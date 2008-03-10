@@ -929,7 +929,7 @@
 		fRef = 585F37110D68B7DB00673AE6 /* sketch_actions.cpp */;
 		name = "sketch_actions.cpp: 154";
 		rLen = 1373;
-		rLoc = 6267;
+		rLoc = 6276;
 		rType = 0;
 		vrLen = 3202;
 		vrLoc = 4433;
@@ -939,7 +939,7 @@
 		fRef = 585F37120D68B7DB00673AE6 /* sketch_actions.h */;
 		name = "sketch_actions.h: 138";
 		rLen = 1320;
-		rLoc = 6631;
+		rLoc = 6643;
 		rType = 0;
 		vrLen = 4442;
 		vrLoc = 0;
@@ -959,7 +959,7 @@
 		fRef = 585F376D0D68B7DB00673AE6 /* sketch_workbench.cpp */;
 		name = "sketch_workbench.cpp: 107";
 		rLen = 71;
-		rLoc = 5293;
+		rLoc = 5298;
 		rType = 0;
 		vrLen = 4354;
 		vrLoc = 3478;
@@ -969,7 +969,7 @@
 		fRef = 5803B5E90D8199C10001DA83 /* part_workbench.cpp */;
 		name = "part_workbench.cpp: 64";
 		rLen = 0;
-		rLoc = 3038;
+		rLoc = 3043;
 		rType = 0;
 		vrLen = 4076;
 		vrLoc = 1485;
@@ -979,7 +979,7 @@
 		fRef = 585F37C00D68B8D300673AE6 /* part_actions.cpp */;
 		name = "part_actions.cpp: 101";
 		rLen = 0;
-		rLoc = 4270;
+		rLoc = 4275;
 		rType = 0;
 		vrLen = 3573;
 		vrLoc = 954;
@@ -1039,7 +1039,7 @@
 		fRef = 589AC0DB0D730AD3001725D0 /* sketch_line.cpp */;
 		name = "sketch_line.cpp: 115";
 		rLen = 398;
-		rLoc = 5077;
+		rLoc = 5082;
 		rType = 0;
 		vrLen = 4418;
 		vrLoc = 0;
@@ -1059,7 +1059,7 @@
 		fRef = 585F37BE0D68B8D300673AE6 /* part.cpp */;
 		name = "part.cpp: 357";
 		rLen = 0;
-		rLoc = 12728;
+		rLoc = 12736;
 		rType = 0;
 		vrLen = 3042;
 		vrLoc = 12388;
@@ -1069,7 +1069,7 @@
 		fRef = 585F37BF0D68B8D300673AE6 /* part.h */;
 		name = "part.h: 102";
 		rLen = 0;
-		rLoc = 4941;
+		rLoc = 4957;
 		rType = 0;
 		vrLen = 5606;
 		vrLoc = 2187;
@@ -1179,7 +1179,7 @@
 		fRef = 5803B5E70D8199B90001DA83 /* sketch.h */;
 		name = "sketch.h: 161";
 		rLen = 117;
-		rLoc = 10151;
+		rLoc = 10171;
 		rType = 0;
 		vrLen = 6788;
 		vrLoc = 3757;
@@ -1209,7 +1209,7 @@
 		fRef = 585F37110D68B7DB00673AE6 /* sketch_actions.cpp */;
 		name = "sketch_actions.cpp: 154";
 		rLen = 1373;
-		rLoc = 6267;
+		rLoc = 6276;
 		rType = 0;
 		vrLen = 3202;
 		vrLoc = 4433;
@@ -1219,7 +1219,7 @@
 		fRef = 585F37C00D68B8D300673AE6 /* part_actions.cpp */;
 		name = "part_actions.cpp: 98";
 		rLen = 0;
-		rLoc = 4288;
+		rLoc = 4293;
 		rType = 0;
 		vrLen = 3668;
 		vrLoc = 804;
@@ -1229,7 +1229,7 @@
 		fRef = 585F37120D68B7DB00673AE6 /* sketch_actions.h */;
 		name = "sketch_actions.h: 138";
 		rLen = 1320;
-		rLoc = 6631;
+		rLoc = 6643;
 		rType = 0;
 		vrLen = 4818;
 		vrLoc = 3258;
@@ -1249,7 +1249,7 @@
 		fRef = 585F37120D68B7DB00673AE6 /* sketch_actions.h */;
 		name = "sketch_actions.h: 138";
 		rLen = 1320;
-		rLoc = 6631;
+		rLoc = 6643;
 		rType = 0;
 		vrLen = 4442;
 		vrLoc = 0;
@@ -1279,7 +1279,7 @@
 		fRef = 585F37BF0D68B8D300673AE6 /* part.h */;
 		name = "part.h: 104";
 		rLen = 55;
-		rLoc = 5051;
+		rLoc = 5067;
 		rType = 0;
 		vrLen = 5620;
 		vrLoc = 2019;
@@ -1289,7 +1289,7 @@
 		fRef = 585F37BE0D68B8D300673AE6 /* part.cpp */;
 		name = "part.cpp: 410";
 		rLen = 0;
-		rLoc = 15429;
+		rLoc = 15437;
 		rType = 0;
 		vrLen = 2873;
 		vrLoc = 12458;
@@ -1309,7 +1309,7 @@
 		fRef = 585F376D0D68B7DB00673AE6 /* sketch_workbench.cpp */;
 		name = "sketch_workbench.cpp: 574";
 		rLen = 268;
-		rLoc = 21367;
+		rLoc = 21372;
 		rType = 0;
 		vrLen = 2904;
 		vrLoc = 19983;
@@ -1329,7 +1329,7 @@
 		fRef = 585F37BF0D68B8D300673AE6 /* part.h */;
 		name = "part.h: 104";
 		rLen = 55;
-		rLoc = 5051;
+		rLoc = 5067;
 		rType = 0;
 		vrLen = 5534;
 		vrLoc = 2233;
@@ -1339,7 +1339,7 @@
 		fRef = 585F37100D68B7DB00673AE6 /* sketch.h */;
 		name = "sketch.h: 161";
 		rLen = 116;
-		rLoc = 10171;
+		rLoc = 10191;
 		rType = 0;
 		vrLen = 6779;
 		vrLoc = 3766;
@@ -1349,7 +1349,7 @@
 		fRef = 585F37BF0D68B8D300673AE6 /* part.h */;
 		name = "part.h: 137";
 		rLen = 0;
-		rLoc = 7497;
+		rLoc = 7513;
 		rType = 0;
 		vrLen = 5607;
 		vrLoc = 2187;
@@ -1359,7 +1359,7 @@
 		fRef = 589AC3BD0D735D8F001725D0 /* sketch.cpp */;
 		name = "sketch.cpp: 736";
 		rLen = 208;
-		rLoc = 28608;
+		rLoc = 28620;
 		rType = 0;
 		vrLen = 3722;
 		vrLoc = 25385;
@@ -1369,7 +1369,7 @@
 		fRef = 585F37BE0D68B8D300673AE6 /* part.cpp */;
 		name = "part.cpp: 511";
 		rLen = 0;
-		rLoc = 18683;
+		rLoc = 18691;
 		rType = 0;
 		vrLen = 3443;
 		vrLoc = 15331;
@@ -1389,7 +1389,7 @@
 		fRef = 5803B5E70D8199B90001DA83 /* sketch.h */;
 		name = "sketch.h: 161";
 		rLen = 117;
-		rLoc = 10151;
+		rLoc = 10171;
 		rType = 0;
 		vrLen = 6779;
 		vrLoc = 3766;
@@ -1399,7 +1399,7 @@
 		fRef = 5803B5E90D8199C10001DA83 /* part_workbench.cpp */;
 		name = "part_workbench.cpp: 145";
 		rLen = 0;
-		rLoc = 6509;
+		rLoc = 4415;
 		rType = 0;
 		vrLen = 3647;
 		vrLoc = 4306;
@@ -1409,7 +1409,7 @@
 		fRef = 585F37BE0D68B8D300673AE6 /* part.cpp */;
 		name = "part.cpp: 410";
 		rLen = 0;
-		rLoc = 14576;
+		rLoc = 14584;
 		rType = 0;
 		vrLen = 3001;
 		vrLoc = 12988;
@@ -1419,7 +1419,7 @@
 		fRef = 5803B5E90D8199C10001DA83 /* part_workbench.cpp */;
 		name = "part_workbench.cpp: 63";
 		rLen = 0;
-		rLoc = 3038;
+		rLoc = 3043;
 		rType = 0;
 		vrLen = 4185;
 		vrLoc = 1485;
@@ -1429,7 +1429,7 @@
 		fRef = 585F376D0D68B7DB00673AE6 /* sketch_workbench.cpp */;
 		name = "sketch_workbench.cpp: 107";
 		rLen = 71;
-		rLoc = 5293;
+		rLoc = 5298;
 		rType = 0;
 		vrLen = 4354;
 		vrLoc = 3478;
@@ -1439,7 +1439,7 @@
 		fRef = 5803B5E90D8199C10001DA83 /* part_workbench.cpp */;
 		name = "part_workbench.cpp: 64";
 		rLen = 0;
-		rLoc = 3038;
+		rLoc = 3043;
 		rType = 0;
 		vrLen = 4076;
 		vrLoc = 1485;
@@ -1449,7 +1449,7 @@
 		fRef = 585F37C00D68B8D300673AE6 /* part_actions.cpp */;
 		name = "part_actions.cpp: 101";
 		rLen = 0;
-		rLoc = 4270;
+		rLoc = 4275;
 		rType = 0;
 		vrLen = 3573;
 		vrLoc = 954;
@@ -1458,8 +1458,8 @@
 		isa = PBXTextBookmark;
 		fRef = 589AC3BD0D735D8F001725D0 /* sketch.cpp */;
 		name = "sketch.cpp: 304";
-		rLen = 1118;
-		rLoc = 13393;
+		rLen = 0;
+		rLoc = 4809;
 		rType = 0;
 		vrLen = 3412;
 		vrLoc = 12828;
@@ -1469,7 +1469,7 @@
 		fRef = 585F37BE0D68B8D300673AE6 /* part.cpp */;
 		name = "part.cpp: 424";
 		rLen = 0;
-		rLoc = 15254;
+		rLoc = 15262;
 		rType = 0;
 		vrLen = 2816;
 		vrLoc = 13360;
@@ -1539,7 +1539,7 @@
 		fRef = 589AC0DB0D730AD3001725D0 /* sketch_line.cpp */;
 		name = "sketch_line.cpp: 115";
 		rLen = 398;
-		rLoc = 5077;
+		rLoc = 5082;
 		rType = 0;
 		vrLen = 3576;
 		vrLoc = 3438;
@@ -1569,7 +1569,7 @@
 		fRef = 589AC0DB0D730AD3001725D0 /* sketch_line.cpp */;
 		name = "sketch_line.cpp: 115";
 		rLen = 398;
-		rLoc = 5077;
+		rLoc = 5082;
 		rType = 0;
 		vrLen = 4418;
 		vrLoc = 0;
@@ -1629,7 +1629,7 @@
 		fRef = 585F37BE0D68B8D300673AE6 /* part.cpp */;
 		name = "part.cpp: 357";
 		rLen = 0;
-		rLoc = 12728;
+		rLoc = 12736;
 		rType = 0;
 		vrLen = 3042;
 		vrLoc = 12388;
@@ -1639,7 +1639,7 @@
 		fRef = 585F37BF0D68B8D300673AE6 /* part.h */;
 		name = "part.h: 102";
 		rLen = 0;
-		rLoc = 4941;
+		rLoc = 4957;
 		rType = 0;
 		vrLen = 5606;
 		vrLoc = 2187;
@@ -1949,7 +1949,7 @@
 		fRef = 5803B5E70D8199B90001DA83 /* sketch.h */;
 		name = "sketch.h: 161";
 		rLen = 117;
-		rLoc = 10151;
+		rLoc = 10171;
 		rType = 0;
 		vrLen = 6848;
 		vrLoc = 3697;
@@ -1959,7 +1959,7 @@
 		fRef = 585F37BF0D68B8D300673AE6 /* part.h */;
 		name = "part.h: 137";
 		rLen = 0;
-		rLoc = 7497;
+		rLoc = 7513;
 		rType = 0;
 		vrLen = 4937;
 		vrLoc = 1784;
@@ -2327,7 +2327,7 @@
 		fRef = 585F36380D68B4B700673AE6 /* constraint_length.cpp */;
 		name = "constraint_length.cpp: 166";
 		rLen = 0;
-		rLoc = 7370;
+		rLoc = 7375;
 		rType = 0;
 		vrLen = 3353;
 		vrLoc = 5048;
@@ -2619,7 +2619,7 @@
 		fRef = 589AC0D10D730AAA001725D0 /* constraint_horizontal.cpp */;
 		name = "constraint_horizontal.cpp: 43";
 		rLen = 113;
-		rLoc = 2139;
+		rLoc = 2144;
 		rType = 0;
 		vrLen = 3729;
 		vrLoc = 1408;
@@ -2629,7 +2629,7 @@
 		fRef = 589AC0D60D730AC5001725D0 /* constraint_vertical.cpp */;
 		name = "constraint_vertical.cpp: 44";
 		rLen = 0;
-		rLoc = 2248;
+		rLoc = 2253;
 		rType = 0;
 		vrLen = 4114;
 		vrLoc = 0;
@@ -2719,7 +2719,7 @@
 		fRef = 589AC1FA0D732C3F001725D0 /* constraint_angle_edit_mode.cpp */;
 		name = "constraint_angle_edit_mode.cpp: 75";
 		rLen = 0;
-		rLoc = 3629;
+		rLoc = 3634;
 		rType = 0;
 		vrLen = 4336;
 		vrLoc = 0;
@@ -2769,7 +2769,7 @@
 		fRef = 58F156E50D6B18FA008290F7 /* constraint_angle.cpp */;
 		name = "constraint_angle.cpp: 145";
 		rLen = 0;
-		rLoc = 6217;
+		rLoc = 6222;
 		rType = 0;
 		vrLen = 3416;
 		vrLoc = 4652;
@@ -2779,7 +2779,7 @@
 		fRef = 589AC3130D73524A001725D0 /* constraint_coincidence.cpp */;
 		name = "constraint_coincidence.cpp: 295";
 		rLen = 0;
-		rLoc = 11014;
+		rLoc = 11019;
 		rType = 0;
 		vrLen = 3237;
 		vrLoc = 9412;
@@ -2819,7 +2819,7 @@
 		fRef = 589AC1F00D732C1A001725D0 /* constraint_distance_edit_mode.cpp */;
 		name = "constraint_distance_edit_mode.cpp: 76";
 		rLen = 0;
-		rLoc = 3665;
+		rLoc = 3670;
 		rType = 0;
 		vrLen = 4375;
 		vrLoc = 0;
@@ -2839,7 +2839,7 @@
 		fRef = 589AC1010D731A71001725D0 /* constraint_distance.cpp */;
 		name = "constraint_distance.cpp: 237";
 		rLen = 0;
-		rLoc = 10419;
+		rLoc = 10424;
 		rType = 0;
 		vrLen = 3535;
 		vrLoc = 13160;
@@ -3114,7 +3114,7 @@
 		fRef = 583C5F5D0D7EED3E00BB480D /* sketch_constraint_dimcreate_mode.cpp */;
 		name = "sketch_constraint_dimcreate_mode.cpp: 230";
 		rLen = 942;
-		rLoc = 9819;
+		rLoc = 9824;
 		rType = 0;
 		vrLen = 3844;
 		vrLoc = 7887;
@@ -3141,7 +3141,7 @@
 		fRef = 583C60140D7F021200BB480D /* sketch_ellipse_create_mode.cpp */;
 		name = "sketch_ellipse_create_mode.cpp: 203";
 		rLen = 0;
-		rLoc = 8107;
+		rLoc = 8112;
 		rType = 0;
 		vrLen = 3179;
 		vrLoc = 7291;
@@ -3171,7 +3171,7 @@
 		fRef = 58B27FE90D786896008951D9 /* sketch_circle.cpp */;
 		name = "sketch_circle.cpp: 289";
 		rLen = 824;
-		rLoc = 11056;
+		rLoc = 11061;
 		rType = 0;
 		vrLen = 3439;
 		vrLoc = 8745;
@@ -3181,7 +3181,7 @@
 		fRef = 583C5F670D7EED7900BB480D /* sketch_ellipse_edit_mode.cpp */;
 		name = "sketch_ellipse_edit_mode.cpp: 157";
 		rLen = 0;
-		rLoc = 7024;
+		rLoc = 7029;
 		rType = 0;
 		vrLen = 3789;
 		vrLoc = 5008;
@@ -3191,7 +3191,7 @@
 		fRef = 585F373D0D68B7DB00673AE6 /* sketch_ellipse.cpp */;
 		name = "sketch_ellipse.cpp: 128";
 		rLen = 0;
-		rLoc = 5920;
+		rLoc = 5925;
 		rType = 0;
 		vrLen = 3883;
 		vrLoc = 4812;
@@ -3202,6 +3202,11 @@
 		name = part_body.h;
 		path = /Volumes/Work/ghemingway/Documents/Wildcat/Projects/XCode3/../../Source/Workbenches/PartDesign/part_body.h;
 		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {916, 1339}}";
+			sepNavSelRange = "{3522, 0}";
+			sepNavVisRange = "{0, 3692}";
+		};
 	};
 	584B14F30D8053D9004FB387 /* part_body.cpp */ = {
 		isa = PBXFileReference;
@@ -3209,6 +3214,11 @@
 		name = part_body.cpp;
 		path = /Volumes/Work/ghemingway/Documents/Wildcat/Projects/XCode3/../../Source/Workbenches/PartDesign/part_body.cpp;
 		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {916, 1862}}";
+			sepNavSelRange = "{3486, 0}";
+			sepNavVisRange = "{1941, 3454}";
+		};
 	};
 	584B15000D80A8E1004FB387 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -3265,7 +3275,7 @@
 		fRef = 5852584D0D7F225B00A0C6C8 /* sketch_axis.cpp */;
 		name = "sketch_axis.cpp: 206";
 		rLen = 0;
-		rLoc = 7791;
+		rLoc = 7796;
 		rType = 0;
 		vrLen = 2803;
 		vrLoc = 6162;
@@ -3345,7 +3355,7 @@
 		fRef = 584B14EE0D8053CE004FB387 /* part_body.h */;
 		name = "part_body.h: 76";
 		rLen = 0;
-		rLoc = 3404;
+		rLoc = 3386;
 		rType = 0;
 		vrLen = 3711;
 		vrLoc = 0;
@@ -3355,7 +3365,7 @@
 		fRef = 584B14F30D8053D9004FB387 /* part_body.cpp */;
 		name = "part_body.cpp: 119";
 		rLen = 0;
-		rLoc = 5034;
+		rLoc = 5079;
 		rType = 0;
 		vrLen = 3404;
 		vrLoc = 1836;
@@ -3365,7 +3375,7 @@
 		fRef = 585F37C50D68B8D300673AE6 /* part_body_actions.h */;
 		name = "part_body_actions.h: 52";
 		rLen = 0;
-		rLoc = 2145;
+		rLoc = 2159;
 		rType = 0;
 		vrLen = 3628;
 		vrLoc = 0;
@@ -3405,7 +3415,7 @@
 		fRef = 585F37C50D68B8D300673AE6 /* part_body_actions.h */;
 		name = "part_body_actions.h: 72";
 		rLen = 19;
-		rLoc = 3301;
+		rLoc = 3328;
 		rType = 0;
 		vrLen = 3537;
 		vrLoc = 0;
@@ -3532,7 +3542,7 @@
 		fRef = 589AC23D0D73435B001725D0 /* sketch_rect_mode.cpp */;
 		name = "sketch_rect_mode.cpp: 137";
 		rLen = 0;
-		rLoc = 6261;
+		rLoc = 6266;
 		rType = 0;
 		vrLen = 4189;
 		vrLoc = 3718;
@@ -3596,7 +3606,7 @@
 		fRef = 585F374F0D68B7DB00673AE6 /* sketch_line_edit_mode.cpp */;
 		name = "sketch_line_edit_mode.cpp: 88";
 		rLen = 0;
-		rLoc = 4257;
+		rLoc = 4262;
 		rType = 0;
 		vrLen = 4083;
 		vrLoc = 2050;
@@ -3626,7 +3636,7 @@
 		fRef = 5852585A0D7F229E00A0C6C8 /* sketch_axis_edit_mode.cpp */;
 		name = "sketch_axis_edit_mode.cpp: 89";
 		rLen = 0;
-		rLoc = 4238;
+		rLoc = 4243;
 		rType = 0;
 		vrLen = 4002;
 		vrLoc = 1981;
@@ -5718,31 +5728,31 @@
 	};
 	585F37C40D68B8D300673AE6 /* part_body_actions.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {882, 1624}}";
-			sepNavSelRange = "{2434, 0}";
-			sepNavVisRange = "{0, 3835}";
+			sepNavIntBoundsRect = "{{0, 0}, {916, 1652}}";
+			sepNavSelRange = "{2693, 0}";
+			sepNavVisRange = "{1712, 2921}";
 		};
 	};
 	585F37C50D68B8D300673AE6 /* part_body_actions.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {913, 1299}}";
-			sepNavSelRange = "{2975, 0}";
-			sepNavVisRange = "{0, 3628}";
+			sepNavIntBoundsRect = "{{0, 0}, {916, 1339}}";
+			sepNavSelRange = "{2982, 0}";
+			sepNavVisRange = "{0, 3638}";
 			sepNavWindowFrame = "{{1356, 144}, {972, 1371}}";
 		};
 	};
 	585F37C60D68B8D300673AE6 /* part_body_controller.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {966, 1358}}";
-			sepNavSelRange = "{1744, 0}";
-			sepNavVisRange = "{0, 3944}";
+			sepNavIntBoundsRect = "{{0, 0}, {916, 1344}}";
+			sepNavSelRange = "{3980, 0}";
+			sepNavVisRange = "{0, 4085}";
 		};
 	};
 	585F37C70D68B8D300673AE6 /* part_body_controller.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {966, 1353}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{0, 3076}";
+			sepNavIntBoundsRect = "{{0, 0}, {913, 1299}}";
+			sepNavSelRange = "{3120, 0}";
+			sepNavVisRange = "{0, 3122}";
 		};
 	};
 	585F37C80D68B8D300673AE6 /* part_controller.cpp */ = {
@@ -5868,7 +5878,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {916, 1442}}";
 			sepNavSelRange = "{4719, 0}";
-			sepNavVisRange = "{373, 4803}";
+			sepNavVisRange = "{302, 4874}";
 		};
 	};
 	585F37E00D68B8D300673AE6 /* part_plane_actions.cpp */ = {
@@ -7615,7 +7625,7 @@
 		fRef = 585F37130D68B7DB00673AE6 /* sketch_align_suggestion.cpp */;
 		name = "sketch_align_suggestion.cpp: 312";
 		rLen = 3;
-		rLoc = 12987;
+		rLoc = 12992;
 		rType = 0;
 		vrLen = 4371;
 		vrLoc = 17650;
@@ -7715,7 +7725,7 @@
 		fRef = 585F37130D68B7DB00673AE6 /* sketch_align_suggestion.cpp */;
 		name = "sketch_align_suggestion.cpp: 313";
 		rLen = 0;
-		rLoc = 13020;
+		rLoc = 13025;
 		rType = 0;
 		vrLen = 3923;
 		vrLoc = 4935;
@@ -7825,7 +7835,7 @@
 		fRef = 585F37510D68B7DB00673AE6 /* sketch_point.cpp */;
 		name = "sketch_point.cpp: 90";
 		rLen = 421;
-		rLoc = 4228;
+		rLoc = 4233;
 		rType = 0;
 		vrLen = 3609;
 		vrLoc = 2636;
@@ -7896,7 +7906,7 @@
 		fRef = 585F362C0D68B4B700673AE6 /* constraint_fix.cpp */;
 		name = "constraint_fix.cpp: 213";
 		rLen = 0;
-		rLoc = 8381;
+		rLoc = 8386;
 		rType = 0;
 		vrLen = 3149;
 		vrLoc = 8055;
@@ -8319,7 +8329,7 @@
 		fRef = 585F37390D68B7DB00673AE6 /* sketch_conic_twopoint.cpp */;
 		name = "sketch_conic_twopoint.cpp: 40";
 		rLen = 0;
-		rLoc = 2035;
+		rLoc = 2040;
 		rType = 0;
 		vrLen = 4191;
 		vrLoc = 1485;
@@ -8429,7 +8439,7 @@
 		fRef = 585F36530D68B4B700673AE6 /* sketch_constraint_geocreate_mode.cpp */;
 		name = "sketch_constraint_geocreate_mode.cpp: 86";
 		rLen = 0;
-		rLoc = 3524;
+		rLoc = 3529;
 		rType = 0;
 		vrLen = 3726;
 		vrLoc = 0;
@@ -8512,7 +8522,7 @@
 		fRef = 589AC2060D732D40001725D0 /* constraint_length_edit_mode.cpp */;
 		name = "constraint_length_edit_mode.cpp: 75";
 		rLen = 0;
-		rLoc = 3643;
+		rLoc = 3648;
 		rType = 0;
 		vrLen = 4351;
 		vrLoc = 0;
@@ -8522,7 +8532,7 @@
 		fRef = 589AC2150D732DAB001725D0 /* constraint_radius_modes.cpp */;
 		name = "constraint_radius_modes.cpp: 75";
 		rLen = 0;
-		rLoc = 3641;
+		rLoc = 3646;
 		rType = 0;
 		vrLen = 4349;
 		vrLoc = 0;
@@ -8764,7 +8774,7 @@
 		fRef = 589AC3D90D735DEE001725D0 /* part_pad.cpp */;
 		name = "part_pad.cpp: 298";
 		rLen = 0;
-		rLoc = 12971;
+		rLoc = 12980;
 		rType = 0;
 		vrLen = 2814;
 		vrLoc = 14648;
@@ -8774,7 +8784,7 @@
 		fRef = 589AC3DE0D735E0A001725D0 /* part_pad_create_mode.cpp */;
 		name = "part_pad_create_mode.cpp: 226";
 		rLen = 0;
-		rLoc = 9290;
+		rLoc = 9299;
 		rType = 0;
 		vrLen = 3476;
 		vrLoc = 11731;
@@ -8784,7 +8794,7 @@
 		fRef = 589AC3E40D735E18001725D0 /* part_shaft.cpp */;
 		name = "part_shaft.cpp: 513";
 		rLen = 0;
-		rLoc = 21659;
+		rLoc = 21672;
 		rType = 0;
 		vrLen = 3301;
 		vrLoc = 27411;
@@ -8814,7 +8824,7 @@
 		fRef = 589AC3E90D735E35001725D0 /* part_shaft_create_mode.cpp */;
 		name = "part_shaft_create_mode.cpp: 212";
 		rLen = 0;
-		rLoc = 8893;
+		rLoc = 8898;
 		rType = 0;
 		vrLen = 3528;
 		vrLoc = 6862;
@@ -8858,7 +8868,7 @@
 		fRef = 5803B5E70D8199B90001DA83 /* sketch.h */;
 		name = "sketch.h: 161";
 		rLen = 117;
-		rLoc = 10151;
+		rLoc = 10171;
 		rType = 0;
 		vrLen = 6847;
 		vrLoc = 3697;
@@ -8868,7 +8878,7 @@
 		fRef = 585F37100D68B7DB00673AE6 /* sketch.h */;
 		name = "sketch.h: 161";
 		rLen = 116;
-		rLoc = 10171;
+		rLoc = 10191;
 		rType = 0;
 		vrLen = 6788;
 		vrLoc = 3757;
@@ -8885,7 +8895,7 @@
 		fRef = 5803B5E70D8199B90001DA83 /* sketch.h */;
 		name = "sketch.h: 161";
 		rLen = 117;
-		rLoc = 10151;
+		rLoc = 10171;
 		rType = 0;
 		vrLen = 6847;
 		vrLoc = 3697;
@@ -8895,7 +8905,7 @@
 		fRef = 585F37100D68B7DB00673AE6 /* sketch.h */;
 		name = "sketch.h: 161";
 		rLen = 116;
-		rLoc = 10171;
+		rLoc = 10191;
 		rType = 0;
 		vrLen = 6788;
 		vrLoc = 3757;
@@ -8915,7 +8925,7 @@
 		fRef = 585F37BF0D68B8D300673AE6 /* part.h */;
 		name = "part.h: 137";
 		rLen = 0;
-		rLoc = 7497;
+		rLoc = 7513;
 		rType = 0;
 		vrLen = 4911;
 		vrLoc = 1810;
@@ -8935,7 +8945,7 @@
 		fRef = 585F37BF0D68B8D300673AE6 /* part.h */;
 		name = "part.h: 137";
 		rLen = 0;
-		rLoc = 7497;
+		rLoc = 7513;
 		rType = 0;
 		vrLen = 4911;
 		vrLoc = 1810;
@@ -9089,7 +9099,7 @@
 		fRef = 58B280C10D7891B8008951D9 /* sketch_arc_tpcreate_mode.cpp */;
 		name = "sketch_arc_tpcreate_mode.cpp: 174";
 		rLen = 0;
-		rLoc = 7740;
+		rLoc = 7745;
 		rType = 0;
 		vrLen = 3847;
 		vrLoc = 4906;
@@ -9099,7 +9109,7 @@
 		fRef = 589AC3C20D735D9D001725D0 /* sketch_arc_stcreate_mode.cpp */;
 		name = "sketch_arc_stcreate_mode.cpp: 175";
 		rLen = 0;
-		rLoc = 7505;
+		rLoc = 7510;
 		rType = 0;
 		vrLen = 3915;
 		vrLoc = 5021;
@@ -9109,7 +9119,7 @@
 		fRef = 58B27F7D0D7860B5008951D9 /* sketch_circle_create_mode.cpp */;
 		name = "sketch_circle_create_mode.cpp: 161";
 		rLen = 0;
-		rLoc = 7213;
+		rLoc = 7218;
 		rType = 0;
 		vrLen = 3844;
 		vrLoc = 2246;
@@ -9327,7 +9337,7 @@
 		fRef = 58B280C60D789220008951D9 /* constraint_radius.cpp */;
 		name = "constraint_radius.cpp: 167";
 		rLen = 0;
-		rLoc = 7227;
+		rLoc = 7232;
 		rType = 0;
 		vrLen = 3362;
 		vrLoc = 5638;
@@ -9367,7 +9377,7 @@
 		fRef = 58B280F10D78965F008951D9 /* sketch_arc_stedit_mode.cpp */;
 		name = "sketch_arc_stedit_mode.cpp: 114";
 		rLen = 0;
-		rLoc = 5117;
+		rLoc = 5122;
 		rType = 0;
 		vrLen = 4079;
 		vrLoc = 954;
@@ -9377,7 +9387,7 @@
 		fRef = 585F375A0D68B7DB00673AE6 /* sketch_profile.cpp */;
 		name = "sketch_profile.cpp: 285";
 		rLen = 0;
-		rLoc = 11178;
+		rLoc = 11183;
 		rType = 0;
 		vrLen = 4218;
 		vrLoc = 7915;
@@ -9427,7 +9437,7 @@
 		fRef = 58B9D3EF0D7D9C5D00F026A3 /* sketch_arc.cpp */;
 		name = "sketch_arc.cpp: 75";
 		rLen = 0;
-		rLoc = 3487;
+		rLoc = 3492;
 		rType = 0;
 		vrLen = 3882;
 		vrLoc = 1866;
