@@ -51,7 +51,7 @@ class WCSketchAxis;
 /***********************************************~***************************************************/
 
 
-class WCShaft : virtual public WCPartFeature {
+class WCPartShaft : virtual public WCPartFeature {
 protected:
 	std::list<std::pair<WCSketchProfile*,bool> >_profiles;											//!< List of included profiles
 	WCSketchAxis								*_axis;												//!< Revolution axis
@@ -71,16 +71,16 @@ private:
 	void GenerateTopology(const WCRay &ray);														//!< Private method to generate all topology
 	
 	//Deny Access
-	WCShaft();																						//!< Deny access to default constructor
-	WCShaft(const WCShaft& WCShaft);																//!< Deny access to copy constructor
-	WCShaft& operator=(const WCShaft &WCShaft);														//!< Deny access to equals operator
+	WCPartShaft();																					//!< Deny access to default constructor
+	WCPartShaft(const WCPartShaft& shaft);															//!< Deny access to copy constructor
+	WCPartShaft& operator=(const WCPartShaft &shaft);												//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCShaft(WCPartBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,//!< Primary constructor
+	WCPartShaft(WCPartBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,//!< Primary constructor
 												WCSketchAxis *axis, const bool profilesOnRight,
 												const WPFloat &cwAngle, const WPFloat &ccwAngle);
-	WCShaft(xercesc::DOMElement *element, WCSerialDictionary *dictionary);								//!< Persistance constructor
-	virtual ~WCShaft();																				//!< Default destructor
+	WCPartShaft(xercesc::DOMElement *element, WCSerialDictionary *dictionary);						//!< Persistance constructor
+	virtual ~WCPartShaft();																			//!< Default destructor
 	
 	//Member Access Methods
 	inline std::list<std::pair<WCSketchProfile*,bool> > Profiles(void) const { return this->_profiles; }//!< Get the associated sketch profiles
@@ -103,13 +103,13 @@ public:
 
 	/*** Actions ***/
 	static WCDrawingMode* ModeCreate(WCPartWorkbench *wb);											//!< Return create mode controller
-	static WCActionShaftCreate* ActionCreate(WCPartBody *body, const std::string &shaftName,			//!< Primary creation action
+	static WCActionPartShaftCreate* ActionCreate(WCPartBody *body, const std::string &shaftName,	//!< Primary creation action
 												const std::list<std::pair<WCSketchProfile*,bool> > &profiles,
 												WCSketchAxis *axis, const bool profilesOnRight,
 												const WPFloat &cwAngle, const WPFloat &ccwAngle);
 	
 	/*** Friend Functions ***/
-	friend std::ostream& operator<<(std::ostream& out, const WCShaft &shaft);						//!< Overloaded output operator		
+	friend std::ostream& operator<<(std::ostream& out, const WCPartShaft &shaft);					//!< Overloaded output operator		
 };
 
 

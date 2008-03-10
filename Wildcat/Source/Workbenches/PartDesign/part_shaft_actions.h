@@ -42,40 +42,39 @@
 /*** Class Predefines ***/
 class WCPartBody;
 class WCSketchProfile;
-class WCShaft;
+class WCPartShaft;
 class WCSketchAxis;
 
 
 /***********************************************~***************************************************/
 
 
-class WCActionShaftCreate : public WCAction {
+class WCActionPartShaftCreate : public WCAction {
 private:
-	WCPartBody										*_body;												//!< Associated body
+	WCPartBody									*_body;												//!< Associated body
 	std::string									_shaftName;											//!< Name of new object
 	std::list< std::pair<WCSketchProfile*,bool> >_profiles;											//!< Associated profiles
 	WCSketchAxis								*_axis;												//!< Revolution axis
 	bool										_profilesOnRight;									//!< Side on which profiles appear
 	WPFloat										_cwAngle, _ccwAngle;								//!< Revolution angles
-	WCShaft										*_shaft;											//!< Post-creation shaft
-
-	//Constructors
-	WCActionShaftCreate();																			//!< Deny access to default constructor
-	WCActionShaftCreate(const WCActionShaftCreate& action);											//!< Deny access to copy constructor
-	WCActionShaftCreate(WCPartBody *body, const std::string &shaftName,									//!< Primary constructor
+	WCPartShaft									*_shaft;											//!< Post-creation shaft
+	//Hidden Constructors
+	WCActionPartShaftCreate();																		//!< Deny access to default constructor
+	WCActionPartShaftCreate(const WCActionPartShaftCreate& action);									//!< Deny access to copy constructor
+	WCActionPartShaftCreate(WCPartBody *body, const std::string &shaftName,							//!< Primary constructor
 												const std::list< std::pair<WCSketchProfile*,bool> > &profiles,
 												WCSketchAxis *axis, const bool profilesOnRight,
 												const WPFloat &cwAngle, const WPFloat &ccwAngle);
 	
 	//Friend Declarations
-	friend class WCShaft;																			//!< Make WCPad a friend
+	friend class WCPartShaft;																		//!< Make shaft a friend
 public:
 	//Constructors and Destructors
-	WCActionShaftCreate(xercesc::DOMElement *element, WCSerialDictionary *dictionary);					//!< Persistance constructor
-	~WCActionShaftCreate()						{ }													//!< Default destructor
+	WCActionPartShaftCreate(xercesc::DOMElement *element, WCSerialDictionary *dictionary);			//!< Persistance constructor
+	~WCActionPartShaftCreate()					{ }													//!< Default destructor
 
 	//Member Access Methods
-	inline WCShaft* Shaft(void)					{ return this->_shaft; }							//!< Get the created object
+	inline WCPartShaft* Shaft(void)				{ return this->_shaft; }							//!< Get the created object
 
 	//Inherited Methods
 	WCFeature* Execute(void);																		//!< Execute the action

@@ -42,7 +42,7 @@
 
 /*** Class Predefines ***/
 class WCPartWorkbench;
-class WCShaft;
+class WCPartShaft;
 class WCSketchProfile;
 class WCSketchAxis;
 
@@ -50,7 +50,7 @@ class WCSketchAxis;
 /***********************************************~***************************************************/
 
 
-class WCModeShaftCreate : virtual public WCDrawingMode {
+class WCModePartShaftCreate : virtual public WCDrawingMode {
 private:
 	WCPartWorkbench								*_workbench;										//!< Parent part workbench
 	WPInt										_stage;												//!< Creation stage (nothing, profiles, 1st click, done)
@@ -62,18 +62,16 @@ private:
 	std::list<WCVector4>						_convexHull;										//!< Convex hull for the profiles
 	WPFloat										_cwAngle, _ccwAngle;								//!< Revolution angles
 	std::list<WCNurbsSurface*>					_surfaces;											//!< List of revolution surfaces
-
 	//Private Methods
 	void CheckSelections(void);																		//!< Private method to check what is selected
 	void ProcessProfiles(const std::list<WCSketchProfile*> &profiles);								//!< Private method to process all profiles
 	void GenerateSurfaces(void);																	//!< Private method to generate all surfaces
-	
 	//Deny Access
-	WCModeShaftCreate();																			//!< Default constructor
+	WCModePartShaftCreate();																		//!< Default constructor
 public:
 	//Constructors and Destructors
-	WCModeShaftCreate(WCPartWorkbench *wb);															//!< Primary constructor
-	~WCModeShaftCreate()				{ }															//!< Default destructor
+	WCModePartShaftCreate(WCPartWorkbench *wb);														//!< Primary constructor
+	~WCModePartShaftCreate()					{ }													//!< Default destructor
 	
 	//Virtual Methods
 	void OnEntry(void);																				//!< Handle entry into mode
@@ -81,30 +79,6 @@ public:
 	void OnMouseDown(const WCMouseButton &button);													//!< Handle mouse button press
 	void OnMouseMove(const WPFloat &x, const WPFloat &y);											//!< Handle mouse moves
 	void OnMouseUp(const WCMouseButton &button);													//!< Handle mouse button release
-	void Render(void);																				//!< Render the mode
-};
-
-
-/***********************************************~***************************************************
-
-
-class WCModeShaftEdit : virtual public WCDrawingMode {
-private:
-	WCShaft										*_shaft;											//!< Shaft being edited
-
-	//Deny Access
-	WCModeShaftEdit();																				//!< Default constructor
-public:
-	//Constructors and Destructors
-	WCModeShaftEdit(WCShaft *shaft);																//!< Primary constructor
-	~WCModeShaftEdit()				{ }																//!< Default destructor
-	
-	//Virtual Methods
-	void OnEntry(void);																				//!< Handle entry into mode
-	void OnExit(void);																				//!< Handle exit from mode
-	void OnMouseMove(const WPFloat &x, const WPFloat &y);											//!< Handle mouse moves
-	void OnMouseUp(const WCMouseButton &button);													//!< Handle mouse button release
-	void OnArrowKeyPress(const WCArrowKey &key);													//!< Handle arrow key press
 	void Render(void);																				//!< Render the mode
 };
 

@@ -39,21 +39,21 @@
 
 
 /*** Class Predefines ***/
-class WCShaft;
+class WCPartShaft;
 
 
 /***********************************************~***************************************************/
 
 
-class WCShaftController : public WCEventController {
+class WCPartShaftController : public WCEventController {
 private:
-	WCShaft										*_shaft;											//!< Associated object
-	WCShaftController();																			//!< Deny access to default constructor
-	WCShaftController(const WCShaftController& contoller);											//!< Deny access to copy constructor
-	WCShaftController& operator=(const WCShaftController& controller);								//!< Deny access to equals operator
+	WCPartShaft									*_shaft;											//!< Associated object
+	WCPartShaftController();																		//!< Deny access to default constructor
+	WCPartShaftController(const WCPartShaftController& contoller);									//!< Deny access to copy constructor
+	WCPartShaftController& operator=(const WCPartShaftController& controller);						//!< Deny access to equals operator
 public:
-	WCShaftController(WCShaft *shaft);																//!< Primary constructor
-	~WCShaftController()						{ }													//!< Default destructor
+	WCPartShaftController(WCPartShaft *shaft);														//!< Primary constructor
+	~WCPartShaftController()					{ }													//!< Default destructor
 	
 	//Inherited Methods
 	WCObject* Associate(void);																		//!< Return associated object

@@ -43,7 +43,7 @@
 /***********************************************~***************************************************/
 
 
-void WCModeShaftCreate::CheckSelections(void) {
+void WCModePartShaftCreate::CheckSelections(void) {
 	//Check to see if a sketch is selected
 	std::list<WCSketch*> sketchList = this->_workbench->SelectionManager()->FilterSelected<WCSketch>(true);
 	std::list<WCSketchProfile*> profiles;
@@ -103,12 +103,12 @@ void WCModeShaftCreate::CheckSelections(void) {
 }
 
 
-void WCModeShaftCreate::ProcessProfiles(const std::list<WCSketchProfile*> &profiles) {
+void WCModePartShaftCreate::ProcessProfiles(const std::list<WCSketchProfile*> &profiles) {
 	//Qualify all of the selected profiles
-	this->_profilesOnRight = WCShaft::QualifyProfiles(profiles, this->_profiles, this->_axis);
+	this->_profilesOnRight = WCPartShaft::QualifyProfiles(profiles, this->_profiles, this->_axis);
 	//Make sure there is atleast one profile remains
 	if (this->_profiles.size() == 0) {
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCModeShaftCreate::ProcessProfiles - No valid profiles remain.");
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCModePartShaftCreate::ProcessProfiles - No valid profiles remain.");
 			//throw error
 			return;
 	}
@@ -144,7 +144,7 @@ void WCModeShaftCreate::ProcessProfiles(const std::list<WCSketchProfile*> &profi
 }
 
 
-void WCModeShaftCreate::GenerateSurfaces(void) {
+void WCModePartShaftCreate::GenerateSurfaces(void) {
 	//Check to make sure there is a depth
 	if (fabs(this->_cwAngle - this->_ccwAngle) < 0.01) return;
 	WCNurbsSurface *surface;
@@ -217,13 +217,13 @@ void WCModeShaftCreate::GenerateSurfaces(void) {
 /***********************************************~***************************************************/
 
 
-WCModeShaftCreate::WCModeShaftCreate(WCPartWorkbench *wb) :	::WCDrawingMode(wb->Part(), PARTSHAFTMODE_CREATE_NAME), 
+WCModePartShaftCreate::WCModePartShaftCreate(WCPartWorkbench *wb) :	::WCDrawingMode(wb->Part(), PARTSHAFTMODE_CREATE_NAME), 
 	_workbench(wb), _stage(0), _mark(), _axis(NULL), _ray(NULL), _profiles(), _cwAngle(0.0), _ccwAngle(0.0), _surfaces() {
 	//Nothing else for now
 }
 
 
-void WCModeShaftCreate::OnEntry(void) {
+void WCModePartShaftCreate::OnEntry(void) {
 	this->_workbench->Part()->Status("Shaft Creation Mode Entered");
 //	CLOGGER_DEBUG(WCLogManager::RootLogger(), "Entering Shaft Create Mode.");
 	//Check to see what is selected
@@ -233,7 +233,7 @@ void WCModeShaftCreate::OnEntry(void) {
 }
 
 
-void WCModeShaftCreate::OnExit(void) {
+void WCModePartShaftCreate::OnExit(void) {
 //	CLOGGER_DEBUG(WCLogManager::RootLogger(), "Exiting Shaft Create Mode.");
 	//Delete appropriate objects
 	if (this->_stage == 0) return;
@@ -248,7 +248,7 @@ void WCModeShaftCreate::OnExit(void) {
 }
 
 
-void WCModeShaftCreate::OnMouseDown(const WCMouseButton &button) {
+void WCModePartShaftCreate::OnMouseDown(const WCMouseButton &button) {
 	//Cancel if right click
 	if (button == WCMouseButton::Right()) {
 		//If not drawing, do nothing
@@ -287,7 +287,7 @@ void WCModeShaftCreate::OnMouseDown(const WCMouseButton &button) {
 		//Increment the stage (just need it to exit on mouse up)
 		this->_stage++;
 		//Create action to create shaft
-		WCActionShaftCreate *action = WCShaft::ActionCreate(this->_workbench->Part()->Body(), "",
+		WCActionPartShaftCreate *action = WCPartShaft::ActionCreate(this->_workbench->Part()->Body(), "",
 			this->_profiles, this->_axis, this->_profilesOnRight, this->_cwAngle, this->_ccwAngle);
 		//Execute action
 		this->_workbench->Part()->Document()->ExecuteAction( action );
@@ -295,7 +295,7 @@ void WCModeShaftCreate::OnMouseDown(const WCMouseButton &button) {
 }
 
 
-void WCModeShaftCreate::OnMouseMove(const WPFloat &x, const WPFloat &y) {
+void WCModePartShaftCreate::OnMouseMove(const WPFloat &x, const WPFloat &y) {
 	//If in stage 0, do nothing
 	if (this->_stage == 0) return;
 
@@ -334,7 +334,7 @@ void WCModeShaftCreate::OnMouseMove(const WPFloat &x, const WPFloat &y) {
 }
 
 
-void WCModeShaftCreate::OnMouseUp(const WCMouseButton &button) {
+void WCModePartShaftCreate::OnMouseUp(const WCMouseButton &button) {
 	//If stage == 3, exit the mode
 	if (this->_stage == 3) {
 		//Return to selection mode
@@ -343,7 +343,7 @@ void WCModeShaftCreate::OnMouseUp(const WCMouseButton &button) {
 }
 
 
-void WCModeShaftCreate::Render(void) {
+void WCModePartShaftCreate::Render(void) {
 	//If stage is above zero, render surfaces and curves
 	if (this->_stage == 0) return;
 	

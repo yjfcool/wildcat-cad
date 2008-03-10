@@ -161,7 +161,7 @@ bool WCPartWorkbench::OnUserMessage(const WCUserMessage &message) {
 	//Is this a shaft mode message
 	else if (message == "shaft") {
 		//Create a new drawing mode
-		mode = WCShaft::ModeCreate(this);
+		mode = WCPartShaft::ModeCreate(this);
 		//Go into shaft mode
 		this->DrawingMode(mode);
 	}

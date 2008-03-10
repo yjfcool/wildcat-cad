@@ -36,22 +36,22 @@
 /***********************************************~***************************************************/
 
 
-WCShaftController::WCShaftController(WCShaft *shaft) : ::WCEventController(shaft->TreeElement()), _shaft(shaft) {
+WCPartShaftController::WCPartShaftController(WCPartShaft *shaft) : ::WCEventController(shaft->TreeElement()), _shaft(shaft) {
 	//Make sure reference is not null
 	if (this->_shaft == NULL) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaftController::WCShaftController - NULL shaft passed.\n");
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPartShaftController::WCPartShaftController - NULL shaft passed.\n");
 		//throw error
 		return;
 	}
 }
 
 
-inline WCObject* WCShaftController::Associate(void) {
+inline WCObject* WCPartShaftController::Associate(void) {
 	return this->_shaft;
 }
 
 
-void WCShaftController::OnSelection(const bool fromManager, std::list<WCVisualObject*> objects) {
+void WCPartShaftController::OnSelection(const bool fromManager, std::list<WCVisualObject*> objects) {
 	this->_shaft->Document()->Status("Shaft " + this->_shaft->GetName() + " was selected");
 //	std::cout << "Shaft: " << this->_shaft->GetName() << "(" << this << ") was selected.\n";
 	//Is this from the selection manager
@@ -69,7 +69,7 @@ void WCShaftController::OnSelection(const bool fromManager, std::list<WCVisualOb
 }
 
 
-void WCShaftController::OnDeselection(const bool fromManager) {
+void WCPartShaftController::OnDeselection(const bool fromManager) {
 //	std::cout << "Shaft: " << this->_shaft->GetName() << " was deselected.\n";
 	if (!fromManager) {
 		//Remove the item from the selection list
@@ -82,7 +82,7 @@ void WCShaftController::OnDeselection(const bool fromManager) {
 }
 
 
-void WCShaftController::OnContextClick(void) {
+void WCPartShaftController::OnContextClick(void) {
 }
 
 

@@ -39,7 +39,7 @@
 /***********************************************~***************************************************/
 
 
-std::list<WCTrimProfile> WCShaft::GenerateFrontProfile(const WCRay &ray) {
+std::list<WCTrimProfile> WCPartShaft::GenerateFrontProfile(const WCRay &ray) {
 	//Make sure there is some angle
 	if (this->_cwAngle - this->_ccwAngle < 0.01) return std::list<WCTrimProfile>();
 	
@@ -230,7 +230,7 @@ std::list<WCTrimProfile> WCShaft::GenerateFrontProfile(const WCRay &ray) {
 }
 
 
-void WCShaft::GenerateBackProfile(const WCRay &ray) {
+void WCPartShaft::GenerateBackProfile(const WCRay &ray) {
 	//Make sure there is some angle
 	if (this->_cwAngle - this->_ccwAngle < 0.01) return;
 	//Make sure not a full circle
@@ -398,7 +398,7 @@ void WCShaft::GenerateBackProfile(const WCRay &ray) {
 }
 
 
-void WCShaft::GenerateSurfaces(const WCRay &ray, const std::list<WCTrimProfile> &profileList) {
+void WCPartShaft::GenerateSurfaces(const WCRay &ray, const std::list<WCTrimProfile> &profileList) {
 	//Make sure there is some angle
 	if (this->_cwAngle - this->_ccwAngle < 0.01) return;
 
@@ -443,13 +443,13 @@ void WCShaft::GenerateSurfaces(const WCRay &ray, const std::list<WCTrimProfile> 
 }
 
 
-void WCShaft::GeneratePoints(const WCRay &ray) {
+void WCPartShaft::GeneratePoints(const WCRay &ray) {
 	//Make sure there is some angle
 	if (this->_cwAngle - this->_ccwAngle < 0.01) return;
 }
 
 
-void WCShaft::GenerateCurves(const WCRay &ray, const std::list<WCTrimProfile> &profileList) {
+void WCPartShaft::GenerateCurves(const WCRay &ray, const std::list<WCTrimProfile> &profileList) {
 	//Make sure there is some angle
 	if (this->_cwAngle - this->_ccwAngle < 0.01) return;
 
@@ -517,21 +517,21 @@ void WCShaft::GenerateCurves(const WCRay &ray, const std::list<WCTrimProfile> &p
 }
 
 
-void WCShaft::GenerateTopology(const WCRay &ray) {
+void WCPartShaft::GenerateTopology(const WCRay &ray) {
 }
 
 
 /***********************************************~***************************************************/
 
 
-WCShaft::WCShaft(WCPartBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,
+WCPartShaft::WCPartShaft(WCPartBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,
 	WCSketchAxis *axis, const bool profilesOnRight, const WPFloat &cwAngle, const WPFloat &ccwAngle) : 
 	::WCPartFeature(body, name), _profiles(profiles), _axis(axis), _profilesOnRight(profilesOnRight),
 	_cwAngle(cwAngle), _ccwAngle(ccwAngle), _points(), _lines(), _curves(), _surfaces() {
 	//Check feature name
 	if (this->_name == "") this->_name = this->_part->GenerateFeatureName(this);
 	//Create event handler
-	this->_controller = new WCShaftController(this);
+	this->_controller = new WCPartShaftController(this);
 	//Create tree element
 	WSTexture* shaftIcon = this->_document->Scene()->TextureManager()->TextureFromName("shaft32");
 	this->_treeElement = new WCTreeElement(this->_document->TreeView(), this->_name, this->_controller, shaftIcon);
@@ -587,24 +587,24 @@ WCShaft::WCShaft(WCPartBody *body, const std::string &name, const std::list<std:
 }
 
 
-WCShaft::~WCShaft() {
+WCPartShaft::~WCPartShaft() {
 }
 
 	
-void WCShaft::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
+void WCPartShaft::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 }
 
 
-xercesc::DOMElement* WCShaft::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
+xercesc::DOMElement* WCPartShaft::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
 	return NULL;
 }
 
 
-void WCShaft::Render(const GLuint defaultProg, const WCColor color) {
+void WCPartShaft::Render(const GLuint defaultProg, const WCColor color) {
 }
 
 
-void WCShaft::OnSelection(const bool fromManager, std::list<WCVisualObject*> objects) {
+void WCPartShaft::OnSelection(const bool fromManager, std::list<WCVisualObject*> objects) {
 	//Change the color of all points
 	std::list<WCGeometricPoint*>::iterator pointIter;
 	for (pointIter = this->_points.begin(); pointIter != this->_points.end(); pointIter++)
@@ -626,7 +626,7 @@ void WCShaft::OnSelection(const bool fromManager, std::list<WCVisualObject*> obj
 }
 
 
-void WCShaft::OnDeselection(const bool fromManager) {
+void WCPartShaft::OnDeselection(const bool fromManager) {
 	//Change the color of all points
 	std::list<WCGeometricPoint*>::iterator pointIter;
 	for (pointIter = this->_points.begin(); pointIter != this->_points.end(); pointIter++)
@@ -651,7 +651,7 @@ void WCShaft::OnDeselection(const bool fromManager) {
 /***********************************************~***************************************************/
 
 
-bool WCShaft::QualifyProfiles(const std::list<WCSketchProfile*> &inputProfiles, std::list<std::pair<WCSketchProfile*,bool> > &outputProfiles, 
+bool WCPartShaft::QualifyProfiles(const std::list<WCSketchProfile*> &inputProfiles, std::list<std::pair<WCSketchProfile*,bool> > &outputProfiles, 
 	const WCSketchAxis *axis) {
 	WCSketch *sketch;
 	WPUInt tmpFloat;
@@ -725,23 +725,24 @@ bool WCShaft::QualifyProfiles(const std::list<WCSketchProfile*> &inputProfiles, 
 /***********************************************~***************************************************/
 
 
-WCDrawingMode* WCShaft::ModeCreate(WCPartWorkbench *wb) {
+WCDrawingMode* WCPartShaft::ModeCreate(WCPartWorkbench *wb) {
 	//Create a new drawing mode
-	return new WCModeShaftCreate(wb);
+	return new WCModePartShaftCreate(wb);
 }
 
 
-WCActionShaftCreate* WCShaft::ActionCreate(WCPartBody *body, const std::string &shaftName, const std::list< std::pair<WCSketchProfile*,bool> > &profiles, 
-	WCSketchAxis *axis, const bool profilesOnRight, const WPFloat &cwAngle, const WPFloat &ccwAngle) {
+WCActionPartShaftCreate* WCPartShaft::ActionCreate(WCPartBody *body, const std::string &shaftName,
+	const std::list< std::pair<WCSketchProfile*,bool> > &profiles, WCSketchAxis *axis, const bool profilesOnRight, 
+	const WPFloat &cwAngle, const WPFloat &ccwAngle) {
 	//Create a new shaft create action
-	return new WCActionShaftCreate(body, shaftName, profiles, axis, profilesOnRight, cwAngle, ccwAngle);
+	return new WCActionPartShaftCreate(body, shaftName, profiles, axis, profilesOnRight, cwAngle, ccwAngle);
 }
 
 
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCShaft &shaft) {
+std::ostream& operator<<(std::ostream& out, const WCPartShaft &shaft) {
 	return out;
 }
 

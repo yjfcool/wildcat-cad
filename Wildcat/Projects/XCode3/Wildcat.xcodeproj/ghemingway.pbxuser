@@ -517,6 +517,32 @@
 			5876D9960D85CA8F00D1A6A5 /* PBXTextBookmark */ = 5876D9960D85CA8F00D1A6A5 /* PBXTextBookmark */;
 			5876D9970D85CA8F00D1A6A5 /* PBXTextBookmark */ = 5876D9970D85CA8F00D1A6A5 /* PBXTextBookmark */;
 			5876D9980D85CA8F00D1A6A5 /* PBXTextBookmark */ = 5876D9980D85CA8F00D1A6A5 /* PBXTextBookmark */;
+			5876D9D10D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9D10D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9D20D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9D20D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9D30D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9D30D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9D40D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9D40D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9D50D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9D50D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9D60D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9D60D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9D70D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9D70D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9D80D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9D80D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9D90D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9D90D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9DA0D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9DA0D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9DB0D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9DB0D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9DC0D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9DC0D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9DD0D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9DD0D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9DE0D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9DE0D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9DF0D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9DF0D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9E00D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9E00D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9E10D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9E10D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9E20D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9E20D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9E30D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9E30D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9E40D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9E40D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9E50D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9E50D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9E60D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9E60D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9E70D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9E70D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9E80D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9E80D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9E90D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9E90D85D24700D1A6A5 /* PBXTextBookmark */;
+			5876D9EA0D85D24700D1A6A5 /* PBXTextBookmark */ = 5876D9EA0D85D24700D1A6A5 /* PBXTextBookmark */;
 			588702AA0D773BB10071FEBB = 588702AA0D773BB10071FEBB /* PBXTextBookmark */;
 			588702AC0D773BB10071FEBB = 588702AC0D773BB10071FEBB /* PBXTextBookmark */;
 			588702AE0D773BB10071FEBB = 588702AE0D773BB10071FEBB /* PBXTextBookmark */;
@@ -4869,7 +4895,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {913, 2072}}";
 			sepNavSelRange = "{7513, 0}";
-			sepNavVisRange = "{1810, 4834}";
+			sepNavVisRange = "{1810, 4927}";
 			sepNavWindowFrame = "{{1344, 207}, {972, 1371}}";
 		};
 	};
@@ -4963,7 +4989,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1020, 1568}}";
 			sepNavSelRange = "{5518, 0}";
-			sepNavVisRange = "{1330, 4660}";
+			sepNavVisRange = "{1330, 4659}";
 		};
 	};
 	585F37CE0D68B8D300673AE6 /* part_pad_actions.cpp */ = {
@@ -5017,9 +5043,9 @@
 	};
 	585F37D50D68B8D300673AE6 /* part_shaft.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {966, 1708}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{0, 4891}";
+			sepNavIntBoundsRect = "{{0, 0}, {916, 1694}}";
+			sepNavSelRange = "{6451, 0}";
+			sepNavVisRange = "{1764, 4858}";
 		};
 	};
 	585F37D60D68B8D300673AE6 /* part_shaft_actions.cpp */ = {
@@ -5029,11 +5055,25 @@
 			sepNavVisRange = "{0, 3626}";
 		};
 	};
+	585F37D70D68B8D300673AE6 /* part_shaft_actions.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {916, 1288}}";
+			sepNavSelRange = "{3567, 0}";
+			sepNavVisRange = "{0, 4118}";
+		};
+	};
 	585F37D80D68B8D300673AE6 /* part_shaft_controller.cpp */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {966, 1274}}";
 			sepNavSelRange = "{1744, 0}";
 			sepNavVisRange = "{0, 3957}";
+		};
+	};
+	585F37D90D68B8D300673AE6 /* part_shaft_controller.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {916, 1235}}";
+			sepNavSelRange = "{2589, 0}";
+			sepNavVisRange = "{0, 3138}";
 		};
 	};
 	585F37DA0D68B8D300673AE6 /* part_shaft_create_mode.cpp */ = {
@@ -5045,9 +5085,9 @@
 	};
 	585F37DB0D68B8D300673AE6 /* part_shaft_modes.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {966, 1624}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{0, 4425}";
+			sepNavIntBoundsRect = "{{0, 0}, {948, 1274}}";
+			sepNavSelRange = "{3402, 0}";
+			sepNavVisRange = "{130, 4130}";
 		};
 	};
 	585F37DC0D68B8D300673AE6 /* part_workbench.cpp */ = {
@@ -6820,7 +6860,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {916, 2884}}";
 			sepNavSelRange = "{6945, 0}";
-			sepNavVisRange = "{5030, 3134}";
+			sepNavVisRange = "{5030, 3158}";
 		};
 	};
 	5876D97E0D85CA8F00D1A6A5 /* PBXTextBookmark */ = {
@@ -7088,6 +7128,317 @@
 		rLoc = 7513;
 		rType = 0;
 		vrLen = 4834;
+		vrLoc = 1810;
+	};
+	5876D9AB0D85D16A00D1A6A5 /* part_shaft_actions.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = part_shaft_actions.cpp;
+		path = /Volumes/Work/ghemingway/Documents/Wildcat/Projects/XCode3/../../Source/Workbenches/PartDesign/part_shaft_actions.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {966, 1235}}";
+			sepNavSelRange = "{3217, 0}";
+			sepNavVisRange = "{0, 3668}";
+		};
+	};
+	5876D9B00D85D18F00D1A6A5 /* part_shaft_controller.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = part_shaft_controller.cpp;
+		path = /Volumes/Work/ghemingway/Documents/Wildcat/Projects/XCode3/../../Source/Workbenches/PartDesign/part_shaft_controller.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {916, 1274}}";
+			sepNavSelRange = "{3861, 0}";
+			sepNavVisRange = "{130, 3863}";
+		};
+	};
+	5876D9C50D85D21400D1A6A5 /* part_shaft_create_mode.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = part_shaft_create_mode.cpp;
+		path = /Volumes/Work/ghemingway/Documents/Wildcat/Projects/XCode3/../../Source/Workbenches/PartDesign/part_shaft_create_mode.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {916, 5250}}";
+			sepNavSelRange = "{11718, 0}";
+			sepNavVisRange = "{10162, 3244}";
+		};
+	};
+	5876D9C80D85D22500D1A6A5 /* part_workbench.cpp */ = {
+		isa = PBXFileReference;
+		name = part_workbench.cpp;
+		path = /Volumes/Work/ghemingway/Documents/Wildcat/Projects/XCode3/../../Source/Workbenches/PartDesign/part_workbench.cpp;
+		sourceTree = "<absolute>";
+	};
+	5876D9CA0D85D22500D1A6A5 /* part_workbench.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = part_workbench.cpp;
+		path = /Volumes/Work/ghemingway/Documents/Wildcat/Projects/XCode3/../../Source/Workbenches/PartDesign/part_workbench.cpp;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {916, 2884}}";
+			sepNavSelRange = "{7128, 0}";
+			sepNavVisRange = "{5030, 3162}";
+		};
+	};
+	5876D9D10D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 589AC3D90D735DEE001725D0 /* part_pad.cpp */;
+		name = "part_pad.cpp: 420";
+		rLen = 0;
+		rLoc = 17062;
+		rType = 0;
+		vrLen = 2722;
+		vrLoc = 14841;
+	};
+	5876D9D20D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 585F37CD0D68B8D300673AE6 /* part_pad.h */;
+		name = "part_pad.h: 98";
+		rLen = 0;
+		rLoc = 5518;
+		rType = 0;
+		vrLen = 4659;
+		vrLoc = 1330;
+	};
+	5876D9D30D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 585F37D50D68B8D300673AE6 /* part_shaft.h */;
+		name = "part_shaft.h: 112";
+		rLen = 0;
+		rLoc = 6451;
+		rType = 0;
+		vrLen = 4858;
+		vrLoc = 1764;
+	};
+	5876D9D40D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 585F37D70D68B8D300673AE6 /* part_shaft_actions.h */;
+		name = "part_shaft_actions.h: 77";
+		rLen = 0;
+		rLoc = 3567;
+		rType = 0;
+		vrLen = 4118;
+		vrLoc = 0;
+	};
+	5876D9D50D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 585F37D90D68B8D300673AE6 /* part_shaft_controller.h */;
+		name = "part_shaft_controller.h: 56";
+		rLen = 0;
+		rLoc = 2589;
+		rType = 0;
+		vrLen = 3138;
+		vrLoc = 0;
+	};
+	5876D9D60D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 585F37DB0D68B8D300673AE6 /* part_shaft_modes.h */;
+		name = "part_shaft_modes.h: 70";
+		rLen = 0;
+		rLoc = 3402;
+		rType = 0;
+		vrLen = 4130;
+		vrLoc = 130;
+	};
+	5876D9D70D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 589AC3E40D735E18001725D0 /* part_shaft.cpp */;
+		name = "part_shaft.cpp: 736";
+		rLen = 0;
+		rLoc = 30333;
+		rType = 0;
+		vrLen = 3219;
+		vrLoc = 27607;
+	};
+	5876D9D80D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5876D9AB0D85D16A00D1A6A5 /* part_shaft_actions.cpp */;
+		name = "part_shaft_actions.cpp: 62";
+		rLen = 0;
+		rLoc = 3217;
+		rType = 0;
+		vrLen = 3668;
+		vrLoc = 0;
+	};
+	5876D9D90D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5876D9B00D85D18F00D1A6A5 /* part_shaft_controller.cpp */;
+		name = "part_shaft_controller.cpp: 85";
+		rLen = 0;
+		rLoc = 3861;
+		rType = 0;
+		vrLen = 3863;
+		vrLoc = 130;
+	};
+	5876D9DA0D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5876D9C50D85D21400D1A6A5 /* part_shaft_create_mode.cpp */;
+		name = "part_shaft_create_mode.cpp: 290";
+		rLen = 0;
+		rLoc = 11718;
+		rType = 0;
+		vrLen = 3244;
+		vrLoc = 10162;
+	};
+	5876D9DB0D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5876D9C80D85D22500D1A6A5 /* part_workbench.cpp */;
+		rLen = 1;
+		rLoc = 163;
+		rType = 1;
+	};
+	5876D9DC0D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5876D97B0D85CA8200D1A6A5 /* part_workbench.cpp */;
+		name = "part_workbench.cpp: 157";
+		rLen = 0;
+		rLoc = 6945;
+		rType = 0;
+		vrLen = 3158;
+		vrLoc = 5030;
+	};
+	5876D9DD0D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 589AC3D90D735DEE001725D0 /* part_pad.cpp */;
+		name = "part_pad.cpp: 420";
+		rLen = 0;
+		rLoc = 17062;
+		rType = 0;
+		vrLen = 2722;
+		vrLoc = 14841;
+	};
+	5876D9DE0D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 585F37CD0D68B8D300673AE6 /* part_pad.h */;
+		name = "part_pad.h: 98";
+		rLen = 0;
+		rLoc = 5518;
+		rType = 0;
+		vrLen = 4659;
+		vrLoc = 1330;
+	};
+	5876D9DF0D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 585F37D50D68B8D300673AE6 /* part_shaft.h */;
+		name = "part_shaft.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 4867;
+		vrLoc = 0;
+	};
+	5876D9E00D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 585F37D70D68B8D300673AE6 /* part_shaft_actions.h */;
+		name = "part_shaft_actions.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 4079;
+		vrLoc = 0;
+	};
+	5876D9E10D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 585F37D50D68B8D300673AE6 /* part_shaft.h */;
+		name = "part_shaft.h: 112";
+		rLen = 0;
+		rLoc = 6451;
+		rType = 0;
+		vrLen = 4858;
+		vrLoc = 1764;
+	};
+	5876D9E20D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 585F37D70D68B8D300673AE6 /* part_shaft_actions.h */;
+		name = "part_shaft_actions.h: 77";
+		rLen = 0;
+		rLoc = 3567;
+		rType = 0;
+		vrLen = 4118;
+		vrLoc = 0;
+	};
+	5876D9E30D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 585F37D90D68B8D300673AE6 /* part_shaft_controller.h */;
+		name = "part_shaft_controller.h: 56";
+		rLen = 0;
+		rLoc = 2589;
+		rType = 0;
+		vrLen = 3138;
+		vrLoc = 0;
+	};
+	5876D9E40D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 585F37DB0D68B8D300673AE6 /* part_shaft_modes.h */;
+		name = "part_shaft_modes.h: 70";
+		rLen = 0;
+		rLoc = 3402;
+		rType = 0;
+		vrLen = 4130;
+		vrLoc = 130;
+	};
+	5876D9E50D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 589AC3E40D735E18001725D0 /* part_shaft.cpp */;
+		name = "part_shaft.cpp: 736";
+		rLen = 0;
+		rLoc = 30333;
+		rType = 0;
+		vrLen = 3219;
+		vrLoc = 27607;
+	};
+	5876D9E60D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5876D9AB0D85D16A00D1A6A5 /* part_shaft_actions.cpp */;
+		name = "part_shaft_actions.cpp: 62";
+		rLen = 0;
+		rLoc = 3217;
+		rType = 0;
+		vrLen = 3668;
+		vrLoc = 0;
+	};
+	5876D9E70D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5876D9B00D85D18F00D1A6A5 /* part_shaft_controller.cpp */;
+		name = "part_shaft_controller.cpp: 85";
+		rLen = 0;
+		rLoc = 3861;
+		rType = 0;
+		vrLen = 3863;
+		vrLoc = 130;
+	};
+	5876D9E80D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5876D9C50D85D21400D1A6A5 /* part_shaft_create_mode.cpp */;
+		name = "part_shaft_create_mode.cpp: 290";
+		rLen = 0;
+		rLoc = 11718;
+		rType = 0;
+		vrLen = 3244;
+		vrLoc = 10162;
+	};
+	5876D9E90D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5876D9CA0D85D22500D1A6A5 /* part_workbench.cpp */;
+		name = "part_workbench.cpp: 164";
+		rLen = 0;
+		rLoc = 7128;
+		rType = 0;
+		vrLen = 3162;
+		vrLoc = 5030;
+	};
+	5876D9EA0D85D24700D1A6A5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 585F37BF0D68B8D300673AE6 /* part.h */;
+		name = "part.h: 137";
+		rLen = 0;
+		rLoc = 7513;
+		rType = 0;
+		vrLen = 4927;
 		vrLoc = 1810;
 	};
 	588702640D771CB50071FEBB /* wgeol.h */ = {
@@ -8224,9 +8575,9 @@
 		path = /Volumes/Work/ghemingway/Documents/Wildcat/Projects/XCode3/../../Source/Workbenches/PartDesign/part_pad.cpp;
 		sourceTree = "<absolute>";
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {916, 6132}}";
+			sepNavIntBoundsRect = "{{0, 0}, {916, 6258}}";
 			sepNavSelRange = "{17062, 0}";
-			sepNavVisRange = "{14924, 2639}";
+			sepNavVisRange = "{14841, 2722}";
 		};
 	};
 	589AC3DE0D735E0A001725D0 /* part_pad_create_mode.cpp */ = {
@@ -8242,6 +8593,11 @@
 		name = part_shaft.cpp;
 		path = /Volumes/Work/ghemingway/Documents/Wildcat/Projects/XCode3/../../Source/Workbenches/PartDesign/part_shaft.cpp;
 		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {916, 10528}}";
+			sepNavSelRange = "{30333, 0}";
+			sepNavVisRange = "{27607, 3219}";
+		};
 	};
 	589AC3E90D735E35001725D0 /* part_shaft_create_mode.cpp */ = {
 		isa = PBXFileReference;
@@ -8305,7 +8661,7 @@
 		fRef = 589AC3E40D735E18001725D0 /* part_shaft.cpp */;
 		name = "part_shaft.cpp: 513";
 		rLen = 0;
-		rLoc = 21672;
+		rLoc = 21692;
 		rType = 0;
 		vrLen = 3301;
 		vrLoc = 27411;

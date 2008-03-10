@@ -36,7 +36,7 @@
 /***********************************************~***************************************************/
 
 
-WCActionShaftCreate::WCActionShaftCreate(WCPartBody *body, const std::string &shaftName, const std::list< std::pair<WCSketchProfile*,bool> > &profiles,
+WCActionPartShaftCreate::WCActionPartShaftCreate(WCPartBody *body, const std::string &shaftName, const std::list< std::pair<WCSketchProfile*,bool> > &profiles,
 	WCSketchAxis *axis,	const bool profilesOnRight, const WPFloat &cwAngle, const WPFloat &ccwAngle) : ::WCAction("Create Shaft", body), _body(body),
 	_shaftName(shaftName), _profiles(profiles), _axis(axis), _profilesOnRight(profilesOnRight),
 	_cwAngle(cwAngle), _ccwAngle(ccwAngle), _shaft(NULL) {
@@ -44,22 +44,22 @@ WCActionShaftCreate::WCActionShaftCreate(WCPartBody *body, const std::string &sh
 }
 
 
-WCFeature* WCActionShaftCreate::Execute(void) {
+WCFeature* WCActionPartShaftCreate::Execute(void) {
 	//Create the shaft
-	WCShaft *shaft = new WCShaft(this->_body, this->_shaftName, this->_profiles, this->_axis, this->_profilesOnRight, 
+	WCPartShaft *shaft = new WCPartShaft(this->_body, this->_shaftName, this->_profiles, this->_axis, this->_profilesOnRight, 
 		this->_cwAngle, this->_ccwAngle);
 	//Make sure shaft is not null
 	if (shaft == NULL) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCActionShaftCreate::Execute - Shaft could not be created.");
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCActionPartShaftCreate::Execute - Shaft could not be created.");
 	//Set the pointer and return
 	this->_shaft = shaft;
 	return this->_shaft;
 }
 
 
-xercesc::DOMElement* WCActionShaftCreate::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
+xercesc::DOMElement* WCActionPartShaftCreate::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
 	//Create primary element for this object
-	xercesc::DOMElement*  actionElement = document->createElement(xercesc::XMLString::transcode("ShaftCreate"));
+	xercesc::DOMElement*  actionElement = document->createElement(xercesc::XMLString::transcode("ActionPartShaftCreate"));
 	//Add the creator attribute
 	actionElement->setAttribute(xercesc::XMLString::transcode("Creator"), xercesc::XMLString::transcode("12345"));
 	//Add the object name attribute
