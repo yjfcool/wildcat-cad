@@ -45,7 +45,7 @@
 
 
 /*** Class Predefines ***/
-class WCPlane;
+class WCPartPlane;
 class WCSketchFeature;
 class WCSketchConstraint;
 class WCConstraintPlanner;
@@ -59,7 +59,7 @@ class WCSketchProfile;
 class WCSketch : public WCPartFeature, public virtual WCVisualObject {
 protected:
 	WCSketchWorkbench							*_workbench;										//!< Sketch workbench
-	WCPlane										*_refPlane;											//!< Reference plane
+	WCPartPlane										*_refPlane;											//!< Reference plane
 	WCConstraintPlanner							*_planner;											//!< Constraint planner
 	std::map<std::string, WCSketchFeature*>		_featureMap;										//!< Sketch features
 	std::list<WCSketchFeature*>					_featureList;										//!< List of features
@@ -85,12 +85,12 @@ private:
 	WCSketch& operator=(const WCSketch& sketch);													//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCSketch(WCFeature *creator, const std::string &name, WCPlane* plane);							//!< Primary constructor
+	WCSketch(WCFeature *creator, const std::string &name, WCPartPlane* plane);							//!< Primary constructor
 	WCSketch(xercesc::DOMElement *element, WCSerialDictionary *dictionary);							//!< Persistance constructor
 	~WCSketch();																					//!< Default destructor
 	
 	//Member Access Methods
-	inline WCPlane* ReferencePlane(void)				{ return this->_refPlane; }					//!< Get reference plane
+	inline WCPartPlane* ReferencePlane(void)				{ return this->_refPlane; }					//!< Get reference plane
 	inline WCConstraintPlanner* ConstraintPlanner(void)	{ return this->_planner; }					//!< Get the constraint planner
 	inline std::map<std::string, WCSketchFeature*>& FeatureMap(void)								//!< Get the feature map
 												{ return  this->_featureMap; }
@@ -155,7 +155,7 @@ public:
 	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
 
 	/*** Actions ***/
-	static WCAction* ActionCreate(WCFeature *creator, const std::string sketchName, WCPlane *refPlane);//!< Primary create action
+	static WCAction* ActionCreate(WCFeature *creator, const std::string sketchName, WCPartPlane *refPlane);//!< Primary create action
 	static WCAction* ActionMarkConstruction(WCSketch *sketch, std::list<WCSketchFeature*> features);	//!< Mark as construction elements
 	static WCAction* ActionMarkNonConstruction(WCSketch *sketch, std::list<WCSketchFeature*> features);	//!< Mark as not construction elements
 	static WCAction* ActionDelete(WCSketch *sketch, std::list<WCSketchFeature*> features);			//!< Primary delete action

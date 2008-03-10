@@ -42,14 +42,14 @@
 
 /*** Class Predefines ***/
 class WCPartWorkbench;
-class WCPad;
+class WCPartPad;
 class WCSketchProfile;
 
 
 /***********************************************~***************************************************/
 
 
-class WCModePadCreate : virtual public WCDrawingMode {
+class WCModePartPadCreate : virtual public WCDrawingMode {
 private:
 	WCPartWorkbench								*_workbench;										//!< Parent part workbench
 	WPInt										_stage;												//!< Creation stage (nothing, profiles, 1st click, done)
@@ -67,11 +67,11 @@ private:
 	void GenerateSurfaces(void);																	//!< Private method to generate all surfaces
 	
 	//Deny Access
-	WCModePadCreate();																				//!< Default constructor
+	WCModePartPadCreate();																			//!< Default constructor
 public:
 	//Constructors and Destructors
-	WCModePadCreate(WCPartWorkbench *wb);															//!< Primary constructor
-	~WCModePadCreate()				{ }																//!< Default destructor
+	WCModePartPadCreate(WCPartWorkbench *wb);														//!< Primary constructor
+	~WCModePartPadCreate()						{ }													//!< Default destructor
 	
 	//Virtual Methods
 	void OnEntry(void);																				//!< Handle entry into mode
@@ -79,35 +79,6 @@ public:
 	void OnMouseDown(const WCMouseButton &button);													//!< Handle mouse button press
 	void OnMouseMove(const WPFloat &x, const WPFloat &y);											//!< Handle mouse moves
 	void OnMouseUp(const WCMouseButton &button);													//!< Handle mouse button release
-	void Render(void);																				//!< Render the mode
-};
-
-
-/***********************************************~***************************************************
-
-
-class WCModeSketchPointEdit : virtual public WCDrawingMode {
-private:
-	WCSketchPoint								*_point;											//!< Point being edited
-	WCVector4									_position;											//!< Initial position
-	
-	WPFloat										_xSuggest, _ySuggest;								//!< Location of suggestion
-	WCSketchAlignmentSuggestion					_suggestionType;									//!< Type of suggestion
-	std::list<WCSketchAlignmentSuggestion>		_alignRules;										//!< List of alignment suggestion rules
-
-	//Deny Access
-	WCModeSketchPointEdit();																		//!< Default constructor
-public:
-	//Constructors and Destructors
-	WCModeSketchPointEdit(WCSketchPoint *point);													//!< Primary constructor
-	~WCModeSketchPointEdit()				{ }														//!< Default destructor
-	
-	//Virtual Methods
-	void OnEntry(void);																				//!< Handle entry into mode
-	void OnExit(void);																				//!< Handle exit from mode
-	void OnMouseMove(const WPFloat &x, const WPFloat &y);											//!< Handle mouse moves
-	void OnMouseUp(const WCMouseButton &button);													//!< Handle mouse button release
-	void OnArrowKeyPress(const WCArrowKey &key);													//!< Handle arrow key press
 	void Render(void);																				//!< Render the mode
 };
 

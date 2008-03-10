@@ -26,8 +26,8 @@
 ********************************************************************************/
 
 
-#ifndef __BODY_ACTIONS_H__
-#define __BODY_ACTIONS_H__
+#ifndef __PART_BODY_ACTIONS_H__
+#define __PART_BODY_ACTIONS_H__
 
 
 /*** Included Header Files ***/
@@ -40,7 +40,7 @@
 
 
 /*** Class Predefines ***/
-class WCBody;
+class WCPartBody;
 class WCPart;
 
 
@@ -52,20 +52,20 @@ private:
 	WCGUID										_partGUID;											//!< GUID for associated objects
 	WCPart										*_part;												//!< Associated part
 	std::string									_bodyName;											//!< Name of new body
-	WCBody										*_partBody;											//!< Post-creation PartBody
+	WCPartBody									*_partBody;											//!< Post-creation PartBody
 	//Hidden Constructors
 	WCActionPartBodyCreate();																		//!< Deny access to default constructor
 	WCActionPartBodyCreate(const WCActionPartBodyCreate& action);									//!< Deny access to copy constructor
 	WCActionPartBodyCreate(WCPart *part, const std::string &bodyName);								//!< Primary constructor
 	//Friend Declarations
-	friend class WCBody;																			//!< Make WCBody a friend
+	friend class WCPartBody;																		//!< Make WCPartBody a friend
 public:
 	//Constructors and Destructors
 	WCActionPartBodyCreate(xercesc::DOMElement *element, WCSerialDictionary *dictionary);			//!< Persistance constructor
-	~WCActionPartBodyCreate()						{ }												//!< Default destructor
+	~WCActionPartBodyCreate()					{ }													//!< Default destructor
 
 	//Member Access Methods
-	inline WCBody* Body(void)					{ return this->_partBody; }							//!< Get the created part body
+	inline WCPartBody* Body(void)				{ return this->_partBody; }							//!< Get the created part body
 
 	//Inherited Methods
 	WCFeature* Execute(void);																		//!< Execute the action
@@ -78,5 +78,5 @@ public:
 /***********************************************~***************************************************/
 
 
-#endif //__BODY_ACTIONS_H__
+#endif //__PART_BODY_ACTIONS_H__
 

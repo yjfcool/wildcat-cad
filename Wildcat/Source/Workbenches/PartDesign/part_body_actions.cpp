@@ -56,7 +56,7 @@ WCFeature* WCActionPartBodyCreate::Execute(void) {
 	}
 
 	//Create the body
-	WCBody *body = new WCBody(this->_part, this->_bodyName);
+	WCPartBody *body = new WCPartBody(this->_part, this->_bodyName);
 	//Make sure body is not null
 	if (body == NULL) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCActionPartBodyCreate::Execute - Body could not be created.");

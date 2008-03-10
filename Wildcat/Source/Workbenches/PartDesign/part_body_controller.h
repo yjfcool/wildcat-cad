@@ -26,8 +26,8 @@
 ********************************************************************************/
 
 
-#ifndef __BODY_CONTROLLER_H__
-#define __BODY_CONTROLLER_H__
+#ifndef __PART_BODY_CONTROLLER_H__
+#define __PART_BODY_CONTROLLER_H__
 
 
 /*** Included Header Files ***/
@@ -39,22 +39,22 @@
 
 
 /*** Class Predefines ***/
-class WCBody;
+class WCPartBody;
 
 
 /***********************************************~***************************************************/
 
 
 
-class WCBodyController : public WCEventController {
+class WCPartBodyController : public WCEventController {
 private:
-	WCBody										*_body;												//!< Controlled object
-	WCBodyController();																				//!< Deny access to default constructor
-	WCBodyController(const WCBodyController& contoller);											//!< Deny access to copy constructor
-	WCBodyController& operator=(const WCBodyController& controller);								//!< Deny access to equals operator
+	WCPartBody									*_body;												//!< Controlled object
+	WCPartBodyController();																			//!< Deny access to default constructor
+	WCPartBodyController(const WCPartBodyController& contoller);									//!< Deny access to copy constructor
+	WCPartBodyController& operator=(const WCPartBodyController& controller);						//!< Deny access to equals operator
 public:
-	WCBodyController(WCBody *body);																	//!< Primary constructor
-	~WCBodyController()				{ }																//!< Default destructor
+	WCPartBodyController(WCPartBody *body);															//!< Primary constructor
+	~WCPartBodyController()						{ }													//!< Default destructor
 	
 	//Inherited Methods
 	WCObject* Associate(void);																		//!< Return associated object
@@ -67,5 +67,5 @@ public:
 /***********************************************~***************************************************/
 
 
-#endif //__BODY_CONTROLLER_H__
+#endif //__PART_BODY_CONTROLLER_H__
 

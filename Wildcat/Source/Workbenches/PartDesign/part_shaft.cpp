@@ -30,7 +30,7 @@
 #include "PartDesign/part_shaft.h"
 #include "PartDesign/part_body.h"
 #include "PartDesign/part.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 #include "Sketcher/sketch_profile.h"
 #include "Sketcher/sketch.h"
 #include "Sketcher/sketch_axis.h"
@@ -183,7 +183,7 @@ std::list<WCTrimProfile> WCShaft::GenerateFrontProfile(const WCRay &ray) {
 		}
 	}
 	//Get reference plane
-	WCPlane *refPlane = this->_profiles.front().first->Sketch()->ReferencePlane();
+	WCPartPlane *refPlane = this->_profiles.front().first->Sketch()->ReferencePlane();
 	//Find minimum bounding rectangle for bounding points
 	std::list<WCVector4> baseCorners = MinimumBoundingRectangle(inputList, refPlane->InverseTransformMatrix(), refPlane->TransformMatrix());
 	//Place into array
@@ -354,7 +354,7 @@ void WCShaft::GenerateBackProfile(const WCRay &ray) {
 		}
 	}
 	//Get reference plane
-	WCPlane *refPlane = this->_profiles.front().first->Sketch()->ReferencePlane();
+	WCPartPlane *refPlane = this->_profiles.front().first->Sketch()->ReferencePlane();
 	//Find minimum bounding rectangle for bounding points
 	std::list<WCVector4> baseCorners = MinimumBoundingRectangle(inputList, refPlane->InverseTransformMatrix(), refPlane->TransformMatrix());
 	//Place into array
@@ -524,7 +524,7 @@ void WCShaft::GenerateTopology(const WCRay &ray) {
 /***********************************************~***************************************************/
 
 
-WCShaft::WCShaft(WCBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,
+WCShaft::WCShaft(WCPartBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,
 	WCSketchAxis *axis, const bool profilesOnRight, const WPFloat &cwAngle, const WPFloat &ccwAngle) : 
 	::WCPartFeature(body, name), _profiles(profiles), _axis(axis), _profilesOnRight(profilesOnRight),
 	_cwAngle(cwAngle), _ccwAngle(ccwAngle), _points(), _lines(), _curves(), _surfaces() {
@@ -731,7 +731,7 @@ WCDrawingMode* WCShaft::ModeCreate(WCPartWorkbench *wb) {
 }
 
 
-WCActionShaftCreate* WCShaft::ActionCreate(WCBody *body, const std::string &shaftName, const std::list< std::pair<WCSketchProfile*,bool> > &profiles, 
+WCActionShaftCreate* WCShaft::ActionCreate(WCPartBody *body, const std::string &shaftName, const std::list< std::pair<WCSketchProfile*,bool> > &profiles, 
 	WCSketchAxis *axis, const bool profilesOnRight, const WPFloat &cwAngle, const WPFloat &ccwAngle) {
 	//Create a new shaft create action
 	return new WCActionShaftCreate(body, shaftName, profiles, axis, profilesOnRight, cwAngle, ccwAngle);

@@ -43,14 +43,14 @@
 
 
 /*** Class Predefines ***/
-class WCBody;
+class WCPartBody;
 class WCSketchProfile;
 
 
 /***********************************************~***************************************************/
 
 
-class WCPad : virtual public WCPartFeature {
+class WCPartPad : virtual public WCPartFeature {
 protected:
 	std::list<std::pair<WCSketchProfile*,bool> >_profiles;											//!< List of included profiles
 	WCVector4									_direction;											//!< Extrusion direction
@@ -68,15 +68,15 @@ private:
 	void GenerateTopology(void);																	//!< Private method to generate topology model
 	
 	//Deny Access
-	WCPad();																						//!< Deny access to default constructor
-	WCPad(const WCPad& pad);																		//!< Deny access to copy constructor
-	WCPad& operator=(const WCPad &pad);																//!< Deny access to equals operator
+	WCPartPad();																					//!< Deny access to default constructor
+	WCPartPad(const WCPartPad& pad);																//!< Deny access to copy constructor
+	WCPartPad& operator=(const WCPartPad &pad);														//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCPad(WCBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,//!< Primary constructor
+	WCPartPad(WCPartBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,//!< Primary constructor
 												const WCVector4 &direction, const WPFloat &posDepth, const WPFloat &negDepth);
-	WCPad(xercesc::DOMElement *element, WCSerialDictionary *dictionary);									//!< Persistance constructor
-	virtual ~WCPad();																				//!< Default destructor
+	WCPartPad(xercesc::DOMElement *element, WCSerialDictionary *dictionary);						//!< Persistance constructor
+	virtual ~WCPartPad();																			//!< Default destructor
 	
 	//Member Access Methods
 	inline std::list<std::pair<WCSketchProfile*,bool> > Profiles(void) const { return this->_profiles; }//!< Get the associated sketch profiles
@@ -95,12 +95,12 @@ public:
 
 	/*** Actions ***/
 	static WCDrawingMode* ModeCreate(WCPartWorkbench *wb);											//!< Return create mode controller
-	static WCActionPadCreate* ActionCreate(WCBody *body, const std::string &padName,				//!< Primary creation action
+	static WCActionPartPadCreate* ActionCreate(WCPartBody *body, const std::string &padName,		//!< Primary creation action
 												const std::list<std::pair<WCSketchProfile*,bool> > &profiles,
 												const WCVector4 &direction, const WPFloat &posDepth, const WPFloat &negDepth);
 	
 	/*** Friend Functions ***/
-	friend std::ostream& operator<<(std::ostream& out, const WCPad &pad);							//!< Overloaded output operator		
+	friend std::ostream& operator<<(std::ostream& out, const WCPartPad &pad);						//!< Overloaded output operator		
 };
 
 

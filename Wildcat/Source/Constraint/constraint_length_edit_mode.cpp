@@ -33,7 +33,7 @@
 #include "Sketcher/sketch.h"
 #include "Kernel/selection_mode.h"
 #include "Kernel/document.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 
 
 /***********************************************~***************************************************/

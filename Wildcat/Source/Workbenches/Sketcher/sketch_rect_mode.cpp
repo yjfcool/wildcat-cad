@@ -37,7 +37,7 @@
 #include "Constraint/constraint_vertical.h"
 #include "Constraint/constraint_coincidence.h"
 #include "Constraint/constraint_length.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 #include "Kernel/document.h"
 
 

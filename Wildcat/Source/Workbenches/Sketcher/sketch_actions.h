@@ -41,7 +41,7 @@
 
 /*** Class Predefines ***/
 class WCSketch;
-class WCPlane;
+class WCPartPlane;
 class WCSketchFeature;
 
 
@@ -52,13 +52,13 @@ class WCActionSketchCreate : public WCAction {
 private:
 	WCSketch									*_sketch;											//!< Associated sketch
 	std::string									_sketchName;										//!< Sketch name
-	WCPlane										*_refPlane;											//!< Reference plane
+	WCPartPlane										*_refPlane;											//!< Reference plane
 
 	//Constructors
 	WCActionSketchCreate();																			//!< Deny access to default constructor
 	WCActionSketchCreate(const WCActionSketchCreate &action);										//!< Deny access to copy constructor
 	WCActionSketchCreate& operator=(const WCActionSketchCreate& action);							//!< Deny access to equals operator
-	WCActionSketchCreate(WCFeature *creator, const std::string &sketchName, WCPlane *refPlane);		//!< Primary constructor
+	WCActionSketchCreate(WCFeature *creator, const std::string &sketchName, WCPartPlane *refPlane);		//!< Primary constructor
 							 
 	//Friend Declarations
 	friend class WCSketch;																			//!< Sketch is a friend

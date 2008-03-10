@@ -38,7 +38,7 @@
 #include "Constraint/constraint_horizontal.h"
 #include "Constraint/constraint_vertical.h"
 #include "Kernel/document.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 
 
 /***********************************************~***************************************************/

@@ -30,7 +30,7 @@
 #include "Sketcher/sketch_conic_twopoint.h"
 #include "Sketcher/sketch.h"
 #include "Kernel/document.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 
 
 /***********************************************~***************************************************/

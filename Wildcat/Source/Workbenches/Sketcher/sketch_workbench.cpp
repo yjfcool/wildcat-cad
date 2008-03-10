@@ -35,7 +35,7 @@
 #include "Kernel/document.h"
 #include "Kernel/workbench_layer.h"
 #include "Kernel/selection_mode.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 #include "PartDesign/part.h"
 
 

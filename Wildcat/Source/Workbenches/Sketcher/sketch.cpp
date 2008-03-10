@@ -86,7 +86,7 @@ void WCSketch::Initialize(void) {
 /***********************************************~***************************************************/
 
 
-WCSketch::WCSketch(WCFeature *creator, const std::string &name, WCPlane* plane) : ::WCPartFeature(creator, name),
+WCSketch::WCSketch(WCFeature *creator, const std::string &name, WCPartPlane* plane) : ::WCPartFeature(creator, name),
 	_workbench(NULL), _refPlane(plane), _planner(NULL),
 	_featureMap(), _featureList(), _pointMap(), _lineMap(), _curveMap(), _constraintList(), _profileList(),
 	_refTreeElement(NULL), _featureTreeElement(NULL), 
@@ -118,7 +118,7 @@ WCSketch::WCSketch(xercesc::DOMElement *element, WCSerialDictionary *dictionary)
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
 	dictionary->InsertGUID(guid, this);
 	//Get the reference plane
-	this->_refPlane = (WCPlane*)WCSerializeableObject::GetGUIDAttrib(element, "reference", dictionary);
+	this->_refPlane = (WCPartPlane*)WCSerializeableObject::GetGUIDAttrib(element, "reference", dictionary);
 
 	//Initialize the object
 	this->Initialize();
@@ -715,7 +715,7 @@ xercesc::DOMElement* WCSketch::Serialize(xercesc::DOMDocument *document, WCSeria
 /***********************************************~***************************************************/
 
 
-WCAction* WCSketch::ActionCreate(WCFeature *creator, const std::string sketchName, WCPlane *refPlane) {
+WCAction* WCSketch::ActionCreate(WCFeature *creator, const std::string sketchName, WCPartPlane *refPlane) {
 	//Create new action for sketch creation
 	return new WCActionSketchCreate(creator, sketchName, refPlane);
 }

@@ -40,38 +40,36 @@
 
 
 /*** Class Predefines ***/
-class WCBody;
+class WCPartBody;
 class WCSketchProfile;
-class WCPad;
+class WCPartPad;
 
 
 /***********************************************~***************************************************/
 
 
-class WCActionPadCreate : public WCAction {
+class WCActionPartPadCreate : public WCAction {
 private:
-	WCBody										*_body;												//!< Associated body
+	WCPartBody									*_body;												//!< Associated body
 	std::string									_padName;											//!< Name of new pad
 	std::list< std::pair<WCSketchProfile*,bool> >_profiles;											//!< Associated profiles
 	WCVector4									_direction;											//!< Extrusion direction
 	WPFloat										_posDepth, _negDepth;								//!< Extrusion distance
-	WCPad										*_pad;												//!< Post-creation pad
-
-	//Constructors
-	WCActionPadCreate();																			//!< Deny access to default constructor
-	WCActionPadCreate(const WCActionPadCreate& action);												//!< Deny access to copy constructor
-	WCActionPadCreate(WCBody *body, const std::string &padName,										//!< Primary constructor
+	WCPartPad									*_pad;												//!< Post-creation pad
+	//Hidden Constructors
+	WCActionPartPadCreate();																		//!< Deny access to default constructor
+	WCActionPartPadCreate(const WCActionPartPadCreate& action);										//!< Deny access to copy constructor
+	WCActionPartPadCreate(WCPartBody *body, const std::string &padName,								//!< Primary constructor
 												const std::list< std::pair<WCSketchProfile*,bool> > &profiles,
 												const WCVector4 &direction, const WPFloat &posDepth, const WPFloat &negDepth);
-	
 	//Friend Declarations
-	friend class WCPad;																				//!< Make WCPad a friend
+	friend class WCPartPad;																			//!< Make WCPartPad a friend
 public:
-	WCActionPadCreate(xercesc::DOMElement *element, WCSerialDictionary *dictionary);						//!< Persistance constructor
-	~WCActionPadCreate()						{ }													//!< Default destructor
+	WCActionPartPadCreate(xercesc::DOMElement *element, WCSerialDictionary *dictionary);			//!< Persistance constructor
+	~WCActionPartPadCreate()					{ }													//!< Default destructor
 
 	//Member Access Methods
-	inline WCPad* Pad(void)						{ return this->_pad; }								//!< Get the created pad
+	inline WCPartPad* Pad(void)					{ return this->_pad; }								//!< Get the created pad
 
 	//Inherited Methods
 	WCFeature* Execute(void);																		//!< Execute the action

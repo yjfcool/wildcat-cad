@@ -44,7 +44,7 @@
 
 /*** Class Predefines ***/
 class WCPartFeature;
-class WCBody;
+class WCPartBody;
 
 
 /***********************************************~***************************************************/
@@ -56,7 +56,7 @@ protected:
 	std::map<std::string, WCPartFeature*>		_featureMap;										//!< Map of all feature in the part
 	std::list<WCPartFeature*>					_featureList;										//!< List of all features in the part
 	WCPartWorkbench								*_workbench;										//!< Associated part workbench
-	WCBody										*_currentBody;										//!< Current body
+	WCPartBody										*_currentBody;										//!< Current body
 
 	//Scene Objects
 	WCPointLayer								*_pointLayer;										//!< Point layer
@@ -92,8 +92,8 @@ public:
 	inline WCPointLayer* PointsLayer(void)		{ return this->_pointLayer; }						//!< Get the points layer
 	inline WCVisualLayer* CurvesLayer(void)		{ return this->_curveLayer; }						//!< Get the curves layer
 	inline WCVisualLayer* SurfacesLayer(void)	{ return this->_surfaceLayer; }						//!< Get the surfaces layer
-	inline WCBody* Body(void)					{ return this->_currentBody; }						//!< Get the current body
-	void Body(WCBody* body);																		//!< Set the current body
+	inline WCPartBody* Body(void)					{ return this->_currentBody; }						//!< Get the current body
+	void Body(WCPartBody* body);																		//!< Set the current body
 	inline std::map<WCGeometricPoint*,WCEventController*>& PointMap(void) { return this->_pointMap;}//!< Get the point map
 	inline std::map<WCGeometricLine*,WCEventController*>& LineMap(void) { return this->_lineMap; }	//!< Get the line map
 	inline std::map<WCGeometricCurve*,WCEventController*>& CurveMap(void) { return this->_curveMap;}//!< Get the curve map

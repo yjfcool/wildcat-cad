@@ -36,22 +36,22 @@
 /***********************************************~***************************************************/
 
 
-WCPadController::WCPadController(WCPad *pad) : ::WCEventController(pad->TreeElement()), _pad(pad) {
+WCPartPadController::WCPartPadController(WCPartPad *pad) : ::WCEventController(pad->TreeElement()), _pad(pad) {
 	//Make sure reference is not null
 	if (this->_pad == NULL) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPadController::WCPadController - NULL pad passed.\n");
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPartPadController::WCPartPadController - NULL pad passed.\n");
 		//throw error
 		return;
 	}
 }
 
 
-inline WCObject* WCPadController::Associate(void) {
+inline WCObject* WCPartPadController::Associate(void) {
 	return this->_pad;
 }
 
 
-void WCPadController::OnSelection(const bool fromManager, std::list<WCVisualObject*> objects) {
+void WCPartPadController::OnSelection(const bool fromManager, std::list<WCVisualObject*> objects) {
 	this->_pad->Document()->Status("Pad " + this->_pad->GetName() + " was selected");
 //	std::cout << "Pad: " << this->_pad->GetName() << "(" << this << ") was selected.\n";
 	//Is this from the selection manager
@@ -69,7 +69,7 @@ void WCPadController::OnSelection(const bool fromManager, std::list<WCVisualObje
 }
 
 
-void WCPadController::OnDeselection(const bool fromManager) {
+void WCPartPadController::OnDeselection(const bool fromManager) {
 //	std::cout << "Pad: " << this->_pad->GetName() << " was deselected.\n";
 	if (!fromManager) {
 		//Remove the item from the selection list
@@ -82,7 +82,7 @@ void WCPadController::OnDeselection(const bool fromManager) {
 }
 
 
-void WCPadController::OnContextClick(void) {
+void WCPartPadController::OnContextClick(void) {
 }
 
 

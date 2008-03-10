@@ -30,7 +30,7 @@
 #include "PartDesign/part_feature.h"
 #include "PartDesign/part.h"
 #include "PartDesign/part_body.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 #include "Sketcher/sketch.h"
 
 
@@ -141,13 +141,13 @@ bool WCPartFeature::Deserialize(xercesc::DOMElement* featureElement, WCSerialDic
 	//Find the feature to create
 	if (name == "Plane") {
 		//Create the plane feature
-		new WCPlane(featureElement, dictionary);
+		new WCPartPlane(featureElement, dictionary);
 		//All is good here
 		return true;
 	}
 	else if (name == "PartBody") {
 		//Create the body feature
-		new WCBody(featureElement, dictionary);
+		new WCPartBody(featureElement, dictionary);
 		//All is good here
 		return true;
 	}

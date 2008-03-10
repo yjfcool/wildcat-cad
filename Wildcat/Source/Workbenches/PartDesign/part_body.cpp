@@ -35,12 +35,12 @@
 /***********************************************~***************************************************/
 
 
-WCBody::WCBody(WCPart *part, const std::string name) : ::WCPartFeature(part, name) {
+WCPartBody::WCPartBody(WCPart *part, const std::string &name) : ::WCPartFeature(part, name) {
 
 	//Check feature name
 	if (this->_name == "") this->_name = this->_part->GenerateFeatureName(this);
 	//Create event handler
-	this->_controller = new WCBodyController(this);
+	this->_controller = new WCPartBodyController(this);
 	//Create tree element
 	WSTexture* bodyIcon = this->_document->Scene()->TextureManager()->TextureFromName("body32");
 	this->_treeElement = new WCTreeElement(this->_document->TreeView(), this->_name, this->_controller, bodyIcon);
@@ -54,7 +54,7 @@ WCBody::WCBody(WCPart *part, const std::string name) : ::WCPartFeature(part, nam
 	if (this->_part->Body() == NULL) this->_part->Body(this);
 }
 
-WCBody::WCBody(xercesc::DOMElement *element, WCSerialDictionary *dictionary) : 
+WCPartBody::WCPartBody(xercesc::DOMElement *element, WCSerialDictionary *dictionary) : 
 	::WCPartFeature( WCSerializeableObject::ElementFromName(element,"PartFeature"), dictionary ) {
 
 	//Make sure element if not null
@@ -64,7 +64,7 @@ WCBody::WCBody(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	dictionary->InsertGUID(guid, this);
 
 	//Create event handler
-	this->_controller = new WCBodyController(this);
+	this->_controller = new WCPartBodyController(this);
 	//Create tree element
 	WSTexture* bodyIcon = this->_document->Scene()->TextureManager()->TextureFromName("body32");
 	this->_treeElement = new WCTreeElement(this->_document->TreeView(), this->_name, this->_controller, bodyIcon);
@@ -79,7 +79,7 @@ WCBody::WCBody(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 }
 
 
-WCBody::~WCBody() {
+WCPartBody::~WCPartBody() {
 	//Remove the body from the document
 	this->_part->RemoveFeature(this);
 	//Delete objects
@@ -88,11 +88,11 @@ WCBody::~WCBody() {
 }
 
 
-void WCBody::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
+void WCPartBody::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 }
 
 
-xercesc::DOMElement* WCBody::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
+xercesc::DOMElement* WCPartBody::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
 	//Insert self into dictionary
 	WCGUID guid = dictionary->InsertAddress(this);
 	//Create the base element for the object
@@ -114,17 +114,16 @@ xercesc::DOMElement* WCBody::Serialize(xercesc::DOMDocument *document, WCSerialD
 /***********************************************~***************************************************/
 
 
-WCActionPartBodyCreate* WCBody::ActionCreate(WCPart *part, const std::string &bodyName) {
+WCActionPartBodyCreate* WCPartBody::ActionCreate(WCPart *part, const std::string &bodyName) {
 	//Create a new body create action
 	return new WCActionPartBodyCreate(part, bodyName);
 }
 
 
-
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCBody &body) {
+std::ostream& operator<<(std::ostream& out, const WCPartBody &body) {
 	return out;
 }
 

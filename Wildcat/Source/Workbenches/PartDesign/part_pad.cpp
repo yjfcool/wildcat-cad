@@ -30,7 +30,7 @@
 #include "PartDesign/part_pad.h"
 #include "PartDesign/part_body.h"
 #include "PartDesign/part.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 #include "Sketcher/sketch_profile.h"
 #include "Sketcher/sketch.h"
 
@@ -39,13 +39,13 @@
 /***********************************************~***************************************************/
 
 
-void WCPad::GeneratePoints(void) {
+void WCPartPad::GeneratePoints(void) {
 	//Check to make sure there is a depth
 	if (this->_posDepth - this->_negDepth < 0.01) return;
 }
 
 
-void WCPad::GenerateCurves(void) {
+void WCPartPad::GenerateCurves(void) {
 	//Check to make sure there is a depth
 	if (this->_posDepth - this->_negDepth < 0.01) return;
 
@@ -83,7 +83,7 @@ void WCPad::GenerateCurves(void) {
 }
 
 
-void WCPad::GenerateSurfaces(void) {
+void WCPartPad::GenerateSurfaces(void) {
 	//Check to make sure there is a depth
 	if (this->_posDepth - this->_negDepth < 0.01) return;
 	
@@ -115,7 +115,7 @@ void WCPad::GenerateSurfaces(void) {
 }
 
 
-void WCPad::GenerateTopBottom(void) {
+void WCPartPad::GenerateTopBottom(void) {
 	std::list< std::pair<WCSketchProfile*,bool> >::iterator profileIter;
 	std::list< std::pair<WCGeometricCurve*,bool> > curveList;
 	std::list< std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
@@ -240,7 +240,7 @@ void WCPad::GenerateTopBottom(void) {
 	}
 	GLuint prog = this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight_trim");
 	//Find minimum bounding rectangle for bounding points
-	WCPlane *refPlane = this->_profiles.front().first->Sketch()->ReferencePlane();
+	WCPartPlane *refPlane = this->_profiles.front().first->Sketch()->ReferencePlane();
 	std::list<WCVector4> baseCorners = MinimumBoundingRectangle(inputList, refPlane->InverseTransformMatrix(), refPlane->TransformMatrix());
 	WCVector4 corners[4];
 	corners[0] = baseCorners.front(); baseCorners.pop_front();		// Lower-left
@@ -303,21 +303,21 @@ void WCPad::GenerateTopBottom(void) {
 
 
 
-void WCPad::GenerateTopology(void) {
+void WCPartPad::GenerateTopology(void) {
 }
 
 
 /***********************************************~***************************************************/
 
 
-WCPad::WCPad(WCBody *body, const std::string &name, const std::list< std::pair<WCSketchProfile*,bool> > &profiles, 
+WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, const std::list< std::pair<WCSketchProfile*,bool> > &profiles, 
 	const WCVector4 &direction, const WPFloat &posDepth, const WPFloat &negDepth) : 
 	::WCPartFeature(body, name), _profiles(profiles), _direction(direction), _posDepth(posDepth), _negDepth(negDepth),
 	_points(), _lines(), _curves(), _surfaces() {
 	//Check feature name
 	if (this->_name == "") this->_name = this->_part->GenerateFeatureName(this);
 	//Create event handler
-	this->_controller = new WCPadController(this);
+	this->_controller = new WCPartPadController(this);
 	//Create tree element
 	WSTexture* padIcon = this->_document->Scene()->TextureManager()->TextureFromName("pad32");
 	this->_treeElement = new WCTreeElement(this->_document->TreeView(), this->_name, this->_controller, padIcon);
@@ -358,24 +358,24 @@ WCPad::WCPad(WCBody *body, const std::string &name, const std::list< std::pair<W
 }
 
 
-WCPad::~WCPad() {
+WCPartPad::~WCPartPad() {
 }
 
 
-void WCPad::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
+void WCPartPad::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 }
 
 
-xercesc::DOMElement* WCPad::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
+xercesc::DOMElement* WCPartPad::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
 	return NULL;
 }
 
 
-void WCPad::Render(const GLuint defaultProg, const WCColor color) {
+void WCPartPad::Render(const GLuint defaultProg, const WCColor color) {
 }
 
 
-void WCPad::OnSelection(const bool fromManager, std::list<WCVisualObject*> objects) {
+void WCPartPad::OnSelection(const bool fromManager, std::list<WCVisualObject*> objects) {
 	//Change the color of all points
 	
 	//Change the color of all lines
@@ -391,7 +391,7 @@ void WCPad::OnSelection(const bool fromManager, std::list<WCVisualObject*> objec
 }
 
 
-void WCPad::OnDeselection(const bool fromManager) {
+void WCPartPad::OnDeselection(const bool fromManager) {
 	//Change the color of all points
 	
 	//Change the color of all lines
@@ -410,23 +410,23 @@ void WCPad::OnDeselection(const bool fromManager) {
 /***********************************************~***************************************************/
 
 
-WCDrawingMode* WCPad::ModeCreate(WCPartWorkbench *wb) {
+WCDrawingMode* WCPartPad::ModeCreate(WCPartWorkbench *wb) {
 	//Create a new drawing mode
-	return new WCModePadCreate(wb);
+	return new WCModePartPadCreate(wb);
 }
 
 
-WCActionPadCreate* WCPad::ActionCreate(WCBody *body, const std::string &padName, const std::list< std::pair<WCSketchProfile*,bool> > &profiles, 
-	const WCVector4 &direction, const WPFloat &posDepth, const WPFloat &negDepth) {
+WCActionPartPadCreate* WCPartPad::ActionCreate(WCPartBody *body, const std::string &padName, 
+	const std::list< std::pair<WCSketchProfile*,bool> > &profiles, const WCVector4 &direction, const WPFloat &posDepth, const WPFloat &negDepth) {
 	//Create a new pad create action
-	return new WCActionPadCreate(body, padName, profiles, direction, posDepth, negDepth);
+	return new WCActionPartPadCreate(body, padName, profiles, direction, posDepth, negDepth);
 }
 
 
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCPad &pad) {
+std::ostream& operator<<(std::ostream& out, const WCPartPad &pad) {
 	return out;
 }
 

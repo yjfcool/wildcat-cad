@@ -35,7 +35,7 @@
 #include "Sketcher/sketch_point.h"
 #include "Sketcher/sketch_line.h"
 #include "Kernel/document.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 
 
 /***********************************************~***************************************************/

@@ -29,7 +29,7 @@
 /*** Included Header Files ***/
 #include "PartDesign/part_pad_modes.h"
 #include "PartDesign/part_pad.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 #include "PartDesign/part_workbench.h"
 #include "PartDesign/part.h"
 #include "Kernel/document.h"
@@ -42,7 +42,7 @@
 /***********************************************~***************************************************/
 
 
-bool WCModePadCreate::CheckSelections(void) {
+bool WCModePartPadCreate::CheckSelections(void) {
 	//Check to see if a sketch is selected
 	std::list<WCSketch*> sketchList = this->_workbench->SelectionManager()->FilterSelected<WCSketch>(true);
 	std::list<WCSketchProfile*> profiles;
@@ -69,7 +69,7 @@ bool WCModePadCreate::CheckSelections(void) {
 }
 
 
-void WCModePadCreate::ProcessProfiles(const std::list<WCSketchProfile*> &profiles) {
+void WCModePartPadCreate::ProcessProfiles(const std::list<WCSketchProfile*> &profiles) {
 	WCSketch *sketch;
 	//Validate each profile
 	std::list<WCSketchProfile*>::const_iterator iter;
@@ -116,7 +116,7 @@ void WCModePadCreate::ProcessProfiles(const std::list<WCSketchProfile*> &profile
 		}
 	}
 	//Find minimum bounding rectangle for bounding points
-	WCPlane *refPlane = this->_profiles.front().first->Sketch()->ReferencePlane();
+	WCPartPlane *refPlane = this->_profiles.front().first->Sketch()->ReferencePlane();
 	std::list<WCVector4> baseCorners = MinimumBoundingRectangle(inputList, refPlane->InverseTransformMatrix(), refPlane->TransformMatrix());
 	std::list<WCVector4>::iterator baseIter = baseCorners.begin();
 	//Load the corners array - (clockwise starting at lower-left)
@@ -139,7 +139,7 @@ void WCModePadCreate::ProcessProfiles(const std::list<WCSketchProfile*> &profile
 }
 
 
-void WCModePadCreate::GenerateSurfaces(void) {
+void WCModePartPadCreate::GenerateSurfaces(void) {
 	//Check to make sure there is a depth
 	if (fabs(this->_posDepth - this->_negDepth) < 0.01) return;
 	
@@ -231,13 +231,13 @@ void WCModePadCreate::GenerateSurfaces(void) {
 /***********************************************~***************************************************/
 
 
-WCModePadCreate::WCModePadCreate(WCPartWorkbench *wb) :	::WCDrawingMode(wb->Part(), PARTPADMODE_CREATE_NAME), 
+WCModePartPadCreate::WCModePartPadCreate(WCPartWorkbench *wb) :	::WCDrawingMode(wb->Part(), PARTPADMODE_CREATE_NAME), 
 	_workbench(wb), _stage(0), _mark(), _plane(), _direction(), _profiles(), _posDepth(0.0), _negDepth(0.0), _surfaces() {
 	//Nothing else for now
 }
 
 
-void WCModePadCreate::OnEntry(void) {
+void WCModePartPadCreate::OnEntry(void) {
 	this->_workbench->Part()->Status("Pad Creation Mode Entered");
 //	CLOGGER_DEBUG(WCLogManager::RootLogger(), "Entering Pad Create Mode.");
 	//Check to see what is selected
@@ -248,7 +248,7 @@ void WCModePadCreate::OnEntry(void) {
 }
 
 
-void WCModePadCreate::OnExit(void) {
+void WCModePartPadCreate::OnExit(void) {
 //	CLOGGER_DEBUG(WCLogManager::RootLogger(), "Exiting Pad Create Mode.");
 	//Delete appropriate objects
 	if (this->_stage == 0) return;
@@ -261,7 +261,7 @@ void WCModePadCreate::OnExit(void) {
 }
 
 
-void WCModePadCreate::OnMouseDown(const WCMouseButton &button) {
+void WCModePartPadCreate::OnMouseDown(const WCMouseButton &button) {
 	//Cancel if right click
 	if (button == WCMouseButton::Right()) {
 		//If not drawing, do nothing
@@ -306,7 +306,7 @@ void WCModePadCreate::OnMouseDown(const WCMouseButton &button) {
 		//Clear the list
 		this->_surfaces.clear();
 		//Create action to create pad
-		WCActionPadCreate *action = WCPad::ActionCreate(this->_workbench->Part()->Body(), "",
+		WCActionPartPadCreate *action = WCPartPad::ActionCreate(this->_workbench->Part()->Body(), "",
 			this->_profiles, this->_direction, this->_posDepth, this->_negDepth);
 		//Execute action
 		this->_workbench->Part()->Document()->ExecuteAction( action );
@@ -314,7 +314,7 @@ void WCModePadCreate::OnMouseDown(const WCMouseButton &button) {
 }
 
 
-void WCModePadCreate::OnMouseMove(const WPFloat &x, const WPFloat &y) {
+void WCModePartPadCreate::OnMouseMove(const WPFloat &x, const WPFloat &y) {
 	//If in stage 0, do nothing
 	if (this->_stage == 0) return;
 
@@ -351,7 +351,7 @@ void WCModePadCreate::OnMouseMove(const WPFloat &x, const WPFloat &y) {
 }
 
 
-void WCModePadCreate::OnMouseUp(const WCMouseButton &button) {
+void WCModePartPadCreate::OnMouseUp(const WCMouseButton &button) {
 	//If stage == 3, exit the mode
 	if (this->_stage == 3) {
 		//Clear selection
@@ -362,7 +362,7 @@ void WCModePadCreate::OnMouseUp(const WCMouseButton &button) {
 }
 
 
-void WCModePadCreate::Render(void) {
+void WCModePartPadCreate::Render(void) {
 	//If stage is above zero, render surfaces and curves
 	if (this->_stage == 0) return;
 	

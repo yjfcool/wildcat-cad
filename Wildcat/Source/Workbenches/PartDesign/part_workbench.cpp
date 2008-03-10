@@ -38,7 +38,7 @@
 
 //Part Feature Included Headers
 #include "PartDesign/coordinate_system.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 #include "PartDesign/part_body.h"
 #include "PartDesign/part_pad.h"
 #include "PartDesign/part_shaft.h"
@@ -91,13 +91,13 @@ void WCPartWorkbench::CreateInitialObjects(void) {
 //												WCVector4(1.0, 0.0, 0.0), WCVector4(0.0, 1.0, 0.0), WCVector4(0.0, 0.0, 1.0)) );
 //	this->_part->ExecuteAction( WCFeaturePoint::ActionCreate(this->_part, "", 0.0, 1.0, 0.0) );
 //	this->_part->ExecuteAction( WCFeaturePoint::ActionCreate(this->_part, "", 1.0, 0.0, 0.0) );
-	this->_part->ExecuteAction( WCPlane::ActionCreate(this->_part, "xy plane", WCVector4(0.0, 0.0, 0.0), 
+	this->_part->ExecuteAction( WCPartPlane::ActionCreate(this->_part, "xy plane", WCVector4(0.0, 0.0, 0.0), 
 												WCVector4(1.0, 0.0, 0.0), WCVector4(0.0, 1.0, 0.0)) );
-	this->_part->ExecuteAction( WCPlane::ActionCreate(this->_part, "yz plane", WCVector4(0.0, 0.0, 0.0), 
+	this->_part->ExecuteAction( WCPartPlane::ActionCreate(this->_part, "yz plane", WCVector4(0.0, 0.0, 0.0), 
 												WCVector4(0.0, 1.0, 0.0), WCVector4(0.0, 0.0, 1.0)) );
-	this->_part->ExecuteAction( WCPlane::ActionCreate(this->_part, "zx plane", WCVector4(0.0, 0.0, 0.0), 
+	this->_part->ExecuteAction( WCPartPlane::ActionCreate(this->_part, "zx plane", WCVector4(0.0, 0.0, 0.0), 
 												WCVector4(0.0, 0.0, 1.0), WCVector4(1.0, 0.0, 0.0)) );
-	this->_part->ExecuteAction( WCBody::ActionCreate(this->_part, "PartBody") );
+	this->_part->ExecuteAction( WCPartBody::ActionCreate(this->_part, "PartBody") );
 }
 
 
@@ -149,12 +149,12 @@ bool WCPartWorkbench::OnUserMessage(const WCUserMessage &message) {
 	//Is this a pad mode message
 	else if (message == "body") {
 		//Create a new body
-		this->_part->ExecuteAction( WCBody::ActionCreate(this->_part, "") );
+		this->_part->ExecuteAction( WCPartBody::ActionCreate(this->_part, "") );
 	}
 	//Is this a pad mode message
 	else if (message == "pad") {
 		//Create a new drawing mode
-		mode = WCPad::ModeCreate(this);
+		mode = WCPartPad::ModeCreate(this);
 		//Go into pad mode
 		this->DrawingMode(mode);
 	}
@@ -179,11 +179,11 @@ bool WCPartWorkbench::OnUserMessage(const WCUserMessage &message) {
 	}
 	//Is this a sketcher mode message
 	else if (message == "sketch") {
-		WCPlane *refPlane;
+		WCPartPlane *refPlane;
 		//Make sure something is selected
 		if ((controller == NULL) || 
 			(this->SelectionManager()->Count() != 1) ||
-			((refPlane = dynamic_cast<WCPlane*>(controller->Associate())) == NULL)) {
+			((refPlane = dynamic_cast<WCPartPlane*>(controller->Associate())) == NULL)) {
 			_part->Status("Must have one plane selected to create a sketch.");
 			return true;
 		}

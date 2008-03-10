@@ -32,7 +32,7 @@
 #include "Kernel/document.h"
 #include "Kernel/workbench_layer.h"
 #include "PartDesign/part.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 
 
 /***********************************************~***************************************************/

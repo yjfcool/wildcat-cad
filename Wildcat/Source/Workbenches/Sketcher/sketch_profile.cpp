@@ -31,7 +31,7 @@
 #include "Sketcher/sketch.h"
 #include "Sketcher/sketch_axis.h"
 #include "Kernel/document.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 
 
 /***********************************************~***************************************************/

@@ -40,7 +40,7 @@
 
 
 /*** Class Predefines ***/
-class WCBody;
+class WCPartBody;
 class WCSketchProfile;
 class WCShaft;
 class WCSketchAxis;
@@ -51,7 +51,7 @@ class WCSketchAxis;
 
 class WCActionShaftCreate : public WCAction {
 private:
-	WCBody										*_body;												//!< Associated body
+	WCPartBody										*_body;												//!< Associated body
 	std::string									_shaftName;											//!< Name of new object
 	std::list< std::pair<WCSketchProfile*,bool> >_profiles;											//!< Associated profiles
 	WCSketchAxis								*_axis;												//!< Revolution axis
@@ -62,7 +62,7 @@ private:
 	//Constructors
 	WCActionShaftCreate();																			//!< Deny access to default constructor
 	WCActionShaftCreate(const WCActionShaftCreate& action);											//!< Deny access to copy constructor
-	WCActionShaftCreate(WCBody *body, const std::string &shaftName,									//!< Primary constructor
+	WCActionShaftCreate(WCPartBody *body, const std::string &shaftName,									//!< Primary constructor
 												const std::list< std::pair<WCSketchProfile*,bool> > &profiles,
 												WCSketchAxis *axis, const bool profilesOnRight,
 												const WPFloat &cwAngle, const WPFloat &ccwAngle);

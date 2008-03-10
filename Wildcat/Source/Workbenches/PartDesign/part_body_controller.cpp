@@ -37,23 +37,23 @@
 /***********************************************~***************************************************/
 
 
-WCBodyController::WCBodyController(WCBody *body) : ::WCEventController(body->TreeElement()),
+WCPartBodyController::WCPartBodyController(WCPartBody *body) : ::WCEventController(body->TreeElement()),
 	_body(body) { 
 	//Make sure body is not null
 	if (body == NULL) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCBodyController::WCBodyController - NULL body passed.");
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPartBodyController::WCPartBodyController - NULL body passed.");
 		//throw error
 		return;
 	}
 }
 
 
-inline WCObject* WCBodyController::Associate(void) {
+inline WCObject* WCPartBodyController::Associate(void) {
 	return this->_body;
 }
 
 
-void WCBodyController::OnSelection(const bool fromManager, std::list<WCVisualObject*> objects) {
+void WCPartBodyController::OnSelection(const bool fromManager, std::list<WCVisualObject*> objects) {
 	this->_body->Document()->Status("Body " + this->_body->GetName() + " was selected");
 	//Is this from the selection manager
 	if (!fromManager) {
@@ -74,7 +74,7 @@ void WCBodyController::OnSelection(const bool fromManager, std::list<WCVisualObj
 }
 
 
-void WCBodyController::OnDeselection(const bool fromManager) {
+void WCPartBodyController::OnDeselection(const bool fromManager) {
 //	std::cout << "Body: " << this->_body->Name() << "(" << this->_body << ") was deselected.\n";
 	if (!fromManager) {
 		//Remove the item from the selection list
@@ -87,9 +87,8 @@ void WCBodyController::OnDeselection(const bool fromManager) {
 }
 
 
-void WCBodyController::OnContextClick(void) {
+void WCPartBodyController::OnContextClick(void) {
 }
-
 
 
 /***********************************************~***************************************************/

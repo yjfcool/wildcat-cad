@@ -32,13 +32,13 @@
 #include "Sketcher/sketch_feature.h"
 #include "Kernel/document.h"
 #include "PartDesign/part.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 
 
 /***********************************************~***************************************************/
 
 
-WCActionSketchCreate::WCActionSketchCreate(WCFeature *creator, const std::string &sketchName, WCPlane *refPlane) : 
+WCActionSketchCreate::WCActionSketchCreate(WCFeature *creator, const std::string &sketchName, WCPartPlane *refPlane) : 
 	::WCAction("Create Sketch", creator), _sketchName(sketchName), _refPlane(refPlane) {
 	//Make sure creator and refPlane are valid
 	if ((creator == NULL) || (refPlane == NULL)) {

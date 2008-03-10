@@ -49,22 +49,17 @@ class WCPart;
 /***********************************************~***************************************************/
 
 
-class WCBody : virtual public WCPartFeature {
-protected:
-	//...
+class WCPartBody : virtual public WCPartFeature {
 private:
 	//Deny Access
-	WCBody();																						//!< Deny access to default constructor
-	WCBody(const WCBody& body);																		//!< Deny access to copy constructor
-	WCBody& operator=(const WCBody &body);															//!< Deny access to equals operator
+	WCPartBody();																					//!< Deny access to default constructor
+	WCPartBody(const WCPartBody& WCPartBody);															//!< Deny access to copy constructor
+	WCPartBody& operator=(const WCPartBody &body);													//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCBody(WCPart *part, const std::string name);													//!< Primary constructor
-	WCBody(xercesc::DOMElement *element, WCSerialDictionary *dictionary);							//!< Persistance constructor
-	virtual ~WCBody();																				//!< Default destructor
-	
-	//Member Access Methods
-	//...
+	WCPartBody(WCPart *part, const std::string &name);												//!< Primary constructor
+	WCPartBody(xercesc::DOMElement *element, WCSerialDictionary *dictionary);						//!< Persistance constructor
+	virtual ~WCPartBody();																			//!< Default destructor
 	
 	//Required Inherited Methods
 	virtual std::string RootName(void) const	{ return BODY_CLASSNAME; }							//!< Get the class name
@@ -76,7 +71,7 @@ public:
 	static WCActionPartBodyCreate* ActionCreate(WCPart *creator, const std::string &bodyName);		//!< Primary creation action
 	
 	/*** Friend Functions ***/
-	friend std::ostream& operator<<(std::ostream& out, const WCBody &body);							//!< Overloaded output operator		
+	friend std::ostream& operator<<(std::ostream& out, const WCPartBody &body);						//!< Overloaded output operator		
 };
 
 

@@ -137,7 +137,7 @@ WCPart::WCPart(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 		}
 	}
 	//Get the current body
-	this->_currentBody = (WCBody*)WCSerializeableObject::GetGUIDAttrib(element, "currentbody", dictionary);
+	this->_currentBody = (WCPartBody*)WCSerializeableObject::GetGUIDAttrib(element, "currentbody", dictionary);
 
 	//Need to restore published geometry
 	//...
@@ -156,7 +156,7 @@ WCPart::~WCPart() {
 }
 
 
-void WCPart::Body(WCBody* body) {
+void WCPart::Body(WCPartBody* body) {
 	//Make sure body is not null
 	if (body == NULL) {CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPart::Body - NULL value passed.");}
 	else this->_currentBody = body;

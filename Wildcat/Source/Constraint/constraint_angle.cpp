@@ -32,7 +32,7 @@
 #include "Sketcher/sketch_line.h"
 #include "Kernel/document.h"
 #include "Kernel/unit_types.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 
 
 /***********************************************~***************************************************/

@@ -29,7 +29,7 @@
 /*** Included Header Files ***/
 #include "PartDesign/part_actions.h"
 #include "PartDesign/part.h"
-#include "PartDesign/plane.h"
+#include "PartDesign/part_plane.h"
 #include "Kernel/document.h"
 
 

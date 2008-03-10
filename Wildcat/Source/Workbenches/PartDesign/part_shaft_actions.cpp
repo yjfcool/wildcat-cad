@@ -36,7 +36,7 @@
 /***********************************************~***************************************************/
 
 
-WCActionShaftCreate::WCActionShaftCreate(WCBody *body, const std::string &shaftName, const std::list< std::pair<WCSketchProfile*,bool> > &profiles,
+WCActionShaftCreate::WCActionShaftCreate(WCPartBody *body, const std::string &shaftName, const std::list< std::pair<WCSketchProfile*,bool> > &profiles,
 	WCSketchAxis *axis,	const bool profilesOnRight, const WPFloat &cwAngle, const WPFloat &ccwAngle) : ::WCAction("Create Shaft", body), _body(body),
 	_shaftName(shaftName), _profiles(profiles), _axis(axis), _profilesOnRight(profilesOnRight),
 	_cwAngle(cwAngle), _ccwAngle(ccwAngle), _shaft(NULL) {

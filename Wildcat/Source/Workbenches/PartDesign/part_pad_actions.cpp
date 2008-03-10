@@ -36,16 +36,17 @@
 /***********************************************~***************************************************/
 
 
-WCActionPadCreate::WCActionPadCreate(WCBody *body, const std::string &padName, const std::list< std::pair<WCSketchProfile*,bool> > &profiles,
+WCActionPartPadCreate::WCActionPartPadCreate(WCPartBody *body, const std::string &padName, 
+	const std::list< std::pair<WCSketchProfile*,bool> > &profiles, 
 	const WCVector4 &direction,	const WPFloat &posDepth, const WPFloat &negDepth) : ::WCAction("Create Pad", body), _body(body),
 	_padName(padName), _profiles(profiles), _direction(direction), _posDepth(posDepth), _negDepth(negDepth), _pad(NULL) {
 	//Nothing else for now
 }
 
 
-WCFeature* WCActionPadCreate::Execute(void) {
+WCFeature* WCActionPartPadCreate::Execute(void) {
 	//Create the pad
-	WCPad *pad = new WCPad(this->_body, this->_padName, this->_profiles, this->_direction, this->_posDepth, this->_negDepth);
+	WCPartPad *pad = new WCPartPad(this->_body, this->_padName, this->_profiles, this->_direction, this->_posDepth, this->_negDepth);
 	//Make sure pad is not null
 	if (pad == NULL) 
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCActionPadCreate::Execute - Pad could not be created.");
@@ -55,9 +56,9 @@ WCFeature* WCActionPadCreate::Execute(void) {
 }
 
 
-xercesc::DOMElement* WCActionPadCreate::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
+xercesc::DOMElement* WCActionPartPadCreate::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
 	//Create primary element for this object
-	xercesc::DOMElement*  actionElement = document->createElement(xercesc::XMLString::transcode("PadCreate"));
+	xercesc::DOMElement*  actionElement = document->createElement(xercesc::XMLString::transcode("ActionPartPadCreate"));
 	//Add the creator attribute
 	actionElement->setAttribute(xercesc::XMLString::transcode("Creator"), xercesc::XMLString::transcode("12345"));
 	//Add the plane name attribute

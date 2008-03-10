@@ -39,21 +39,21 @@
 
 
 /*** Class Predefines ***/
-class WCPad;
+class WCPartPad;
 
 
 /***********************************************~***************************************************/
 
 
-class WCPadController : public WCEventController {
+class WCPartPadController : public WCEventController {
 private:
-	WCPad										*_pad;												//!< Associated object
-	WCPadController();																				//!< Deny access to default constructor
-	WCPadController(const WCPadController& contoller);												//!< Deny access to copy constructor
-	WCPadController& operator=(const WCPadController& controller);									//!< Deny access to equals operator
+	WCPartPad									*_pad;												//!< Associated object
+	WCPartPadController();																			//!< Deny access to default constructor
+	WCPartPadController(const WCPartPadController& contoller);										//!< Deny access to copy constructor
+	WCPartPadController& operator=(const WCPartPadController& controller);							//!< Deny access to equals operator
 public:
-	WCPadController(WCPad *pad);																	//!< Primary constructor
-	~WCPadController()							{ }													//!< Default destructor
+	WCPartPadController(WCPartPad *pad);															//!< Primary constructor
+	~WCPartPadController()						{ }													//!< Default destructor
 	
 	//Inherited Methods
 	WCObject* Associate(void);																		//!< Return associated object

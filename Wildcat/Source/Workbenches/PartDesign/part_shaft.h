@@ -43,7 +43,7 @@
 
 
 /*** Class Predefines ***/
-class WCBody;
+class WCPartBody;
 class WCSketchProfile;
 class WCSketchAxis;
 
@@ -76,7 +76,7 @@ private:
 	WCShaft& operator=(const WCShaft &WCShaft);														//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCShaft(WCBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,//!< Primary constructor
+	WCShaft(WCPartBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,//!< Primary constructor
 												WCSketchAxis *axis, const bool profilesOnRight,
 												const WPFloat &cwAngle, const WPFloat &ccwAngle);
 	WCShaft(xercesc::DOMElement *element, WCSerialDictionary *dictionary);								//!< Persistance constructor
@@ -103,7 +103,7 @@ public:
 
 	/*** Actions ***/
 	static WCDrawingMode* ModeCreate(WCPartWorkbench *wb);											//!< Return create mode controller
-	static WCActionShaftCreate* ActionCreate(WCBody *body, const std::string &shaftName,			//!< Primary creation action
+	static WCActionShaftCreate* ActionCreate(WCPartBody *body, const std::string &shaftName,			//!< Primary creation action
 												const std::list<std::pair<WCSketchProfile*,bool> > &profiles,
 												WCSketchAxis *axis, const bool profilesOnRight,
 												const WPFloat &cwAngle, const WPFloat &ccwAngle);
