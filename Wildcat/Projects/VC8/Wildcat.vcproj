@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="..\..\Build\Win32"
+			IntermediateDirectory="..\..\Build\Win32"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="&quot;Y:\Dependencies\xerces-c-src_2_8_0\include&quot;;Y:\Source\Workbenches;Y:\Source"
+				AdditionalIncludeDirectories="&quot;..\..\Dependencies\xerces-c-src_2_8_0\include&quot;;..\..\Workbenches;..\..\Source"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_CONSOLE;WIN32;__WIN32__;NDEBUG;_WINDOWS;XML_LIBRARY"
 				StringPooling="true"
 				MinimalRebuild="false"
@@ -66,7 +66,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="OpenGL32.lib GLu32.lib GLaux.lib xerces-c_2.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;Y:\Dependencies\xerces-c-src_2_8_0\Build\Win32\VC8\Release&quot;"
+				AdditionalLibraryDirectories="&quot;..\..\Dependencies\xerces-c-src_2_8_0\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				ImportLibrary=""
@@ -191,63 +191,63 @@
 				Name="Headers"
 				>
 				<File
-					RelativePath="..\..\..\source\utility\adapter.h"
+					RelativePath="..\..\Source\Utility\adapter.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\bounding_object.h"
+					RelativePath="..\..\Source\Utility\bounding_object.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\color.h"
+					RelativePath="..\..\Source\Utility\color.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\log_appenders.h"
+					RelativePath="..\..\Source\Utility\log_appenders.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\log_manager.h"
+					RelativePath="..\..\Source\Utility\log_manager.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\matrix.h"
+					RelativePath="..\..\Source\Utility\matrix.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\object.h"
+					RelativePath="..\..\Source\Utility\object.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\quaternion.h"
+					RelativePath="..\..\Source\Utility\quaternion.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\serializeable_object.h"
+					RelativePath="..\..\Source\Utility\serializeable_object.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\shader_manager.h"
+					RelativePath="..\..\Source\Utility\shader_manager.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\texture_manager.h"
+					RelativePath="..\..\Source\Utility\texture_manager.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\types.h"
+					RelativePath="..\..\Source\Utility\types.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\vector.h"
+					RelativePath="..\..\Source\Utility\vector.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\visual_object.h"
+					RelativePath="..\..\Source\Utility\visual_object.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\wutil.h"
+					RelativePath="..\..\Source\Utility\wutil.h"
 					>
 				</File>
 			</Filter>
@@ -255,80 +255,55 @@
 				Name="Source"
 				>
 				<File
-					RelativePath="..\..\..\source\utility\adapter.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\source\utility\bounding_object.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\source\utility\color.cpp"
+					RelativePath="..\..\Source\Utility\adapter.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\log_appenders.cpp"
+					RelativePath="..\..\Source\Utility\bounding_object.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\log_manager.cpp"
+					RelativePath="..\..\Source\Utility\color.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\matrix.cpp"
+					RelativePath="..\..\Source\Utility\log_appenders.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\object.cpp"
+					RelativePath="..\..\Source\Utility\log_manager.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\quaternion.cpp"
+					RelativePath="..\..\Source\Utility\matrix.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\serializeable_object.cpp"
+					RelativePath="..\..\Source\Utility\object.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\shader_manager.cpp"
+					RelativePath="..\..\Source\Utility\quaternion.cpp"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\texture_manager.cpp"
+					RelativePath="..\..\Source\Utility\serializeable_object.cpp"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\..\source\utility\vector.cpp"
+					RelativePath="..\..\Source\Utility\shader_manager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Utility\texture_manager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Utility\texture_manager_win32.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Utility\vector.cpp"
 					>
 				</File>
 			</Filter>
@@ -342,15 +317,19 @@
 				Name="Headers"
 				>
 				<File
-					RelativePath="..\..\..\source\application\win32\glext.h"
+					RelativePath="..\..\Source\Application\Win32\glext.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\application\win32\glxext.h"
+					RelativePath="..\..\Source\Application\Win32\glxext.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\application\win32\wglext.h"
+					RelativePath="..\..\Source\Application\Win32\wglext.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\win_gl.h"
 					>
 				</File>
 			</Filter>
@@ -358,10 +337,138 @@
 				Name="Source"
 				>
 				<File
-					RelativePath="..\..\..\source\application\win32\wildcat.cpp"
+					RelativePath="..\..\Source\Application\Win32\wildcat.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\win_gl.cpp"
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Geometry"
+			>
+			<Filter
+				Name="Shaders"
+				>
+			</Filter>
+			<Filter
+				Name="Headers"
+				>
+				<File
+					RelativePath="..\..\Source\Geometry\geometric_algorithms.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometric_line.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometric_point.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometric_types.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometry_context.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometry_manager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\nurbs.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\nurbs_curve.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\nurbs_surface.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\ray.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\trimmed_nurbs_surface.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\wgeol.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Source"
+				>
+				<File
+					RelativePath="..\..\Source\Geometry\geometric_algorithms.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometric_algorithms_triangulation.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometric_line.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometric_point.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometric_types.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometry_context.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\nurbs.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\nurbs_curve.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\nurbs_surface.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\ray.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\trimmed_nurbs_surface.cpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Scene"
+			>
+		</Filter>
+		<Filter
+			Name="Topology"
+			>
+		</Filter>
+		<Filter
+			Name="Constraints"
+			>
+		</Filter>
+		<Filter
+			Name="Resources"
+			>
 		</Filter>
 	</Files>
 	<Globals>
