@@ -36,7 +36,7 @@
 
 void WCTextureManager::ParseManifest(const std::string &manifest, const std::string &directory, const bool &verbose) {
 	//Create xml parser
-	xercesc::XercesDOMParser* parser = new xercesc::XercesDOMParser(0,0,0);
+	xercesc::XercesDOMParser* parser = new xercesc::XercesDOMParser();
 	//Set validation scheme
 	parser->setValidationScheme(xercesc::XercesDOMParser::Val_Always);    
 	xercesc::ErrorHandler* errHandler = (xercesc::ErrorHandler*) new xercesc::HandlerBase();

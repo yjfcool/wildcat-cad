@@ -148,7 +148,7 @@ private:
 public:
 	//General use functions
 	void SetLevel(WCLoggerLevel level)			{ this->_level = level.GetLevel(); }				//!< Function to set the level of the logger
-	void SetAppender(WCLogAppender* appender=NULL);
+	void SetAppender(WCLogAppender* appender=NULL);													//!< Set the log appender
 
 	//Functions used by the logging macros
 	inline bool IsDebugEnabled(void)			{ return (this->_level <= LOGGER_DEBUG); }			//!< Quick check to see if debug is enabled

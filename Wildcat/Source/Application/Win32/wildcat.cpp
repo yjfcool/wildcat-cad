@@ -1,15 +1,59 @@
-/*
- *		This Code Was Created By Jeff Molofee 2000
- *		A HUGE Thanks To Fredric Echols For Cleaning Up
- *		And Optimizing This Code, Making It More Flexible!
- *		If You've Found This Code Useful, Please Let Me Know.
- *		Visit My Site At nehe.gamedev.net
- */
+/*******************************************************************************
+* Copyright (c) 2007, 2008, CerroKai Development
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*     * Redistributions of source code must retain the above copyright
+*       notice, this list of conditions and the following disclaimer.
+*     * Redistributions in binary form must reproduce the above copyright
+*       notice, this list of conditions and the following disclaimer in the
+*       documentation and/or other materials provided with the distribution.
+*     * Neither the name of CerroKai Development nor the
+*       names of its contributors may be used to endorse or promote products
+*       derived from this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY CerroKai Development ``AS IS'' AND ANY
+* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL CerroKai Development BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+********************************************************************************/
 
-#include <windows.h>		// Header File For Windows
-#include <gl\gl.h>			// Header File For The OpenGL32 Library
-#include <gl\glu.h>			// Header File For The GLu32 Library
-#include <gl\glaux.h>		// Header File For The Glaux Library
+
+/*** Included Header Files ***/
+#include "utility/wutil.h"
+#include "utility/log_manager.h"
+#include "Utility/log_appenders.h"
+
+
+/***********************************************~***************************************************/
+
+
+void InitApplication(void) {
+	//Initialize logger manager
+	WCLogManager::Initialize();
+	//Set root appender to a file appender
+	WCFileAppender *appender = new WCFileAppender("wildcat.log");
+	WCLogManager::RootLogger()->SetAppender(appender);
+	//Initialize xml manager
+	xercesc::XMLPlatformUtils::Initialize();
+}
+
+
+void ShutdownApplication(void) {
+	//Terminate the managers
+	xercesc::XMLPlatformUtils::Terminate();
+	WCLogManager::Terminate();
+}
+
+
+/***********************************************~***************************************************/
 
 
 HDC			hDC=NULL;		// Private GDI Device Context
@@ -267,53 +311,74 @@ LRESULT CALLBACK WndProc(	HWND	hWnd,			// Handle For This Window
 	return DefWindowProc(hWnd,uMsg,wParam,lParam);
 }
 
-int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
-					HINSTANCE	hPrevInstance,		// Previous Instance
-					LPSTR		lpCmdLine,			// Command Line Parameters
-					int			nCmdShow) {			// Window Show State
-	MSG		msg;									// Windows Message Structure
-	BOOL	done=FALSE;								// Bool Variable To Exit Loop
+
+
+
+int WINAPI WinMain(	HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+	MSG msg;
+	BOOL done=FALSE;
+
+	//Initialize the app
+	InitApplication();
 
 	// Create Our OpenGL Window
-	if (!CreateGLWindow(L"NeHe's OpenGL Framework", 640, 480, 16)) {
-		return 0;									// Quit If Window Was Not Created
+	if (!CreateGLWindow(L"Wildcat", 800, 600, 16)) {
+		// Quit If Window Was Not Created
+		return 0;			
 	}
 
-	while(!done) {									// Loop That Runs While done=FALSE
-		if (PeekMessage(&msg,NULL,0,0,PM_REMOVE)) {	// Is There A Message Waiting?
-			if (msg.message == WM_QUIT) {				// Have We Received A Quit Message?
-				done = TRUE;							// If So done=TRUE
-			}
-			else {									// If Not, Deal With Window Messages
-				TranslateMessage(&msg);				// Translate The Message
-				DispatchMessage(&msg);				// Dispatch The Message
+	// Loop That Runs While done=FALSE
+	while(!done) {
+		// Is There A Message Waiting?
+		if (PeekMessage(&msg,NULL,0,0,PM_REMOVE)) {
+			// Have We Received A Quit Message, if So done=TRUE
+			if (msg.message == WM_QUIT) done = TRUE;
+			// If Not, Deal With Window Messages
+			else {
+				// Translate The Message
+				TranslateMessage(&msg);
+				// Dispatch The Message
+				DispatchMessage(&msg);
 			}
 		}
-		else {										// If There Are No Messages
+		// If There Are No Messages
+		else {
 			// Draw The Scene.  Watch For ESC Key And Quit Messages From DrawGLScene()
-			if (active) {								// Program Active?
-				if (keys[VK_ESCAPE]) {				// Was ESC Pressed?
-					done=TRUE;						// ESC Signalled A Quit
-				}
-				else {								// Not Time To Quit, Update Screen
-					DrawGLScene();					// Draw The Scene
-					SwapBuffers(hDC);				// Swap Buffers (Double Buffering)
+			// Program Active?
+			if (active) {
+				// Was ESC Pressed?
+				if (keys[VK_ESCAPE]) done=TRUE;
+				// Not Time To Quit, Update Screen
+				else {
+					// Draw The Scene
+					DrawGLScene();
+					// Swap Buffers (Double Buffering)
+					SwapBuffers(hDC);
 				}
 			}
-
-			if (keys[VK_F1]) {						// Is F1 Being Pressed?
-				keys[VK_F1] = FALSE;					// If So Make Key FALSE
-				KillGLWindow();						// Kill Our Current Window
+			// Is F1 Being Pressed?
+			if (keys[VK_F1]) {
+				// If So Make Key FALSE
+				keys[VK_F1] = FALSE;
+				// Kill Our Current Window
+				KillGLWindow();
 				// Recreate Our OpenGL Window
-				if (!CreateGLWindow(L"NeHe's OpenGL Framework", 640, 480, 16)) {
-					return 0;						// Quit If Window Was Not Created
+				if (!CreateGLWindow(L"NeHe's OpenGL Framework", 800, 600, 16)) {
+					// Quit If Window Was Not Created
+					return 0;
 				}
 			}
 		}
 	}
-
 	// Shutdown
-	KillGLWindow();									// Kill The Window
-	return ((int)msg.wParam);							// Exit The Program
+	KillGLWindow();
+
+	//Shutdown the application
+	ShutdownApplication();
+	//Exit the application
+	return 1;
 }
+
+
+/***********************************************~***************************************************/
 

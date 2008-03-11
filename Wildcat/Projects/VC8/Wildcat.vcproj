@@ -46,7 +46,7 @@
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				EnableEnhancedInstructionSet="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -64,9 +64,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenGL32.lib GLu32.lib GLaux.lib xerces-c_2.lib"
+				AdditionalDependencies="OpenGL32.lib GLu32.lib GLaux.lib xerces-c_static_2.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;..\..\Dependencies\xerces-c-src_2_8_0\lib&quot;"
+				IgnoreAllDefaultLibraries="false"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				ImportLibrary=""
@@ -122,7 +124,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XML_LIBRARY"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"

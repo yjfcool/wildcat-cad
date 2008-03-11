@@ -47,7 +47,8 @@
 
 class WCLogAppender {
 public:
-	virtual void ForcedLog(int level, std::string msg, int line, std::string file)=0;				//!< Required method
+	virtual void ForcedLog(const int &level, const std::string &msg, const int &line,				//!< Required method
+												const std::string &file)=0;
 	virtual ~WCLogAppender()					{ }
 };
 
@@ -61,7 +62,8 @@ private:
 public:
 	WCConsoleAppender();																			//!< Default constructor
 	~WCConsoleAppender()						{ }													//!< Default destructor
-	void ForcedLog(int level, std::string msg, int line, std::string file);							//!< Required logging method
+	void ForcedLog(const int &level, const std::string &msg, const int &line,						//!< Required logging method
+												const std::string &file);
 };
 
 
@@ -73,9 +75,10 @@ private:
 	std::ofstream							_stream;												//!< File stream object
 	int										_count[6];												//!< Count of logging messages at each level
 public:
-	WCFileAppender(std::string fileName);															//!< Primary constructor
+	WCFileAppender(const std::string &fileName);													//!< Primary constructor
 	~WCFileAppender();																				//!< Default destructor
-	void ForcedLog(int level, std::string msg, int line, std::string file);							//!< Required logging method
+	void ForcedLog(const int &level, const std::string &msg, const int &line,						//!< Required logging method
+												const std::string &file);
 };
 
 

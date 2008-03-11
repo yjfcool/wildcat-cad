@@ -42,7 +42,9 @@ WCConsoleAppender::WCConsoleAppender() {
 }
 
 
-void WCConsoleAppender::ForcedLog(int level, std::string msg, int line, std::string file) {
+void WCConsoleAppender::ForcedLog(const int &level, const std::string &msg, const int &line,
+	const std::string &file) {
+	//Switch on level
 	switch(level) {
 		case LOGGER_DEBUG: 
 			this->_count[LOGGER_DEBUG]++;
@@ -71,12 +73,12 @@ void WCConsoleAppender::ForcedLog(int level, std::string msg, int line, std::str
 /***********************************************~***************************************************/
 
 
-WCFileAppender::WCFileAppender(std::string fileName) {
+WCFileAppender::WCFileAppender(const std::string &fileName) {
 	//Open a ifstream with the given filename
 	this->_stream.open(fileName.c_str(), FILEAPPENDER_FLAGS);
 	//Make sure the stream is open for writing
 	if (!this->_stream) {
-		std::cerr << "";
+		std::cerr << "WCFileAppender::WCFileAppender - Error: Not able to open file: " << fileName << " for output.\n";
 		return;
 	}
 }
@@ -91,7 +93,9 @@ WCFileAppender::~WCFileAppender() {
 }
 
 
-void WCFileAppender::ForcedLog(int level, std::string msg, int line, std::string file) {
+void WCFileAppender::ForcedLog(const int &level, const std::string &msg, const int &line,
+	const std::string &file) {
+	//Switch on level
 	switch(level) {
 		case LOGGER_DEBUG: 
 			this->_count[LOGGER_DEBUG]++;
