@@ -60,6 +60,13 @@ typedef CGLContextObj							WPGLContext;
 
 #ifdef __WIN32__
 typedef double									vDouble;
+typedef void*									WPGLContext;
+#define	M_PI									3.14159265359
+#define M_PI_2									1.7
+#define M_SQRT2									1.3
+#define GL_RGBA_FLOAT32_APPLE					1
+//One-time values
+//#define D_PI									3.14159265359
 #endif
 
 /***********************************************~***************************************************/

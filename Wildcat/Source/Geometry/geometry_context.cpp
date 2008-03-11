@@ -36,6 +36,7 @@
 
 
 void WCGeometryContext::StartCurve(void) {
+	GLenum retVal;
 	//Determine performance level
 	if (WCAdapter::HasGLEXTTransformFeedback() && WCAdapter::HasGLEXTBindableUniform() && 
 		WCAdapter::HasGLEXTGeometryShader4() ) {//WCAdapter::HasGLEXTGPUShader4()
@@ -71,7 +72,7 @@ void WCGeometryContext::StartCurve(void) {
 			this->_ncDefault23 = 0;
 			this->_ncBezier23 = this->_shaderManager->ProgramFromName("nc23_bezier_plH");				
 			//Determine number of vertices per batch
-			this->_ncVertsPerBatch = std::min(NURBSCURVE_MAX_VERT_PER_BATCH, WCAdapter::GetMaxGeometryOutputVertices());
+			this->_ncVertsPerBatch = STDMIN(NURBSCURVE_MAX_VERT_PER_BATCH, WCAdapter::GetMaxGeometryOutputVertices());
 			//Initialize generation buffers
 			glGenBuffers(1, &(this->_ncCPBuffer));
 			glBindBuffer(GL_ARRAY_BUFFER, this->_ncCPBuffer);
@@ -91,7 +92,7 @@ void WCGeometryContext::StartCurve(void) {
 			this->_ncBezier23 = this->_shaderManager->ProgramFromName("nc23_bezier_plM");
 			//Set up generation static
 			glGetIntegerv(GL_MAX_TEXTURE_SIZE, &(this->_ncMaxTexSize));
-			this->_ncMaxTexSize = std::min(this->_ncMaxTexSize, NURBSCURVE_MAX_LOD);
+			this->_ncMaxTexSize = STDMIN(this->_ncMaxTexSize, NURBSCURVE_MAX_LOD);
 			//Set up control point texture
 			glGenTextures(1, &(this->_ncCPTex));
 			glActiveTexture(GL_TEXTURE0);
@@ -132,7 +133,7 @@ void WCGeometryContext::StartCurve(void) {
 			glGenFramebuffersEXT(1, &(this->_ncFramebuffer));
 			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_ncFramebuffer);
 			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_ncOutTex, 0);
-			GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+			retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 			if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT)
 				CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartCurve - Framebuffer is not complete.");				
 			//Clean up a bit
@@ -231,6 +232,7 @@ void WCGeometryContext::StopCurve(void) {
 
 
 void WCGeometryContext::StartSurface(void) {
+	GLenum retVal;
 	//Determine performance level
 	if (WCAdapter::HasGLEXTTransformFeedback() && WCAdapter::HasGLEXTBindableUniform() &&
 		WCAdapter::HasGLEXTGeometryShader4() ) {//WCAdapter::HasGLEXTGPUShader4()
@@ -265,7 +267,7 @@ void WCGeometryContext::StartSurface(void) {
 			this->_nsDefault = this->_shaderManager->ProgramFromName("ns_default_plH");
 			this->_nsBezier23 = this->_shaderManager->ProgramFromName("ns23_bezier_plH");
 			//Determine number of vertices per batch
-			this->_nsVertsPerBatch = std::min(NURBSSURFACE_MAX_VERT_PER_BATCH, WCAdapter::GetMaxGeometryOutputVertices());
+			this->_nsVertsPerBatch = STDMIN(NURBSSURFACE_MAX_VERT_PER_BATCH, WCAdapter::GetMaxGeometryOutputVertices());
 			//Initialize generation buffers
 			glGenBuffers(1, &(this->_nsCPBuffer));
 			glBindBuffer(GL_ARRAY_BUFFER, this->_nsCPBuffer);
@@ -290,7 +292,7 @@ void WCGeometryContext::StartSurface(void) {
 			this->_nsDefault23 = this->_shaderManager->ProgramFromName("ns23_default_plM");				
 			this->_nsBezier23 = this->_shaderManager->ProgramFromName("ns23_bezier_plM");				
 			//Determine maximum texture size
-			this->_nsMaxTexSize = std::min(WCAdapter::GetMax2DTextureSize(), NURBSSURFACE_MAX_TEXSIZE);
+			this->_nsMaxTexSize = STDMIN(WCAdapter::GetMax2DTextureSize(), NURBSSURFACE_MAX_TEXSIZE);
 			//Check for errors
 			if (glGetError() != GL_NO_ERROR) 
 				CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - At Medium Program Compilation.");
@@ -355,7 +357,7 @@ void WCGeometryContext::StartSurface(void) {
 			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_nsFramebuffer);
 			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB,this->_nsVertTex, 0);
 			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_nsNormTex, 0);
-			GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+			retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 			//Check for errors
 			if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) 
 				CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - Framebuffer is not complete.");

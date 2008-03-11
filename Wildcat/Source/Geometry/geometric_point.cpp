@@ -229,8 +229,8 @@ void WCGeometricPoint::Render(const GLuint &defaultProg, const WCColor &color, c
 	if (this->_renderProg != 0) glUseProgram(this->_renderProg);
 	else glUseProgram(defaultProg);
 	//Set point size
-	glPointSize(this->_size);
-	GLfloat data[3] = { this->X(), this->Y(), this->Z() };
+	glPointSize((GLfloat)this->_size);
+	GLfloat data[3] = { (GLfloat)this->X(), (GLfloat)this->Y(), (GLfloat)this->Z() };
 	glEnableClientState(GL_VERTEX_ARRAY);
 	//Draw the line
 	glVertexPointer(3, GL_FLOAT, 0, data);
@@ -240,7 +240,7 @@ void WCGeometricPoint::Render(const GLuint &defaultProg, const WCColor &color, c
 }
 
 
-bool WCGeometricPoint::Intersect(WCGeometricPoint &point, WPFloat &tolerance) {
+bool WCGeometricPoint::Intersect(WCGeometricPoint &point, const WPFloat &tolerance) {
 	WCVector4 dist = this->Data() - point.Data();
 	if (dist.Magnitude() <= tolerance) return true;
 	else return false;
@@ -322,7 +322,7 @@ std::vector<WCGeometricPoint*> WCGeometricPoint::VectorFromArray(const WPUInt &c
 	std::vector<WCGeometricPoint*> collection;
 	WCGeometricPoint *point;
 	//Create points from the data and add to the collection
-	for (int i=0; i<count; i++) {
+	for (WPUInt i=0; i<count; i++) {
 		//Create a new point
 		point = new WCGeometricPoint(data[i*4], data[i*4+1], data[i*4+2], data[i*4+3]);
 		//Add it to the vector

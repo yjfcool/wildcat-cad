@@ -117,7 +117,7 @@ void WCNurbs::FindSpanMultiplicity(const WPUInt &numCP, const WPUInt &degree, co
 	span = WCNurbs::FindSpan(numCP, degree, u, knotPoints);
 	//The see how many times u occurs
 	multiplicity = 0;
-	for (int i=0; i<=numCP+degree; i++) if (knotPoints[i] == u) multiplicity++;
+	for (WPUInt i=0; i<=numCP+degree; i++) if (knotPoints[i] == u) multiplicity++;
 }
 
 
@@ -126,9 +126,9 @@ WPFloat* WCNurbs::BasisValues(const WPUInt &span, const WPFloat &u, const WPUInt
 	WPFloat a[2][degree+1];
 	WPFloat left[degree+1];
 	WPFloat right[degree+1];
-	int j, k, r, s1, s2, j1, j2, rk, pk;
+	int j, k, r, j1, j2, s1, s2, rk, pk;
 	WPFloat saved, temp, d;
-	WPUInt useDer = std::min(der, degree-1);
+	WPUInt useDer = STDMIN(der, degree-1);
 	
 	//Allocate space for the output
 	WPFloat *ders = new WPFloat[(der+1) * (degree+1)];
@@ -136,11 +136,11 @@ WPFloat* WCNurbs::BasisValues(const WPUInt &span, const WPFloat &u, const WPUInt
 	if (ders == NULL) 
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::BasisValues - Not able to allocate memory for results array.");
 	//Set all values to zero
-	memset(ders, 0.0, sizeof(WPFloat)*(der+1)*(degree+1));
+	memset(ders, 0, sizeof(WPFloat)*(der+1)*(degree+1));
 		
 	//Calculate basis values
 	ndu[0][0] = 1.0;
-	for (j=1; j<=degree; j++) {
+	for (j=1; j<=(int)degree; j++) {
 		left[j] = u - knotPoints[span+1-j];
 		right[j] = knotPoints[span+j] - u;
 		saved = 0.0;
@@ -153,17 +153,17 @@ WPFloat* WCNurbs::BasisValues(const WPUInt &span, const WPFloat &u, const WPUInt
 		ndu[j][j] = saved;
 	}
 	//Copy the basis values into the results
-	for (j=0; j<=degree; j++) ders[j] = ndu[j][degree];
+	for (j=0; j<=(int)degree; j++) ders[j] = ndu[j][degree];
 	//Check for der==0 optimization
 	if (der == 0) return ders;
 	
 	//Loop over function index
-	for (r=0; r<=degree; r++) {
+	for (r=0; r<=(int)degree; r++) {
 		s1 = 0;
 		s2 = 1;
 		a[0][0] = 1.0;
 		//Loop to compute kth derivative
-		for (k=1; k<=useDer; k++) {
+		for (k=1; k<=(int)useDer; k++) {
 			d = 0.0;
 			rk = r - k;
 			pk = degree - k;
@@ -190,8 +190,8 @@ WPFloat* WCNurbs::BasisValues(const WPUInt &span, const WPFloat &u, const WPUInt
 	}
 	//Multiply each der value by the factorial
 	r = degree;
-	for (k=1; k<=useDer; k++) {
-		for (j=0; j<=degree; j++) 
+	for (k=1; k<=(int)useDer; k++) {
+		for (j=0; j<=(int)degree; j++) 
 			ders[k*(degree+1)+j] *= r;
 		r *= (degree - k);
 	}
@@ -216,7 +216,7 @@ WPFloat* WCNurbs::LoadDefaultKnotPoints(const WPUInt &kp, const WPUInt &degree) 
 
 	WPFloat x=0.0, dx=1.0/(kp-2*degree-1);
 	//Set the value for each knot point
-	for (int i=0; i<kp; i++) {
+	for (WPUInt i=0; i<kp; i++) {
 		//Set the bottom ones to zero
 		if (i < degree) knotPoints[i] = 0.0;
 		//Have regular steps in the middle
@@ -242,7 +242,7 @@ WPFloat* WCNurbs::LoadBezierKnotPoints(const WPUInt &kp) {
 	}
 	
 	//Loop through each kp and set it
-	for (int i=0; i<kp; i++) {
+	for (WPUInt i=0; i<kp; i++) {
 		if (i < kp/2) knotPoints[i] = 0.0;
 		else knotPoints[i] = 1.0;
 	}
@@ -262,7 +262,7 @@ WPFloat* WCNurbs::LoadUniformKnotPoints(const WPUInt &kp) {
 	
 	WPFloat dx=1.0/(kp-1.0);
 	//Set the value for each knot point
-	for (int i=0; i<kp; i++)
+	for (WPUInt i=0; i<kp; i++)
 		knotPoints[i] = dx * i;
 	return knotPoints;
 }
@@ -287,7 +287,7 @@ WPFloat* WCNurbs::LoadCustomKnotPoints(const std::vector<WPFloat> &inPoints) {
 	
 	WPFloat min = knotPoints[0];
 	//Copy the data into the array
-	for (int i=0; i<inPoints.size(); i++) {
+	for (WPUInt i=0; i<inPoints.size(); i++) {
 		knotPoints[i] = inPoints.at(i);
 		//Make sure they are in ascending order
 		if (knotPoints[i] >= min) min = knotPoints[i];
@@ -301,7 +301,7 @@ WPFloat WCNurbs::EstimateLength(const std::vector<WCVector4> &controlPoints) {
 	//Initialize length variable
 	WPFloat length = 0.0;
 	//Approximate length using control points
-	for (int i=0; i<controlPoints.size()-1; i++) {
+	for (WPUInt i=0; i<controlPoints.size()-1; i++) {
 		//Get vector from control point to the next
 		length += controlPoints.at(i+1).Distance( controlPoints.at(i) );
 	}
@@ -313,7 +313,7 @@ WPFloat WCNurbs::EstimateLengthU(const std::vector<WCVector4> &controlPoints, co
 	//Initialize length variable
 	WPFloat length = 0.0;
 	//Approximate length using control points along u edge with v index = 0
-	for (int i=0; i<numCPU-1; i++) {
+	for (WPUInt i=0; i<numCPU-1; i++) {
 		//Get vector from one control point to the next
 		length += controlPoints.at(i+1).Distance( controlPoints.at(i) );
 	}
@@ -326,7 +326,7 @@ WPFloat WCNurbs::EstimateLengthV(const std::vector<WCVector4> &controlPoints, co
 	WPFloat length = 0.0;
 	WPUInt numCPU = controlPoints.size() / numCPV;
 	//Approximate length using control points along v edge with u index = 0
-	for (int i=0; i<numCPV-1; i++) {
+	for (WPUInt i=0; i<numCPV-1; i++) {
 		//Get vector from one control point to the next
 		length += controlPoints.at((i+1)*numCPU).Distance( controlPoints.at(i*numCPU) );
 	}
@@ -356,8 +356,8 @@ void WCNurbs::CircularPoints(const WCVector4 &center, const WCVector4 &xUnit, co
 	WPUInt numControlPoints = 2 * numArcs + 1;
 	WPUInt numKnotPoints = 2 * numArcs + 4;
 	
-	WCVector4 points[numControlPoints+1];
-	WPFloat knots[numKnotPoints];
+	WCVector4 *points = new WCVector4[numControlPoints+1];
+	WPFloat *knots = new WPFloat[numKnotPoints];
 	
 	WPFloat w1 = cos(deltaTheta / 2.0);
 	WCVector4 p0 = center + (xUnit * radius * cos(startAngle)) + (yUnit * radius * sin(startAngle));
@@ -369,7 +369,7 @@ void WCNurbs::CircularPoints(const WCVector4 &center, const WCVector4 &xUnit, co
 	//Create all the control points
 	WCVector4 p1, p2, t2;
 	WPFloat dummy;
-	for (int i=0; i<=numArcs; i++) {
+	for (WPUInt i=0; i<=numArcs; i++) {
 		angle = angle + deltaTheta;
 		p2 = center + (xUnit * radius * cos(angle)) + (yUnit * radius * sin(angle));
 		points[index+2] = p2;
@@ -406,12 +406,15 @@ void WCNurbs::CircularPoints(const WCVector4 &center, const WCVector4 &xUnit, co
 
 	//Create vector of control points
 //	std::vector<WCVector4> cp;
-	for (int i=0; i<numControlPoints; i++)
+	for (WPUInt i=0; i<numControlPoints; i++)
 		controlPoints.push_back(points[i]);
 	//Create vector of knot points
 //	std::vector<WPFloat> kp;
-	for (int i=0; i<numKnotPoints; i++)
+	for (WPUInt i=0; i<numKnotPoints; i++)
 		knotPoints.push_back(knots[i]);
+	//Delete arrays
+	delete knots;
+	delete points;
 }
 
 

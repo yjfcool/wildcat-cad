@@ -89,7 +89,7 @@ public:
 	void ApplyTranslation(const WCVector4 &translation);											//!< Apply a linear translation to the object
 	void Render(const GLuint &defaultProg, const WCColor &color, const WPFloat &zoom);				//!< Render the object
 	//Original Member Functions
-	bool Intersect(WCGeometricPoint &point, WPFloat &tolerance=POINT_EQUALITY_EPSILON);				//!< Check for intersection with point
+	bool Intersect(WCGeometricPoint &point, const WPFloat &tolerance=POINT_EQUALITY_EPSILON);		//!< Check for intersection with point
 
 	//Overridden Operators
 	WCGeometricPoint operator+(const WCGeometricPoint &point);										//!< Point addition

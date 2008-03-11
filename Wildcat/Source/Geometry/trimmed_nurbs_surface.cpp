@@ -67,7 +67,7 @@ std::list<WCVector4> TrimProfileBoundaryList(std::list<std::pair<WCGeometricCurv
 					GLfloat* data = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
 					//Process forwards
 					if ((*curveIter).second) {
-						for (int i=1; i<nurb->LevelOfDetail(); i++) {
+						for (WPUInt i=1; i<nurb->LevelOfDetail(); i++) {
 							//Get point data
 							point.Set(data[i*4], data[i*4+1], data[i*4+2], 1.0);
 							//Put point into list
@@ -76,7 +76,7 @@ std::list<WCVector4> TrimProfileBoundaryList(std::list<std::pair<WCGeometricCurv
 					}
 					//Process backwards
 					else {
-						for (int i=nurb->LevelOfDetail()-2; i>=0; i--) {
+						for (WPUInt i=nurb->LevelOfDetail()-2; i>=0; i--) {
 							//Get point data
 							point.Set(data[i*4], data[i*4+1], data[i*4+2], 1.0);
 							//Put point into list
@@ -93,7 +93,7 @@ std::list<WCVector4> TrimProfileBoundaryList(std::list<std::pair<WCGeometricCurv
 					//Process curve forwards
 					if ((*curveIter).second) {
 						//Go through all control points (make sure to skip the first)
-						for(int i=1; i<controlPoints.size(); i++) {
+						for(unsigned int i=1; i<controlPoints.size(); i++) {
 							//Copy the vector base
 							point = controlPoints.at(i);
 							//Set the weight to 1.0
@@ -171,7 +171,7 @@ std::list<WCVector4> WCTrimmedNurbsSurface::BoundaryList(std::list<std::pair<WCG
 //				std::cout << "Buffer Data: " << data << std::endl;
 				//Process forwards
 				if ((*curveIter).second) {
-					for (int i=1; i<nurb->LevelOfDetail(); i++) {
+					for (WPUInt i=1; i<nurb->LevelOfDetail(); i++) {
 						//Get point data
 						point.Set(data[i*4], data[i*4+1], data[i*4+2], 1.0);
 						//Put point into list
@@ -234,9 +234,9 @@ void WCTrimmedNurbsSurface::GenerateTrimList(void) {
 			tmpVec = this->_trimMatrix * (*boundaryIter);
 			vertList.push_back(tmpVec);
 			//Also place into vertex buffer array
-			vertData[vertIndex*3] = (*boundaryIter).I();
-			vertData[vertIndex*3+1] = (*boundaryIter).J();
-			vertData[vertIndex*3+2] = (*boundaryIter).K();
+			vertData[vertIndex*3] = (GLfloat)(*boundaryIter).I();
+			vertData[vertIndex*3+1] = (GLfloat)(*boundaryIter).J();
+			vertData[vertIndex*3+2] = (GLfloat)(*boundaryIter).K();
 			//Increment vertIndex
 			vertIndex++;
 		}
@@ -387,16 +387,16 @@ void WCTrimmedNurbsSurface::GenerateTexture(void) {
 		glBegin(GL_QUADS);
 			//Lower left
 			WCVector4 tmpVec = this->_controlPoints[0];
-			glVertex3f(tmpVec.I(), tmpVec.J(), tmpVec.K());
+			glVertex3f((GLfloat)tmpVec.I(), (GLfloat)tmpVec.J(), (GLfloat)tmpVec.K());
 			//Upper left
 			tmpVec = this->_controlPoints[2];
-			glVertex3f(tmpVec.I(), tmpVec.J(), tmpVec.K());
+			glVertex3f((GLfloat)tmpVec.I(), (GLfloat)tmpVec.J(), (GLfloat)tmpVec.K());
 			//Upper right
 			tmpVec = this->_controlPoints[3];
-			glVertex3f(tmpVec.I(), tmpVec.J(), tmpVec.K());
+			glVertex3f((GLfloat)tmpVec.I(), (GLfloat)tmpVec.J(), (GLfloat)tmpVec.K());
 			//Lower right
 			tmpVec = this->_controlPoints[1];
-			glVertex3f(tmpVec.I(), tmpVec.J(), tmpVec.K());
+			glVertex3f((GLfloat)tmpVec.I(), (GLfloat)tmpVec.J(), (GLfloat)tmpVec.K());
 		glEnd();
 	}
 
@@ -451,7 +451,7 @@ WCTrimmedNurbsSurface::WCTrimmedNurbsSurface(WCGeometryContext *context, const s
 	this->_width = xAxis.Magnitude();
 	this->_height = yAxis.Magnitude();
 	WPFloat aspectRatio = this->_height / this->_width;
-	this->_texHeight = this->_texWidth * aspectRatio;
+	this->_texHeight = (WPUInt)(this->_texWidth * aspectRatio);
 	xAxis.Normalize(true);
 	yAxis.Normalize(true);
 	zAxis.Normalize(true);

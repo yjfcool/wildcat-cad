@@ -95,7 +95,7 @@ public:
 	bool operator!=(const WCNurbsMode &mode)	{ return this->_mode != mode._mode; }				//!< Inequality operator
 	//Serialization Methods
 	void ToElement(xercesc::DOMElement *element)	{ WCSerializeableObject::AddFloatAttrib(element, "mode", this->_mode); }
-	void FromElement(xercesc::DOMElement *element)	{ this->_mode = WCSerializeableObject::GetFloatAttrib(element, "mode"); }
+	void FromElement(xercesc::DOMElement *element)	{ this->_mode = (unsigned int)WCSerializeableObject::GetFloatAttrib(element, "mode"); }
 };
 
 

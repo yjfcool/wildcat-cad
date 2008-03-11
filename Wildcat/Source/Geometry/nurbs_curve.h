@@ -137,7 +137,7 @@ public:
 	//Original Member Functions
 	WCVector4 Derivative(const WPFloat &u, const WPUInt &der);										//!< Evaluate the derivative at a specific point
 	WCRay Tangent(const WPFloat &u);																//!< Get the tangent to the curve at U
-	WCVector4 PointInversion(const WCVector4 &point, WPFloat &u=0.0);								//!< Get the closest point on the curve from the given point
+	WCVector4 PointInversion(const WCVector4 &point, const WPFloat &u=0.0);							//!< Get the closest point on the curve from the given point
 	
 	//Knot Insertion and Degree Elevation - Does Not Alter Curve Shape
 	void InsertKnot(const WPFloat &u, const WPUInt &multiplicity=1);								//!< Insert a knot at parametric value u

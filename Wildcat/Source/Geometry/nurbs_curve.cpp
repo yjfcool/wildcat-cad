@@ -50,13 +50,13 @@ extern WPFloat* __bezier_coef[8];
 void WCNurbsCurve::GenerateKnotPointsVBO(void) {
 	//Determine actual number of bytes needed in the buffer
 	WPUInt size = this->_kp * 4 * sizeof(GLfloat);
-	GLfloat data[size / sizeof(GLfloat)];	
+	GLfloat *data = new GLfloat[size / sizeof(GLfloat)];	
 	//Check to see if shader array is undersize	
-	if (this->_context->CurveMinKPBufferSize() < size) {
+	if ((WPUInt)this->_context->CurveMinKPBufferSize() < size) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateKnotPointsVBO - Undersized array in shader.");
 	}	
 	//Otherwise, copy the kp array into the vbo (Cast WPFloat to GLfloat)	
-	for (int i=0; i<this->_kp; i++) data[i*4] = (GLfloat)this->_knotPoints[i];
+	for (WPUInt i=0; i<this->_kp; i++) data[i*4] = (GLfloat)this->_knotPoints[i];
 	//Bind the knot point buffer and load it
 	glBindBuffer(GL_ARRAY_BUFFER, this->_context->CurveKPBuffer());	
 	glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
@@ -72,35 +72,38 @@ void WCNurbsCurve::GenerateKnotPointsVBO(void) {
 	glUnmapBuffer(GL_ARRAY_BUFFER);	
 /*** Debug ***/
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	delete data;
 }
 
 
 void WCNurbsCurve::GenerateKnotPointsTexture(void) {
 	//Create temporary array for data
-	GLfloat data[4 * this->_kp];
+	GLfloat *data = new GLfloat[4 * this->_kp];
 	//Copy knot points into array (cast WPFloat to GLfloat)
-	for (int i=0; i<this->_kp; i++) data[i*4] = (GLfloat)this->_knotPoints[i];
+	for (WPUInt i=0; i<this->_kp; i++) data[i*4] = (GLfloat)this->_knotPoints[i];
 	//Set up some parameters
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	//Set up texture
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_context->CurveKPTex());	
 	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, this->_kp, 1, GL_RGBA, GL_FLOAT, data);
-	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsCurve::GenerateKnotPointsTexture Error - Texture Setup.\n";		
+	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsCurve::GenerateKnotPointsTexture Error - Texture Setup.\n";
+	//Delete data array
+	delete data;
 }
 
 
 void WCNurbsCurve::GenerateControlPointsVBO(void) {
 	//Determine the needed size of the buffer
 	GLuint size = this->_cp * 4 * sizeof(GLfloat);
-	GLfloat data[size / sizeof(GLfloat)];
+	GLfloat *data = new GLfloat[size / sizeof(GLfloat)];
 	//Check for shader array undersize
-	if (this->_context->CurveMinCPBufferSize() < size) {
+	if ((WPUInt)this->_context->CurveMinCPBufferSize() < size) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateControlPointsVBO - Undersized array in shader.");
 	}
 	//Otherwise, convert all control points to GLfloat arrays
 	WCVector4 controlPoint;
-	for (int i=0; i<this->_cp; i++) {
+	for (WPUInt i=0; i<this->_cp; i++) {
 		//Cast each control point to a GLfloat array
 		controlPoint = this->_controlPoints.at(i);
 		data[i*4]	= (GLfloat)controlPoint.I();
@@ -123,15 +126,17 @@ void WCNurbsCurve::GenerateControlPointsVBO(void) {
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 /*** Debug ***/
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//Delete data array
+	delete data;
 }
 
 
 void WCNurbsCurve::GenerateControlPointsTexture(void) {
 	//Create temporary array for data
-	GLfloat data[this->_cp * 4];
+	GLfloat *data = new GLfloat[this->_cp * 4];
 	//Copy control points into array
 	WCVector4 controlPoint;
-	for (int i=0; i<this->_cp; i++) {
+	for (WPUInt i=0; i<this->_cp; i++) {
 		//Cast each control point to a GLfloat array
 		controlPoint = this->_controlPoints.at(i);
 		data[i*4]	= (GLfloat)controlPoint.I();
@@ -145,7 +150,9 @@ void WCNurbsCurve::GenerateControlPointsTexture(void) {
 	glActiveTexture(GL_TEXTURE1);	
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_context->CurveCPTex());	
 	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, this->_cp, 1, GL_RGBA, GL_FLOAT, data);
-	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsCurve::GenerateControlPointsTexture Error - Texture Setup.\n";		
+	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsCurve::GenerateControlPointsTexture Error - Texture Setup.\n";
+	//Delete data array
+	delete data;
 }
 
 
@@ -176,7 +183,7 @@ void WCNurbsCurve::LoadKnotPoints(const std::vector<WPFloat> &knotPoints) {
 	else if (this->_mode == WCNurbsMode::Custom()) {
 		bool isCustom = true;
 		//Check to make sure custom array is valid
-		for (int i=1; i<this->_degree; i++) {
+		for (WPUInt i=1; i<this->_degree; i++) {
 			if (knotPoints.at(i) != knotPoints.at(0)) isCustom = false;
 			if (knotPoints.at(this->_kp-i-1) != knotPoints.at(this->_kp-1)) isCustom = false;
 		}
@@ -233,15 +240,15 @@ void WCNurbsCurve::GenerateCurveHigh(void) {
 	WPFloat u = this->_knotPoints[0];
 	WPFloat range = this->_knotPoints[this->_kp-1] - this->_knotPoints[0];
 	WPFloat du = range / ((GLfloat)(this->_lod-1));
-	int numBatches = ceil( (float)this->_lod / (float)this->_context->CurveVerticesPerBatch() );
+	int numBatches = (int)ceil( (float)this->_lod / (float)this->_context->CurveVerticesPerBatch() );
 	//Create a temporary array (LOD vertices)
-	GLfloat data[numBatches * 4];
+	GLfloat *data = new GLfloat[numBatches * 4];
 	for (int i=0; i<numBatches; i++) {
 		//Load array with value for each batch
-		data[i*4] = u;									//Set first position to u
-		data[i*4+1] = du;								//Set second position to du
-		data[i*4+2] = this->_knotPoints[this->_kp-1];	//Set third position to uMax
-		data[i*4+3] = 1.0;								//Dummy data
+		data[i*4] =   (GLfloat)u;								//Set first position to u
+		data[i*4+1] = (GLfloat)du;								//Set second position to du
+		data[i*4+2] = (GLfloat)this->_knotPoints[this->_kp-1];	//Set third position to uMax
+		data[i*4+3] = (GLfloat)1.0;								//Dummy data
 		//Increment u
 		u += du * this->_context->CurveVerticesPerBatch();				
 	}	
@@ -253,6 +260,8 @@ void WCNurbsCurve::GenerateCurveHigh(void) {
 	//Allocate space for the batch data and load data value array
 	glBufferData(GL_ARRAY_BUFFER, numBatches*4*sizeof(GLfloat), data, GL_STATIC_DRAW);
 //	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsCurve::GenerateCurveHigh Error - Input buffer setup.\n";
+	//Delete data array
+	delete data;
 			
 	/*** Time to Generate ***/
 
@@ -293,7 +302,7 @@ void WCNurbsCurve::GenerateCurveHigh(void) {
 void WCNurbsCurve::GenerateCurveMedium(void) {
 	//Check for special generation cases, otherwise set the program
 	if (this->_degree == 1) return this->GenerateCurveOne();
-	if (this->_lod > this->_context->CurveMaxTextureSize()) {
+	if (this->_lod > (WPUInt)this->_context->CurveMaxTextureSize()) {
 		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - LOD exceeds hardware Maximum Texture Size.");
 		return this->GenerateCurveLow();
 	}
@@ -338,18 +347,18 @@ void WCNurbsCurve::GenerateCurveMedium(void) {
 	/*** Setup input texture ***/
 	
 	//Allocate space for the texture (w * h * RGBA)
-	GLfloat data[this->_lod * 4];
+	GLfloat *data = new GLfloat[this->_lod * 4];
 	WPFloat u = this->_knotPoints[0];
 	WPFloat range = this->_knotPoints[this->_kp-1] - this->_knotPoints[0];
 	WPFloat du = range / ((GLfloat)(this->_lod-1));	
 	//Initialize data in the array
-	for (int i=0; i<this->_lod; i++) {
-		data[i*4] = u;									//Set first position to u
-		data[i*4+1] = du;								//Set second position to du
-		data[i*4+2] = this->_knotPoints[this->_kp-1];	//Set third position to uMax
-		data[i*4+3] = GLfloat(i);						//Set fourth position to index		
+	for (WPUInt i=0; i<this->_lod; i++) {
+		data[i*4] =   (GLfloat)u;						//Set first position to u
+		data[i*4+1] = (GLfloat)du;						//Set second position to du
+		data[i*4+2] = (GLfloat)this->_knotPoints[this->_kp-1];	//Set third position to uMax
+		data[i*4+3] = (GLfloat)(i);						//Set fourth position to index		
 		//Increment u
-		u = std::min(u+du, this->_knotPoints[this->_kp-1]);
+		u = STDMIN(u+du, this->_knotPoints[this->_kp-1]);
 	}
 	//Setup and copy the data into the texture
 //	for (int i=0; i<this->_lod; i++) printf("%d: %f %f %f %f\n", i, data[i*4], data[i*4+1], data[i*4+2], data[i*4+3]);
@@ -358,6 +367,8 @@ void WCNurbsCurve::GenerateCurveMedium(void) {
 	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, this->_lod, 1, GL_RGBA, GL_FLOAT, data);
 	if (glGetError() != GL_NO_ERROR) 
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Setup Input Texture.");
+	//Delete data array
+	delete data;
 
 	/*** Setup Viewport and Render***/
 
@@ -386,10 +397,11 @@ void WCNurbsCurve::GenerateCurveMedium(void) {
 
 	/*** Save output texture into vertex VBO using simple memory read ***/
 
-	GLfloat vertData[this->_context->CurveMaxTextureSize() * 4];
+	GLfloat *vertData = new GLfloat[this->_context->CurveMaxTextureSize() * 4];
 	glReadPixels(0, 0, this->_context->CurveMaxTextureSize(), 1, GL_RGBA, GL_FLOAT, vertData);
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);
 	glBufferData(GL_ARRAY_BUFFER, this->_context->CurveMaxTextureSize() * 4 * sizeof(GLfloat), vertData, GL_STATIC_DRAW);
+	delete vertData;
 
 	/*** Save output texture into vertex VBO using a PBO ***
 
@@ -427,19 +439,20 @@ void WCNurbsCurve::GenerateCurveLow(void) {
 	WPFloat du = range / ((GLfloat)(this->_lod-1));
 	WCVector4 pt;
 	//Create a temporary array (LOD+1 vertices)
-	GLfloat data[(this->_lod+1)*NURBSCURVE_FLOATS_PER_VERTEX];
-	for (int i=0; i<this->_lod; i++) {
+	GLfloat *data = new GLfloat[(this->_lod+1)*NURBSCURVE_FLOATS_PER_VERTEX];
+	for (WPUInt i=0; i<this->_lod; i++) {
 		pt = this->Evaluate(u);
-		data[i*4] = pt.I();
-		data[i*4+1] = pt.J();
-		data[i*4+2] = pt.K();
-		data[i*4+3] = pt.L();
+		data[i*4] =   (GLfloat)pt.I();
+		data[i*4+1] = (GLfloat)pt.J();
+		data[i*4+2] = (GLfloat)pt.K();
+		data[i*4+3] = (GLfloat)pt.L();
 		//Increment u (up to kp-1)
-		u = std::min(u+du, this->_knotPoints[this->_kp-1]);				
+		u = STDMIN(u+du, this->_knotPoints[this->_kp-1]);				
 	}
 	//Allocate space for the output vertex data
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);	
-	glBufferData(GL_ARRAY_BUFFER, this->_lod * NURBSCURVE_FLOATS_PER_VERTEX * sizeof(GLfloat), data, GL_STATIC_DRAW);		
+	glBufferData(GL_ARRAY_BUFFER, this->_lod * NURBSCURVE_FLOATS_PER_VERTEX * sizeof(GLfloat), data, GL_STATIC_DRAW);
+	delete data;
 /*** Debug ***
 	std::cout << "Generate Low Verts: " << this->_lod+1 << std::endl;	
 	GLfloat *data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
@@ -455,10 +468,10 @@ void WCNurbsCurve::GenerateCurveLow(void) {
 void WCNurbsCurve::GenerateCurveOne(void) {
 	//Determine the needed size of the buffer
 	GLuint size = this->_cp * 4 * sizeof(GLfloat);
-	GLfloat data[size / sizeof(GLfloat)];		
+	GLfloat *data = new GLfloat[size / sizeof(GLfloat)];		
 	//Convert all control points to GLfloat arrays
 	WCVector4 controlPoint;
-	for (int i=0; i<this->_cp; i++) {
+	for (WPUInt i=0; i<this->_cp; i++) {
 		//Cast each control point to a GLfloat array
 		controlPoint = this->_controlPoints.at(i);
 		data[i*4]	= (GLfloat)controlPoint.I();
@@ -469,6 +482,7 @@ void WCNurbsCurve::GenerateCurveOne(void) {
 	//Bind to buffer and copy data in
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);
 	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+	delete data;
 /*** Debug ***
 	std::cout << "Degree One Curve Vertices: " << this->_lod << std::endl;	
 	GLfloat *data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
@@ -527,7 +541,7 @@ WCNurbsCurve::WCNurbsCurve(WCGeometryContext *context, const WPUInt &degree, con
 	} else {			
 		//Find the rough length of the curve and the number of needed segments
 		WPFloat length = WCNurbs::EstimateLength(this->_controlPoints);
-		this->_lod = (length / NURBSCURVE_GENERATE_ACCURACY) + 1;	
+		this->_lod = (WPUInt)(length / NURBSCURVE_GENERATE_ACCURACY) + 1;	
 		//Use knot mode to setup knot array
 		this->LoadKnotPoints(knotPoints);
 	}		
@@ -552,7 +566,7 @@ WCNurbsCurve::WCNurbsCurve(const WCNurbsCurve &curve) :
 	} else {			
 		//Find the rough length of the curve and the number of needed segments
 		WPFloat length = WCNurbs::EstimateLength(this->_controlPoints);
-		this->_lod = (length / NURBSCURVE_GENERATE_ACCURACY) + 1;
+		this->_lod = (WPUInt)(length / NURBSCURVE_GENERATE_ACCURACY) + 1;
 		//Set up the knot vector
 		if (this->_mode != WCNurbsMode::Custom())	
 			this->LoadKnotPoints();
@@ -583,11 +597,11 @@ WCNurbsCurve::WCNurbsCurve(xercesc::DOMElement *element, WCSerialDictionary *dic
 	//Get context
 	this->_context = (WCGeometryContext*)WCSerializeableObject::GetGUIDAttrib(element, "context", dictionary); 
 	//Get degree
-	this->_degree = WCSerializeableObject::GetFloatAttrib(element, "degree");
+	this->_degree = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "degree");
 	//Get number of control points
-	this->_cp = WCSerializeableObject::GetFloatAttrib(element, "numCP");
+	this->_cp = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "numCP");
 	//Get number of knot points
-	this->_kp = WCSerializeableObject::GetFloatAttrib(element, "numKP");
+	this->_kp = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "numKP");
 
 	//Setup NURBS mode
 	this->_mode.FromElement(WCSerializeableObject::ElementFromName(element,"Mode"));
@@ -605,7 +619,7 @@ WCNurbsCurve::WCNurbsCurve(xercesc::DOMElement *element, WCSerialDictionary *dic
 	//Loop through all cp and load them
 	WCVector4 cp;
 	xercesc::DOMElement *cpElement;
-	for (int index=0; index< this->_cp; index++) {
+	for (WPUInt index=0; index< this->_cp; index++) {
 		//Cast to an element
 		cpElement = (xercesc::DOMElement*)nodeList->item(index);
 		//Load vector from element
@@ -629,7 +643,7 @@ WCNurbsCurve::WCNurbsCurve(xercesc::DOMElement *element, WCSerialDictionary *dic
 	//Loop through all kp and load them
 	WPFloat kp;
 	xercesc::DOMElement *kpElement;
-	for (int index=0; index< this->_kp; index++) {
+	for (WPUInt index=0; index< this->_kp; index++) {
 		//Cast to an element
 		kpElement = (xercesc::DOMElement*)nodeList->item(index);
 		//Load float from element
@@ -648,7 +662,7 @@ WCNurbsCurve::WCNurbsCurve(xercesc::DOMElement *element, WCSerialDictionary *dic
 	} else {			
 		//Find the rough length of the curve and the number of needed segments
 		WPFloat length = WCNurbs::EstimateLength(this->_controlPoints);
-		this->_lod = (length / NURBSCURVE_GENERATE_ACCURACY) + 1;	
+		this->_lod = (WPUInt)(length / NURBSCURVE_GENERATE_ACCURACY) + 1;	
 	}	
 	//Establish aligned bounding box
 	this->_bounds = new WCAlignedBoundingBox(this->_controlPoints);
@@ -736,7 +750,7 @@ WPUInt WCNurbsCurve::Degree(const WPUInt &degree) {
 	if (this->_degree != 1) {			
 		//Find the rough length of the curve and the number of needed segments
 		WPFloat length = WCNurbs::EstimateLength(this->_controlPoints);
-		this->_lod = (length / NURBSCURVE_GENERATE_ACCURACY) + 1;	
+		this->_lod = (WPUInt)(length / NURBSCURVE_GENERATE_ACCURACY) + 1;	
 		//Use knot mode to setup knot array
 		this->LoadKnotPoints();
 	}
@@ -786,7 +800,7 @@ WCVisualObject* WCNurbsCurve::HitTest(const WCRay &ray, const WPFloat &tolerance
 
 void WCNurbsCurve::ApplyTransform(const WCMatrix4 &transform) {
 	//Loop through all control points and apply transform
-	for (int i=0; i<this->_cp; i++)
+	for (WPUInt i=0; i<this->_cp; i++)
 		this->_controlPoints.at(i) = transform * this->_controlPoints.at(i);
 	//Make sure curve is regenerated
 	this->_isVisualDirty = true;
@@ -795,7 +809,7 @@ void WCNurbsCurve::ApplyTransform(const WCMatrix4 &transform) {
 
 void WCNurbsCurve::ApplyTranslation(const WCVector4 &translation) {
 	//Loop through all control points and apply translation
-	for (int i=0; i<this->_cp; i++)
+	for (WPUInt i=0; i<this->_cp; i++)
 		this->_controlPoints.at(i) = this->_controlPoints.at(i) + translation;
 	//Make sure curve is regenerated
 	this->_isVisualDirty = true;
@@ -824,7 +838,7 @@ void WCNurbsCurve::Render(const GLuint &defaultProg, const WCColor &color, const
 	glPushMatrix();
 	//Bump z to move lines off of surfaces
 	glTranslated(0.0, 0.0, 0.01);
-	glLineWidth(this->_thickness);
+	glLineWidth((GLfloat)this->_thickness);
 	glEnable(GL_LINE_SMOOTH);
 	glEnableClientState(GL_VERTEX_ARRAY);	
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);
@@ -858,7 +872,7 @@ void WCNurbsCurve::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 	if (this->_degree != 1) {
 		//Update LOD estimate incase length changed
 		WPFloat length = WCNurbs::EstimateLength(this->_controlPoints);
-		this->_lod = (length / NURBSCURVE_GENERATE_ACCURACY) + 1;
+		this->_lod = (WPUInt)(length / NURBSCURVE_GENERATE_ACCURACY) + 1;
 	}
 	//Make sure all dependent objects know about it
 	this->SendBroadcastNotice(OBJECT_NOTIFY_UPDATE);
@@ -885,7 +899,7 @@ std::list<WPFloat> WCNurbsCurve::Intersect(WCGeometricPoint *point, const WPFloa
 	WCVector4 p0((WPFloat)data[0], (WPFloat)data[1], (WPFloat)data[2], (WPFloat)data[3]), p1, direction, tmpVec;
 	WPFloat u, dist;
 	//Loop through remaining vertices and test each
-	for (int i=1; i<this->_lod; i++) {
+	for (WPUInt i=1; i<this->_lod; i++) {
 		//Determine p1
 		p1.Set( (WPFloat)data[index], (WPFloat)data[index+1], (WPFloat)data[index+2], (WPFloat)data[index+3] );
 		//See if there is an intersection between line and point segment
@@ -897,7 +911,7 @@ std::list<WPFloat> WCNurbsCurve::Intersect(WCGeometricPoint *point, const WPFloa
 		//Bounds check u
 		if ((u > -tolerance) && (u < (1.0 + tolerance))) {
 			//Bound u
-			u = std::max( std::min(u, 1.0), 0.0);
+			u = STDMAX( STDMIN(u, 1.0), 0.0);
 			//Get point on segment
 			tmpVec = p0 + direction * u;
 			//Get distance from point on segment to point
@@ -959,7 +973,7 @@ std::list<WPIntersectRec> WCNurbsCurve::Intersect(WCGeometricCurve *curve, const
 		//Initialize the first vector
 		WCVector4 firstVec((WPFloat)data[0], (WPFloat)data[1], (WPFloat)data[2], (WPFloat)data[3]), secVec;
 		//Loop through remaining vertices and test each
-		for (int i=1; i<this->_lod; i++) {
+		for (WPUInt i=1; i<this->_lod; i++) {
 			//Determine secVec
 			secVec.Set( (WPFloat)data[index], (WPFloat)data[index+1], (WPFloat)data[index+2], (WPFloat)data[index+3] );	
 			//See if there is an intersection between line and curve segment
@@ -1020,14 +1034,14 @@ std::list<WPIntersectRec> WCNurbsCurve::Intersect(WCGeometricCurve *curve, const
 		WPUInt indexA=4, indexB;
 		c1First.Set((WPFloat)dataA[0], (WPFloat)dataA[1], (WPFloat)dataA[2], (WPFloat)dataA[3]);
 		//Loop through first curve segments
-		for (int i1=1; i1<this->_lod; i1++) {
+		for (WPUInt i1=1; i1<this->_lod; i1++) {
 			//Set c1 second vector
 			c1Second.Set((WPFloat)dataA[indexA], (WPFloat)dataA[indexA+1], (WPFloat)dataA[indexA+2], (WPFloat)dataA[indexA+3]);
 			//Set the first vector for curve 2
 			c2First.Set((WPFloat)dataB[0], (WPFloat)dataB[1], (WPFloat)dataB[2], (WPFloat)dataB[3]);
 			indexB = 4;
 			//Loop through second curve segments
-			for (int i2=1; i2<numVerts; i2++) {
+			for (WPUInt i2=1; i2<numVerts; i2++) {
 				//Set c2 second vector
 				c2Second.Set((WPFloat)dataB[indexB], (WPFloat)dataB[indexB+1], (WPFloat)dataB[indexB+2], (WPFloat)dataB[indexB+3]);
 				//See if there is an intersection between c1 and c2 segment
@@ -1093,7 +1107,7 @@ WPFloat WCNurbsCurve::Length(const WPFloat &tolerance) {
 	//Set up points
 	WCVector4 p0(verts[0], verts[1], verts[2], verts[3]), p1;
 	//Loop through the vertex data
-	for (int i=1; i<this->_lod; i++) {
+	for (WPUInt i=1; i<this->_lod; i++) {
 		p1 = WCVector4(verts[i*4], verts[i*4+1], verts[i*4+2], verts[i*4+3]);
 		length += (p1 - p0).Magnitude();
 		p0 = p1;
@@ -1120,10 +1134,10 @@ WCVector4 WCNurbsCurve::Evaluate(const WPFloat &u) {
 	//Bezier case
 	if (this->_mode == WCNurbsMode::Bezier()) {
 		WCMatrix n(this->_degree+1, this->_degree+1, __bezier_coef[this->_degree]);
-		WPFloat pts[(this->_degree+1)*4];
+		WPFloat *pts = new WPFloat[(this->_degree+1)*4];
 		WCVector w(this->_degree+1, 0.0);
 		WCVector4 tmpVec;
-		for (int i=0; i<=this->_degree; i++) {
+		for (WPUInt i=0; i<=this->_degree; i++) {
 			tmpVec = this->_controlPoints.at(i);
 			pts[i*4]	= tmpVec.I(); 
 			pts[i*4+1]	= tmpVec.J(); 
@@ -1132,6 +1146,7 @@ WCVector4 WCNurbsCurve::Evaluate(const WPFloat &u) {
 			w.Set(i, tmpVec.L());
 		}
 		WCMatrix g(this->_degree+1, 4, pts);
+		delete pts;
 		WCMatrix ng = n * g;
 		//Calculate t vector
 		WCVector t(this->_degree+1, 1.0);			
@@ -1163,7 +1178,7 @@ WCVector4 WCNurbsCurve::Evaluate(const WPFloat &u) {
 		if (basisValues == NULL) return WCVector4();
 		WPFloat w = 0.0;
 		//Evaluate the point
-		for(int j=0; j<=this->_degree; j++) {
+		for(WPUInt j=0; j<=this->_degree; j++) {
 			p0 = this->_controlPoints.at(span-this->_degree+j);
 			w += p0.L() * basisValues[j];
 			c += p0 * p0.L() * basisValues[j];
@@ -1208,7 +1223,7 @@ WCVector4 WCNurbsCurve::Derivative(const WPFloat &u, const WPUInt &der) {
 //	WCGeometricPoint *point;
 	WCVector4 point;
 	//Calculate the derivative value
-	for (int j=0; j<=this->_degree; j++) {
+	for (WPUInt j=0; j<=this->_degree; j++) {
 		point = this->_controlPoints.at(span-this->_degree+j);
 		index = span - this->_degree + j;
 /*** Debug ***/
@@ -1247,7 +1262,7 @@ WCRay WCNurbsCurve::Tangent(const WPFloat &u) {
 	WCVector4 pt;
 	WPFloat d=0.0, dDer=0.0;
 	//Calculate the derivative value
-	for (int i=0; i<=this->_degree; i++) {
+	for (WPUInt i=0; i<=this->_degree; i++) {
 		pt = this->_controlPoints.at(span - this->_degree + i);
 		d +=	pt.L() * basisValues[i];
 		dDer += pt.L() * basisValues[i+this->_degree+1];
@@ -1267,12 +1282,14 @@ WCRay WCNurbsCurve::Tangent(const WPFloat &u) {
 }
 
 
-WCVector4 WCNurbsCurve::PointInversion(const WCVector4 &point, WPFloat &u) {
+WCVector4 WCNurbsCurve::PointInversion(const WCVector4 &point, const WPFloat &u) {
+	WPFloat localU = u;
 	//Get base vector for point
 	WCVector4 refPoint = point;
 	refPoint.K(0.0);
 	WCVector4 curvePoint;
-	int i, index=-1;
+	int index=-1;
+	WPUInt i;
 	WPFloat dist, minDist=10000000.0;
 
 	//Calculate a starting u value
@@ -1296,13 +1313,13 @@ WCVector4 WCNurbsCurve::PointInversion(const WCVector4 &point, WPFloat &u) {
 				//Save the index
 				index = i;
 				//Save the t
-				u = t;
+				localU = t;
 			}
 		}
 		//Check to make sure some reasonable index was found
 		if (index == -1) return WCVector4();
 		//Now find the point on the line segment and return it
-		WCVector4 p = this->_controlPoints.at(index) + (this->_controlPoints.at(index+1) - this->_controlPoints.at(index)) * u;
+		WCVector4 p = this->_controlPoints.at(index) + (this->_controlPoints.at(index+1) - this->_controlPoints.at(index)) * localU;
 		return p;
 	}
 
@@ -1335,7 +1352,7 @@ WCVector4 WCNurbsCurve::PointInversion(const WCVector4 &point, WPFloat &u) {
 	//Make sure to unmap the buffer
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	//Calculate the u value for the initial minimum point
-	u = index * this->_knotPoints[this->_kp-1] / (this->_lod+1);
+	localU = index * this->_knotPoints[this->_kp-1] / (this->_lod+1);
 	
 	//Initialize metrics
 	WPFloat *basisValues;
@@ -1355,8 +1372,8 @@ WCVector4 WCNurbsCurve::PointInversion(const WCVector4 &point, WPFloat &u) {
 		cDer.Set(0.0, 0.0, 0.0, 0.0);
 		c2Der.Set(0.0, 0.0, 0.0, 0.0);
 		//Find the span and basis values up to second derivative
-		index = WCNurbs::FindSpan(this->_cp, this->_degree, u, this->_knotPoints);
-		basisValues = WCNurbs::BasisValues(index, u, this->_degree, this->_knotPoints, 2);
+		index = WCNurbs::FindSpan(this->_cp, this->_degree, localU, this->_knotPoints);
+		basisValues = WCNurbs::BasisValues(index, localU, this->_degree, this->_knotPoints, 2);
 		//Calculate C, C', and C''
 		for (i=0; i<=this->_degree; i++) {
 			pt = this->_controlPoints.at(index-this->_degree+i);
@@ -1398,7 +1415,7 @@ WCVector4 WCNurbsCurve::PointInversion(const WCVector4 &point, WPFloat &u) {
 		
 		//Calculate next u
 		bottom = c2Der.DotProduct(vDist) + (bottom * bottom);
-		uNx = u - (top / bottom);
+		uNx = localU - (top / bottom);
 		//Adjust u by rule (3) if necessary (closed and open curves)
 		if (this->_isClosed) {
 			if (uNx < this->_knotPoints[index]) uNx = this->_knotPoints[index+1] - this->_knotPoints[index] + uNx;
@@ -1410,11 +1427,11 @@ WCVector4 WCNurbsCurve::PointInversion(const WCVector4 &point, WPFloat &u) {
 		}
 		
 		/*** Check rule (4) for halting ***/
-		top = (cDer * (uNx - u)).Magnitude();
+		top = (cDer * (uNx - localU)).Magnitude();
 		if (top <= NURBSCURVE_EPSILON_ONE) return c;
 
 		//Swap the u value to the next u value
-		u = uNx;
+		localU = uNx;
 		//Increment max loop counter
 		j++;
 	}
@@ -1441,23 +1458,23 @@ void WCNurbsCurve::InsertKnot(const WPFloat &u, const WPUInt &multiplicity) {
 	WCNurbs::FindSpanMultiplicity(this->_cp, this->_degree, eval, this->_knotPoints, span, s);
 	
 	//Load new knot vector
-	for (int i=0; i<=span; i++) UQ[i] = this->_knotPoints[i];
-	for (int i=1; i<=multiplicity; i++)	UQ[span+i] = eval;
-	for (int i=span+1; i<this->_kp; i++) UQ[i+multiplicity] = this->_knotPoints[i];
+	for (WPUInt i=0; i<=span; i++) UQ[i] = this->_knotPoints[i];
+	for (WPUInt i=1; i<=multiplicity; i++)	UQ[span+i] = eval;
+	for (WPUInt i=span+1; i<this->_kp; i++) UQ[i+multiplicity] = this->_knotPoints[i];
 	//Load unaltered control points
-	for (int i=0; i<=span-this->_degree; i++) Qw[i] = this->_controlPoints.at(i);
-	for (int i=span-s; i<this->_cp; i++) Qw[i+multiplicity] = this->_controlPoints.at(i);
-	for (int i=0; i<=this->_degree-s; i++) Rw[i] = this->_controlPoints.at(span-this->_degree+i);
-	for (int j=1; j<=multiplicity; j++) {
+	for (WPUInt i=0; i<=span-this->_degree; i++) Qw[i] = this->_controlPoints.at(i);
+	for (WPUInt i=span-s; i<this->_cp; i++) Qw[i+multiplicity] = this->_controlPoints.at(i);
+	for (WPUInt i=0; i<=this->_degree-s; i++) Rw[i] = this->_controlPoints.at(span-this->_degree+i);
+	for (WPUInt j=1; j<=multiplicity; j++) {
 		L = span - this->_degree + j;
-		for (int i=0; i<this->_degree-j-s; i++) {
+		for (WPUInt i=0; i<this->_degree-j-s; i++) {
 			alpha = (u - this->_knotPoints[L+i]) / (this->_knotPoints[i+span+1] - this->_knotPoints[L-i]);
 			Rw[i] = Rw[i+1] * alpha + Rw[i] * (1.0 - alpha);
 		}
 		Qw[L] = Rw[0];
 		Qw[span+multiplicity-j-s] = Rw[this->_degree-j-s];
 	}
-	for (int i=L+1; i<span-s; i++) Qw[i] = Rw[i-L];
+	for (WPUInt i=L+1; i<span-s; i++) Qw[i] = Rw[i-L];
 
 	//Save new knot points
 	delete this->_knotPoints;
@@ -1465,7 +1482,7 @@ void WCNurbsCurve::InsertKnot(const WPFloat &u, const WPUInt &multiplicity) {
 //	WCCollection<WCControlPoint*> cpCollection;
 	std::vector<WCVector4> controlPoints;
 	//Release unused old control points
-	for (int i=0; i<cp; i++) {
+	for (WPUInt i=0; i<cp; i++) {
 		//...
 	}
 	this->_controlPoints = controlPoints;
@@ -1482,7 +1499,7 @@ void WCNurbsCurve::InsertKnot(const WPFloat &u, const WPUInt &multiplicity) {
 	} else {			
 		//Find the rough length of the curve and the number of needed segments
 		WPFloat length = WCNurbs::EstimateLength(this->_controlPoints);
-		this->_lod = (length / NURBSCURVE_GENERATE_ACCURACY) + 1;	
+		this->_lod = (WPUInt)(length / NURBSCURVE_GENERATE_ACCURACY) + 1;	
 	}	
 	this->_isVisualDirty = true;
 }
@@ -1541,9 +1558,9 @@ bool WCNurbsCurve::operator==(const WCNurbsCurve &curve) {
 	if (this->_cp != curve._cp) return false;
 	if (this->_kp != curve._kp) return false;
 	//Check the arrays and collections
-	for (int i=0; i<this->_cp; i++)
+	for (WPUInt i=0; i<this->_cp; i++)
 		if (this->_controlPoints.at(i) != curve._controlPoints.at(i)) return false;
-	for (int i=0; i<this->_kp; i++)
+	for (WPUInt i=0; i<this->_kp; i++)
 		if (this->_knotPoints[i] != curve._knotPoints[i]) return false;
 /*** Debug ***/
 	//May want to check on equivalence of curves due to reparameterization
@@ -1585,7 +1602,7 @@ xercesc::DOMElement* WCNurbsCurve::Serialize(xercesc::DOMDocument *document, WCS
 	//List of control points
 	xmlString = xercesc::XMLString::transcode("ControlPoint");
 	xercesc::DOMElement *cpElement;
-	for (int i=0; i<this->_cp; i++) {
+	for (WPUInt i=0; i<this->_cp; i++) {
 		cpElement = document->createElement(xmlString);
 		this->_controlPoints.at(i).ToElement(cpElement);
 		element->appendChild(cpElement);
@@ -1595,7 +1612,7 @@ xercesc::DOMElement* WCNurbsCurve::Serialize(xercesc::DOMDocument *document, WCS
 	//List of knot points
 	xmlString = xercesc::XMLString::transcode("KnotPoint");
 	xercesc::DOMElement *kpElement;
-	for (int i=0; i<this->_kp; i++) {
+	for (WPUInt i=0; i<this->_kp; i++) {
 		kpElement = document->createElement(xmlString);
 		WCSerializeableObject::AddFloatAttrib(kpElement, "value", this->_knotPoints[i]);
 		element->appendChild(kpElement);
@@ -1647,21 +1664,21 @@ WCNurbsCurve* WCNurbsCurve::Conic(WCGeometryContext *context, const WCVector4 &p
 	}
 	//Classify type and number of segments
 	WPUInt nsegs;
-	if (p1.L() >= 1.0) nsegs = 1.0;
+	if (p1.L() >= 1.0) nsegs = 1;
 	else {
 		WPFloat angle = Angle(p0, p1, p2);
 //		std::cout << "Angle: " << angle << std::endl;
-		if ((p1.L() > 0.0) && (angle > 60.0)) nsegs = 1.0;
-		else if ((p1.L() < 0.0) && (angle > 90.0)) nsegs = 4.0;
-		else nsegs = 2.0;
+		if ((p1.L() > 0.0) && (angle > 60.0)) nsegs = 1;
+		else if ((p1.L() < 0.0) && (angle > 90.0)) nsegs = 4;
+		else nsegs = 2;
 	}
 //	std::cout << "Number of Segments: " << nsegs << std::endl;
 	
 	WPUInt n = 2 * nsegs;
 	WPUInt j = n + 1;
 	//Create knot point and control point arrays
-	WPFloat knots[j+3];
-	WCVector4 controlPoints[j];
+	WPFloat *knots = new WPFloat[j+3];
+	WCVector4 *controlPoints = new WCVector4[j];
 	
 	//Load end knots
 	for (int i=0; i<3; i++) {
@@ -1711,12 +1728,16 @@ WCNurbsCurve* WCNurbsCurve::Conic(WCGeometryContext *context, const WCVector4 &p
 	
 	//Create vector of control points
 	std::vector<WCVector4> cp;
-	for (int i=0; i<j; i++) cp.push_back(controlPoints[i]);
+	for (WPUInt i=0; i<j; i++) cp.push_back(controlPoints[i]);
 	//Create vector of knot points
 	std::vector<WPFloat> kp;
-	for (int i=0; i<j+3; i++) kp.push_back(knots[i]);
+	for (WPUInt i=0; i<j+3; i++) kp.push_back(knots[i]);
 	//Create the curve
 	WCNurbsCurve *curve = new WCNurbsCurve(context, 2, cp, WCNurbsMode::Custom(), kp);
+	//Delete arrays
+	delete knots;
+	delete controlPoints;
+	//Return the curve
 	return curve;
 }
 
@@ -1749,7 +1770,7 @@ std::ostream& operator<<(std::ostream& out, const WCNurbsCurve &curve) {
 	if (curve._controlPoints.size() != 0) {
 		//Print out control point information
 		out << "\t Control Points(" << curve._cp << ")\n";
-		for (int i=0; i<curve._cp; i++) {
+		for (WPUInt i=0; i<curve._cp; i++) {
 			std::cout << "\t\t{" << curve._controlPoints.at(i).I() << ", \t";
 			std::cout << curve._controlPoints.at(i).J() << ", \t";
 			std::cout << curve._controlPoints.at(i).K() << ", \t";
@@ -1760,7 +1781,7 @@ std::ostream& operator<<(std::ostream& out, const WCNurbsCurve &curve) {
 	if (curve._knotPoints != NULL) {
 		//Print out knot point information
 		out << "\t Knot Points(" << curve._kp << ")\n\t\t{";
-		for (int i=0; i<curve._kp; i++) {
+		for (WPUInt i=0; i<curve._kp; i++) {
 			std::cout << curve._knotPoints[i];
 			if (i != curve._kp-1) std::cout << ", ";
 			else std::cout << "}\n";

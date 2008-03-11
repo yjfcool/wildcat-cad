@@ -65,12 +65,12 @@ void WCNurbsSurface::ValidateSelfIntersection(void) {
 void WCNurbsSurface::GenerateKnotPointsVBOs(void) {
 	//Determine actual number of bytes needed in the buffer
 	WPUInt size = this->_kpU * 4 * sizeof(GLfloat);
-	GLfloat data[size / sizeof(GLfloat)];
+	GLfloat *data = new GLfloat[size / sizeof(GLfloat)];
 	//Check to see if shader array is undersize
-	if (this->_context->SurfaceMinKPBufferSize() < size)
+	if ((WPUInt)this->_context->SurfaceMinKPBufferSize() < size)
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateKnotPointsVBO - Undersized array in shader.");
 	//Otherwise, copy the kp array into the vbo (Cast WPFloat to GLfloat)
-	for (int i=0; i<this->_kpU; i++) data[i*4] = (GLfloat)this->_knotPointsU[i];
+	for (WPUInt i=0; i<this->_kpU; i++) data[i*4] = (GLfloat)this->_knotPointsU[i];
 	//Bind the knot point buffer and load it
 	glBindBuffer(GL_ARRAY_BUFFER, this->_context->SurfaceKPUBuffer());
 	glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
@@ -84,7 +84,7 @@ void WCNurbsSurface::GenerateKnotPointsVBOs(void) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//Now load the V buffer
-	for (int i=0; i<this->_kpV; i++) data[i*4] = (GLfloat)this->_knotPointsV[i];
+	for (WPUInt i=0; i<this->_kpV; i++) data[i*4] = (GLfloat)this->_knotPointsV[i];
 	//Bind the knot point buffer and load it
 	glBindBuffer(GL_ARRAY_BUFFER, this->_context->SurfaceKPVBuffer());
 	glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
@@ -98,14 +98,16 @@ void WCNurbsSurface::GenerateKnotPointsVBOs(void) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//Check for GL errors here
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateKnotPointsVBO - Unspecified GL Error.");
+	//Delete array
+	delete data;
 }
 
 
 void WCNurbsSurface::GenerateKnotPointsTextures(void) {
 	//Create temporary array for data
-	GLfloat dataU[4 * this->_kpU];
+	GLfloat *dataU = new GLfloat[4 * this->_kpU];
 	//Copy knot points into array (cast WPFloat to GLfloat)
-	for (int i=0; i<this->_kpU; i++) dataU[i*4] = (GLfloat)this->_knotPointsU[i];
+	for (WPUInt i=0; i<this->_kpU; i++) dataU[i*4] = (GLfloat)this->_knotPointsU[i];
 	//Set up some parameters
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	//Set up texture
@@ -115,8 +117,8 @@ void WCNurbsSurface::GenerateKnotPointsTextures(void) {
 	//Check for GL errors
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateKnotPointsTexture - U Texture Setup.");
 	//Create temporary array for data
-	GLfloat dataV[4 * this->_kpU];
-	for (int i=0; i<this->_kpV; i++) dataV[i*4] = (GLfloat)this->_knotPointsV[i];
+	GLfloat *dataV = new GLfloat[4 * this->_kpU];
+	for (WPUInt i=0; i<this->_kpV; i++) dataV[i*4] = (GLfloat)this->_knotPointsV[i];
 	//Set up some parameters
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	//Set up texture
@@ -125,19 +127,22 @@ void WCNurbsSurface::GenerateKnotPointsTextures(void) {
 	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, this->_kpV, 1, GL_RGBA, GL_FLOAT, dataV);
 	//Check for GL errors here
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateKnotPointsTexture - V Texture Setup.");
+	//Delete arrays
+	delete dataU;
+	delete dataV;
 }
 
 
 void WCNurbsSurface::GenerateControlPointsVBO(void) {
 	//Determine the needed size of the buffer
 	GLuint size = this->_cpU * this->_cpV * 4 * sizeof(GLfloat);
-	GLfloat data[size / sizeof(GLfloat)];
+	GLfloat *data = new GLfloat[size / sizeof(GLfloat)];
 	//Check for shader array undersize
-	if (this->_context->SurfaceMinCPBufferSize() < size)
+	if ((GLuint)this->_context->SurfaceMinCPBufferSize() < size)
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateControlPointsVBO - Undersized array in shader.");
 	//Otherwise, convert all control points to GLfloat arrays
 	WCVector4 controlPoint;
-	for (int i=0; i<(this->_cpU * this->_cpV); i++) {
+	for (WPUInt i=0; i<(this->_cpU * this->_cpV); i++) {
 		controlPoint = this->_controlPoints.at(i);
 		//Cast each control point to a GLfloat array
 		data[i*4]	= (GLfloat)controlPoint.I();
@@ -158,6 +163,8 @@ void WCNurbsSurface::GenerateControlPointsVBO(void) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//Check for GL errors here
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateControlPointsVBO - Unspecified GL Error.");
+	//Delete array
+	delete data;
 }
 
 
@@ -167,8 +174,8 @@ void WCNurbsSurface::GenerateControlPointsTexture(void) {
 	WCVector4 point;
 	int index = 0;
 	//Copy control points into array
-	for (int i=0; i<this->_cpV; i++) {
-		for (int j=0; j<this->_cpU; j++) {
+	for (WPUInt i=0; i<this->_cpV; i++) {
+		for (WPUInt j=0; j<this->_cpU; j++) {
 			//Cast each control point to a GLfloat array
 			point = this->_controlPoints.at(i*this->_cpU + j);
 			data[index++] = (GLfloat)point.I();
@@ -223,14 +230,14 @@ void WCNurbsSurface::GenerateSurfaceHigh(void) {
 	if ((this->_degreeU <= 3) && (this->_degreeV <= 3) && (this->_modeU == WCNurbsMode::Bezier()) && (this->_modeV == WCNurbsMode::Bezier())) {
 		std::cout << "Using Bezier23\n";
 		glUseProgram(this->_context->SurfaceBezier23Program());
-		glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSU_BEZIER23], this->_degreeU, this->_cpU, this->_kpU, 0.0);
-		glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSV_BEZIER23], this->_degreeV, this->_cpV, this->_kpV, 0.0);
+		glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSU_BEZIER23], this->_degreeU, this->_cpU, this->_kpU, 0);
+		glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSV_BEZIER23], this->_degreeV, this->_cpV, this->_kpV, 0);
 	//Otherwise use the default case
 	} else {
 		std::cout << "Using Default\n";
 		glUseProgram(this->_context->SurfaceDefaultProgram());
-		glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSU_DEFAULT], this->_degreeU, this->_cpU, this->_kpU, 0.0);
-		glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSV_DEFAULT], this->_degreeV, this->_cpV, this->_kpV, 0.0);
+		glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSU_DEFAULT], this->_degreeU, this->_cpU, this->_kpU, 0);
+		glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSV_DEFAULT], this->_degreeV, this->_cpV, this->_kpV, 0);
 	}
 	//Make sure no problems so far
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceHigh - Setup Problems.");
@@ -261,19 +268,19 @@ void WCNurbsSurface::GenerateSurfaceHigh(void) {
 	range = this->_knotPointsV[this->_kpV-1] - this->_knotPointsV[0];
 	WPFloat dv = range / ((GLfloat)(this->_lodV-1));
 	//Create a temporary array (numVerts vertices)
-	GLfloat data[this->_numVerts * 4];
+	GLfloat *data = new GLfloat[this->_numVerts * 4];
 	int index = 0;
 	//Loop through each line
-	for (int r=0; r <this->_lodV; r++) {
+	for (WPUInt r=0; r <this->_lodV; r++) {
 		//Reset u each loop
 		u = this->_knotPointsU[0];
 		//Loop through each batch on each line
-		for (int i=0; i<this->_lodU; i++) {
+		for (WPUInt i=0; i<this->_lodU; i++) {
 			//Load array with value for each batch
-			data[index++]	= u;							//Set first position to u
-			data[index++]	= v;							//Set second position to du
-			data[index++]	= 0.0;							//Set third position to nothing
-			data[index++]	= 0.0;							//Set fourth position to nothing
+			data[index++]	= (GLfloat)u;				//Set first position to u
+			data[index++]	= (GLfloat)v;				//Set second position to du
+			data[index++]	= (GLfloat)0.0;				//Set third position to nothing
+			data[index++]	= (GLfloat)0.0;				//Set fourth position to nothing
 			//Increment u
 			u += du;
 		}
@@ -289,6 +296,7 @@ void WCNurbsSurface::GenerateSurfaceHigh(void) {
 	//Allocate space for the batch data and load data value array
 	glBufferData(GL_ARRAY_BUFFER, this->_numVerts * 4 * sizeof(GLfloat), data, GL_STATIC_DRAW);
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceHigh - Input buffer setup.");
+	delete data;
 
 	/*** Time to Generate ***/
 
@@ -340,7 +348,7 @@ void WCNurbsSurface::GenerateSurfaceMedium(void) {
 	//Check for special generation cases, otherwise set the program
 	if ((this->_controlPoints.size() == 4) && (this->_numVerts <= NURBSSURFACE_SIZE4_CUTOFF)) return this->GenerateSurfaceSize4();
 //	if ((this->_degreeU == 1) && (this->_degreeV = 1)) return this->GenerateSurfaceOne();
-	if ((this->_lodU > this->_context->SurfaceMaxTextureSize()) || (this->_lodV > this->_context->SurfaceMaxTextureSize())) {
+	if ((this->_lodU > (WPUInt)this->_context->SurfaceMaxTextureSize()) || (this->_lodV > (WPUInt)this->_context->SurfaceMaxTextureSize())) {
 		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceMedium - LOD exceeds hardware Maximum Texture Size.");
 		return this->GenerateSurfaceLow();
 	}
@@ -401,21 +409,21 @@ void WCNurbsSurface::GenerateSurfaceMedium(void) {
 	WPFloat dv = range / ((GLfloat)(this->_lodV-1));
 	int index=0, uvIndex=0;	
 	//Initialize data in the array
-	for (int i=0; i<this->_lodV; i++) {
+	for (WPUInt i=0; i<this->_lodV; i++) {
 		//Make sure to reset u
 		u = 0;
-		for (int j=0; j<this->_lodU; j++) {
-			data[index++] = u;				//Set first position to u
-			data[index++] = v;				//Set second position to v
-			data[index++] = 0.0;			//Set third position to 0.0
-			data[index++] = 0.0;			//Set fourth position to 0.0
-			uvData[uvIndex++] = u;			//Set the u coordinate
-			uvData[uvIndex++] = v;			//Set the v coordinate
+		for (WPUInt j=0; j<this->_lodU; j++) {
+			data[index++] = (GLfloat)u;				//Set first position to u
+			data[index++] = (GLfloat)v;				//Set second position to v
+			data[index++] = (GLfloat)0.0;			//Set third position to 0.0
+			data[index++] = (GLfloat)0.0;			//Set fourth position to 0.0
+			uvData[uvIndex++] = (GLfloat)u;			//Set the u coordinate
+			uvData[uvIndex++] = (GLfloat)v;			//Set the v coordinate
 			//Increment u
-			u = std::min(u+du, this->_knotPointsU[this->_kpU-1]);
+			u = STDMIN(u+du, this->_knotPointsU[this->_kpU-1]);
 		}
 		//Selectively Increment v
-		if (i < this->_lodV) v = std::min(v+dv, this->_knotPointsV[this->_kpV-1]);
+		if (i < this->_lodV) v = STDMIN(v+dv, this->_knotPointsV[this->_kpV-1]);
 	}
 //	for (int i=0; i<this->_numVerts; i++) printf("%d: %f %f %f %f\n", i, data[i*4], data[i*4+1], data[i*4+2], data[i*4+3]);
 	//Setup and copy the data into the texture
@@ -438,8 +446,8 @@ void WCNurbsSurface::GenerateSurfaceMedium(void) {
 	//Set up the viewport and polygon mode
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glViewport(0, 0, this->_context->SurfaceMaxTextureSize(), this->_context->SurfaceMaxTextureSize());
-	GLfloat w = this->_lodU * 2.0 / this->_context->SurfaceMaxTextureSize() - 1.0;
-	GLfloat h = this->_lodV * 2.0 / this->_context->SurfaceMaxTextureSize() - 1.0;	
+	GLfloat w = (GLfloat)(this->_lodU * 2.0 / this->_context->SurfaceMaxTextureSize() - 1.0);
+	GLfloat h = (GLfloat)(this->_lodV * 2.0 / this->_context->SurfaceMaxTextureSize() - 1.0);
 	GLfloat quad[] = { -1.0, -1.0, -1.0, h, w, h, w, -1.0 };
 	//Turn on vertex arrays
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -541,11 +549,11 @@ void WCNurbsSurface::GenerateSurfaceLow(void) {
 	//Zero all of the indices
 	vIndex = nIndex = tIndex = 0;
 	//Loop through v
-	for (int i=0; i<this->_lodV; i++) {
+	for (WPUInt i=0; i<this->_lodV; i++) {
 		//Reset u each loop
 		u = this->_knotPointsU[0];
 		//Loop through u
-		for (int j=0; j<this->_lodU; j++) {
+		for (WPUInt j=0; j<this->_lodU; j++) {
 			/*** Calculate point and normal ***/
 			//Init the point values
 			S.Set(0.0, 0.0, 0.0, 0.0);
@@ -558,10 +566,10 @@ void WCNurbsSurface::GenerateSurfaceLow(void) {
 			spanV = WCNurbs::FindSpan(this->_cpV, this->_degreeV, v, this->_knotPointsV);
 			bvV = WCNurbs::BasisValues(spanV, v, this->_degreeV, this->_knotPointsV, 1);
 			//Evaluate the point
-			for(int k=0; k<=this->_degreeV; k++) {
+			for(WPUInt k=0; k<=this->_degreeV; k++) {
 				//Determine the index of the control point
 				index = (this->_cpU * (spanV - this->_degreeV + k)) + spanU - this->_degreeU;
-				for (int l=0; l<=this->_degreeU; l++) {
+				for (WPUInt l=0; l<=this->_degreeU; l++) {
 					pt = this->_controlPoints.at(index);
 					S += pt * (pt.L() * bvU[l] * bvV[k]);
 					D += pt.L() * bvU[l] * bvV[k];
@@ -593,9 +601,9 @@ void WCNurbsSurface::GenerateSurfaceLow(void) {
 			tData[tIndex++] = (GLfloat)u;
 			tData[tIndex++] = (GLfloat)v;		
 			//Increment u (up to kp-1)
-			u = std::min(u+du, this->_knotPointsU[this->_kpU-1]);				
+			u = STDMIN(u+du, this->_knotPointsU[this->_kpU-1]);				
 		}
-		v = std::min(v+dv, this->_knotPointsV[this->_kpV-1]);
+		v = STDMIN(v+dv, this->_knotPointsV[this->_kpV-1]);
 	}
 	//Allocate space for the output vertex data
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffers[NURBSSURFACE_VERTEX_BUFFER]);	
@@ -663,10 +671,10 @@ void WCNurbsSurface::GenerateSurfaceSize4(void) {
 	GLfloat nData[this->_numVerts*4];
 	GLfloat tData[this->_numVerts*2];
 	//Loop on V
-	for(int i=0; i<this->_lodV; i++) {
+	for(WPUInt i=0; i<this->_lodV; i++) {
 		//Reset u each loop
 		u = this->_knotPointsU[0];
-		for (int j=0; j<this->_lodU; j++) {
+		for (WPUInt j=0; j<this->_lodU; j++) {
 			//Calculate vertex values (interpolate the corner points)
 			pt = (p0 * u * v) + (p1 * (1.0-u) * v) + (p2 * u * (1.0-v)) + (p3 * (1.0-u) * (1.0-v));
 			vData[vIndex++] = (GLfloat)pt.I();
@@ -683,9 +691,9 @@ void WCNurbsSurface::GenerateSurfaceSize4(void) {
 			tData[tIndex++] = (GLfloat)u;
 			tData[tIndex++] = (GLfloat)v;
 			//Increment u (up to kp-1)
-			u = std::min(u+du, this->_knotPointsU[this->_kpU-1]);				
+			u = STDMIN(u+du, this->_knotPointsU[this->_kpU-1]);				
 		}
-		v = std::min(v+dv, this->_knotPointsV[this->_kpV-1]);
+		v = STDMIN(v+dv, this->_knotPointsV[this->_kpV-1]);
 	}
 	//Allocate space for the output vertex data
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffers[NURBSSURFACE_VERTEX_BUFFER]);	
@@ -728,9 +736,9 @@ void WCNurbsSurface::GenerateIndex(void) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateIndex - Unable to allocate space for index data."); return; }
 	int ll, index = 0;
 	//Loop through each line
-	for(int v=0; v<this->_lodV-1; v++) {
+	for(WPUInt v=0; v<this->_lodV-1; v++) {
 		//Loop through each element in the line
-		for (int u=0; u<this->_lodU-1; u++) {
+		for (WPUInt u=0; u<this->_lodU-1; u++) {
 			//Calculate vertex index of lower left vertex
 			ll = this->_lodU * v + u;
 			//Upper triangle
@@ -788,8 +796,8 @@ WCNurbsSurface::WCNurbsSurface(WCGeometryContext *context, const WPUInt &degreeU
 	//Check to make sure degree is less than the number of control points
 	if ((this->_degreeU >= this->_cpU) || (this->_degreeV >= this->_cpV)) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::WCNurbsSurface - Degree must be less than the number of control points.");
-		this->_degreeU = std::min(this->_cpU - 1, this->_degreeU);
-		this->_degreeV = std::min(this->_cpV - 1, this->_degreeV);	
+		this->_degreeU = STDMIN(this->_cpU - 1, this->_degreeU);
+		this->_degreeV = STDMIN(this->_cpV - 1, this->_degreeV);	
 	}
 	//Define the number of knot points
 	this->_kpU = this->_degreeU + this->_cpU + 1;
@@ -818,9 +826,9 @@ WCNurbsSurface::WCNurbsSurface(WCGeometryContext *context, const WPUInt &degreeU
 	this->LoadKnotPoints(kpU, kpV);
 	//Estimate LOD values
 	WPFloat length = WCNurbs::EstimateLengthU(this->_controlPoints, this->_cpU);
-	this->_lodU = std::max( (int)(length / NURBSSURFACE_GENERATE_ACCURACY) + 1, 2);
+	this->_lodU = STDMAX( (int)(length / NURBSSURFACE_GENERATE_ACCURACY) + 1, 2);
 	length = WCNurbs::EstimateLengthV(this->_controlPoints, this->_cpV);
-	this->_lodV = std::max( (int)(length / NURBSSURFACE_GENERATE_ACCURACY) + 1, 2);
+	this->_lodV = STDMAX( (int)(length / NURBSSURFACE_GENERATE_ACCURACY) + 1, 2);
 	this->_numVerts = this->_lodU * this->_lodV;
 	//Validate surface flags
 	this->ValidateClosure();
@@ -875,8 +883,8 @@ void WCNurbsSurface::Degree(const WPUInt &degreeU, const WPUInt &degreeV) {
 	//Check to make sure degree is less than the number of control points
 	if ((degU >= this->_cpU) || (degV >= this->_cpV)) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::Degree - Degree must be less than the number of control points.");
-		degU = std::min(this->_cpU - 1, degU);
-		degV = std::min(this->_cpV - 1, degV);
+		degU = STDMIN(this->_cpU - 1, degU);
+		degV = STDMIN(this->_cpV - 1, degV);
 	}
 	if ((degU < 1) || (degV < 1)) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::Degree - Degree must be greater than 1.");
@@ -1038,9 +1046,9 @@ void WCNurbsSurface::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 	this->_isVisualDirty = true;
 	//Estimate LOD values
 	WPFloat length = WCNurbs::EstimateLengthU(this->_controlPoints, this->_cpU);
-	this->_lodU = (length / NURBSSURFACE_GENERATE_ACCURACY) + 1;
+	this->_lodU = (WPUInt)(length / NURBSSURFACE_GENERATE_ACCURACY) + 1;
 	length = WCNurbs::EstimateLengthV(this->_controlPoints, this->_cpV);
-	this->_lodV = (length / NURBSSURFACE_GENERATE_ACCURACY) + 1;
+	this->_lodV = (WPUInt)(length / NURBSSURFACE_GENERATE_ACCURACY) + 1;
 	this->_numVerts = this->_lodU * this->_lodV;	
 	//Make sure all dependent objects know about it
 	this->SendBroadcastNotice(OBJECT_NOTIFY_UPDATE);	
@@ -1070,10 +1078,10 @@ WCVector4 WCNurbsSurface::Evaluate(const WPFloat &u, const WPFloat &v) {
 	WPFloat w=0;
 	WCVector4 point;
 	//Evaluate the point
-	for(int i=0; i<=this->_degreeV; i++) {
+	for(WPUInt i=0; i<=this->_degreeV; i++) {
 		//Determine the index of the control point
 		index = (this->_cpU * (spanV - this->_degreeV + i)) + spanU - this->_degreeU;
-		for (int j=0; j<=this->_degreeU; j++) {
+		for (WPUInt j=0; j<=this->_degreeU; j++) {
 			point = this->_controlPoints.at(index);			
 			w = w + (point.L() * basisValuesU[j] * basisValuesV[i]);
 			c = c + point * point.L() * basisValuesU[j] * basisValuesV[i];
@@ -1128,7 +1136,8 @@ WCVector4 WCNurbsSurface::PointInversion(const WCVector4 &point) {
 	WCVector4 refPoint = point;
 	refPoint.K(0.0);
 	WCVector4 curvePoint;
-	int i, j, index=-1;
+	WPUInt i, j;
+	int index=-1;
 	WPFloat u, v, dist, minDist=10000000.0;
 
 	//Find the closest point on the surface
@@ -1340,22 +1349,22 @@ WCNurbsSurface* WCNurbsSurface::ExtrudeCurve(WCGeometryContext *context, WCGeome
 		std::vector<WCVector4> cp;
 		WPFloat *knotPoints = nurbs->KnotPoints();
 		std::vector<WPFloat> kp;
-		for (int i=0; i<nurbs->NumberKnotPoints(); i++) kp.push_back(knotPoints[i]);
+		for (WPUInt i=0; i<nurbs->NumberKnotPoints(); i++) kp.push_back(knotPoints[i]);
 		WCVector4 data;
 		//Check alignment
 		if (aligned) {
 			//First loop
-			for (int j=0; j<curveNumCP; j++) {
+			for (WPUInt j=0; j<curveNumCP; j++) {
 				data = oldCP.at(j) + (direction * negDepth);
 				cp.push_back(data);
 			}
 			//Second loop
-			for (int j=0; j<curveNumCP; j++) {
+			for (WPUInt j=0; j<curveNumCP; j++) {
 				data = oldCP.at(j) + ((direction * negDepth * 0.5) + (direction * posDepth * 0.5));
 				cp.push_back(data);
 			}
 			//Third loop
-			for (int j=0; j<curveNumCP; j++) {
+			for (WPUInt j=0; j<curveNumCP; j++) {
 				data = oldCP.at(j) + (direction * posDepth);
 				cp.push_back(data);
 			}
@@ -1363,17 +1372,17 @@ WCNurbsSurface* WCNurbsSurface::ExtrudeCurve(WCGeometryContext *context, WCGeome
 		//Reverse alignment
 		else {
 			//First loop
-			for (int j=curveNumCP-1; j>=0; j--) {
+			for (WPUInt j=curveNumCP-1; j>=0; j--) {
 				data = oldCP.at(j) + (direction * negDepth);
 				cp.push_back(data);
 			}
 			//Second loop
-			for (int j=curveNumCP-1; j>=0; j--) {
+			for (WPUInt j=curveNumCP-1; j>=0; j--) {
 				data = oldCP.at(j) + ((direction * negDepth * 0.5) + (direction * posDepth * 0.5));
 				cp.push_back(data);
 			}
 			//Third loop
-			for (int j=curveNumCP-1; j>=0; j--) {
+			for (WPUInt j=curveNumCP-1; j>=0; j--) {
 				data = oldCP.at(j) + (direction * posDepth);
 				cp.push_back(data);
 			}
@@ -1500,7 +1509,7 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 		curveMode = nurbs->Mode();
 		//Setup curveKP
 		WPFloat *kpArray = nurbs->KnotPoints();
-		for (int i=0; i<nurbs->NumberKnotPoints(); i++)
+		for (WPUInt i=0; i<nurbs->NumberKnotPoints(); i++)
 			curveKP.push_back(kpArray[i]);
 		//Reverse curve values if necessary
 		if (aligned) {
@@ -1516,7 +1525,7 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 	WPFloat theta = 0.0;
 	WPFloat cosines[numArcs+1], sines[numArcs+1];
 	//Determine all angle values
-	for (int i=1; i<=numArcs; i++) {
+	for (WPUInt i=1; i<=numArcs; i++) {
 		theta = theta + deltaAngle;
 		cosines[i] = cos(theta);
 		sines[i] = sin(theta);
@@ -1528,7 +1537,7 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 	WCVector4 O, x, y, t, P0, P2, T0, T2, pt, tmpVec;
 	int index;
 	//Loop and compute each u row of control points and weights
-	for (int j=0; j<numCPV; j++) {
+	for (WPUInt j=0; j<numCPV; j++) {
 		//Project curveCP[j] onto axis
 		O = ProjectPointToLine3D(axis->Base(), axis->Direction(), curveCP[j]);
 		x = curveCP[j] - O;
@@ -1546,7 +1555,7 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 		T0 = y;
 		index = 0;
 		//Compute u row
-		for (int i=1; i<=numArcs; i++) {
+		for (WPUInt i=1; i<=numArcs; i++) {
 			//Determine the second point
 			P2 = O + (x * r * cosines[i]) + (y * r * sines[i]);
 			Pij[index+2][j] = P2;
@@ -1567,13 +1576,13 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 
 	//Convert Pij into vector
 	std::vector<WCVector4> controlPoints;
-	for (int j=0; j<numCPV; j++)
+	for (WPUInt j=0; j<numCPV; j++)
 		for (int i=numCPU-1; i>=0; i--)
 			controlPoints.push_back( Pij[i][j] );
 	
 	//Convert knotPoints to vector
 	std::vector<WPFloat> knotPointsU;
-	for (int i=0; i<numKPU; i++) knotPointsU.push_back(knotPoints[i]);
+	for (WPUInt i=0; i<numKPU; i++) knotPointsU.push_back(knotPoints[i]);
 	
 /*** DEBUG ***
 	std::cout << "DegreeU: 2\n";
@@ -1612,7 +1621,7 @@ std::ostream& operator<<(std::ostream& out, const WCNurbsSurface &surface) {
 	if (surface._controlPoints.size() != 0) {
 		//Print out control point information
 		out << "\t Control Points(" << surface._cpU << " x " <<  surface._cpV << ")\n";
-		for (int i=0; i<surface._controlPoints.size(); i++) {
+		for (WPUInt i=0; i<surface._controlPoints.size(); i++) {
 			std::cout << "\t\t{" << surface._controlPoints.at(i).I() << ", \t";
 			std::cout << surface._controlPoints.at(i).J() << ", \t";
 			std::cout << surface._controlPoints.at(i).K() << ", \t";
@@ -1623,9 +1632,9 @@ std::ostream& operator<<(std::ostream& out, const WCNurbsSurface &surface) {
 	//Print out knot point information
 	out << "\t Knot Points(" << surface._kpU << " & " << surface._kpV << ")\n";
 	if (surface._knotPointsU != NULL)
-		out << "\t\t U: "; for (int i=0; i < surface._kpU; i++) out << surface._knotPointsU[i] << " "; out << std::endl;
+		out << "\t\t U: "; for (WPUInt i=0; i < surface._kpU; i++) out << surface._knotPointsU[i] << " "; out << std::endl;
 	if (surface._knotPointsV != NULL)
-		out << "\t\t V: "; for (int i=0; i < surface._kpV; i++) out << surface._knotPointsV[i] << " "; out << std::endl;
+		out << "\t\t V: "; for (WPUInt i=0; i < surface._kpV; i++) out << surface._knotPointsV[i] << " "; out << std::endl;
 	return out;
 }
 

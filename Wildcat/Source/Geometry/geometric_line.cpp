@@ -141,7 +141,7 @@ std::list<WPFloat> WCGeometricLine::Intersect(WCGeometricPoint *point, const WPF
 	//Bounds check u
 	if ((u < -tol) || (u > (1.0 + tol))) return std::list<WPFloat>();
 	//Bound u [0.0 to 1.0]
-	u = std::max( std::min(u, 1.0), 0.0);
+	u = STDMAX( STDMIN(u, 1.0), 0.0);
 	//Get the point on the line
 	WCVector4 pt = this->_p0 + direction * u;
 	//Get distance from point on line to point
@@ -149,7 +149,7 @@ std::list<WPFloat> WCGeometricLine::Intersect(WCGeometricPoint *point, const WPF
 	//Return u if dist <= tol
 	if (dist > tol) return std::list<WPFloat>();
 	//Otherwise, return the intersection
-	return std::list<WPFloat>(u);
+	return std::list<WPFloat>(1, u);
 }
 
 
@@ -202,7 +202,7 @@ std::list<WPIntersectRec> WCGeometricLine::Intersect(WCGeometricCurve *curve, co
 		//Initialize the first vector
 		WCVector4 firstVec((WPFloat)data[0], (WPFloat)data[1], (WPFloat)data[2], (WPFloat)data[3]), secVec;
 		//Loop through remaining vertices and test each
-		for (int i=1; i<numVerts; i++) {
+		for (WPUInt i=1; i<numVerts; i++) {
 			//Determine secVec
 			secVec.Set( (WPFloat)data[index], (WPFloat)data[index+1], (WPFloat)data[index+2], (WPFloat)data[index+3] );
 //			std::cout << "First: " << firstVec << std::endl;
@@ -284,20 +284,21 @@ WCRay WCGeometricLine::Tangent(const WPFloat &u) {
 }
 
 
-WCVector4 WCGeometricLine::PointInversion(const WCVector4 &point, WPFloat &u) {
+WCVector4 WCGeometricLine::PointInversion(const WCVector4 &point, const WPFloat &u) {
+	WPFloat localU = u;
 	//Get direction vector
 	WCVector4 direction = this->_p1 - this->_p0;
 	direction.Normalize(true);
 	//Get point vector
 	WCVector4 pointVector = point - this->_p0;
-	u = direction.DotProduct(pointVector);
+	localU = direction.DotProduct(pointVector);
 	//Divide u by the magnitude of p0 - pt
-	u /= this->_p1.Distance(this->_p0);
+	localU /= this->_p1.Distance(this->_p0);
 	//Check end conditions
-	if (u < 0.0) return this->_p0;
-	if (u > 1.0) return this->_p1;
+	if (localU < 0.0) return this->_p0;
+	if (localU > 1.0) return this->_p1;
 	//Get the point on the line
-	WCVector4 pt = this->_p0 * (1.0 - u) + this->_p1 * u;
+	WCVector4 pt = this->_p0 * (1.0 - localU) + this->_p1 * localU;
 	return pt;
 }
 
@@ -348,9 +349,10 @@ void WCGeometricLine::Render(const GLuint &defaultProg, const WCColor &color, co
 		glUseProgram(0);
 	}
 	//Set the line thickness
-	glLineWidth(this->_thickness);
+	glLineWidth((GLfloat)this->_thickness);
 	//Setup data for the line
-	GLfloat data[6] = { this->_p0.I(), this->_p0.J(), this->_p0.K(), this->_p1.I(), this->_p1.J(), this->_p1.K() };
+	GLfloat data[6] = { (GLfloat)this->_p0.I(), (GLfloat)this->_p0.J(), (GLfloat)this->_p0.K(),
+						(GLfloat)this->_p1.I(), (GLfloat)this->_p1.J(), (GLfloat)this->_p1.K() };
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnable(GL_LINE_SMOOTH);
 	//Draw the line

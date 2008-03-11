@@ -175,7 +175,7 @@ void WCAlignedBoundingBox::Render(void) {
 	if (this->_isDirty) this->GenerateVBO();
 
 	//Get current program
-	GLuint prog = (GLuint)glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
+//	GLuint prog = (GLuint)glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 	//Get the current polymode
 	GLint polyMode[2];
 	glGetIntegerv(GL_POLYGON_MODE, polyMode);
@@ -196,7 +196,7 @@ void WCAlignedBoundingBox::Render(void) {
 	//Reset the polygon mode
 	if (polyMode[0] == GL_LINE)	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	//Reset the program
-	glUseProgram(prog);
+//	glUseProgram(prog);
 	//Check for errors
 	if (glGetError() != GL_NO_ERROR) std::cout << "WCAlignedBoundingBox::Render Error - Unknown error.\n";
 }
@@ -213,13 +213,13 @@ void WCAlignedBoundingBox::Set(const std::vector<WCGeometricPoint*> &points) {
 	this->_zMin = (GLfloat)points.at(0)->Z();
 	this->_zMax = (GLfloat)this->_zMin;
 	//Find the bounds of the data set
-	for (int i=1; i<points.size(); i++) {
-		if (points.at(i)->X() > this->_xMax) this->_xMax = points.at(i)->X();
-		if (points.at(i)->X() < this->_xMin) this->_xMin = points.at(i)->X();
-		if (points.at(i)->Y() > this->_yMax) this->_yMax = points.at(i)->Y();
-		if (points.at(i)->Y() < this->_yMin) this->_yMin = points.at(i)->Y();
-		if (points.at(i)->Z() > this->_zMax) this->_zMax = points.at(i)->Z();
-		if (points.at(i)->Z() < this->_zMin) this->_zMin = points.at(i)->Z();
+	for (unsigned int i=1; i<points.size(); i++) {
+		if (points.at(i)->X() > this->_xMax) this->_xMax = (GLfloat)points.at(i)->X();
+		if (points.at(i)->X() < this->_xMin) this->_xMin = (GLfloat)points.at(i)->X();
+		if (points.at(i)->Y() > this->_yMax) this->_yMax = (GLfloat)points.at(i)->Y();
+		if (points.at(i)->Y() < this->_yMin) this->_yMin = (GLfloat)points.at(i)->Y();
+		if (points.at(i)->Z() > this->_zMax) this->_zMax = (GLfloat)points.at(i)->Z();
+		if (points.at(i)->Z() < this->_zMin) this->_zMin = (GLfloat)points.at(i)->Z();
 	}
 	//Mark as dirty
 	this->_isDirty = true;
@@ -237,13 +237,13 @@ void WCAlignedBoundingBox::Set(const std::vector<WCVector4> &vectors) {
 	this->_zMin = (GLfloat)vectors.at(0).K();
 	this->_zMax = (GLfloat)this->_zMin;
 	//Find the bounds of the data set
-	for (int i=1; i<vectors.size(); i++) {
-		if (vectors.at(i).I() > this->_xMax) this->_xMax = vectors.at(i).I();
-		if (vectors.at(i).I() < this->_xMin) this->_xMin = vectors.at(i).I();
-		if (vectors.at(i).J() > this->_yMax) this->_yMax = vectors.at(i).J();
-		if (vectors.at(i).J() < this->_yMin) this->_yMin = vectors.at(i).J();
-		if (vectors.at(i).K() > this->_zMax) this->_zMax = vectors.at(i).K();
-		if (vectors.at(i).K() < this->_zMin) this->_zMin = vectors.at(i).K();
+	for (unsigned int i=1; i<vectors.size(); i++) {
+		if (vectors.at(i).I() > this->_xMax) this->_xMax = (GLfloat)vectors.at(i).I();
+		if (vectors.at(i).I() < this->_xMin) this->_xMin = (GLfloat)vectors.at(i).I();
+		if (vectors.at(i).J() > this->_yMax) this->_yMax = (GLfloat)vectors.at(i).J();
+		if (vectors.at(i).J() < this->_yMin) this->_yMin = (GLfloat)vectors.at(i).J();
+		if (vectors.at(i).K() > this->_zMax) this->_zMax = (GLfloat)vectors.at(i).K();
+		if (vectors.at(i).K() < this->_zMin) this->_zMin = (GLfloat)vectors.at(i).K();
 	}
 	//Mark as dirty
 	this->_isDirty = true;
@@ -263,13 +263,13 @@ void WCAlignedBoundingBox::Set(WCVector4 *vectors, const WPUInt &size) {
 	this->_zMin = (GLfloat)vectors[0].K();
 	this->_zMax = (GLfloat)this->_zMin;
 	//Find the bounds of the data set
-	for (int i=1; i<size; i++) {
-		if (vectors[i].I() > this->_xMax) this->_xMax = vectors[i].I();
-		if (vectors[i].I() < this->_xMin) this->_xMin = vectors[i].I();
-		if (vectors[i].J() > this->_yMax) this->_yMax = vectors[i].J();
-		if (vectors[i].J() < this->_yMin) this->_yMin = vectors[i].J();
-		if (vectors[i].K() > this->_zMax) this->_zMax = vectors[i].K();
-		if (vectors[i].K() < this->_zMin) this->_zMin = vectors[i].K();
+	for (unsigned int i=1; i<size; i++) {
+		if (vectors[i].I() > this->_xMax) this->_xMax = (GLfloat)vectors[i].I();
+		if (vectors[i].I() < this->_xMin) this->_xMin = (GLfloat)vectors[i].I();
+		if (vectors[i].J() > this->_yMax) this->_yMax = (GLfloat)vectors[i].J();
+		if (vectors[i].J() < this->_yMin) this->_yMin = (GLfloat)vectors[i].J();
+		if (vectors[i].K() > this->_zMax) this->_zMax = (GLfloat)vectors[i].K();
+		if (vectors[i].K() < this->_zMin) this->_zMin = (GLfloat)vectors[i].K();
 	}
 	//Mark as dirty
 	this->_isDirty = true;
@@ -292,7 +292,7 @@ void WCAlignedBoundingBox::Set(const GLuint &buffer, const WPUInt &size) {
 	this->_zMin = data[2];
 	this->_zMax = this->_zMin;
 	//Find the bounds of the data set
-	for (int i=1; i<size; i++) {
+	for (WPUInt i=1; i<size; i++) {
 		index = i*4;
 		if (data[index] >   this->_xMax) this->_xMax = data[index];
 		if (data[index] <   this->_xMin) this->_xMin = data[index];
@@ -311,12 +311,12 @@ void WCAlignedBoundingBox::Set(const GLuint &buffer, const WPUInt &size) {
 
 WCAlignedBoundingBox& WCAlignedBoundingBox::operator+=(const WCAlignedBoundingBox &obj) {
 	//Compare each min/max dimension
-	this->_xMin = std::min(this->_xMin, obj._xMin);
-	this->_yMin = std::min(this->_yMin, obj._yMin);
-	this->_zMin = std::min(this->_zMin, obj._zMin);
-	this->_xMax = std::max(this->_xMax, obj._xMax);
-	this->_yMax = std::max(this->_yMax, obj._yMax);
-	this->_zMax = std::max(this->_zMax, obj._zMax);
+	this->_xMin = STDMIN(this->_xMin, obj._xMin);
+	this->_yMin = STDMIN(this->_yMin, obj._yMin);
+	this->_zMin = STDMIN(this->_zMin, obj._zMin);
+	this->_xMax = STDMAX(this->_xMax, obj._xMax);
+	this->_yMax = STDMAX(this->_yMax, obj._yMax);
+	this->_zMax = STDMAX(this->_zMax, obj._zMax);
 	//Mark as dirty
 	this->_isDirty = true;
 	//Return this object

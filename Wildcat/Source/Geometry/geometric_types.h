@@ -117,7 +117,7 @@ public:
 	virtual WCVector4 Evaluate(const WPFloat &u)=0;													//!< Evaluate curve for a parametric value
 	virtual WCVector4 Derivative(const WPFloat &u, const WPUInt &der)=0;							//!< Evaluate derivative at specific point
 	virtual WCRay Tangent(const WPFloat &u)=0;														//!< Get the tangent to the curve at U
-	virtual WCVector4 PointInversion(const WCVector4 &point, WPFloat &u=0.0)=0;						//!< Get closest point on curve from point
+	virtual WCVector4 PointInversion(const WCVector4 &point, const WPFloat &u=0.0)=0;				//!< Get closest point on curve from point
 
 	//Serialization Method
 	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object

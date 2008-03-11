@@ -52,16 +52,16 @@
 #include <OpenGL/gl.h>
 #include <OpenGL/glext.h>
 #include <OpenGL/OpenGL.h>
+#define STDMIN std::min
+#define STDMAX std::max
 #endif
 
 #ifdef __WIN32__
-#include <windows.h>		// Header File For Windows
-#include <gl/gl.h>			// Header File For The OpenGL32 Library
-#include <gl/glu.h>			// Header File For The GLu32 Library
-#include <gl/glaux.h>		// Header File For The Glaux Library
-#include <Application/Win32/wglext.h>
-#include <Application/Win32/glext.h>
-//#include <Application/Win32/glxext.h>
+#include <windows.h>					//Generic header file For Windows
+#include <Application/Win32/win_gl.h>	//Header file for windows platform
+//Defines for std::min and std::max problem
+#define STDMIN min
+#define STDMAX max
 #endif
 
 
@@ -77,8 +77,6 @@
 //Configuration Values
 #define __WILDCAT_DEBUG_LOGGER__
 #define __WILDCAT_NO_THREADS__
-//One-time values
-#define D_PI									3.14159265359
 //Define Logger Values
 #define LOGGER_DEBUG							1
 #define LOGGER_INFO								2

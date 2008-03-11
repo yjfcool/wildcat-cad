@@ -91,8 +91,10 @@ void WCRay::Render(const GLuint &defaultProg, const WCColor &color, const WPFloa
 	else color.Enable();
 	//Draw the ray
 	glBegin(GL_LINES);
-		glVertex3f(this->_base.I(), this->_base.J(), this->_base.K());
-		glVertex3f(this->_base.I()+this->_direction.I(), this->_base.J()+this->_direction.J(), this->_base.K()+this->_direction.K());
+		glVertex3f((GLfloat)this->_base.I(), (GLfloat)this->_base.J(), (GLfloat)this->_base.K());
+		glVertex3f((GLfloat)(this->_base.I()+this->_direction.I()),
+				   (GLfloat)(this->_base.J()+this->_direction.J()),
+				   (GLfloat)(this->_base.K()+this->_direction.K()));
 	glEnd();
 }
 	
@@ -126,7 +128,7 @@ WCRay WCRay::FromScreenCoords(const int &xMouse, const int &yMouse, const int &w
 	winY = (float)viewport[3] - winY;
 	//Setup output variables
 	GLdouble posX, posY, posZ;
-	glReadPixels( winX, int(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ );
+	glReadPixels( GLint(winX), GLint(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ );
 	//Convert front point, convert back point
 /*** DEBUG ***/
 //Need to implement on our own

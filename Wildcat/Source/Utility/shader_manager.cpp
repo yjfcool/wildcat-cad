@@ -182,7 +182,7 @@ WSProgram* WCShaderManager::ParseProgram(xercesc::DOMElement *element, const boo
 		if (typeStr == "GL_INTERLEAVED_ATTRIBS_EXT") type = GL_INTERLEAVED_ATTRIBS_EXT;
 		else if (typeStr == "GL_SEPARATE_ATTRIBS_EXT") type = GL_SEPARATE_ATTRIBS_EXT;
 		else { 
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::ParseProgram - Unknown transform feedback type(" << type << "."); 
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::ParseProgram - Unknown transform feedback type(" << typeStr << "."); 
 			delete program;
 			return NULL;
 		}
@@ -192,7 +192,7 @@ WSProgram* WCShaderManager::ParseProgram(xercesc::DOMElement *element, const boo
 		nodeList = tmpElement->getElementsByTagName(xmlString);
 		xercesc::XMLString::release(&xmlString);
 		GLint varyingCount = nodeList->getLength();
-		const GLchar* varyings[varyingCount];
+		const GLchar** varyings = new const GLchar*[varyingCount];
 		//Process varyings
 		for (int index=0; index<varyingCount; index++) {
 			//Get the varying element

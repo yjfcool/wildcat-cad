@@ -711,7 +711,7 @@ WPFloat WCVector::NormInf(void) {
 	int index = cblas_idamax(this->_size, this->_data, 1);
 //Non-BLAS path
 #else
-	WPFloat 
+//	WPFloat 
 	std::cout << "WCVector::NormInf - need to get blas alternative\n";
 	int index = 0;
 #endif
