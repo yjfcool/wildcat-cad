@@ -122,10 +122,10 @@ void WCNurbs::FindSpanMultiplicity(const WPUInt &numCP, const WPUInt &degree, co
 
 
 WPFloat* WCNurbs::BasisValues(const WPUInt &span, const WPFloat &u, const WPUInt &degree, const WPFloat *knotPoints, const WPUInt &der) {
-	WPFloat ndu[degree+1][degree+1];
-	WPFloat a[2][degree+1];
-	WPFloat left[degree+1];
-	WPFloat right[degree+1];
+	WPFloat **ndu = new WPFloat*[(degree+1) * (degree+1)];
+	WPFloat **a = new WPFloat*[2 * (degree+1)];
+	WPFloat *left = new WPFloat[degree+1];
+	WPFloat *right = new WPFloat[degree+1];
 	int j, k, r, j1, j2, s1, s2, rk, pk;
 	WPFloat saved, temp, d;
 	WPUInt useDer = STDMIN(der, degree-1);
@@ -199,6 +199,11 @@ WPFloat* WCNurbs::BasisValues(const WPUInt &span, const WPFloat &u, const WPUInt
 	for (k=0; k<(der+1)*(degree+1); k++) 
 		std::cout << "ders[" << k << "]: " << ders[k] << std::endl;	
 /*** Debug ***/
+	//Delete arrays
+	delete ndu;
+	delete a;
+	delete left;
+	delete right;
 	//Return the array
 	return ders;
 }

@@ -255,7 +255,7 @@ WSProgram* WCShaderManager::ParseProgram(xercesc::DOMElement *element, const boo
 
 void WCShaderManager::ParseManifest(const std::string &manifest, const std::string &directory, const bool &verbose) {
 	//Create xml parser
-	xercesc::XercesDOMParser* parser = new xercesc::XercesDOMParser();
+	xercesc::XercesDOMParser* parser = new xercesc::XercesDOMParser(0,0,0);
 	//Set validation scheme
 	parser->setValidationScheme(xercesc::XercesDOMParser::Val_Always);    
 	xercesc::ErrorHandler* errHandler = (xercesc::ErrorHandler*) new xercesc::HandlerBase();

@@ -399,8 +399,8 @@ void WCNurbsSurface::GenerateSurfaceMedium(void) {
 	/*** Setup Input Texture and TexCoord Buffer ***/
 	
 	//Allocate space for the texture (w * h * RGBA)
-	GLfloat data[this->_numVerts * 4];
-	GLfloat uvData[this->_numVerts * 2];
+	GLfloat *data = new GLfloat[this->_numVerts * 4];
+	GLfloat *uvData = new GLfloat[this->_numVerts * 2];
 	WPFloat u = this->_knotPointsU[0];
 	WPFloat range = this->_knotPointsU[this->_kpU-1] - this->_knotPointsU[0];
 	WPFloat du = range / ((GLfloat)(this->_lodU-1));
@@ -434,7 +434,10 @@ void WCNurbsSurface::GenerateSurfaceMedium(void) {
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffers[NURBSSURFACE_TEXCOORD_BUFFER]);
 	glBufferData(GL_ARRAY_BUFFER, this->_numVerts * 2 * sizeof(GLfloat), uvData, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-//	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsSurface::GenerateSurfaceMedium Error - Setup Input Texture.\n";	
+//	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsSurface::GenerateSurfaceMedium Error - Setup Input Texture.\n";
+	//Delete arrays
+	delete data;
+	delete uvData;
 	
 	/*** Setup and render ***/
 
@@ -465,18 +468,20 @@ void WCNurbsSurface::GenerateSurfaceMedium(void) {
 	/*** Save output textures into vertex VBO and normal VBO using simple memory read ***/
 
 	//Read the vertex data
-	GLfloat vertData[this->_numVerts * 4];
+	GLfloat *vertData = new GLfloat[this->_numVerts * 4];
 	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 	glReadPixels(0, 0, this->_lodU, this->_lodV, GL_RGBA, GL_FLOAT, vertData);
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffers[NURBSSURFACE_VERTEX_BUFFER]);
 	glBufferData(GL_ARRAY_BUFFER, this->_numVerts * 4 * sizeof(GLfloat), vertData, GL_STATIC_DRAW);
+	delete vertData;
 
 	//Read the normal data
-	GLfloat normData[this->_numVerts * 4];
+	GLfloat *normData = new GLfloat[this->_numVerts * 4];
 	glReadBuffer(GL_COLOR_ATTACHMENT1_EXT);
 	glReadPixels(0, 0, this->_lodU, this->_lodV, GL_RGBA, GL_FLOAT, normData);
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffers[NURBSSURFACE_NORMAL_BUFFER]);
 	glBufferData(GL_ARRAY_BUFFER, this->_numVerts * 4 * sizeof(GLfloat), normData, GL_STATIC_DRAW);
+	delete normData;
 
 	/*** Save output textures into vertex and normal VBOs using a PBO ***
 
@@ -537,9 +542,9 @@ void WCNurbsSurface::GenerateSurfaceLow(void) {
 	WPFloat dv = range / ((GLfloat)(this->_lodV-1));
 	
 	//Create a temporary array (NumVert vertices)
-	GLfloat vData[this->_numVerts*4];
-	GLfloat nData[this->_numVerts*4];
-	GLfloat tData[this->_numVerts*2];
+	GLfloat *vData = new GLfloat[this->_numVerts*4];
+	GLfloat *nData = new GLfloat[this->_numVerts*4];
+	GLfloat *tData = new GLfloat[this->_numVerts*2];
 	WPFloat *bvU, *bvV;
 	WCVector4 pt;
 	int spanU, spanV;
@@ -634,6 +639,10 @@ void WCNurbsSurface::GenerateSurfaceLow(void) {
 	//Clean up and report errors
 	glBindBuffer(GL_ARRAY_BUFFER, 0);	
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceLow - Unspecified error.");
+	//Delete arrays
+	delete vData;
+	delete nData;
+	delete tData;
 }
 
 
@@ -667,9 +676,9 @@ void WCNurbsSurface::GenerateSurfaceSize4(void) {
 	range = this->_knotPointsV[this->_kpV-1] - this->_knotPointsV[0];
 	WPFloat dv = range / ((GLfloat)(this->_lodV-1));
 	//Set aside data for the vertices, normals, and texcoords
-	GLfloat vData[this->_numVerts*4];
-	GLfloat nData[this->_numVerts*4];
-	GLfloat tData[this->_numVerts*2];
+	GLfloat *vData = new GLfloat[this->_numVerts*4];
+	GLfloat *nData = new GLfloat[this->_numVerts*4];
+	GLfloat *tData = new GLfloat[this->_numVerts*2];
 	//Loop on V
 	for(WPUInt i=0; i<this->_lodV; i++) {
 		//Reset u each loop
@@ -724,13 +733,17 @@ void WCNurbsSurface::GenerateSurfaceSize4(void) {
 	//Clean up and report errors
 	glBindBuffer(GL_ARRAY_BUFFER, 0);	
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceSize4 - Unspecified error.");
+	//Delete arrays
+	delete vData;
+	delete nData;
+	delete tData;
 }
 
 
 void WCNurbsSurface::GenerateIndex(void) {
 	//Allocate space for local array of data
 	GLuint size = (this->_lodU-1) * (this->_lodV-1) * 2 * 3;  //Two triangles per lod, 3 verts per triangle
-	GLuint data[size];			
+	GLuint *data = new GLuint[size];			
 	//Check to make sure data was allocated
 	if (data == NULL) {	
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateIndex - Unable to allocate space for index data."); return; }
@@ -755,6 +768,8 @@ void WCNurbsSurface::GenerateIndex(void) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_buffers[NURBSSURFACE_INDEX_BUFFER]);
 	//Copy data into buffer object
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(GLuint), data, GL_STATIC_DRAW);	
+	//Delete array
+	delete data;
 /*** Debug ***
 	std::cout << "Generate Index Values: " << size << std::endl;	
 	GLint *data2 = (GLint*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_ONLY);
@@ -1523,7 +1538,8 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 
 	//Holding arrays for sines and cosines
 	WPFloat theta = 0.0;
-	WPFloat cosines[numArcs+1], sines[numArcs+1];
+	WPFloat *cosines = new WPFloat[numArcs+1];
+	WPFloat *sines = new WPFloat[numArcs+1];
 	//Determine all angle values
 	for (WPUInt i=1; i<=numArcs; i++) {
 		theta = theta + deltaAngle;
@@ -1533,7 +1549,7 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 
 	WPFloat r, uDummy, vDummy;
 	WPFloat wm = cos(deltaAngle / 2.0), weight;
-	WCVector4 Pij[numCPU][numCPV];
+	WCVector4 **Pij = new WCVector4*[numCPU * numCPV];
 	WCVector4 O, x, y, t, P0, P2, T0, T2, pt, tmpVec;
 	int index;
 	//Loop and compute each u row of control points and weights
@@ -1573,6 +1589,9 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 			if (i < numArcs) { P0 = P2; T0 = T2; }
 		}
 	}
+	//Delete arrays
+	delete sines;
+	delete cosines;
 
 	//Convert Pij into vector
 	std::vector<WCVector4> controlPoints;
