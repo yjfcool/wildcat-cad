@@ -147,8 +147,8 @@ public:
 	
 	//Overridden operators
 	WCPlacement& operator=(const WCPlacement &place) { this->_place = place._place; return *this; }	//!< Equals operator
-	bool operator==(const WCPlacement &place)	{ return this->_place == place._place; }			//!< Equality operator
-	bool operator!=(const WCPlacement &place)	{ return this->_place != place._place; }			//!< Inequality operator
+	bool operator==(const WCPlacement &place) const	{ return this->_place == place._place; }		//!< Equality operator
+	bool operator!=(const WCPlacement &place) const	{ return this->_place != place._place; }		//!< Inequality operator
 };
 
 

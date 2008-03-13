@@ -235,7 +235,6 @@
 		585F37750D68B7DB00673AE6 /* sketch_arc_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37180D68B7DB00673AE6 /* sketch_arc_actions.cpp */; };
 		585F37760D68B7DB00673AE6 /* sketch_arc_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F371A0D68B7DB00673AE6 /* sketch_arc_controller.cpp */; };
 		585F37770D68B7DB00673AE6 /* sketch_arc_stcreate_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F371D0D68B7DB00673AE6 /* sketch_arc_stcreate_mode.cpp */; };
-		585F37780D68B7DB00673AE6 /* sketch_arc_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F371E0D68B7DB00673AE6 /* sketch_arc_edit_mode.cpp */; };
 		585F37790D68B7DB00673AE6 /* sketch_arc_tpcreate_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F371F0D68B7DB00673AE6 /* sketch_arc_tpcreate_mode.cpp */; };
 		585F377B0D68B7DB00673AE6 /* sketch_axis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37220D68B7DB00673AE6 /* sketch_axis.cpp */; };
 		585F377C0D68B7DB00673AE6 /* sketch_axis_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37240D68B7DB00673AE6 /* sketch_axis_actions.cpp */; };
@@ -294,6 +293,7 @@
 		585F37FD0D68B8D300673AE6 /* part_plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37DE0D68B8D300673AE6 /* part_plane.cpp */; };
 		585F37FE0D68B8D300673AE6 /* part_plane_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37E00D68B8D300673AE6 /* part_plane_actions.cpp */; };
 		585F37FF0D68B8D300673AE6 /* part_plane_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37E20D68B8D300673AE6 /* part_plane_controller.cpp */; };
+		587CB6EA0D89A48D00833178 /* sketch_arc_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */; };
 		588969E50D6E182C007C5F82 /* fixedSelected32.tif in Resources */ = {isa = PBXBuildFile; fileRef = 588969E40D6E182C007C5F82 /* fixedSelected32.tif */; };
 		589AC2190D73404F001725D0 /* constraint_coincidence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361C0D68B4B700673AE6 /* constraint_coincidence.cpp */; };
 		589AC2330D734343001725D0 /* constraint_coincidence_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361E0D68B4B700673AE6 /* constraint_coincidence_actions.cpp */; };
@@ -684,7 +684,6 @@
 		585F371B0D68B7DB00673AE6 /* sketch_arc_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sketch_arc_controller.h; path = ../../Source/Workbenches/Sketcher/sketch_arc_controller.h; sourceTree = SOURCE_ROOT; };
 		585F371C0D68B7DB00673AE6 /* sketch_arc_modes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sketch_arc_modes.h; path = ../../Source/Workbenches/Sketcher/sketch_arc_modes.h; sourceTree = SOURCE_ROOT; };
 		585F371D0D68B7DB00673AE6 /* sketch_arc_stcreate_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_arc_stcreate_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_arc_stcreate_mode.cpp; sourceTree = SOURCE_ROOT; };
-		585F371E0D68B7DB00673AE6 /* sketch_arc_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_arc_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_arc_stedit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		585F371F0D68B7DB00673AE6 /* sketch_arc_tpcreate_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_arc_tpcreate_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_arc_tpcreate_mode.cpp; sourceTree = SOURCE_ROOT; };
 		585F37210D68B7DB00673AE6 /* sketch_arc_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sketch_arc_type.h; path = ../../Source/Workbenches/Sketcher/sketch_arc_type.h; sourceTree = SOURCE_ROOT; };
 		585F37220D68B7DB00673AE6 /* sketch_axis.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_axis.cpp; path = ../../Source/Workbenches/Sketcher/sketch_axis.cpp; sourceTree = SOURCE_ROOT; };
@@ -817,6 +816,7 @@
 		585F37E10D68B8D300673AE6 /* part_plane_actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_plane_actions.h; path = ../../Source/Workbenches/PartDesign/part_plane_actions.h; sourceTree = SOURCE_ROOT; };
 		585F37E20D68B8D300673AE6 /* part_plane_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = part_plane_controller.cpp; path = ../../Source/Workbenches/PartDesign/part_plane_controller.cpp; sourceTree = SOURCE_ROOT; };
 		585F37E30D68B8D300673AE6 /* part_plane_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_plane_controller.h; path = ../../Source/Workbenches/PartDesign/part_plane_controller.h; sourceTree = SOURCE_ROOT; };
+		587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_arc_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_arc_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		588969E40D6E182C007C5F82 /* fixedSelected32.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = fixedSelected32.tif; path = ../../Source/Resources/fixedSelected32.tif; sourceTree = SOURCE_ROOT; };
 		58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_circle_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_circle_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		58DAD6400D69C7610093679D /* constraint_measure_radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = constraint_measure_radius.h; path = ../../Source/Constraint/constraint_measure_radius.h; sourceTree = SOURCE_ROOT; };
@@ -2514,7 +2514,7 @@
 				585F371A0D68B7DB00673AE6 /* sketch_arc_controller.cpp */,
 				585F371D0D68B7DB00673AE6 /* sketch_arc_stcreate_mode.cpp */,
 				585F371F0D68B7DB00673AE6 /* sketch_arc_tpcreate_mode.cpp */,
-				585F371E0D68B7DB00673AE6 /* sketch_arc_edit_mode.cpp */,
+				587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -2953,7 +2953,6 @@
 				585F37750D68B7DB00673AE6 /* sketch_arc_actions.cpp in Sources */,
 				585F37760D68B7DB00673AE6 /* sketch_arc_controller.cpp in Sources */,
 				585F37770D68B7DB00673AE6 /* sketch_arc_stcreate_mode.cpp in Sources */,
-				585F37780D68B7DB00673AE6 /* sketch_arc_edit_mode.cpp in Sources */,
 				585F37790D68B7DB00673AE6 /* sketch_arc_tpcreate_mode.cpp in Sources */,
 				585F377B0D68B7DB00673AE6 /* sketch_axis.cpp in Sources */,
 				585F377C0D68B7DB00673AE6 /* sketch_axis_actions.cpp in Sources */,
@@ -3025,6 +3024,7 @@
 				589AC2190D73404F001725D0 /* constraint_coincidence.cpp in Sources */,
 				589AC2330D734343001725D0 /* constraint_coincidence_actions.cpp in Sources */,
 				58B27F780D785FC4008951D9 /* sketch_circle_edit_mode.cpp in Sources */,
+				587CB6EA0D89A48D00833178 /* sketch_arc_edit_mode.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
