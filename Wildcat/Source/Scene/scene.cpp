@@ -55,8 +55,13 @@ WCScene::WCScene() : :: WCSerializeableObject(),
 	this->_shaderManager = new WCShaderManager(WCScene::ShaderManifest, resourcesDirectory, false);
 	//Start new texture manager
 	this->_textureManager = new WCTextureManager(WCScene::TextureManifest, resourcesDirectory, false);
-	//Start new geometry context
+//Platform specific capture of current context
+#ifdef __APPLE__
 	this->_glContext = CGLGetCurrentContext();
+#else
+	this->_glContext = NULL;
+#endif
+	//Create new geometry context
 	this->_geomContext = new WCGeometryContext(this->_glContext, this->_shaderManager);
 
 	//Initialize the mouse button array
@@ -99,8 +104,13 @@ WCScene::WCScene(xercesc::DOMElement* element, WCSerialDictionary *dictionary) :
 	this->_shaderManager = new WCShaderManager(WCScene::ShaderManifest, resourcesDirectory, false);
 	//Start new texture manager
 	this->_textureManager = new WCTextureManager(WCScene::TextureManifest, resourcesDirectory, false);
-	//Start new geometry context
+//Platform specific capture of current context
+#ifdef __APPLE__
 	this->_glContext = CGLGetCurrentContext();
+#else
+	this->_glContext = NULL;
+#endif
+	//Create new geometry context
 	this->_geomContext = new WCGeometryContext(this->_glContext, this->_shaderManager);
 	//Register context guid
 	WCGUID contextGuid = WCSerializeableObject::GetStringAttrib(element, "contextGUID");
@@ -161,9 +171,9 @@ bool WCScene::OnIdle(void) {
 }
 
 
-bool WCScene::OnMouseMove(const int x, const int y) {
+bool WCScene::OnMouseMove(const int &x, const int &y) {
 	//Check to make sure the mouse is within the scene
-	if ((x < 0) || (y < 0) || (x > this->_winWidth) || (y > this->_winHeight)) return true;
+	if ((x < 0) || (y < 0) || (x > (int)this->_winWidth) || (y > (int)this->_winHeight)) return true;
 	//Convert to x,y scene coords and save values
 	this->_mouseX = ((x * this->_width) / this->_winWidth) - (this->_width / 2.0);
 	this->_mouseY = (this->_height / 2.0) - ((y * this->_height) / this->_winHeight);
@@ -230,7 +240,7 @@ bool WCScene::OnArrowKeyPress(const WCArrowKey &key) {
 }
 
 
-bool WCScene::OnReshape(const int width, const int height) {
+bool WCScene::OnReshape(const int &width, const int &height) {
 	//Update the screen size(in pixels)
 	this->_winWidth = width;
 	this->_winHeight = height;

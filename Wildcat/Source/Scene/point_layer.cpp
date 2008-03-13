@@ -37,8 +37,8 @@
 
 void WCPointLayer::GenerateBuffers(void) {
 	//Create arrays for all possible points
-	GLfloat vData[3*this->_pointList.size()];
-	GLfloat cData[4*this->_pointList.size()];
+	GLfloat *vData = new GLfloat[3*this->_pointList.size()];
+	GLfloat *cData = new GLfloat[4*this->_pointList.size()];
 	//Reset the number of visible points
 	this->_numVisible = 0;
 	WPUInt vIndex = 0;
@@ -51,9 +51,9 @@ void WCPointLayer::GenerateBuffers(void) {
 		point = *iter;
 		if (point->IsVisible()) {
 			//Set the first vertex data
-			vData[vIndex++] = point->X();
-			vData[vIndex++] = point->Y();
-			vData[vIndex++] = point->Z();
+			vData[vIndex++] = (GLfloat)point->X();
+			vData[vIndex++] = (GLfloat)point->Y();
+			vData[vIndex++] = (GLfloat)point->Z();
 			color = point->Color();
 			//Set the color data
 			cData[cIndex++] = color.R();
@@ -74,6 +74,9 @@ void WCPointLayer::GenerateBuffers(void) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	if (glGetError() != GL_NO_ERROR) 
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPointLayer::GenerateBuffers - At Cleanup and Exit.");
+	//Delete arrays
+	delete vData;
+	delete cData;
 }
 
 

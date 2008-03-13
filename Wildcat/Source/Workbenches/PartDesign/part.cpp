@@ -125,7 +125,7 @@ WCPart::WCPart(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	xercesc::DOMElement *featureElement;
 	bool retVal;
 	//Loop through all features
-	for (int featureIndex=0; featureIndex < list->getLength(); featureIndex++) {
+	for (WPUInt featureIndex=0; featureIndex < list->getLength(); featureIndex++) {
 		//Get the indexed node
 		tmpNode = list->item(featureIndex);
 		//Make sure node is element

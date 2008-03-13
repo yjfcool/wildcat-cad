@@ -120,8 +120,8 @@ public:
 	~WCText();																					//!< Default destructor
 	
 	//General Access Methods
-	inline GLfloat Width(void)					{ return this->_texWidth * SCREEN_PIXEL_WIDTH; }	//!< Get the width of the text
-	inline GLfloat Height(void)					{ return this->_texHeight * SCREEN_PIXEL_WIDTH; }	//!< Get the height of the text
+	inline GLfloat Width(void)					{ return (GLfloat)(this->_texWidth * SCREEN_PIXEL_WIDTH); }	//!< Get the width of the text
+	inline GLfloat Height(void)					{ return (GLfloat)(this->_texHeight * SCREEN_PIXEL_WIDTH); }//!< Get the height of the text
 	inline std::string Text(void)				{ return this->_text; }								//!< Get the text string
 	void Text(const std::string &text);																//!< Set the text string
 	inline WCColor Color(void)					{ return this->_color; }							//!< Get the text color

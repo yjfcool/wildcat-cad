@@ -60,9 +60,9 @@ bool WCCameraLayer::OnMouseMove(const WPFloat x, const WPFloat y) {
 			WCVector4 b(x, y, 0.0, 0.0);
 			a /= min;
 			b /= min;
-			a.K( pow(2.0f, -0.5f * a.Magnitude()) );
+			a.K( pow(2.0, -0.5 * a.Magnitude()) );
 			a.Normalize(true);
-			b.K( pow(2.0f, -0.5f * b.Magnitude()) );
+			b.K( pow(2.0, -0.5 * b.Magnitude()) );
 			b.Normalize(true);
 			WCVector4 axis = a.CrossProduct(b).Normalize(true);
 			WPFloat angle = acos( a.DotProduct(b) );

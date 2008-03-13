@@ -71,9 +71,9 @@ void WCSelectionManager::ReadyTexture(void) {
 
 
 WCColor WCSelectionManager::EncodeColor(const WPInt index) {
-	GLfloat r = (GLfloat)(index + 1) / 255.0;
+	GLfloat r = (GLfloat)(index + 1.0) / 255.0f;
 //	std::cout << "Index: " << index << ", R: " << r << std::endl;
-	return WCColor(r, 0.0, 0.0, 1.0);
+	return WCColor(r, 0.0f, 0.0f, 1.0f);
 }
 
 
@@ -101,7 +101,7 @@ WPUInt WCSelectionManager::ProcessSingleSelect(std::vector<std::pair<WCVisualObj
 	if (counter.size() == 0) return 0;
 
 	//Otherwise, find the largest count
-	WPUInt maxCount = 0;
+	WPInt maxCount = 0;
 	for (iter = counter.begin(); iter != counter.end(); iter++) {
 		if ((*iter).second > maxCount) {
 			index = (*iter).first;
@@ -130,7 +130,7 @@ WPUInt WCSelectionManager::ProcessRectangleSelect(std::vector<std::pair<WCVisual
 	std::pair<WCVisualObject*,WCSelectionObject*> selectee;
 	WCSelectionObject* selectionObject;
 	//Look through all pixels and add into counter
-	for (int i=0; i < width*height; i++) {
+	for (WPUInt i=0; i < width*height; i++) {
 		index = this->DecodeColor(pixels[i*4], pixels[i*4+1], pixels[i*4+2]);
 		//If there is a valid index
 		if (index != -1) {
@@ -327,8 +327,8 @@ WPUInt WCSelectionManager::Select(const WPUInt &xMin, const WPUInt &xMax, const 
 	glEnable(GL_BLEND);
 
 	//Evaluate the texture compared to the bounding box
-	GLsizei width = std::max(xMax - xMin, (WPUInt)1);
-	GLsizei height = std::max(yMax - yMin, (WPUInt)1);
+	GLsizei width = STDMAX(xMax - xMin, (WPUInt)1);
+	GLsizei height = STDMAX(yMax - yMin, (WPUInt)1);
 	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 	
 	GLubyte *pixels;
@@ -341,8 +341,8 @@ WPUInt WCSelectionManager::Select(const WPUInt &xMin, const WPUInt &xMax, const 
 	//Standard case
 	else {
 		//Adjust minimum width and height
-		width = std::max(xMax - xMin, (WPUInt)3);
-		height = std::max(yMax - yMin, (WPUInt)3);		
+		width = STDMAX(xMax - xMin, (WPUInt)3);
+		height = STDMAX(yMax - yMin, (WPUInt)3);		
 		pixels = new GLubyte[width * height * 4];
 		//Read from the texture
 		glReadPixels(xMin, yMin, width, height, GL_RGBA, GL_UNSIGNED_BYTE , pixels);

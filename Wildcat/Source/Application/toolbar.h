@@ -55,7 +55,7 @@ class WCToolbarManager;
 #define TOOLBARELEMENT_TYPE_MODE				2
 
 
-struct WCToolbarButton {
+class WCToolbarButton {
 private:
 	WCToolbarButton_Bridge						*_bridge;											//!< Bridge to platform indep.
 	//Deny Acces

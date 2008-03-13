@@ -119,8 +119,8 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 	//If there is a texture, draw with it
 	if (this->_texture != 0) {
 		//Determine size of texture
-		GLfloat width = this->_texWidth * SCREEN_PIXEL_WIDTH;
-		GLfloat height = this->_texHeight * SCREEN_PIXEL_WIDTH;
+		GLfloat width = (GLfloat)(this->_texWidth * SCREEN_PIXEL_WIDTH);
+		GLfloat height = (GLfloat)(this->_texHeight * SCREEN_PIXEL_WIDTH);
 		GLfloat vertData[8] = {x, y, x, y+height, x+width, y+height, x+width, y };
 		GLfloat texData[8] = {0.0, this->_texHeight, 0.0, 0.0, this->_texWidth, 0.0, this->_texWidth, this->_texHeight };
 
@@ -153,17 +153,17 @@ void WCText::DrawAtPoint(const WCVector4 &pt, const WCVector4 &uUnit, const WCVe
 	//If there is a texture, draw with it
 	if (this->_texture != 0) {
 		//Determine size of texture
-		GLfloat width = this->_texWidth * SCREEN_PIXEL_WIDTH;
-		GLfloat height = this->_texHeight * SCREEN_PIXEL_WIDTH;
+		GLfloat width = (GLfloat)(this->_texWidth * SCREEN_PIXEL_WIDTH);
+		GLfloat height = (GLfloat)(this->_texHeight * SCREEN_PIXEL_WIDTH);
 		//Find rect corners
 		WCVector4 ul = pt + (vUnit * height);
 		WCVector4 ur = pt + (vUnit * height) + (uUnit * width);
 		WCVector4 lr = pt + (uUnit * width);
 		//Load data
-		GLfloat vertData[12] = {pt.I(), pt.J(), pt.K(), 
-								ul.I(), ul.J(), ul.K(),
-								ur.I(), ur.J(), ur.K(),
-								lr.I(), lr.J(), lr.K() };
+		GLfloat vertData[12] = {(GLfloat)pt.I(), (GLfloat)pt.J(), (GLfloat)pt.K(), 
+								(GLfloat)ul.I(), (GLfloat)ul.J(), (GLfloat)ul.K(),
+								(GLfloat)ur.I(), (GLfloat)ur.J(), (GLfloat)ur.K(),
+								(GLfloat)lr.I(), (GLfloat)lr.J(), (GLfloat)lr.K() };
 		GLfloat texData[8] = {0.0, this->_texHeight, 
 							  0.0, 0.0, 
 							  this->_texWidth, 0.0, 
@@ -186,10 +186,10 @@ void WCText::DrawAtPoint(const WCVector4 &pt, const WCVector4 &uUnit, const WCVe
 		//Do we need to draw the backside also
 		if (this->_isBacked) {
 			//Load data
-			GLfloat backVertData[12] = {lr.I(), lr.J(), lr.K(),
-										ur.I(), ur.J(), ur.K(),
-										ul.I(), ul.J(), ul.K(),
-										pt.I(), pt.J(), pt.K() };
+			GLfloat backVertData[12] = {(GLfloat)lr.I(), (GLfloat)lr.J(), (GLfloat)lr.K(),
+										(GLfloat)ur.I(), (GLfloat)ur.J(), (GLfloat)ur.K(),
+										(GLfloat)ul.I(), (GLfloat)ul.J(), (GLfloat)ul.K(),
+										(GLfloat)pt.I(), (GLfloat)pt.J(), (GLfloat)pt.K() };
 			GLfloat backTexData[8] = {0.0, this->_texHeight, 
 									  0.0, 0.0, 
 									  this->_texWidth, 0.0, 

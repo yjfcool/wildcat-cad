@@ -38,25 +38,25 @@ void WCBackgroundLayer::GenerateBuffers(void) {
 	//Create the vertex data
 	GLfloat data[16];
 	//Lower left
-	data[0] = this->_scene->XMin();
-	data[1] = this->_scene->YMin();
-	data[2] = SCENE_ZMIN_DEFAULT+0.01;
-	data[3] = 1.0;
+	data[0] = (GLfloat)this->_scene->XMin();
+	data[1] = (GLfloat)this->_scene->YMin();
+	data[2] = (GLfloat)(SCENE_ZMIN_DEFAULT + 0.01);
+	data[3] = (GLfloat)1.0;
 	//Upper left
-	data[4] = this->_scene->XMin();
-	data[5] = this->_scene->YMax();
-	data[6] = SCENE_ZMIN_DEFAULT+0.01;
-	data[7] = 1.0;
+	data[4] = (GLfloat)this->_scene->XMin();
+	data[5] = (GLfloat)this->_scene->YMax();
+	data[6] = (GLfloat)(SCENE_ZMIN_DEFAULT + 0.01);
+	data[7] = (GLfloat)1.0;
 	//Upper right
-	data[8] = this->_scene->XMax();
-	data[9] = this->_scene->YMax();
-	data[10] = SCENE_ZMIN_DEFAULT+0.01;
-	data[11] = 1.0;
+	data[8] = (GLfloat)this->_scene->XMax();
+	data[9] = (GLfloat)this->_scene->YMax();
+	data[10] = (GLfloat)(SCENE_ZMIN_DEFAULT + 0.01);
+	data[11] = (GLfloat)1.0;
 	//Lower right
-	data[12] = this->_scene->XMax();
-	data[13] = this->_scene->YMin();
-	data[14] = SCENE_ZMIN_DEFAULT+0.01;
-	data[15] = 1.0;
+	data[12] = (GLfloat)this->_scene->XMax();
+	data[13] = (GLfloat)this->_scene->YMin();
+	data[14] = (GLfloat)(SCENE_ZMIN_DEFAULT + 0.01);
+	data[15] = (GLfloat)1.0;
 	//Copy the data into the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, 16*sizeof(GLfloat), data, GL_STATIC_DRAW);
@@ -64,25 +64,25 @@ void WCBackgroundLayer::GenerateBuffers(void) {
 	//Create the color data
 	GLfloat color[16];
 	//Lower left
-	color[0] = this->_llColor.R();
-	color[1] = this->_llColor.G();
-	color[2] = this->_llColor.B();
-	color[3] = this->_llColor.A();
+	color[0] = (GLfloat)this->_llColor.R();
+	color[1] = (GLfloat)this->_llColor.G();
+	color[2] = (GLfloat)this->_llColor.B();
+	color[3] = (GLfloat)this->_llColor.A();
 	//Upper left
-	color[4] = this->_ulColor.R();
-	color[5] = this->_ulColor.G();
-	color[6] = this->_ulColor.B();
-	color[7] = this->_ulColor.A();
+	color[4] = (GLfloat)this->_ulColor.R();
+	color[5] = (GLfloat)this->_ulColor.G();
+	color[6] = (GLfloat)this->_ulColor.B();
+	color[7] = (GLfloat)this->_ulColor.A();
 	//Upper right
-	color[8] = this->_urColor.R();
-	color[9] = this->_urColor.G();
-	color[10] = this->_urColor.B();
-	color[11] = this->_urColor.A();
+	color[8] = (GLfloat)this->_urColor.R();
+	color[9] = (GLfloat)this->_urColor.G();
+	color[10] = (GLfloat)this->_urColor.B();
+	color[11] = (GLfloat)this->_urColor.A();
 	//Lower right
-	color[12] = this->_lrColor.R();
-	color[13] = this->_lrColor.G();
-	color[14] = this->_lrColor.B();
-	color[15] = this->_lrColor.A();
+	color[12] = (GLfloat)this->_lrColor.R();
+	color[13] = (GLfloat)this->_lrColor.G();
+	color[14] = (GLfloat)this->_lrColor.B();
+	color[15] = (GLfloat)this->_lrColor.A();
 
 	//Copy the data into the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);

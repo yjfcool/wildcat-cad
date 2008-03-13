@@ -98,9 +98,9 @@ void WCLightSource::Render(GLuint currentProg) {
 	loc = glGetUniformLocation(currentProg, "lightSpecularColor");
 	if (loc != -1) glUniform3f(currentProg, this->_specular.R(), this->_specular.G(), this->_specular.B());
 	loc = glGetUniformLocation(currentProg, "lightPosition");
-	if (loc != -1) glUniform3f(currentProg, this->_position.I(), this->_position.J(), this->_position.K());
+	if (loc != -1) glUniform3f(currentProg, (GLfloat)this->_position.I(), (GLfloat)this->_position.J(), (GLfloat)this->_position.K());
 	loc = glGetUniformLocation(currentProg, "lightDirection");
-	if (loc != -1) glUniform3f(currentProg, this->_direction.I(), this->_direction.J(), this->_direction.K());
+	if (loc != -1) glUniform3f(currentProg, (GLfloat)this->_direction.I(), (GLfloat)this->_direction.J(), (GLfloat)this->_direction.K());
 	//Make sure to update lastProg
 	this->_lastProg = currentProg;
 }

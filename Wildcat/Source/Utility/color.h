@@ -48,27 +48,28 @@ private:
 public:
 	//Constructors and Destructors
 	WCColor();																						//!< Default constructor
-	WCColor(const GLfloat r, const GLfloat g, const GLfloat b, const GLfloat a=1.0);				//!< Alternate constructor
+	WCColor(const GLfloat &r, const GLfloat &g, const GLfloat &b, const GLfloat &a=1.0);			//!< Alternate constructor
+	WCColor(const WPFloat &r, const WPFloat &g, const WPFloat &b, const WPFloat &a=1.0);			//!< Alternate constructor
 	WCColor(const WCColor& color);																	//!< Copy constructor
 	~WCColor()									{ }													//!< Default destructor
 	
 	//General Access Methods
-	void Set(const GLfloat r, const GLfloat g, const GLfloat b, const GLfloat a=1.0);				//!< Set the color values
+	void Set(const GLfloat &r, const GLfloat &g, const GLfloat &b, const GLfloat &a=1.0);			//!< Set the color values
 	void Set(const WCColor &color);																	//!< Set using existing color
 	void Enable(void) const						{ glColor4fv(this->_rgba); }						//!< Enable this color
-	void R(const GLfloat red)					{ this->_rgba[0] = red; }							//!< Set red channel
+	void R(const GLfloat &red)					{ this->_rgba[0] = red; }							//!< Set red channel
 	GLfloat R(void) const						{ return this->_rgba[0]; }							//!< Get red channel
-	void G(const GLfloat green)					{ this->_rgba[1] = green; }							//!< Set green channel
+	void G(const GLfloat &green)				{ this->_rgba[1] = green; }							//!< Set green channel
 	GLfloat G(void) const						{ return this->_rgba[1]; }							//!< Get green channel
-	void B(const GLfloat blue)					{ this->_rgba[2] = blue; }							//!< Set blue channel	
+	void B(const GLfloat &blue)					{ this->_rgba[2] = blue; }							//!< Set blue channel	
 	GLfloat B(void) const						{ return this->_rgba[2]; }							//!< Get blue channel
-	void A(const GLfloat alpha)					{ this->_rgba[3] = alpha; }							//!< Set alpha channel
+	void A(const GLfloat &alpha)				{ this->_rgba[3] = alpha; }							//!< Set alpha channel
 	GLfloat A(void) const						{ return this->_rgba[3]; }							//!< Get alpha channel			
 	
 	//Operator overloads
-	WCColor& operator=(const WCColor& col);															//!< Equals operator
-	bool operator==(const WCColor& col) const;														//!< Equality operator
-	bool operator!=(const WCColor& col) const;														//!< Non-equality operator
+	WCColor& operator=(const WCColor &col);															//!< Equals operator
+	bool operator==(const WCColor &col) const;														//!< Equality operator
+	bool operator!=(const WCColor &col) const;														//!< Non-equality operator
 	
 	//Conversion Methods
 	void ToElement(xercesc::DOMElement *element);													//!< Serialize the object

@@ -109,7 +109,7 @@ public:
 	inline WPFloat Height(void) const			{ return this->_height; }							//!< Return the height value
 	inline WPFloat MouseX(void)	const			{ return this->_mouseX; }							//!< Return the x position of the mouse (in scene coords)
 	inline WPFloat MouseY(void)	const			{ return this->_mouseY; }							//!< Return the y position of the mouse (in scene coords)	
-	bool MouseState(WCMouseButton button)		{ return this->_mouseButtons[button._button]; }		//!< Return the state of the mouse button
+	bool MouseState(const WCMouseButton &button){ return this->_mouseButtons[button._button]; }		//!< Return the state of the mouse button
 	inline WPInt WindowWidth(void)	const		{ return this->_winWidth; }							//!< Return the integer window width
 	inline WPInt WindowHeight(void) const		{ return this->_winHeight; }						//!< Return the integer window height
 	inline WCMatrix4 ProjectionInverse(void) const { return this->_projectionInverse; }				//!< Return the projection inverse
@@ -123,12 +123,12 @@ public:
 
 	//Event Handling Methods
 	bool OnIdle(void);																				//!< Handle an idle event
-	bool OnMouseMove(const int x, const int y);														//!< Track the mouse x and y position
+	bool OnMouseMove(const int &x, const int &y);													//!< Track the mouse x and y position
 	bool OnMouseDown(const WCMouseButton &button);													//!< Mouse button down event
 	bool OnMouseUp(const WCMouseButton &button);													//!< Mouse button up event
 	bool OnScroll(const WPFloat &x, const WPFloat &y);												//!< Respond to scroll-wheel event
 	bool OnArrowKeyPress(const WCArrowKey &key);													//!< React to arrow key event
-	bool OnReshape(const int width, const int height);												//!< Window reshape info
+	bool OnReshape(const int &width, const int &height);											//!< Window reshape info
 		
 	//Layer Related Methods
 	void RegisterLayer(WCLayer *layer, WCLayer *layerAbove=NULL);									//!< Add a new layer into the scene

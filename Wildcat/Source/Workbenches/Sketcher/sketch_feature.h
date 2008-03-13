@@ -56,8 +56,8 @@ public:
 	static WCColor								SelectedColor;										//!< Selected feature color
 	static WCColor								ConstructionColor;									//!< Construction feature color
 	static WCColor								InprocessColor;										//!< Inprocess feature color
-	static WPFloat								PointSize;											//!< Default point size
-	static WPFloat								LineThickness;										//!< Default line thickness
+	static GLfloat								PointSize;											//!< Default point size
+	static GLfloat								LineThickness;										//!< Default line thickness
 	static GLint								LineStippleFactor;									//!< Default line stipple factor
 	static GLushort								LineStipplePattern;									//!< Default line stipple patter
 	

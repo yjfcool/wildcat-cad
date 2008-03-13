@@ -37,8 +37,8 @@
 
 
 void WCPartPlane::GenerateVBO(void) {
-	GLfloat invZoom = 1.0 / this->_document->Scene()->ActiveCamera()->Zoom();
-	GLfloat zoom = invZoom * PARTPLANE_SCALE;
+	GLfloat invZoom = 1.0f / (GLfloat)this->_document->Scene()->ActiveCamera()->Zoom();
+	GLfloat zoom = (GLfloat)(invZoom * PARTPLANE_SCALE);
 
 	//Calculate the corners
 	WCVector4 ll = this->_base - this->_uAxis*zoom - this->_vAxis*zoom;

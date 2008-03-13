@@ -70,10 +70,10 @@
 
 class WCMeasurePosition {
 private:
-	WPUInt										_pos;												//!< Type value
+	int											_pos;												//!< Type value
 	//Deny Access
 	WCMeasurePosition();																			//!< Deny access to default constructor
-	WCMeasurePosition(const WPUInt &pos) : _pos(pos) { }											//!< Primary hidden constructor
+	WCMeasurePosition(const int &pos) : _pos(pos) { }												//!< Primary hidden constructor
 public:
 	//Constructors and Destructors
 	WCMeasurePosition(const WCMeasurePosition &pos) : _pos(pos._pos) { }							//!< Copy constructor
@@ -91,7 +91,7 @@ public:
 
 	//Persistance Methods
 	void ToElement(xercesc::DOMElement *element)	{ WCSerializeableObject::AddFloatAttrib(element, "pos", this->_pos); }
-	void FromElement(xercesc::DOMElement *element)	{ this->_pos = WCSerializeableObject::GetFloatAttrib(element, "pos"); }
+	void FromElement(xercesc::DOMElement *element)	{ this->_pos = (int)WCSerializeableObject::GetFloatAttrib(element, "pos"); }
 };
 
 
@@ -124,7 +124,7 @@ public:
 
 	//Persistance Methods
 	void ToElement(xercesc::DOMElement *element)	{ WCSerializeableObject::AddFloatAttrib(element, "type", this->_type); }
-	void FromElement(xercesc::DOMElement *element)	{ this->_type = WCSerializeableObject::GetFloatAttrib(element, "type"); }
+	void FromElement(xercesc::DOMElement *element)	{ this->_type = (int)WCSerializeableObject::GetFloatAttrib(element, "type"); }
 };
 
 

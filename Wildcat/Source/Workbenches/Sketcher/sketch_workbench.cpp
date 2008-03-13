@@ -261,7 +261,7 @@ void WCSketchWorkbench::RenderPoint(const WPFloat x, const WPFloat y, const WCCo
 	//Calculate horizontal line start and stop
 	WCVector4 pt(x, y, 0.0, 1.0);
 	pt = this->_sketch->ReferencePlane()->TransformMatrix() * pt;
-	GLfloat data[3] = { pt.I(), pt.J(), pt.K() };
+	GLfloat data[3] = { (GLfloat)pt.I(), (GLfloat)pt.J(), (GLfloat)pt.K() };
 
 	//Enable mode color
 	if (color == WCColor::Default()) {
@@ -291,7 +291,7 @@ void WCSketchWorkbench::RenderCrosshairs(const WPFloat x, const WPFloat y, const
 	WCVector4 vAxis(0.0, 1.0, 0.0, 0.0);
 	WCMatrix4 mat = this->_sketch->ReferencePlane()->TransformMatrix();
 	//And apply inverse zoom factor
-	GLfloat invZoom = 1.0 / this->_sketch->Document()->Scene()->ActiveCamera()->Zoom();
+	GLfloat invZoom = 1.0f / (GLfloat)this->_sketch->Document()->Scene()->ActiveCamera()->Zoom();
 	GLfloat zoom = invZoom * SKETCHWORKBENCH_CROSSHAIR_SIZE;
 	//Calculate final offsets
 	base = mat * base;
@@ -303,8 +303,10 @@ void WCSketchWorkbench::RenderCrosshairs(const WPFloat x, const WPFloat y, const
 	WCVector4 up = base + vAxis*zoom;
 	WCVector4 down = base - vAxis*zoom;
 	//Set up render array
-	GLfloat data[12] = { left.I(), left.J(), left.K(), right.I(), right.J(), right.K(),
-						down.I(), down.J(), down.K(), up.I(), up.J(), up.K() };
+	GLfloat data[12] = { (GLfloat)left.I(), (GLfloat)left.J(), (GLfloat)left.K(),
+						 (GLfloat)right.I(), (GLfloat)right.J(), (GLfloat)right.K(),
+						 (GLfloat)down.I(), (GLfloat)down.J(), (GLfloat)down.K(),
+						 (GLfloat)up.I(), (GLfloat)up.J(), (GLfloat)up.K() };
 	
 	//Enable mode color
 	if (color == WCColor::Default()) {
@@ -333,7 +335,7 @@ void WCSketchWorkbench::RenderCrossTarget(const WPFloat x, const WPFloat y, cons
 	WCVector4 vAxis(0.0, 1.0, 0.0, 0.0);
 	WCMatrix4 mat = this->_sketch->ReferencePlane()->TransformMatrix();
 	//And apply inverse zoom factor
-	GLfloat invZoom = 1.0 / this->_sketch->Document()->Scene()->ActiveCamera()->Zoom();
+	GLfloat invZoom = 1.0f / (GLfloat)this->_sketch->Document()->Scene()->ActiveCamera()->Zoom();
 	GLfloat zoom = invZoom * SKETCHWORKBENCH_CROSSHAIR_SIZE;
 	//Calculate final offsets
 	base = mat * base;
@@ -350,12 +352,18 @@ void WCSketchWorkbench::RenderCrossTarget(const WPFloat x, const WPFloat y, cons
 	WCVector4 ur = base + hAxis*zoom*0.45 + vAxis*zoom*0.45;
 	WCVector4 lr = base + hAxis*zoom*0.45 - vAxis*zoom*0.45;
 	//Set up render array
-	GLfloat data[36] = { left.I(), left.J(), left.K(), right.I(), right.J(), right.K(),
-						 down.I(), down.J(), down.K(), up.I(), up.J(), up.K(),
-						 ll.I(), ll.J(), ll.K(), ul.I(), ul.J(), ul.K(),
-						 ul.I(), ul.J(), ul.K(), ur.I(), ur.J(), ur.K(), 
-						 ur.I(), ur.J(), ur.K(), lr.I(), lr.J(), lr.K(),
-						 lr.I(), lr.J(), lr.K(), ll.I(), ll.J(), ll.K() };
+	GLfloat data[36] = { (GLfloat)left.I(), (GLfloat)left.J(), (GLfloat)left.K(),
+						 (GLfloat)right.I(), (GLfloat)right.J(), (GLfloat)right.K(),
+						 (GLfloat)down.I(), (GLfloat)down.J(), (GLfloat)down.K(),
+						 (GLfloat)up.I(), (GLfloat)up.J(), (GLfloat)up.K(),
+						 (GLfloat)ll.I(), (GLfloat)ll.J(), (GLfloat)ll.K(),
+						 (GLfloat)ul.I(), (GLfloat)ul.J(), (GLfloat)ul.K(),
+						 (GLfloat)ul.I(), (GLfloat)ul.J(), (GLfloat)ul.K(),
+						 (GLfloat)ur.I(), (GLfloat)ur.J(), (GLfloat)ur.K(), 
+						 (GLfloat)ur.I(), (GLfloat)ur.J(), (GLfloat)ur.K(),
+						 (GLfloat)lr.I(), (GLfloat)lr.J(), (GLfloat)lr.K(),
+						 (GLfloat)lr.I(), (GLfloat)lr.J(), (GLfloat)lr.K(),
+						 (GLfloat)ll.I(), (GLfloat)ll.J(), (GLfloat)ll.K() };
 
 	//Enable mode color
 	if (color == WCColor::Default()) {

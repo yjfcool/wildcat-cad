@@ -40,7 +40,7 @@
 #define TREEVIEW_STEM_COLOR						0.0, 0.0, 0.0, 1.0
 #define TREEVIEW_TEXT_COLOR						1.0, 1.0, 1.0, 1.0
 #define TREEVIEW_TEXT_SELECTED_COLOR			1.0, 1.0, 0.0, 1.0
-#define TREEVIEW_OPENCLOSE_COLOR				0.3, 0.8, 0.3, 0.9
+#define TREEVIEW_OPENCLOSE_COLOR				0.3f, 0.8f, 0.3f, 0.9f
 #define TREEVIEW_ICON_SIZE						26
 
 
@@ -221,13 +221,13 @@ bool WCTreeElement::Remove(WCTreeElement *element) {
 
 
 WCTreeElement* WCTreeElement::OnMouseDown(const WCMouseButton &button, WCVector4 &pos, WPUInt depth) {
-	GLfloat iconSize = TREEVIEW_ICON_SIZE * SCREEN_PIXEL_WIDTH;	
+	GLfloat iconSize = (GLfloat)(TREEVIEW_ICON_SIZE * SCREEN_PIXEL_WIDTH);
 	GLfloat indent = iconSize * depth;
-	GLfloat yLoc = pos.L();	
+	GLfloat yLoc = (GLfloat)pos.L();	
 
 	//Determine if within the box vertically
 	if ((pos.J() <= yLoc) && (pos.J() >= yLoc - iconSize)) {
-		GLfloat xLoc = pos.K() + indent;
+		GLfloat xLoc = (GLfloat)pos.K() + indent;
 		//See if within open/close box
 		if ((this->_childList.size() > 0) && 
 			(pos.J() >= yLoc-0.666*iconSize) && (pos.J() <= yLoc-0.333*iconSize) && 
@@ -268,9 +268,9 @@ WCTreeElement* WCTreeElement::OnMouseDown(const WCMouseButton &button, WCVector4
 
 
 WCTreeElement* WCTreeElement::OnMouseMove(WCVector4 &pos, WPUInt depth) {
-	GLfloat iconSize = TREEVIEW_ICON_SIZE * SCREEN_PIXEL_WIDTH;
-	GLfloat xLoc = pos.K() + depth * iconSize;
-	GLfloat yLoc = pos.L();
+	GLfloat iconSize = (GLfloat)(TREEVIEW_ICON_SIZE * SCREEN_PIXEL_WIDTH);
+	GLfloat xLoc = (GLfloat)(pos.K() + depth * iconSize);
+	GLfloat yLoc = (GLfloat)pos.L();
 	//Determine if within the box
 	if ((pos.J() <= yLoc) && (pos.J() >= yLoc - iconSize) &&		//Below top of box and above bottom of box
 		(pos.I() >= xLoc) && (pos.I() <= xLoc + (1.25 * iconSize) + this->_label->Width() + (4 * SCREEN_PIXEL_WIDTH))) {
@@ -302,7 +302,7 @@ void WCTreeElement::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 
 void WCTreeElement::Render(WPFloat &x, WPFloat &y, WPUInt depth) {
 	//Setup location and spacing
-	GLfloat iconSize = TREEVIEW_ICON_SIZE * SCREEN_PIXEL_WIDTH;
+	GLfloat iconSize = (GLfloat)(TREEVIEW_ICON_SIZE * SCREEN_PIXEL_WIDTH);
 	GLfloat xLoc = x + iconSize * depth;
 	GLfloat yLoc = y;
 
@@ -392,7 +392,7 @@ void WCTreeElement::Render(WPFloat &x, WPFloat &y, WPUInt depth) {
 	//Draw highlight box if mouse is over
 	if (this->_isMouseOver) {
 		GLfloat textWidth = this->_label->Width();
-		GLfloat xMin = xLoc + 1.25 * iconSize;
+		GLfloat xMin = (GLfloat)(xLoc + 1.25 * iconSize);
 		glDisable(GL_BLEND);
 		WCOverlay::RenderRectangle(xMin-SCREEN_PIXEL_WIDTH, yLoc-iconSize+SCREEN_PIXEL_WIDTH, xMin+textWidth+SCREEN_PIXEL_WIDTH, yLoc-SCREEN_PIXEL_WIDTH, 
 			WCColor(0.5, 0.5, 0.5, 0.3), 
@@ -415,7 +415,8 @@ void WCTreeElement::Render(WPFloat &x, WPFloat &y, WPUInt depth) {
 		this->_label->IsUnderlined(false);
 	}
 	//Draw the label
-	this->_label->DrawAtPoint(xLoc+(1.25*iconSize), yLoc-(0.9*iconSize)+SCREEN_PIXEL_WIDTH);
+	this->_label->DrawAtPoint((GLfloat)(xLoc+(1.25*iconSize)),
+							  (GLfloat)(yLoc-(0.9*iconSize)+SCREEN_PIXEL_WIDTH));
 
 	//Modify y value for next object
 	y = y - iconSize;
@@ -556,9 +557,9 @@ void WCTreeView::GenerateBuffers(void) {
 /*** DEBUG ***/
 
 	//Determine upper left tex-coord
-	GLfloat actualPixelHeight = this->_height / SCREEN_PIXEL_WIDTH;
-	GLfloat actualPixelWidth = this->_width / SCREEN_PIXEL_WIDTH;
-	GLfloat upperY = this->_texHeight - ((this->_texHeight - actualPixelHeight) * this->_scrollbar->Position());
+	GLfloat actualPixelHeight = (GLfloat)(this->_height / SCREEN_PIXEL_WIDTH);
+	GLfloat actualPixelWidth = (GLfloat)(this->_width / SCREEN_PIXEL_WIDTH);
+	GLfloat upperY = (GLfloat)(this->_texHeight - ((this->_texHeight - actualPixelHeight) * this->_scrollbar->Position()));
 	//Create the color data
 	GLfloat texCoords[8];
 	//Upper left
@@ -694,14 +695,14 @@ void WCTreeView::MarkDirty(void) {
 		this->_width = this->_virtualWidth + this->_scrollbar->Width();
 		this->_xMax = this->_xMin + this->_width;
 		//Set the yMin and height
-		this->_height = std::min(this->_layer->Scene()->Height() - 1.5, this->_virtualHeight);
+		this->_height = STDMIN(this->_layer->Scene()->Height() - 1.5, this->_virtualHeight);
 		this->_yMin = this->_yMax - this->_height;
 		//Update texture width and height
-		this->_texWidth = this->_virtualWidth / SCREEN_PIXEL_WIDTH;
-		this->_texHeight = this->_virtualHeight / SCREEN_PIXEL_WIDTH;
+		this->_texWidth = (GLuint)(this->_virtualWidth / SCREEN_PIXEL_WIDTH);
+		this->_texHeight = (GLuint)(this->_virtualHeight / SCREEN_PIXEL_WIDTH);
 		//Update scrollbar values
 		WPFloat extent = this->_height / this->_virtualHeight;
-		this->_scrollbar->Extent( std::min(extent, 1.0) );
+		this->_scrollbar->Extent( STDMIN(extent, 1.0) );
 		//If there is a virtual extent, then enable scrollbar
 		if (extent < 1.0) this->_scrollbar->IsVisible(true);
 		else this->_scrollbar->IsVisible(false);
@@ -713,8 +714,8 @@ void WCTreeView::MarkDirty(void) {
 		//Set the virtual width and height, and texture width and height
 		this->_virtualWidth = 0.0;
 		this->_virtualHeight = 0.0;
-		this->_texWidth = 0.0;
-		this->_texHeight = 0.0;
+		this->_texWidth = 0;
+		this->_texHeight = 0;
 		//Update the scroll bar
 		this->_scrollbar->IsVisible(false);
 		this->_scrollbar->Extent(1.0);
@@ -934,18 +935,18 @@ void WCTreeView::Render(void) {
 	//Optionally render tie-in lines
 	if (this->_scrollbar->IsVisible()) {
 		//Setup data arrays
-		GLfloat lineVerts[12] = { this->_xMax - 1.0, this->_yMax,
-								  this->_xMin + this->_scrollbar->Width(), this->_yMax,
-								  this->_xMin, this->_yMax,
-								  this->_xMin, this->_yMin,
-								  this->_xMin + this->_scrollbar->Width(), this->_yMin,
-								  this->_xMax - 1.0, this->_yMin};
-		GLfloat lineColors[24] = { 0.5, 0.5, 0.5, 0.0,
-								   0.5, 0.5, 0.5, 0.4,
-								   0.5, 0.5, 0.5, 0.75,
-								   0.5, 0.5, 0.5, 0.75,
-								   0.5, 0.5, 0.5, 0.4,
-								   0.5, 0.5, 0.5, 0.0 };
+		GLfloat lineVerts[12] = { (GLfloat)this->_xMax - 1.0f, (GLfloat)this->_yMax,
+								  (GLfloat)(this->_xMin + this->_scrollbar->Width()), (GLfloat)this->_yMax,
+								  (GLfloat)this->_xMin, (GLfloat)this->_yMax,
+								  (GLfloat)this->_xMin, (GLfloat)this->_yMin,
+								  (GLfloat)(this->_xMin + this->_scrollbar->Width()), (GLfloat)this->_yMin,
+								  (GLfloat)this->_xMax - 1.0f, (GLfloat)this->_yMin};
+		GLfloat lineColors[24] = { 0.5f, 0.5f, 0.5f, 0.0f,
+								   0.5f, 0.5f, 0.5f, 0.4f,
+								   0.5f, 0.5f, 0.5f, 0.75f,
+								   0.5f, 0.5f, 0.5f, 0.75f,
+								   0.5f, 0.5f, 0.5f, 0.4f,
+								   0.5f, 0.5f, 0.5f, 0.0f };
 		//Setup draw state
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_COLOR_ARRAY);

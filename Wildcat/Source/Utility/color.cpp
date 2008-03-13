@@ -43,8 +43,14 @@ WCColor::WCColor() {
 }
 
 
-WCColor::WCColor(const GLfloat r, const GLfloat g, const GLfloat b, const GLfloat a) {
+WCColor::WCColor(const GLfloat &r, const GLfloat &g, const GLfloat &b, const GLfloat &a) {
+	//Set the colors
 	this->Set(r, g, b, a);
+}
+
+WCColor::WCColor(const WPFloat &r, const WPFloat &g, const WPFloat &b, const WPFloat &a) {
+	//Set the colors
+	this->Set((GLfloat)r, (GLfloat)g, (GLfloat)b, (GLfloat)a);
 }
 
 
@@ -54,7 +60,7 @@ WCColor::WCColor(const WCColor& color) {
 }
 
 
-void WCColor::Set(const GLfloat r, const GLfloat g, const GLfloat b, const GLfloat a) {
+void WCColor::Set(const GLfloat &r, const GLfloat &g, const GLfloat &b, const GLfloat &a) {
 	//Default is white
 	this->_rgba[0] = r;
 	this->_rgba[1] = g;
@@ -69,14 +75,14 @@ void WCColor::Set(const WCColor &color) {
 }
 
 
-WCColor& WCColor::operator=(const WCColor& color) {
+WCColor& WCColor::operator=(const WCColor &color) {
 	//Copy all color components
 	memcpy(this->_rgba, color._rgba, 4*sizeof(GLfloat));
 	return *this;
 }
 
 
-bool WCColor::operator==(const WCColor& color) const {
+bool WCColor::operator==(const WCColor &color) const {
 	//Return true if all components are same
 	if ((this->_rgba[0] == color._rgba[0]) && 
 		(this->_rgba[1] == color._rgba[1]) && 
@@ -87,7 +93,7 @@ bool WCColor::operator==(const WCColor& color) const {
 }
 
 
-bool WCColor::operator!=(const WCColor& color) const {
+bool WCColor::operator!=(const WCColor &color) const {
 	return !(*this == color);
 }
 

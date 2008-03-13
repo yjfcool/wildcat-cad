@@ -52,7 +52,6 @@ class WCDrawingMode {
 protected:
 	WCFeature									*_creator;											//!< Creating feature
 	std::string									_name;												//!< Mode name
-	
 private:
 	//Deny Access
 	WCDrawingMode();																				//!< Deny access to default constructor

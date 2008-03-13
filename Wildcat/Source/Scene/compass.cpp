@@ -110,9 +110,9 @@ void WCCompass::Render(void) {
 	WCVector4 zAxis(0.0, 0.0, 1.0, 0.0);
 	zAxis = (rotMat * zAxis).Normalize(true) * COMPASS_SCALE_FACTOR + center;
 	
-	GLfloat vData[18] = { x, y, 0.0f, xAxis.I(), xAxis.J(), xAxis.K(),
-						  x, y, 0.0f, yAxis.I(), yAxis.J(), yAxis.K(),
-						  x, y, 0.0f, zAxis.I(), zAxis.J(), zAxis.K() };
+	GLfloat vData[18] = { (GLfloat)x, (GLfloat)y, 0.0f, (GLfloat)xAxis.I(), (GLfloat)xAxis.J(), (GLfloat)xAxis.K(),
+						  (GLfloat)x, (GLfloat)y, 0.0f, (GLfloat)yAxis.I(), (GLfloat)yAxis.J(), (GLfloat)yAxis.K(),
+						  (GLfloat)x, (GLfloat)y, 0.0f, (GLfloat)zAxis.I(), (GLfloat)zAxis.J(), (GLfloat)zAxis.K() };
 	GLfloat cData[24] = { 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
 						  0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
 						  1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f };

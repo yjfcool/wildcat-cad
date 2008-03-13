@@ -39,7 +39,7 @@
 
 /*** Local Defines ***/
 #define SKETCH_CLASSNAME						"Sketch"
-#define SKETCH_AXIS_COLOR						1.0, 0.5, 0.5, 0.8
+#define SKETCH_AXIS_COLOR						1.0f, 0.5f, 0.5f, 0.8f
 #define SKETCH_AXIS_SCALE						1.0
 #define SKETCH_ANALYSIS_TOLERANCE				0.01
 

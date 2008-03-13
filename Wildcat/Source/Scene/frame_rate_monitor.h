@@ -34,11 +34,6 @@
 #include "Scene/wscnl.h"
 #include "Scene/overlay.h"
 
-/*** DEBUG ***/
-//Need #ifdef for OSX
-#include <CoreServices/CoreServices.h>
-/*** DEBUG ***/
-
 
 /*** Local Defines ***/
 #define FRAMERATEMONITOR_WIDTH					1.5
@@ -59,7 +54,7 @@ class WCText;
 class WCFrameRateMonitor : public WCOverlay {
 protected:
 	WPInt										_frameCounter;										//!< Number of frames in this second
-	AbsoluteTime								_start;												//!< Time start marker
+	WPTime										_start;												//!< Time start marker
 	WPFloat										_fps;												//!< Calculated fps
 	WCColor										_color;												//!< FRM color
 	WCText										*_label;											//!< FRM label

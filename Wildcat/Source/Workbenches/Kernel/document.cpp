@@ -145,7 +145,7 @@ WCDocument::WCDocument(xercesc::DOMElement *element, WCSerialDictionary *diction
 		xercesc::XMLString::release(&xmlString);
 		xercesc::DOMElement *nvElement;
 		WCNamedView *namedView;
-		for (int nvIndex=0; nvIndex < list->getLength(); nvIndex++) {
+		for (WPUInt nvIndex=0; nvIndex < list->getLength(); nvIndex++) {
 			//Get the indexed node and cast to element
 			nvElement = (xercesc::DOMElement*)list->item(nvIndex);
 			//Create the named view
@@ -327,7 +327,7 @@ bool WCDocument::Undo(const WPUInt &count) {
 		return true;
 	}
 	//Repeat count times
-	for (int i=0; i<count; i++) {
+	for (WPUInt i=0; i<count; i++) {
 		//Rollback the last count actions
 		CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCDocument::Undo - Rolling Back: " << this->_actions.back()->Name() << ".");
 		status = this->_actions.back()->Rollback();
@@ -363,7 +363,7 @@ bool WCDocument::Redo(const WPUInt &count) {
 		return true;
 	}
 	//Repeat count times
-	for (int i=0; i<count; i++) {
+	for (WPUInt i=0; i<count; i++) {
 		//Redo the last count redo actions
 		CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCDocument::Redo - Re-Executing: " << this->_actions.back()->Name() << ".");
 		status = this->_redoActions.back()->Execute();

@@ -289,7 +289,7 @@ WCSketchProfile::~WCSketchProfile() {
 
 /*** Positive is to the right, zero is on both sides, and negative is to left
 	Axis always has zero or positive slope ***/
-WPUInt WCSketchProfile::IsOnRight(const WCSketchAxis *axis) {
+WPInt WCSketchProfile::IsOnRight(const WCSketchAxis *axis) {
 	//Project axis begin and end points into 3D space
 	WCVector4 axisBegin = this->_sketch->ReferencePlane()->TransformMatrix() * axis->Begin();
 	WCVector4 axisEnd = this->_sketch->ReferencePlane()->TransformMatrix() * axis->End();
@@ -337,7 +337,7 @@ WPUInt WCSketchProfile::IsOnRight(const WCSketchAxis *axis) {
 			//Project the point onto the plane
 			testPoint = this->_sketch->ReferencePlane()->InverseTransformMatrix() * testPoint;
 			//See if point is left or right of line
-			if (IsOnRight2D(axis->Begin().I(), axis->Begin().J(), axis->End().I(), axis->End().J(), testPoint.I(), testPoint.J())) return 1.0;
+			if (IsOnRight2D(axis->Begin().I(), axis->Begin().J(), axis->End().I(), axis->End().J(), testPoint.I(), testPoint.J())) return 1;
 			else return -1;
 		}
 		//If here, then must try next curve to see if left or right
@@ -453,7 +453,7 @@ std::list<WCVector4> WCSketchProfile::BoundaryList(const bool &detailed) {
 					GLfloat* data = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
 					//Process forwards
 					if ((*curveIter).second) {
-						for (int i=1; i<nurb->LevelOfDetail(); i++) {
+						for (WPUInt i=1; i<nurb->LevelOfDetail(); i++) {
 							//Get point data
 							point.Set(data[i*4], data[i*4+1], data[i*4+2], 1.0);
 							//Put point into list
@@ -479,7 +479,7 @@ std::list<WCVector4> WCSketchProfile::BoundaryList(const bool &detailed) {
 					//Process curve forwards
 					if ((*curveIter).second) {
 						//Go through all control points (make sure to skip the first)
-						for(int i=1; i<controlPoints.size(); i++) {
+						for(WPUInt i=1; i<controlPoints.size(); i++) {
 							//Copy the vector base
 							point = controlPoints.at(i);
 							//Set the weight to 1.0
@@ -524,7 +524,7 @@ GLuint WCSketchProfile::Triangulate(GLuint &vertexBuffer, GLuint &indexBuffer) {
 	WCVector4 tmpVec;
 	std::list<WCVector4> vertList;
 	int vertIndex = 0;
-	GLfloat vertData[numVerts * 3];
+	GLfloat *vertData = new GLfloat[numVerts * 3];
 	GLint* indexData;
 	WCMatrix4 toPlaneMatrix( this->_sketch->ReferencePlane()->InverseTransformMatrix() );
 	
@@ -534,9 +534,9 @@ GLuint WCSketchProfile::Triangulate(GLuint &vertexBuffer, GLuint &indexBuffer) {
 		tmpVec = toPlaneMatrix * (*boundaryIter);
 		vertList.push_back(tmpVec);
 		//Also place into vertex buffer array
-		vertData[vertIndex*3] = (*boundaryIter).I();
-		vertData[vertIndex*3+1] = (*boundaryIter).J();
-		vertData[vertIndex*3+2] = (*boundaryIter).K();
+		vertData[vertIndex*3] = (GLfloat)(*boundaryIter).I();
+		vertData[vertIndex*3+1] = (GLfloat)(*boundaryIter).J();
+		vertData[vertIndex*3+2] = (GLfloat)(*boundaryIter).K();
 		//Increment vertIndex
 		vertIndex++;
 	}
@@ -555,6 +555,7 @@ GLuint WCSketchProfile::Triangulate(GLuint &vertexBuffer, GLuint &indexBuffer) {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLint) * 3 * (numVerts-2), indexData, GL_STATIC_DRAW);
 	//Make sure to delete the index array
 	delete indexData;
+	delete vertData;
 /*** DEBUG ***
 	std::cout << "Triangulate Verts(" << vertexBuffer << "): " << numVerts << std::endl;
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);	

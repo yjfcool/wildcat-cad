@@ -66,10 +66,10 @@ void WCSelectionMode::OnMouseUp(const WCMouseButton &button) {
 	WCScene *scene = this->_workbench->Feature()->Document()->Scene();
 	if ((scene->MouseX() == this->_markX) && (scene->MouseY() == this->_markY)) return;
 	//Get the bounds of the selection
-	WPFloat xMin = std::min(scene->MouseX(), this->_markX);
-	WPFloat xMax = std::max(scene->MouseX(), this->_markX);
-	WPFloat yMin = std::min(scene->MouseY(), this->_markY);
-	WPFloat yMax = std::max(scene->MouseY(), this->_markY);
+	WPFloat xMin = STDMIN(scene->MouseX(), this->_markX);
+	WPFloat xMax = STDMAX(scene->MouseX(), this->_markX);
+	WPFloat yMin = STDMIN(scene->MouseY(), this->_markY);
+	WPFloat yMax = STDMAX(scene->MouseY(), this->_markY);
 	//Convert scene position to screen position
 	WPUInt xMinPos = (xMin + (scene->Width()/2.0)) * (scene->WindowWidth() / scene->Width());
 	WPUInt xMaxPos = (xMax + (scene->Width()/2.0)) * (scene->WindowWidth() / scene->Width());
@@ -115,10 +115,10 @@ void WCSelectionMode::Render(void) {
 	//Check to make sure we are selecting
 	if (!this->_isSelecting) return;
 	//Get the bounds of the selection
-	WPFloat xMin = std::min(this->_workbench->Feature()->Document()->Scene()->MouseX(), this->_markX);
-	WPFloat xMax = std::max(this->_workbench->Feature()->Document()->Scene()->MouseX(), this->_markX);
-	WPFloat yMin = std::min(this->_workbench->Feature()->Document()->Scene()->MouseY(), this->_markY);
-	WPFloat yMax = std::max(this->_workbench->Feature()->Document()->Scene()->MouseY(), this->_markY);
+	WPFloat xMin = STDMIN(this->_workbench->Feature()->Document()->Scene()->MouseX(), this->_markX);
+	WPFloat xMax = STDMAX(this->_workbench->Feature()->Document()->Scene()->MouseX(), this->_markX);
+	WPFloat yMin = STDMIN(this->_workbench->Feature()->Document()->Scene()->MouseY(), this->_markY);
+	WPFloat yMax = STDMAX(this->_workbench->Feature()->Document()->Scene()->MouseY(), this->_markY);
 	
 	//Set up billboarding
 	glPushMatrix();

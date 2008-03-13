@@ -31,13 +31,11 @@
 #include "PartDesign/part.h"
 #include "Application/keymap.h"
 #include "Scene/frame_rate_monitor.h"
-#include "PartDesign/feature_point.h"
 #include "Kernel/selection_mode.h"
 #include "Sketcher/sketch.h"
 
 
 //Part Feature Included Headers
-#include "PartDesign/coordinate_system.h"
 #include "PartDesign/part_plane.h"
 #include "PartDesign/part_body.h"
 #include "PartDesign/part_pad.h"

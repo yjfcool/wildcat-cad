@@ -38,7 +38,7 @@
 /*** Local Defines ***/
 #define SKETCHWORKBENCH_SUGGEST_TOLERANCE		0.05
 #define SKETCHWORKBENCH_SUGGEST_COLOR			1.0, 0.0, 1.0, 1.0
-#define SKETCHWORKBENCH_SUGGEST_LINE_FACTOR		2.0
+#define SKETCHWORKBENCH_SUGGEST_LINE_FACTOR		2
 #define SKETCHWORKBENCH_SUGGEST_LINE_PATTERN	0x5555
 
 
@@ -65,7 +65,7 @@ public:
 	WCSketchAlignmentRenderer()					{ }
 	virtual ~WCSketchAlignmentRenderer()		{ }
 	//Manditory Virtual Method
-	virtual void Render(WCSketchWorkbench *wb, const WPFloat x, const WPFloat y)=0;
+	virtual void Render(WCSketchWorkbench *wb, const WPFloat &x, const WPFloat &y)=0;
 };
 
 

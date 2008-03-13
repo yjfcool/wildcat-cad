@@ -36,8 +36,8 @@
 /***********************************************~***************************************************/
 
 
-WCModeSketchTrimCreate::WCModeSketchTrimCreate(WCSketchWorkbench *wb) : ::WCDrawingMode(wb->Sketch(), SKETCHTRIMMODE_CREATE_NAME),
-	_workbench(wb), _curve(NULL) { 
+WCModeSketchTrimCreate::WCModeSketchTrimCreate(WCSketchWorkbench *wb) :
+	::WCDrawingMode(wb->Sketch(), SKETCHTRIMMODE_CREATE_NAME), _workbench(wb), _curve(NULL) { 
 }
 
 

@@ -47,7 +47,7 @@
 
 
 /*** Class Predefines ***/
-class WCColor;
+//None
 
 
 /***********************************************~***************************************************/
@@ -62,28 +62,28 @@ protected:
 	WCPlacement									_placement;											//!< Placement object
 private:
 	void GenerateVBO(void);																			//!< Generate the display VBO
-
+	//Deny Access
 	WCOverlay();																					//!< Deny access to the default constructor
 public:
-	WCOverlay(WCUserInterfaceLayer *layer, bool resize=true);										//!< Primary constructor
+	WCOverlay(WCUserInterfaceLayer *layer, const bool &resize=true);								//!< Primary constructor
 	virtual ~WCOverlay();																			//!< Default destructor
 	
 	//Inherited Member Functions
-	virtual void SetSize(const WPFloat width, const WPFloat height);								//!< Set the size of the overlay
-	virtual void SetPlacement(const WPFloat lowerLeft, const WPFloat lowerRight);					//!< Set the placement 
-	virtual void SetPlacement(WCPlacement placement);												//!< Set the placement
+	virtual void SetSize(const WPFloat &width, const WPFloat &height);								//!< Set the size of the overlay
+	virtual void SetPlacement(const WPFloat &lowerLeft, const WPFloat &lowerRight);					//!< Set the placement 
+	virtual void SetPlacement(const WCPlacement &placement);											//!< Set the placement
 	virtual void OnReshape(void);																	//!< Modify placement on resize
-	virtual void OnMouseDown(const WCMouseButton &button, const WPFloat x, const WPFloat y);		//!< Receive message about mouse button being pressed	
-	virtual void OnMouseEnter(const WPFloat x, const WPFloat y);									//!< Modified MouseEnter
-	virtual void OnMouseExit(const WPFloat x, const WPFloat y);										//!< Modified MouseExit
-	virtual void OnMouseMove(const WPFloat x, const WPFloat y);										//!< Receive message about mouse being moved
+	virtual void OnMouseDown(const WCMouseButton &button, const WPFloat &x, const WPFloat &y);		//!< Receive message about mouse button being pressed	
+	virtual void OnMouseEnter(const WPFloat &x, const WPFloat &y);									//!< Modified MouseEnter
+	virtual void OnMouseExit(const WPFloat &x, const WPFloat &y);									//!< Modified MouseExit
+	virtual void OnMouseMove(const WPFloat &x, const WPFloat &y);									//!< Receive message about mouse being moved
 	virtual void Render(void);																		//!< Primary render entry point
 	
 	//Static Render Methods
-	static void RenderRectangle(const WPFloat xMin, const WPFloat yMin, const WPFloat xMax,			//!< Render a square rectangle
-												const WPFloat yMax, const WCColor &fillColor, const WCColor &edgeColor, const WCColor &shadeColor);
-	static void RenderRoundedRectangle(const WPFloat xMin, const WPFloat yMin, const WPFloat xMax,	//!< Render a rounded rectangle
-												const WPFloat yMax, const WCColor &fillColor, const WCColor &edgeColor, const WCColor &shadeColor);
+	static void RenderRectangle(const WPFloat &xMin, const WPFloat &yMin, const WPFloat &xMax,			//!< Render a square rectangle
+												const WPFloat &yMax, const WCColor &fillColor, const WCColor &edgeColor, const WCColor &shadeColor);
+	static void RenderRoundedRectangle(const WPFloat &xMin, const WPFloat &yMin, const WPFloat &xMax,	//!< Render a rounded rectangle
+												const WPFloat &yMax, const WCColor &fillColor, const WCColor &edgeColor, const WCColor &shadeColor);
 };
 
 

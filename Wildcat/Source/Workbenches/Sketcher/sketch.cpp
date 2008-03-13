@@ -131,7 +131,7 @@ WCSketch::WCSketch(xercesc::DOMElement *element, WCSerialDictionary *dictionary)
 	xercesc::DOMElement *featureElement;
 	bool retVal;
 	//Loop through all features
-	for (int featureIndex=0; featureIndex < list->getLength(); featureIndex++) {
+	for (WPUInt featureIndex=0; featureIndex < list->getLength(); featureIndex++) {
 		//Get the indexed node
 		tmpNode = list->item(featureIndex);
 		//Make sure node is element
@@ -628,9 +628,9 @@ void WCSketch::Render(const GLuint &defaultProg, const WCColor &color, const WPF
 
 	//Draw the two axis
 	glColor4f(SKETCH_AXIS_COLOR);
-	GLfloat data[9] = { vAxis.I(), vAxis.J(), vAxis.K(),
-						base.I(), base.J(), base.K(),
-						hAxis.I(), hAxis.J(), hAxis.K() };
+	GLfloat data[9] = { (GLfloat)vAxis.I(), (GLfloat)vAxis.J(), (GLfloat)vAxis.K(),
+						(GLfloat)base.I(), (GLfloat)base.J(), (GLfloat)base.K(),
+						(GLfloat)hAxis.I(), (GLfloat)hAxis.J(), (GLfloat)hAxis.K() };
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, data);
 	glDrawArrays(GL_LINE_STRIP, 0, 3);

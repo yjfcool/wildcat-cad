@@ -37,8 +37,8 @@
 
 void WCLineLayer::GenerateBuffers(void) {
 	//Create arrays for all possible lines
-	GLfloat vData[6*this->_lineList.size()];
-	GLfloat cData[8*this->_lineList.size()];
+	GLfloat *vData = new GLfloat[6*this->_lineList.size()];
+	GLfloat *cData = new GLfloat[8*this->_lineList.size()];
 	//Reset the number of visible lines
 	this->_numVisible = 0;
 	WPUInt vIndex = 0;
@@ -50,13 +50,13 @@ void WCLineLayer::GenerateBuffers(void) {
 		line = *iter;
 		if (line->IsVisible()) {
 			//Set the first vertex data
-			vData[vIndex++] = line->Begin().I();
-			vData[vIndex++] = line->Begin().J();
-			vData[vIndex++] = line->Begin().K();
+			vData[vIndex++] = (GLfloat)line->Begin().I();
+			vData[vIndex++] = (GLfloat)line->Begin().J();
+			vData[vIndex++] = (GLfloat)line->Begin().K();
 			//Set the second vertex data
-			vData[vIndex++] = line->End().I();
-			vData[vIndex++] = line->End().J();
-			vData[vIndex++] = line->End().K();
+			vData[vIndex++] = (GLfloat)line->End().I();
+			vData[vIndex++] = (GLfloat)line->End().J();
+			vData[vIndex++] = (GLfloat)line->End().K();
 			//Set the color data for first vertex
 			cData[cIndex++] = line->Color().R();
 			cData[cIndex++] = line->Color().G();
@@ -77,6 +77,9 @@ void WCLineLayer::GenerateBuffers(void) {
 	//Copy the data into the vertex VBO
 	glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);
 	glBufferData(GL_ARRAY_BUFFER, cIndex*sizeof(GLfloat), cData, GL_STATIC_DRAW);
+	//Delete arrays
+	delete vData;
+	delete cData;
 /*** DEBUG ***
 	//Show Vertex Data
 	glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);

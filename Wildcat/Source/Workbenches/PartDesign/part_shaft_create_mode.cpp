@@ -321,13 +321,13 @@ void WCModePartShaftCreate::OnMouseMove(const WPFloat &x, const WPFloat &y) {
 	//If in stage 1 (determine cwAngle)
 	if (this->_stage == 1) {
 		//Set the clockwise angle
-		this->_cwAngle = std::min(2.0*M_PI, std::max(0.0, angle));
+		this->_cwAngle = STDMIN(2.0*M_PI, STDMAX(0.0, angle));
 	}
 	//If in stage 2...
 	else {
-		this->_ccwAngle = std::max(-2.0 * M_PI, angle);
+		this->_ccwAngle = STDMAX(-2.0 * M_PI, angle);
 		//Don't let cw-ccw be greater than 2pi
-		this->_ccwAngle = std::max(-2.0 * M_PI + this->_cwAngle, this->_ccwAngle);
+		this->_ccwAngle = STDMAX(-2.0 * M_PI + this->_cwAngle, this->_ccwAngle);
 	}
 	//Regenerate surfaces
 	this->GenerateSurfaces();

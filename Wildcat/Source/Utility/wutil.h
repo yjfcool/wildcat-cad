@@ -59,9 +59,18 @@
 #ifdef __WIN32__
 #include <windows.h>					//Generic header file For Windows
 #include <Application/Win32/win_gl.h>	//Header file for windows platform
+
 //Defines for std::min and std::max problem
 #define STDMIN min
 #define STDMAX max
+
+//Stupid workaround since Windows can't find round
+inline double round(const double &n) {
+	double flr = floor(n);
+	if ((n - flr) >= 0.5) return flr + 1.0;
+	else return flr;
+}
+
 #endif
 
 

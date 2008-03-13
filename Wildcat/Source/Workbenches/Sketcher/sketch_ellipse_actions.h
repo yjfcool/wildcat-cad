@@ -59,7 +59,7 @@ private:
 	WCActionSketchEllipseCreate();																	//!< Deny access to default constructor
 	WCActionSketchEllipseCreate(WCSketch *sketch, const std::string &ellipseName,					//!< Primary constructor
 												const WCVector4 &center, const WCVector4 &majorAxis,
-												const WPFloat &semiMinor, const WPFloat &semiMinor);
+												const WPFloat &semiMinor, const WPFloat &semiMajor);
 	//Friend Declarations
 	friend class WCSketchEllipse;																	//!< Make SketchEllipse a friend
 public:

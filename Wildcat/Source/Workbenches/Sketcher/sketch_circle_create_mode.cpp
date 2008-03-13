@@ -143,7 +143,7 @@ void WCModeSketchCircleCreate::OnMouseMove(const WPFloat &x, const WPFloat &y) {
 		//Calculate the radius
 		this->_radius = sqrt( (this->_xSuggest - this->_beginX) * (this->_xSuggest - this->_beginX) + 
 							   (this->_ySuggest - this->_beginY) * (this->_ySuggest - this->_beginY) );
-		this->_radius = std::max(0.0001, this->_radius);
+		this->_radius = STDMAX(0.0001, this->_radius);
 		//Update the circle
 		WCVector4 center(this->_beginX, this->_beginY, 0.0, 1.0);
 		WCVector4 xUnit(1.0, 0.0, 0.0, 0.0);

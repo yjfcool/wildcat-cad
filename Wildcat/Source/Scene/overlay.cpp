@@ -67,7 +67,7 @@ void WCOverlay::GenerateVBO(void) {
 /***********************************************~***************************************************/
 
 
-WCOverlay::WCOverlay(WCUserInterfaceLayer *layer, bool resize) : ::WCWidget(layer), 
+WCOverlay::WCOverlay(WCUserInterfaceLayer *layer, const bool &resize) : ::WCWidget(layer), 
 	_isMouseOver(false), _color(OVERLAY_DEFAULT_COLOR), _buffer(0), _numVerts(4), _placement(OVERLAY_DEFAULT_PLACEMENT) {
 	//Create a VBO
 	glGenBuffers(1, &this->_buffer);
@@ -80,9 +80,9 @@ WCOverlay::~WCOverlay() {
 }
 
 
-void WCOverlay::SetSize(const WPFloat width, const WPFloat height) {
-	this->_width = std::max(width, OVERLAY_WIDTH_MIN);
-	this->_height = std::max(height, OVERLAY_HEIGHT_MIN);
+void WCOverlay::SetSize(const WPFloat &width, const WPFloat &height) {
+	this->_width = STDMAX(width, OVERLAY_WIDTH_MIN);
+	this->_height = STDMAX(height, OVERLAY_HEIGHT_MIN);
 	this->_xMax = this->_xMin + this->_width;
 	this->_yMax = this->_yMin + this->_height;
 	//Check placement
@@ -90,7 +90,7 @@ void WCOverlay::SetSize(const WPFloat width, const WPFloat height) {
 }
 
 
-void WCOverlay::SetPlacement(const WPFloat lowerLeft, const WPFloat lowerRight) {
+void WCOverlay::SetPlacement(const WPFloat &lowerLeft, const WPFloat &lowerRight) {
 	//Mark the placement as custom
 	this->_placement = WCPlacement::Custom();
 	//Set the remaining placement variables
@@ -103,7 +103,7 @@ void WCOverlay::SetPlacement(const WPFloat lowerLeft, const WPFloat lowerRight) 
 }
 
 
-void WCOverlay::SetPlacement(WCPlacement placement) {
+void WCOverlay::SetPlacement(const WCPlacement &placement) {
 	//Copy the placement
 	this->_placement = placement;
 	//Place in lower left corner
@@ -143,13 +143,13 @@ void WCOverlay::OnReshape(void) {
 }
 
 
-void WCOverlay::OnMouseDown(const WCMouseButton &button, const WPFloat x, const WPFloat y) {
+void WCOverlay::OnMouseDown(const WCMouseButton &button, const WPFloat &x, const WPFloat &y) {
 	//Call the parent OnMouseDown
 	this->WCWidget::OnMouseDown(button, x, y);
 }
 
 
-void WCOverlay::OnMouseEnter(WPFloat x, WPFloat y) {
+void WCOverlay::OnMouseEnter(const WPFloat &x, const WPFloat &y) {
 	//Set mouse over to be true
 	this->_isMouseOver = true;
 	//Since we will change the color, mark as dirty
@@ -157,7 +157,7 @@ void WCOverlay::OnMouseEnter(WPFloat x, WPFloat y) {
 }
 
 
-void WCOverlay::OnMouseExit(const WPFloat x, const WPFloat y) {
+void WCOverlay::OnMouseExit(const WPFloat &x, const WPFloat &y) {
 	//Set mouse over to be false
 	this->_isMouseOver = false;
 	//Since we will change the color, mark as dirty
@@ -165,7 +165,7 @@ void WCOverlay::OnMouseExit(const WPFloat x, const WPFloat y) {
 }
 
 
-void WCOverlay::OnMouseMove(const WPFloat x, const WPFloat y) {
+void WCOverlay::OnMouseMove(const WPFloat &x, const WPFloat &y) {
 }
 
 
@@ -203,12 +203,14 @@ void WCOverlay::Render(void) {
 #define OVERLAY_CORNER_SIZE						8 * SCREEN_PIXEL_WIDTH
 
 
-void WCOverlay::RenderRectangle(const WPFloat xMin, const WPFloat yMin, const WPFloat xMax,	const WPFloat yMax, 
-	const WCColor &fillColor, const WCColor &edgeColor, const WCColor &shadeColor) {
+void WCOverlay::RenderRectangle(const WPFloat &xMin, const WPFloat &yMin, const WPFloat &xMax,
+	const WPFloat &yMax, const WCColor &fillColor, const WCColor &edgeColor, const WCColor &shadeColor) {
 	//Set up data
-	GLfloat yMid = (yMin*0.33) + (yMax*0.66);
-	GLfloat data[8] = { xMin, yMin, xMin, yMax, xMax, yMax, xMax, yMin };
-	GLfloat midData[8] = { xMin, yMid, xMin, yMax, xMax, yMax, xMax, yMid };
+	GLfloat yMid = (GLfloat)((yMin*0.33) + (yMax*0.66));
+	GLfloat data[8] = { (GLfloat)xMin, (GLfloat)yMin, (GLfloat)xMin, (GLfloat)yMax,
+						(GLfloat)xMax, (GLfloat)yMax, (GLfloat)xMax, (GLfloat)yMin };
+	GLfloat midData[8] = { (GLfloat)xMin, (GLfloat)yMid, (GLfloat)xMin, (GLfloat)yMax,
+						   (GLfloat)xMax, (GLfloat)yMax, (GLfloat)xMax, (GLfloat)yMid };
 
 	//Draw the filled quad
 	fillColor.Enable();
@@ -231,51 +233,51 @@ void WCOverlay::RenderRectangle(const WPFloat xMin, const WPFloat yMin, const WP
 }
 
 
-void WCOverlay::RenderRoundedRectangle(const WPFloat xMin, const WPFloat yMin, const WPFloat xMax,	const WPFloat yMax, 
-	const WCColor &fillColor, const WCColor &edgeColor, const WCColor &shadeColor) {
+void WCOverlay::RenderRoundedRectangle(const WPFloat &xMin, const WPFloat &yMin, const WPFloat &xMax,
+	const WPFloat &yMax, const WCColor &fillColor, const WCColor &edgeColor, const WCColor &shadeColor) {
 	//#+1 verts per segment, 4 segments, starting vertex, repeat first segment vertex for closure
 	GLuint numVertices = (4 * (OVERLAY_CORNER_SEGMENTS + 1)) + 2;
-	GLfloat l =OVERLAY_CORNER_SIZE;
-	GLfloat angle = 2.0 * M_PI;
-	GLfloat inc = angle / (4 * OVERLAY_CORNER_SEGMENTS);
-	GLfloat data[numVertices * 2];
+	GLfloat l = (GLfloat)(OVERLAY_CORNER_SIZE);
+	GLfloat angle = (GLfloat)(2.0 * M_PI);
+	GLfloat inc = angle / (GLfloat)(4 * OVERLAY_CORNER_SEGMENTS);
+	GLfloat *data = new GLfloat[numVertices * 2];
 	GLuint index = 0;
 	
 	//Set the center point
-	data[index++] = (xMin + xMax) / 2.0;
-	data[index++] = (yMin + yMax) / 2.0;
+	data[index++] = (GLfloat)(xMin + xMax) / 2.0f;
+	data[index++] = (GLfloat)(yMin + yMax) / 2.0f;
 	
 	//Lower right corner
 	for (GLuint i=0; i<=OVERLAY_CORNER_SEGMENTS; i++) {
-		data[index++] = (xMax - OVERLAY_CORNER_SIZE) + (l * cos(angle));
-		data[index++] = (yMin + OVERLAY_CORNER_SIZE) + (l * sin(angle));
+		data[index++] = (GLfloat)(xMax - OVERLAY_CORNER_SIZE) + (l * cos(angle));
+		data[index++] = (GLfloat)(yMin + OVERLAY_CORNER_SIZE) + (l * sin(angle));
 		angle -= inc;
 	}
 	//Lower left corner
 	angle += inc;
 	for (GLuint i=0; i<=OVERLAY_CORNER_SEGMENTS; i++) {
-		data[index++] = (xMin + OVERLAY_CORNER_SIZE) + (l * cos(angle));
-		data[index++] = (yMin + OVERLAY_CORNER_SIZE) + (l * sin(angle));
+		data[index++] = (GLfloat)(xMin + OVERLAY_CORNER_SIZE) + (l * cos(angle));
+		data[index++] = (GLfloat)(yMin + OVERLAY_CORNER_SIZE) + (l * sin(angle));
 		angle -= inc;
 	}
 	//Upper left corner
 	angle += inc;
 	for (GLuint i=0; i<=OVERLAY_CORNER_SEGMENTS; i++) {
-		data[index++] = (xMin + OVERLAY_CORNER_SIZE) + (l * cos(angle));
-		data[index++] = (yMax - OVERLAY_CORNER_SIZE) + (l * sin(angle));
+		data[index++] = (GLfloat)(xMin + OVERLAY_CORNER_SIZE) + (l * cos(angle));
+		data[index++] = (GLfloat)(yMax - OVERLAY_CORNER_SIZE) + (l * sin(angle));
 		angle -= inc;
 	}
 	//Upper right corner
 	angle += inc;
 	for (GLuint i=0; i<=OVERLAY_CORNER_SEGMENTS; i++) {
-		data[index++] = (xMax - OVERLAY_CORNER_SIZE) + (l * cos(angle));
-		data[index++] = (yMax - OVERLAY_CORNER_SIZE) + (l * sin(angle));
+		data[index++] = (GLfloat)(xMax - OVERLAY_CORNER_SIZE) + (l * cos(angle));
+		data[index++] = (GLfloat)(yMax - OVERLAY_CORNER_SIZE) + (l * sin(angle));
 		angle -= inc;
 
 	}
 	//Close last point
-	data[index++] = xMax;
-	data[index++] = yMin + OVERLAY_CORNER_SIZE;
+	data[index++] = (GLfloat)xMax;
+	data[index++] = (GLfloat)(yMin + OVERLAY_CORNER_SIZE);
 	//Set up the render state
 	fillColor.Enable();
 //	glDisable(GL_LINE_SMOOTH);
@@ -289,6 +291,7 @@ void WCOverlay::RenderRoundedRectangle(const WPFloat xMin, const WPFloat yMin, c
 	glVertexPointer(2, GL_FLOAT, 0, data+2);
 	glDrawArrays(GL_LINE_LOOP, 0, numVertices-1);
 	//Cleanup and exit
+	delete data;
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 

@@ -61,6 +61,7 @@ typedef CGLContextObj							WPGLContext;
 #ifdef __WIN32__
 typedef double									vDouble;
 typedef void*									WPGLContext;
+typedef float									WPTime;
 #define M_E										2.71828182845904523536028747135266250   /* e */
 #define M_LOG2E									1.44269504088896340735992468100189214   /* log 2e */
 #define M_LOG10E								0.434294481903251827651128918916605082  /* log 10e */

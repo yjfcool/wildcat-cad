@@ -97,22 +97,22 @@ void WCVerticalScrollbar::GenerateBuffers(void) {
 	GLfloat texCoords[8];
 
 	/*** Top of Back ***/
-	verts[0] = this->_xMin;
-	verts[1] = this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J();
+	verts[0] = (GLfloat)this->_xMin;
+	verts[1] = (GLfloat)(this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J());
 	verts[2] = verts[0];
-	verts[3] = this->_yMax;
-	verts[4] = this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKTOP].I();
+	verts[3] = (GLfloat)this->_yMax;
+	verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKTOP].I());
 	verts[5] = verts[3];
 	verts[6] = verts[4];
 	verts[7] = verts[1];	
-	texCoords[0] = this->_texSizes[VSCROLLER_TEX_BACKTOP].K();
-	texCoords[1] = this->_texSizes[VSCROLLER_TEX_BACKTOP].L();
-	texCoords[2] = this->_texSizes[VSCROLLER_TEX_BACKTOP].K();
-	texCoords[3] = 0.0;
-	texCoords[4] = 0.0;
-	texCoords[5] = 0.0;
-	texCoords[6] = 0.0;
-	texCoords[7] = this->_texSizes[VSCROLLER_TEX_BACKTOP].L();
+	texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].K();
+	texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].L();
+	texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].K();
+	texCoords[3] = 0.0f;
+	texCoords[4] = 0.0f;
+	texCoords[5] = 0.0f;
+	texCoords[6] = 0.0f;
+	texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].L();
 	//Copy the data into the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKTOP]);
 	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
@@ -121,23 +121,23 @@ void WCVerticalScrollbar::GenerateBuffers(void) {
 	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
 
 	/*** Middle of Back ***/
-	verts[0] = this->_xMin;
-	verts[1] = this->_yMin + this->_texSizes[VSCROLLER_TEX_BACKUP].J() + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J();
+	verts[0] = (GLfloat)this->_xMin;
+	verts[1] = (GLfloat)(this->_yMin + this->_texSizes[VSCROLLER_TEX_BACKUP].J() + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J());
 	verts[2] = verts[0];
-	verts[3] = this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J();
-	verts[4] = this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].I();
+	verts[3] = (GLfloat)(this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J());
+	verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].I());
 	verts[5] = verts[3];
 	verts[6] = verts[4];
 	verts[7] = verts[1];
-	GLfloat height = (verts[3] - verts[1]) / SCREEN_PIXEL_WIDTH;
-	texCoords[0] = this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].K();
-	texCoords[1] = height;
-	texCoords[2] = this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].K();
-	texCoords[3] = 0.0;
-	texCoords[4] = 0.0;
-	texCoords[5] = 0.0;
-	texCoords[6] = 0.0;
-	texCoords[7] = height;
+	GLfloat height = (GLfloat)((verts[3] - verts[1]) / SCREEN_PIXEL_WIDTH);
+	texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].K();
+	texCoords[1] = (GLfloat)height;
+	texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].K();
+	texCoords[3] = 0.0f;
+	texCoords[4] = 0.0f;
+	texCoords[5] = 0.0f;
+	texCoords[6] = 0.0f;
+	texCoords[7] = (GLfloat)height;
 	//Copy the data into the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKMIDDLE]);
 	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
@@ -146,22 +146,22 @@ void WCVerticalScrollbar::GenerateBuffers(void) {
 	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
 
 	/*** Up Arrow of Back ***/
-	verts[0] = this->_xMin;
-	verts[1] = this->_yMin + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J();
+	verts[0] = (GLfloat)this->_xMin;
+	verts[1] = (GLfloat)(this->_yMin + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J());
 	verts[2] = verts[0];
-	verts[3] = verts[1] + this->_texSizes[VSCROLLER_TEX_BACKUP].J();
-	verts[4] = this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKUP].I();
+	verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].J();
+	verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKUP].I());
 	verts[5] = verts[3];
 	verts[6] = verts[4];
 	verts[7] = verts[1];	
-	texCoords[0] = this->_texSizes[VSCROLLER_TEX_BACKUP].K();
-	texCoords[1] = this->_texSizes[VSCROLLER_TEX_BACKUP].L();
-	texCoords[2] = this->_texSizes[VSCROLLER_TEX_BACKUP].K();
-	texCoords[3] = 0.0;
-	texCoords[4] = 0.0;
-	texCoords[5] = 0.0;
-	texCoords[6] = 0.0;
-	texCoords[7] = this->_texSizes[VSCROLLER_TEX_BACKUP].L();
+	texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].K();
+	texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].L();
+	texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].K();
+	texCoords[3] = 0.0f;
+	texCoords[4] = 0.0f;
+	texCoords[5] = 0.0f;
+	texCoords[6] = 0.0f;
+	texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].L();
 	//Copy the data into the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKUP]);
 	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
@@ -170,22 +170,22 @@ void WCVerticalScrollbar::GenerateBuffers(void) {
 	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
 
 	/*** Down Arrow of Back ***/
-	verts[0] = this->_xMin;
-	verts[1] = this->_yMin;
+	verts[0] = (GLfloat)this->_xMin;
+	verts[1] = (GLfloat)this->_yMin;
 	verts[2] = verts[0];
-	verts[3] = verts[1] + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J();
-	verts[4] = this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKDOWN].I();
+	verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].J();
+	verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKDOWN].I());
 	verts[5] = verts[3];
 	verts[6] = verts[4];
 	verts[7] = verts[1];	
-	texCoords[0] = this->_texSizes[VSCROLLER_TEX_BACKDOWN].K();
-	texCoords[1] = this->_texSizes[VSCROLLER_TEX_BACKDOWN].L();
-	texCoords[2] = this->_texSizes[VSCROLLER_TEX_BACKDOWN].K();
-	texCoords[3] = 0.0;
-	texCoords[4] = 0.0;
-	texCoords[5] = 0.0;
-	texCoords[6] = 0.0;
-	texCoords[7] = this->_texSizes[VSCROLLER_TEX_BACKDOWN].L();
+	texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].K();
+	texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].L();
+	texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].K();
+	texCoords[3] = 0.0f;
+	texCoords[4] = 0.0f;
+	texCoords[5] = 0.0f;
+	texCoords[6] = 0.0f;
+	texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].L();
 	//Copy the data into the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKDOWN]);
 	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
@@ -202,22 +202,22 @@ void WCVerticalScrollbar::GenerateBuffers(void) {
 	WPFloat topOfSlider = this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J() + offset - (sliderDiff * this->_position);
 
 	/*** Top of Slider ***/
-	verts[0] = this->_xMin + (2 *SCREEN_PIXEL_WIDTH);
-	verts[1] = topOfSlider - this->_texSizes[VSCROLLER_TEX_KNOBTOP].J();
+	verts[0] = (GLfloat)(this->_xMin + (2.0 *SCREEN_PIXEL_WIDTH));
+	verts[1] = (GLfloat)(topOfSlider - this->_texSizes[VSCROLLER_TEX_KNOBTOP].J());
 	verts[2] = verts[0];
-	verts[3] = verts[1] + this->_texSizes[VSCROLLER_TEX_KNOBTOP].J();
-	verts[4] = this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBTOP].I();
+	verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].J();
+	verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBTOP].I());
 	verts[5] = verts[3];
 	verts[6] = verts[4];
 	verts[7] = verts[1];	
-	texCoords[0] = this->_texSizes[VSCROLLER_TEX_KNOBTOP].K();
-	texCoords[1] = this->_texSizes[VSCROLLER_TEX_KNOBTOP].L();
-	texCoords[2] = this->_texSizes[VSCROLLER_TEX_KNOBTOP].K();
-	texCoords[3] = 0.0;
-	texCoords[4] = 0.0;
-	texCoords[5] = 0.0;
-	texCoords[6] = 0.0;
-	texCoords[7] = this->_texSizes[VSCROLLER_TEX_KNOBTOP].L();
+	texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].K();
+	texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].L();
+	texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].K();
+	texCoords[3] = 0.0f;
+	texCoords[4] = 0.0f;
+	texCoords[5] = 0.0f;
+	texCoords[6] = 0.0f;
+	texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].L();
 	//Copy the data into the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBTOP]);
 	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
@@ -226,22 +226,22 @@ void WCVerticalScrollbar::GenerateBuffers(void) {
 	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
 
 	/*** Middle of Slider ***/
-	verts[0] = this->_xMin + (2 *SCREEN_PIXEL_WIDTH);
-	verts[1] = topOfSlider - sliderHeight + this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].J();
+	verts[0] = (GLfloat)(this->_xMin + (2.0 *SCREEN_PIXEL_WIDTH));
+	verts[1] = (GLfloat)(topOfSlider - sliderHeight + this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].J());
 	verts[2] = verts[0];
-	verts[3] = topOfSlider - this->_texSizes[VSCROLLER_TEX_KNOBTOP].J();
-	verts[4] = this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].I();
+	verts[3] = (GLfloat)(topOfSlider - this->_texSizes[VSCROLLER_TEX_KNOBTOP].J());
+	verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].I());
 	verts[5] = verts[3];
 	verts[6] = verts[4];
 	verts[7] = verts[1];	
-	texCoords[0] = this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].K();
-	texCoords[1] = this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].L();
-	texCoords[2] = this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].K();
-	texCoords[3] = 0.0;
-	texCoords[4] = 0.0;
-	texCoords[5] = 0.0;
-	texCoords[6] = 0.0;
-	texCoords[7] = this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].L();
+	texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].K();
+	texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].L();
+	texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].K();
+	texCoords[3] = 0.0f;
+	texCoords[4] = 0.0f;
+	texCoords[5] = 0.0f;
+	texCoords[6] = 0.0f;
+	texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].L();
 	//Copy the data into the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBMIDDLE]);
 	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
@@ -250,22 +250,22 @@ void WCVerticalScrollbar::GenerateBuffers(void) {
 	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
 
 	/*** Bottom of Slider ***/
-	verts[0] = this->_xMin + (2 *SCREEN_PIXEL_WIDTH);
-	verts[1] = topOfSlider - sliderHeight;
+	verts[0] = (GLfloat)(this->_xMin + (2.0 *SCREEN_PIXEL_WIDTH));
+	verts[1] = (GLfloat)(topOfSlider - sliderHeight);
 	verts[2] = verts[0];
-	verts[3] = verts[1] + this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].J();
-	verts[4] = this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].I();
+	verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].J();
+	verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].I());
 	verts[5] = verts[3];
 	verts[6] = verts[4];
 	verts[7] = verts[1];	
-	texCoords[0] = this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].K();
-	texCoords[1] = this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].L();
-	texCoords[2] = this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].K();
-	texCoords[3] = 0.0;
-	texCoords[4] = 0.0;
-	texCoords[5] = 0.0;
-	texCoords[6] = 0.0;
-	texCoords[7] = this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].L();
+	texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].K();
+	texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].L();
+	texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].K();
+	texCoords[3] = 0.0f;
+	texCoords[4] = 0.0f;
+	texCoords[5] = 0.0f;
+	texCoords[6] = 0.0f;
+	texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].L();
 	//Copy the data into the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBBOTTOM]);
 	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
@@ -373,20 +373,20 @@ void WCVerticalScrollbar::OnMouseDown(const WCMouseButton &button, const WPFloat
 		if (y > topOfSlider) {
 			//Scroll the slider up
 			this->_position -= 0.1 / sliderDiff;
-			this->_position = std::max(this->_position, 0.0);
+			this->_position = STDMAX(this->_position, 0.0);
 		}
 		//Must be below slider
 		else {
 			//Scroll the slider down
 			this->_position += 0.1 / sliderDiff;
-			this->_position = std::min(this->_position, 1.0);
+			this->_position = STDMIN(this->_position, 1.0);
 		}
 	}
 	//Up arrow of back case
 	else if (y >= this->_yMin + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J() - (2*SCREEN_PIXEL_WIDTH)) {
 		//Scroll the slider up
 		this->_position -= 0.1 / sliderDiff;
-		this->_position = std::max(this->_position, 0.0);
+		this->_position = STDMAX(this->_position, 0.0);
 		//Mark that the up button is selected
 		this->_isUpSelected = true;
 	}
@@ -394,7 +394,7 @@ void WCVerticalScrollbar::OnMouseDown(const WCMouseButton &button, const WPFloat
 	else {
 		//Scroll the slider down
 		this->_position += 0.1 / sliderDiff;
-		this->_position = std::min(this->_position, 1.0);
+		this->_position = STDMIN(this->_position, 1.0);
 		//Mark that the down button is selected
 		this->_isDownSelected = true;
 	}
@@ -433,8 +433,8 @@ void WCVerticalScrollbar::OnMouseMove(const WPFloat x, const WPFloat y) {
 		WPFloat diff = (y - this->_mark.J());
 		this->_position = this->_mark.K() - (diff) / sliderDiff;
 		//Bounds check position
-		this->_position = std::max(this->_position, 0.0);
-		this->_position = std::min(this->_position, 1.0);
+		this->_position = STDMAX(this->_position, 0.0);
+		this->_position = STDMIN(this->_position, 1.0);
 		//Mark as dirty
 		this->_isDirty = true;
 		this->_parent->MarkDirty();
@@ -454,8 +454,8 @@ void WCVerticalScrollbar::OnScroll(const WPFloat &x, const WPFloat &y) {
 	//Calculate new position (desensitize y by 8)
 	this->_position -= (y * SCROLLBAR_SCROLLSENSITIVITY) / sliderDiff;
 	//Bounds check position
-	this->_position = std::max(this->_position, 0.0);
-	this->_position = std::min(this->_position, 1.0);
+	this->_position = STDMAX(this->_position, 0.0);
+	this->_position = STDMIN(this->_position, 1.0);
 	//Mark as dirty
 	this->_isDirty = true;
 	this->_parent->MarkDirty();

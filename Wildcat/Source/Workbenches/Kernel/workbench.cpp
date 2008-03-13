@@ -379,17 +379,17 @@ bool WCWorkbench::SaveAs(const std::string &filename) {
 		char* message = xercesc::XMLString::transcode(toCatch.getMessage());
 		std::cout << "Exception message is: \n" << message << "\n";
 		xercesc::XMLString::release(&message);
-		return -1;
+		return false;
 	}
 	catch (const xercesc::DOMException& toCatch) {
 		char* message = xercesc::XMLString::transcode(toCatch.msg);
 		std::cout << "Exception message is: \n" << message << "\n";
 		xercesc::XMLString::release(&message);
-		return -1;
+		return false;
 	}
 	catch (...) {
 		std::cout << "Unexpected Exception \n" ;
-		return -1;
+		return false;
 	}
 	theSerializer->release();
 //	delete myErrorHandler;

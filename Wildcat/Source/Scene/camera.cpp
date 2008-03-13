@@ -31,10 +31,14 @@
 #include "Scene/render_state.h"
 
 
-/*** DEBUG ***/
-//Need #ifdef for OSX
+
+/*** Platform Included Header Files ***/
+#ifdef __APPLE__
 #include <CoreServices/CoreServices.h>
-/*** DEBUG ***/
+#endif
+#ifdef __WIN32__
+//...
+#endif
 
 
 /***********************************************~***************************************************/
@@ -329,7 +333,7 @@ void WCCamera::FitToWindow(void) {
 	//Calculate the pan and zoom factors
 	WPFloat width =  this->_scene->Width() / ((xMax - xMin) + (2.0 * CAMERA_FITWINDOW_BOUNDRY));
 	WPFloat height = this->_scene->Height() / ((yMax - yMin) + (2.0 * CAMERA_FITWINDOW_BOUNDRY));
-	WPFloat zoom = std::min(width, height);
+	WPFloat zoom = STDMIN(width, height);
 	WPFloat panX = -0.5 * (xMin + xMax) * zoom;
 	WPFloat panY = -0.5 * (yMin + yMax) * zoom;
 	//Call AnimateToViewpoint
@@ -351,7 +355,7 @@ void WCCamera::AnimateToViewpoint(const WCQuaternion &rot, const WPFloat xPan, c
 	this->_aniZoom = zoom;
 	//Determine angle (bounds check it)
 	this->_aniAngle = this->_quaternion.InnerProduct(rot);
-	this->_aniAngle = std::max(std::min(this->_aniAngle, 1.0), -1.0);
+	this->_aniAngle = STDMAX(STDMIN(this->_aniAngle, 1.0), -1.0);
 	this->_aniAngle = acos(this->_aniAngle);
 	//Do some checking on angle (just make sure not zero)
 	if (this->_aniAngle == 0.0) this->_aniAngle = 0.01;
@@ -383,7 +387,7 @@ void WCCamera::AnimateToViewpoint(const WCNamedView &view, WPFloat duration) {
 		//Calculate the pan and zoom factors
 		WPFloat width =  this->_scene->Width() / ((xMax - xMin) + (2.0 * CAMERA_FITWINDOW_BOUNDRY));
 		WPFloat height = this->_scene->Height() / ((yMax - yMin) + (2.0 * CAMERA_FITWINDOW_BOUNDRY));
-		WPFloat zoom = std::min(width, height);
+		WPFloat zoom = STDMIN(width, height);
 		WPFloat panX = -0.5 * (xMin + xMax) * zoom;
 		WPFloat panY = -0.5 * (yMin + yMax) * zoom;
 		this->AnimateToViewpoint(view.Quaternion(), panX, panY, zoom, duration);
@@ -477,7 +481,8 @@ void WCCamera::EnableLighting(GLuint prog) {
 	if (prog == 0) return;	
 	//Set program params (if accepted)
 	GLint panZoomLocation = glGetUniformLocation(prog, "panZoomFactor");
-	if (panZoomLocation != -1) glUniform3f(panZoomLocation, this->_panX, this->_panY, this->_zoom);
+	if (panZoomLocation != -1) 
+		glUniform3f(panZoomLocation, (GLfloat)this->_panX, (GLfloat)this->_panY, (GLfloat)this->_zoom);
 }
 
 

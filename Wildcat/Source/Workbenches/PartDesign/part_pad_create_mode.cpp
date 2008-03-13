@@ -333,7 +333,7 @@ void WCModePartPadCreate::OnMouseMove(const WPFloat &x, const WPFloat &y) {
 		viewDir.K( 0.0 );
 		viewDir.Normalize(true);
 		//Calculate posDepth (Make sure is positive)
-		this->_posDepth = std::max(0.0, viewDir.DotProduct(markDir));
+		this->_posDepth = STDMAX(0.0, viewDir.DotProduct(markDir));
 	}
 	//If in stage 2...
 	else {
@@ -344,7 +344,7 @@ void WCModePartPadCreate::OnMouseMove(const WPFloat &x, const WPFloat &y) {
 		viewDir.K( 0.0 );
 		viewDir.Normalize(true);
 		//Calculate negDepth (Make sure is negative)
-		this->_negDepth = std::min(0.0, viewDir.DotProduct(markDir));
+		this->_negDepth = STDMIN(0.0, viewDir.DotProduct(markDir));
 	}
 	//Regenerate surfaces
 	this->GenerateSurfaces();
@@ -371,7 +371,8 @@ void WCModePartPadCreate::Render(void) {
 	base = this->_profiles.front().first->Sketch()->ReferencePlane()->TransformMatrix() * base;
 	if (this->_stage == 1) end = base + this->_direction * this->_posDepth;
 	else end = base + this->_direction * this->_negDepth;
-	GLfloat arrow[6] = { base.I(), base.J(), base.K(), end.I(), end.J(), end.K() };
+	GLfloat arrow[6] = { (GLfloat)base.I(), (GLfloat)base.J(), (GLfloat)base.K(),
+						 (GLfloat)end.I(), (GLfloat)end.J(), (GLfloat)end.K() };
 	
 	//Render arrow
 	glColor4f(1.0, 0.0, 0.0, 1.0);

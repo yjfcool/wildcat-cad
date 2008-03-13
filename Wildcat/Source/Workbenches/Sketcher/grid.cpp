@@ -57,10 +57,10 @@ void WCGrid::GenerateBuffers(void) {
 		ul = mat * ul;
 		ur = mat * ur;
 		lr = mat * lr;
-		xMin = std::min( std::min(ll.I(), ul.I()), std::min(lr.I(), ur.I()) );
-		xMax = std::max( std::max(ll.I(), ul.I()), std::max(lr.I(), ur.I()) );
-		yMin = std::min( std::min(ll.J(), ul.J()), std::min(lr.J(), ur.J()) );
-		yMax = std::max( std::max(ll.J(), ul.J()), std::max(lr.J(), ur.J()) );
+		xMin = STDMIN( STDMIN(ll.I(), ul.I()), STDMIN(lr.I(), ur.I()) );
+		xMax = STDMAX( STDMAX(ll.I(), ul.I()), STDMAX(lr.I(), ur.I()) );
+		yMin = STDMIN( STDMIN(ll.J(), ul.J()), STDMIN(lr.J(), ur.J()) );
+		yMax = STDMAX( STDMAX(ll.J(), ul.J()), STDMAX(lr.J(), ur.J()) );
 		this->_xMin = xMin;
 		this->_xMax = xMax;
 		this->_yMin = yMin;
@@ -77,13 +77,13 @@ void WCGrid::GenerateBuffers(void) {
 	//Calculate line count
 	WPInt hStart, hStop, vStart, vStop;
 	//Horizontal lines
-	hStart = floor( xMin / width ) - 1;
-	hStop = ceil( xMax / width ) + 1;
+	hStart = (WPInt)floor( xMin / width ) - 1;
+	hStop = (WPInt)ceil( xMax / width ) + 1;
 	//Vertical lines
-	vStart = floor( yMin / height ) - 1;
-	vStop = ceil( yMax / height ) + 1;
+	vStart = (WPInt)floor( yMin / height ) - 1;
+	vStop = (WPInt)ceil( yMax / height ) + 1;
 	this->_numLines = (vStop - vStart + 1) + (hStop - hStart + 1);
-	GLfloat data[8 * this->_numLines];
+	GLfloat *data = new GLfloat[8 * this->_numLines];
 
 	//Load data
 	int index = 0;
@@ -96,19 +96,19 @@ void WCGrid::GenerateBuffers(void) {
 		//Transform it to the plane
 		vec = planeMatrix * vec;
 		//Load data
-		data[index++] = vec.I();
-		data[index++] = vec.J();
-		data[index++] = vec.K();
-		data[index++] = vec.L();
+		data[index++] = (GLfloat)vec.I();
+		data[index++] = (GLfloat)vec.J();
+		data[index++] = (GLfloat)vec.K();
+		data[index++] = (GLfloat)vec.L();
 		//Set up the end of the line
 		vec.Set(xMax + width, i * height, 0.0, 1.0);
 		//Transform it to the plane
 		vec = planeMatrix * vec;
 		//Load data
-		data[index++] = vec.I();
-		data[index++] = vec.J();
-		data[index++] = vec.K();
-		data[index++] = vec.L();
+		data[index++] = (GLfloat)vec.I();
+		data[index++] = (GLfloat)vec.J();
+		data[index++] = (GLfloat)vec.K();
+		data[index++] = (GLfloat)vec.L();
 	}
 	//Generate vertical lines
 	for (int i=hStart; i<=hStop; ++i) {
@@ -117,35 +117,37 @@ void WCGrid::GenerateBuffers(void) {
 		//Transform it to the plane
 		vec = planeMatrix * vec;
 		//Load data
-		data[index++] = vec.I();
-		data[index++] = vec.J();
-		data[index++] = vec.K();
-		data[index++] = vec.L();
+		data[index++] = (GLfloat)vec.I();
+		data[index++] = (GLfloat)vec.J();
+		data[index++] = (GLfloat)vec.K();
+		data[index++] = (GLfloat)vec.L();
 		//Set up the end of the line
 		vec.Set(i * width, yMax + height, 0.0, 1.0);
 		//Transform it to the plane
 		vec = planeMatrix * vec;
 		//Load data
-		data[index++] = vec.I();
-		data[index++] = vec.J();
-		data[index++] = vec.K();
-		data[index++] = vec.L();
+		data[index++] = (GLfloat)vec.I();
+		data[index++] = (GLfloat)vec.J();
+		data[index++] = (GLfloat)vec.K();
+		data[index++] = (GLfloat)vec.L();
 	}
 	//Put data into the buffer
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);
 	glBufferData(GL_ARRAY_BUFFER, 8*this->_numLines*sizeof(GLfloat), data, GL_STATIC_DRAW);
+	//Delete the array
+	delete data;
 	
 	//Create sublines if needed
 	if (this->_numLines < GRID_SUBLINE_LIMIT) {
 		//Determine number of sublines
-		hStart = floor( xMin / this->_xSpacing ) - 1;
-		hStop = ceil( xMax / this->_xSpacing ) + 1;
+		hStart = (WPInt)floor( xMin / this->_xSpacing ) - 1;
+		hStop = (WPInt)ceil( xMax / this->_xSpacing ) + 1;
 		//Vertical lines
-		vStart = floor( yMin / this->_ySpacing ) - 1;
-		vStop = ceil( yMax / this->_ySpacing ) + 1;
+		vStart = (WPInt)floor( yMin / this->_ySpacing ) - 1;
+		vStop = (WPInt)ceil( yMax / this->_ySpacing ) + 1;
 		this->_numSubLines = (vStop - vStart + 1) + (hStop - hStart + 1);
 		//Size the buffer
-		GLfloat subData[8 * this->_numSubLines];
+		GLfloat *subData = new GLfloat[8 * this->_numSubLines];
 		
 		index = 0;
 		//Generate horizontal lines
@@ -155,19 +157,19 @@ void WCGrid::GenerateBuffers(void) {
 			//Transform it to the plane
 			vec = planeMatrix * vec;
 			//Load data
-			subData[index++] = vec.I();
-			subData[index++] = vec.J();
-			subData[index++] = vec.K();
-			subData[index++] = vec.L();
+			subData[index++] = (GLfloat)vec.I();
+			subData[index++] = (GLfloat)vec.J();
+			subData[index++] = (GLfloat)vec.K();
+			subData[index++] = (GLfloat)vec.L();
 			//Set up the end of the line
 			vec.Set(xMax + this->_xSpacing, i * this->_ySpacing, 0.0, 1.0);
 			//Transform it to the plane
 			vec = planeMatrix * vec;
 			//Load data
-			subData[index++] = vec.I();
-			subData[index++] = vec.J();
-			subData[index++] = vec.K();
-			subData[index++] = vec.L();
+			subData[index++] = (GLfloat)vec.I();
+			subData[index++] = (GLfloat)vec.J();
+			subData[index++] = (GLfloat)vec.K();
+			subData[index++] = (GLfloat)vec.L();
 		}
 		//Generate vertical lines
 		for (int i=hStart; i<=hStop; ++i) {
@@ -176,24 +178,26 @@ void WCGrid::GenerateBuffers(void) {
 			//Transform it to the plane
 			vec = planeMatrix * vec;
 			//Load data
-			subData[index++] = vec.I();
-			subData[index++] = vec.J();
-			subData[index++] = vec.K();
-			subData[index++] = vec.L();
+			subData[index++] = (GLfloat)vec.I();
+			subData[index++] = (GLfloat)vec.J();
+			subData[index++] = (GLfloat)vec.K();
+			subData[index++] = (GLfloat)vec.L();
 			//Set up the end of the line
 			vec.Set(i * this->_xSpacing, yMax + this->_ySpacing, 0.0, 1.0);
 			//Transform it to the plane
 			vec = planeMatrix * vec;
 			//Load data
-			subData[index++] = vec.I();
-			subData[index++] = vec.J();
-			subData[index++] = vec.K();
-			subData[index++] = vec.L();
+			subData[index++] = (GLfloat)vec.I();
+			subData[index++] = (GLfloat)vec.J();
+			subData[index++] = (GLfloat)vec.K();
+			subData[index++] = (GLfloat)vec.L();
 		}
 
 		//Put data into the buffer
 		glBindBuffer(GL_ARRAY_BUFFER, this->_subBuffer);
 		glBufferData(GL_ARRAY_BUFFER, 8*this->_numSubLines*sizeof(GLfloat), subData, GL_STATIC_DRAW);	
+		//Delete the array
+		delete subData;
 	}
 	//Otherwise, set the number of lines to zero
 	else this->_numSubLines = 0;

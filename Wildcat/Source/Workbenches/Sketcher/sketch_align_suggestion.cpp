@@ -355,12 +355,12 @@ public:
 
 class WCRenderCoincidentTo : public WCSketchAlignmentRenderer {
 public:
-	void Render(WCSketchWorkbench *wb, WPFloat x, WPFloat y) {
+	void Render(WCSketchWorkbench *wb, const WPFloat &x, const WPFloat &y) {
 		WPFloat iconSize = 16 * SCREEN_PIXEL_WIDTH;
-		x += 0.01;
-		y += 0.01;
+		WPFloat localX = x + 0.01;
+		WPFloat localY = y + 0.01;
 		//Calculate box slighly above and right of location
-		WCVector4 ll(x, y, 0.0, 1.0);
+		WCVector4 ll(localX, localY, 0.0, 1.0);
 		WCVector4 xUnit(1.0, 0.0, 0.0, 1.0);
 		WCVector4 yUnit(0.0, 1.0, 0.0, 1.0);
 
@@ -375,10 +375,10 @@ public:
 		WCVector4 lr = ll + xUnit;
 
 		//Set up data arrays
-		GLfloat data[12] = {ll.I(), ll.J(), ll.K(),
-							ul.I(), ul.J(), ul.K(),
-							ur.I(), ur.J(), ur.K(), 
-							lr.I(), lr.J(), lr.K()};
+		GLfloat data[12] = {(GLfloat)ll.I(), (GLfloat)ll.J(), (GLfloat)ll.K(),
+							(GLfloat)ul.I(), (GLfloat)ul.J(), (GLfloat)ul.K(),
+							(GLfloat)ur.I(), (GLfloat)ur.J(), (GLfloat)ur.K(), 
+							(GLfloat)lr.I(), (GLfloat)lr.J(), (GLfloat)lr.K()};
 		WSTexture *tex = wb->Feature()->Document()->Scene()->TextureManager()->TextureFromName("concentric32");
 		GLfloat texCoords[8] = { 0.0, 0.0, 
 								 0.0, tex->_height, 
@@ -409,14 +409,15 @@ public:
 
 class WCRenderVerticalTo : public WCSketchAlignmentRenderer {
 public:
-	void Render(WCSketchWorkbench *wb, const WPFloat x, const WPFloat y) {
+	void Render(WCSketchWorkbench *wb, const WPFloat &x, const WPFloat &y) {
 		//Calculate vertical line start and stop
 		WCVector4 start(x, wb->Grid()->YMin(), 0.0, 1.0);
 		WCVector4 end(x, wb->Grid()->YMax(), 0.0, 1.0);
 		start = wb->Sketch()->ReferencePlane()->TransformMatrix() * start;
 		end = wb->Sketch()->ReferencePlane()->TransformMatrix() * end;
 		//Set up data
-		GLfloat data[6] = { start.I(), start.J(), start.K(), end.I(), end.J(), end.K() };
+		GLfloat data[6] = { (GLfloat)start.I(), (GLfloat)start.J(), (GLfloat)start.K(),
+							(GLfloat)end.I(), (GLfloat)end.J(), (GLfloat)end.K() };
 		//Set up draw environment
 		glLineWidth(1.0);
 		glLineStipple(SKETCHWORKBENCH_SUGGEST_LINE_FACTOR, SKETCHWORKBENCH_SUGGEST_LINE_PATTERN);
@@ -439,14 +440,15 @@ public:
 
 class WCRenderHorizontalTo : public WCSketchAlignmentRenderer {
 public:
-	void Render(WCSketchWorkbench *wb, const WPFloat x, const WPFloat y) {
+	void Render(WCSketchWorkbench *wb, const WPFloat &x, const WPFloat &y) {
 		//Calculate horizontal line start and stop
 		WCVector4 start(wb->Grid()->XMin(), y, 0.0, 1.0);
 		WCVector4 end(wb->Grid()->XMax(), y, 0.0, 1.0);
 		start = wb->Sketch()->ReferencePlane()->TransformMatrix() * start;
 		end = wb->Sketch()->ReferencePlane()->TransformMatrix() * end;
 		//Set up data
-		GLfloat data[6] = { start.I(), start.J(), start.K(), end.I(), end.J(), end.K() };
+		GLfloat data[6] = { (GLfloat)start.I(), (GLfloat)start.J(), (GLfloat)start.K(),
+							(GLfloat)end.I(), (GLfloat)end.J(), (GLfloat)end.K() };
 		//Set up draw environment
 		glLineWidth(1.0);
 		glLineStipple(SKETCHWORKBENCH_SUGGEST_LINE_FACTOR, SKETCHWORKBENCH_SUGGEST_LINE_PATTERN);

@@ -121,7 +121,7 @@ public:
 	inline bool IsSelfIntersecting(void) const	{ return this->_isSelfIntersecting; }				//!< Get if the profile is self-intersecting
 	
 	//Member Methods
-	WPUInt IsOnRight(const WCSketchAxis *axis);														//!< Test relationship of profile to axis
+	WPInt IsOnRight(const WCSketchAxis *axis);														//!< Test relationship of profile to axis
 	WPUInt IsInside(const WCVector4 &point);														//!< Test if a point is inside the profile
 	WCProfileType Categorize(WCSketchProfile *profile);												//!< Categorize the profiles against each other
 	std::list<WCVector4> BoundaryList(const bool &detailed=false);									//!< Output list of boundary points
