@@ -59,18 +59,18 @@ void WCConstraintVertical::GenerateBuffer(void) {
 	WCVector4 lr = ll + xUnit;
 
 	//Set up vertex data arrays
-	this->_vertData[0] = ll.I();
-	this->_vertData[1] = ll.J();
-	this->_vertData[2] = ll.K();
-	this->_vertData[3] = ul.I();
-	this->_vertData[4] = ul.J();
-	this->_vertData[5] = ul.K();
-	this->_vertData[6] = ur.I();
-	this->_vertData[7] = ur.J();
-	this->_vertData[8] = ur.K();
-	this->_vertData[9] = lr.I();
-	this->_vertData[10] = lr.J();
-	this->_vertData[11] = lr.K();
+	this->_vertData[0] = (GLfloat)ll.I();
+	this->_vertData[1] = (GLfloat)ll.J();
+	this->_vertData[2] = (GLfloat)ll.K();
+	this->_vertData[3] = (GLfloat)ul.I();
+	this->_vertData[4] = (GLfloat)ul.J();
+	this->_vertData[5] = (GLfloat)ul.K();
+	this->_vertData[6] = (GLfloat)ur.I();
+	this->_vertData[7] = (GLfloat)ur.J();
+	this->_vertData[8] = (GLfloat)ur.K();
+	this->_vertData[9] = (GLfloat)lr.I();
+	this->_vertData[10] = (GLfloat)lr.J();
+	this->_vertData[11] = (GLfloat)lr.K();
 
 	//Setup texCoord data array
 	GLfloat texCoords[8] = { 0.0, this->_texture->_height, 

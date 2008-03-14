@@ -49,9 +49,9 @@ void WCConstraintCoincidence::PointPoint(void) {
 //		return;		
 	}
 	//Set data to pt0
-	this->_data[0] = pt0.I();
-	this->_data[1] = pt0.J();
-	this->_data[2] = pt0.K();
+	this->_data[0] = (GLfloat)pt0.I();
+	this->_data[1] = (GLfloat)pt0.J();
+	this->_data[2] = (GLfloat)pt0.K();
 }
 
 
@@ -75,9 +75,9 @@ void WCConstraintCoincidence::PointCurve(void) {
 //		return;
 	}
 	//Set data to ptA
-	this->_data[0] = pt.I();
-	this->_data[1] = pt.J();
-	this->_data[2] = pt.K();
+	this->_data[0] = (GLfloat)pt.I();
+	this->_data[1] = (GLfloat)pt.J();
+	this->_data[2] = (GLfloat)pt.K();
 }
 
 
@@ -109,9 +109,9 @@ void WCConstraintCoincidence::CurveCurve(void) {
 //		return;
 	}
 	//Set data to ptA
-	this->_data[0] = ptA.I();
-	this->_data[1] = ptA.J();
-	this->_data[2] = ptA.K();
+	this->_data[0] = (GLfloat)ptA.I();
+	this->_data[1] = (GLfloat)ptA.J();
+	this->_data[2] = (GLfloat)ptA.K();
 }
 
 

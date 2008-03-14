@@ -128,7 +128,7 @@ void WCConstraintCluster::CategorizeNodesAndExpand(void) {
 				//If it is add it to the cluster list
 				this->_clusters.push_back( node->Cluster() );
 				//And check to see if the depth value needs to be changed
-				depth = std::max( depth, node->Cluster()->Depth() );
+				depth = STDMAX( depth, node->Cluster()->Depth() );
 			}
 		}
 		

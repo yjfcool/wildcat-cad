@@ -303,21 +303,21 @@ void WCTreeElement::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 void WCTreeElement::Render(WPFloat &x, WPFloat &y, WPUInt depth) {
 	//Setup location and spacing
 	GLfloat iconSize = (GLfloat)(TREEVIEW_ICON_SIZE * SCREEN_PIXEL_WIDTH);
-	GLfloat xLoc = x + iconSize * depth;
-	GLfloat yLoc = y;
+	GLfloat xLoc = (GLfloat)(x + iconSize * depth);
+	GLfloat yLoc = (GLfloat)y;
 
 	//Set drawing state
 	glEnableClientState(GL_VERTEX_ARRAY);
 	//If open, draw drop-stem
 	if ((this->_isOpen) && (this->_childList.size() > 0)){
-		GLfloat drop =  this->CountVisibleChildren() - this->_childList.back()->CountVisibleChildren();
+		GLfloat drop =  (GLfloat)(this->CountVisibleChildren() - this->_childList.back()->CountVisibleChildren());
 		//Draw only if a drop-stem is needed
 		if (drop > 0) {
 			//Stem color is black
 			glColor4f(TREEVIEW_STEM_COLOR);
 			glLineWidth(TREEVIEW_STEM_WIDTH);
-			GLfloat dropVerts[4] = { xLoc+0.5*iconSize, yLoc-0.5*iconSize, 
-									 xLoc+0.5*iconSize, yLoc-0.5*iconSize-(iconSize*drop) };
+			GLfloat dropVerts[4] = { xLoc+0.5f*iconSize, yLoc-0.5f*iconSize, 
+									 xLoc+0.5f*iconSize, yLoc-0.5f*iconSize-(iconSize*drop) };
 			glVertexPointer(2, GL_FLOAT, 0, dropVerts);
 			glDrawArrays(GL_LINES, 0, 2);
 		}
@@ -328,7 +328,8 @@ void WCTreeElement::Render(WPFloat &x, WPFloat &y, WPUInt depth) {
 		//Stem color is black
 		glColor4f(TREEVIEW_STEM_COLOR);
 		glLineWidth(TREEVIEW_STEM_WIDTH);
-		GLfloat stemVerts[4] = { xLoc-0.5*iconSize, yLoc-0.5*iconSize, xLoc+0.05*iconSize, yLoc-0.5*iconSize };
+		GLfloat stemVerts[4] = { xLoc-0.5f*iconSize, yLoc-0.5f*iconSize, 
+								 xLoc+0.05f*iconSize, yLoc-0.5f*iconSize };
 		glVertexPointer(2, GL_FLOAT, 0, stemVerts);
 		glDrawArrays(GL_LINES, 0, 2);
 	}
@@ -341,21 +342,21 @@ void WCTreeElement::Render(WPFloat &x, WPFloat &y, WPUInt depth) {
 		GLfloat openCloseVerts[6];
 		//Open - V
 		if (this->_isOpen) {
-			openCloseVerts[0] = xLoc - (0.666 *iconSize);
-			openCloseVerts[1] = yLoc - (0.4 *iconSize);
-			openCloseVerts[2] = xLoc - (0.333 * iconSize);
+			openCloseVerts[0] = xLoc - (0.666f *iconSize);
+			openCloseVerts[1] = yLoc - (0.4f *iconSize);
+			openCloseVerts[2] = xLoc - (0.333f * iconSize);
 			openCloseVerts[3] = openCloseVerts[1];
-			openCloseVerts[4] = xLoc - (0.5 * iconSize);
-			openCloseVerts[5] = yLoc - (0.733 * iconSize);
+			openCloseVerts[4] = xLoc - (0.5f * iconSize);
+			openCloseVerts[5] = yLoc - (0.733f * iconSize);
 		}
 		//Closed - |>
 		else {
-			openCloseVerts[0] = xLoc - (0.6 *iconSize);
-			openCloseVerts[1] = yLoc - (0.333 *iconSize);
-			openCloseVerts[2] = xLoc - (0.266 * iconSize);
-			openCloseVerts[3] = yLoc - (0.5 * iconSize);
+			openCloseVerts[0] = xLoc - (0.6f *iconSize);
+			openCloseVerts[1] = yLoc - (0.333f *iconSize);
+			openCloseVerts[2] = xLoc - (0.266f * iconSize);
+			openCloseVerts[3] = yLoc - (0.5f * iconSize);
 			openCloseVerts[4] = openCloseVerts[0];
-			openCloseVerts[5] = yLoc - (0.666 * iconSize);
+			openCloseVerts[5] = yLoc - (0.666f * iconSize);
 		}
 		//Setup the vertex pointer
 		glVertexPointer(2, GL_FLOAT, 0, openCloseVerts);
@@ -514,31 +515,31 @@ void WCTreeView::GenerateBuffers(void) {
 	//Check scroll state
 	if (this->_scrollbar->IsVisible()) {
 		//Lower left
-		data[0] = this->_xMin + this->_scrollbar->Width();
-		data[1] = this->_yMin;
+		data[0] = (GLfloat)(this->_xMin + this->_scrollbar->Width());
+		data[1] = (GLfloat)this->_yMin;
 		//Upper left
-		data[2] = this->_xMin + this->_scrollbar->Width();
-		data[3] = this->_yMax;
+		data[2] = (GLfloat)(this->_xMin + this->_scrollbar->Width());
+		data[3] = (GLfloat)this->_yMax;
 		//Upper right
-		data[4] = this->_xMax + this->_scrollbar->Width();
-		data[5] = this->_yMax;
+		data[4] = (GLfloat)(this->_xMax + this->_scrollbar->Width());
+		data[5] = (GLfloat)this->_yMax;
 		//Lower right
-		data[6] = this->_xMax + this->_scrollbar->Width();
-		data[7] = this->_yMin;
+		data[6] = (GLfloat)(this->_xMax + this->_scrollbar->Width());
+		data[7] = (GLfloat)this->_yMin;
 	}
 	else {
 		//Lower left
-		data[0] = this->_xMin;
-		data[1] = this->_yMin;
+		data[0] = (GLfloat)this->_xMin;
+		data[1] = (GLfloat)this->_yMin;
 		//Upper left
-		data[2] = this->_xMin;
-		data[3] = this->_yMax;
+		data[2] = (GLfloat)this->_xMin;
+		data[3] = (GLfloat)this->_yMax;
 		//Upper right
-		data[4] = this->_xMax;
-		data[5] = this->_yMax;
+		data[4] = (GLfloat)this->_xMax;
+		data[5] = (GLfloat)this->_yMax;
 		//Lower right
-		data[6] = this->_xMax;
-		data[7] = this->_yMin;
+		data[6] = (GLfloat)this->_xMax;
+		data[7] = (GLfloat)this->_yMin;
 	}
 
 	//Copy the data into the VBO

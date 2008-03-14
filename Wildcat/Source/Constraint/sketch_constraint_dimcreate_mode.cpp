@@ -102,8 +102,8 @@ void WCModeSketchConstraintDimensionalCreate::OnMouseDown(const WCMouseButton &b
 	//See if something is selected (one-hit only)
 	WCScene *scene = this->_workbench->Feature()->Document()->Scene();
 	//Convert scene position to screen position
-	WPUInt xPos = (scene->MouseX() + (scene->Width()/2.0)) * (scene->WindowWidth() / scene->Width());
-	WPUInt yPos = scene->WindowHeight() - (scene->MouseY() - scene->Height() / 2.0) * (-1.0 * scene->WindowHeight() / scene->Height());
+	WPUInt xPos = (WPUInt)((scene->MouseX() + (scene->Width()/2.0)) * (scene->WindowWidth() / scene->Width()));
+	WPUInt yPos = (WPUInt)(scene->WindowHeight() - (scene->MouseY() - scene->Height() / 2.0) * (-1.0 * scene->WindowHeight() / scene->Height()));
 	//Call selection
 	this->_workbench->SelectionManager()->Select(xPos, xPos, yPos, yPos, false);
 

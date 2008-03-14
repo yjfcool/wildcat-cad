@@ -61,13 +61,11 @@ protected:
 	bool										_isPan, _isZoom, _isRotate, _isMultiSelect;			//!< State keys
 	std::map<std::string, WCToolbar*>			_toolbarMap;										//!< Map of toolbars
 	WCKeyMap									*_keyMap;											//!< Keymap for the workbench
-
 private:
 	//Deny Access
 	WCWorkbench();																					//!< Deny access to default constructor
 	WCWorkbench(const WCWorkbench& wb);																//!< Deny access to copy constructor
 	WCWorkbench& operator=(const WCWorkbench& wb);													//!< Deny access to equals operator
-	
 public:
 	//Constructors and Destructors
 	WCWorkbench(WCFeature *feature, const std::string &name);										//!< Primary constructor

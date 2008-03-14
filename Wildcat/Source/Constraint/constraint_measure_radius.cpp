@@ -52,23 +52,23 @@ void WCConstraintMeasureRadius::CalculateBuffer(void) {
 
 	/*** Primary Measure Line ***/
 	tmp1 = this->_fromPlane * p0;
-	this->_data[0] = tmp1.I();				
-	this->_data[1] = tmp1.J();
-	this->_data[2] = tmp1.K();
+	this->_data[0] = (GLfloat)tmp1.I();				
+	this->_data[1] = (GLfloat)tmp1.J();
+	this->_data[2] = (GLfloat)tmp1.K();
 	tmp1 = this->_fromPlane * p1;
-	this->_data[3] = tmp1.I();
-	this->_data[4] = tmp1.J();
-	this->_data[5] = tmp1.K();
+	this->_data[3] = (GLfloat)tmp1.I();
+	this->_data[4] = (GLfloat)tmp1.J();
+	this->_data[5] = (GLfloat)tmp1.K();
 	
 	/*** Offset Line ***/
-	this->_data[6] = tmp1.I();
-	this->_data[7] = tmp1.J();
-	this->_data[8] = tmp1.K();
+	this->_data[6] = (GLfloat)tmp1.I();
+	this->_data[7] = (GLfloat)tmp1.J();
+	this->_data[8] = (GLfloat)tmp1.K();
 	tmp1 = p1 + (this->_uUnit * MEASURERADIUS_LABELDISPLACEMENT);
 	tmp1 = this->_fromPlane * tmp1;
-	this->_data[9] = tmp1.I();				
-	this->_data[10] = tmp1.J();
-	this->_data[11] = tmp1.K();
+	this->_data[9] = (GLfloat)tmp1.I();				
+	this->_data[10] = (GLfloat)tmp1.J();
+	this->_data[11] = (GLfloat)tmp1.K();
 
 	/*** Start-end Arrows ***/
 	WPFloat arrow = 0.05;
@@ -80,17 +80,17 @@ void WCConstraintMeasureRadius::CalculateBuffer(void) {
 	this->_data[12] = this->_data[0];
 	this->_data[13] = this->_data[1];
 	this->_data[14] = this->_data[2];
-	this->_data[15] = tmp1.I();
-	this->_data[16] = tmp1.J();
-	this->_data[17] = tmp1.K();
+	this->_data[15] = (GLfloat)tmp1.I();
+	this->_data[16] = (GLfloat)tmp1.J();
+	this->_data[17] = (GLfloat)tmp1.K();
 	tmp1 = p0 + (tan * arrow) + (unit * arrow);
 	tmp1 = this->_fromPlane * tmp1;
 	this->_data[18] = this->_data[0];
 	this->_data[19] = this->_data[1];
 	this->_data[20] = this->_data[2];
-	this->_data[21] = tmp1.I();
-	this->_data[22] = tmp1.J();
-	this->_data[23] = tmp1.K();
+	this->_data[21] = (GLfloat)tmp1.I();
+	this->_data[22] = (GLfloat)tmp1.J();
+	this->_data[23] = (GLfloat)tmp1.K();
 	
 	/*** Determine position for label ***/
 	this->_labelPos = p1 + (this->_uUnit * MEASURERADIUS_LABELDISPLACEMENT);
@@ -201,10 +201,10 @@ void WCConstraintMeasureRadius::Render(const WCColor &color, const bool &selectM
 		WCVector4 ur = this->_labelPos + (vUnit * height) + (uUnit * width);
 		WCVector4 lr = this->_labelPos + (uUnit * width);
 		//Load data
-		GLfloat vertData[12] = {this->_labelPos.I(), this->_labelPos.J(), this->_labelPos.K(), 
-								ul.I(), ul.J(), ul.K(),
-								ur.I(), ur.J(), ur.K(),
-								lr.I(), lr.J(), lr.K() };		
+		GLfloat vertData[12] = {(GLfloat)this->_labelPos.I(), (GLfloat)this->_labelPos.J(), (GLfloat)this->_labelPos.K(), 
+								(GLfloat)ul.I(), (GLfloat)ul.J(), (GLfloat)ul.K(),
+								(GLfloat)ur.I(), (GLfloat)ur.J(), (GLfloat)ur.K(),
+								(GLfloat)lr.I(), (GLfloat)lr.J(), (GLfloat)lr.K() };		
 		//Set drawing state
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glVertexPointer(3, GL_FLOAT, 0, vertData);

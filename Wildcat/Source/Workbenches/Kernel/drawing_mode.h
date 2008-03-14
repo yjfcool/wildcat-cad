@@ -65,7 +65,7 @@ public:
 	inline std::string Name(void) const			{ return this->_name; }								//!< Get the mode name
 	
 	//Overloaded Operators
-	bool operator==(const WCDrawingMode& mode) { return (typeid(*this) == typeid(mode)); }			//!< Type check
+	bool operator==(const WCDrawingMode& mode)	{ return (typeid(*this) == typeid(mode)); }			//!< Type check
 	
 	//Virtual Methods
 	virtual void OnEntry(void)									{ }									//!< Handle entry into mode
@@ -78,8 +78,7 @@ public:
 
 	//Staic Initializers
 	static WCDrawingMode* Default(void)			{ return NULL; }									//!< Default controller
-	static WCSelectionMode* Selection(WCWorkbench* wb);												//!< Selection controller
-//	static WCCameraMode* Camera(WCWorkbench* wb);													//!< Selection controller
+	static WCDrawingMode* Selection(WCWorkbench* wb);												//!< Selection controller
 };
 
 

@@ -404,7 +404,7 @@ WPUInt WCBipartiteFlowNetwork::Distribute(WCBipartiteEdgeNode *edge) { //WCConst
 			while (!this->_vQueue.empty()) {
 				//Get the next vertex node to be processed
 				v = this->_vQueue.front();
-				minimum = std::min( v->Weight() - v->Flows(), v->PathCapacity() );
+				minimum = STDMIN( v->Weight() - v->Flows(), v->PathCapacity() );
 				if (minimum > capvert) {
 					vert = v;
 					capvert = minimum;

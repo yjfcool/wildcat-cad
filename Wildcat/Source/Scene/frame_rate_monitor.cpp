@@ -66,11 +66,23 @@ WCFrameRateMonitor::~WCFrameRateMonitor() {
 
 void WCFrameRateMonitor::operator()(void) {
 	//Start the timer if counter = 0
-	if (this->_frameCounter == 0) this->_start = UpTime();
+	if (this->_frameCounter == 0)
+#ifdef __APPLE__
+		//Use OSX frameworks to get time
+		this->_start = UpTime();
+#elif __WIN32__
+		//Use MFC frameworks to get time
+		this->_start = CFileTime::GetCurrentTime();
+#endif
 	//Calculate FPS every 100 frames
 	if (this->_frameCounter == 100) {
+#ifdef __APPLE__
 		Nanoseconds elapsed = AbsoluteDeltaToNanoseconds(UpTime(), this->_start);
 		this->_fps = 100.0 / UnsignedWideToUInt64(elapsed) * 1000000000;
+#elif __WIN32__
+		CFileTimeSpan elapsed = CFileTime::GetCurrentTime() - this->_start;
+		this->_fps = 100.0 / elapsed.GetTimeSpan() * 1000000000;
+#endif
 		if (this->_fps > 1000.0) this->_fps = -1.0f;
 		//Reset the counter to 0
 		this->_frameCounter = 0;

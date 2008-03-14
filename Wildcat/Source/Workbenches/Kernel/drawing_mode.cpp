@@ -35,7 +35,8 @@
 /***********************************************~***************************************************/
 
 
-WCSelectionMode* WCDrawingMode::Selection(WCWorkbench* wb) {
+WCDrawingMode* WCDrawingMode::Selection(WCWorkbench* wb) {
+	//Create new selection mode controller
 	return new WCSelectionMode(wb);
 }
 

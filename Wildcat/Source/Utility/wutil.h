@@ -52,17 +52,19 @@
 #include <OpenGL/gl.h>
 #include <OpenGL/glext.h>
 #include <OpenGL/OpenGL.h>
-#define STDMIN std::min
-#define STDMAX std::max
+#define STDMIN	std::min
+#define STDMAX	std::max
+#define STDFABS	std::fabs
 #endif
 
 #ifdef __WIN32__
 #include <windows.h>					//Generic header file For Windows
 #include <Application/Win32/win_gl.h>	//Header file for windows platform
 
-//Defines for std::min and std::max problem
-#define STDMIN min
-#define STDMAX max
+//Defines for std:: problem
+#define STDMIN	min
+#define STDMAX	max
+#define STDFABS	fabs
 
 //Stupid workaround since Windows can't find round
 inline double round(const double &n) {

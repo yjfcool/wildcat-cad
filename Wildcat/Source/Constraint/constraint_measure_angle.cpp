@@ -94,38 +94,38 @@ void WCConstraintMeasureAngle::CalculateBuffer(void) {
 	/*** Determine starting arrow values ***/
 
 	//Set staring arrow values
-	this->_data[0] = p0.I();
-	this->_data[1] = p0.J();
-	this->_data[2] = p0.K();
+	this->_data[0] = (GLfloat)p0.I();
+	this->_data[1] = (GLfloat)p0.J();
+	this->_data[2] = (GLfloat)p0.K();
 	tmp1 = p0 - (line0Norm * arrow) - (line0Dir * arrow);
-	this->_data[3] = tmp1.I();
-	this->_data[4] = tmp1.J();
-	this->_data[5] = tmp1.K();
-	this->_data[6] = p0.I();
-	this->_data[7] = p0.J();
-	this->_data[8] = p0.K();
+	this->_data[3] = (GLfloat)tmp1.I();
+	this->_data[4] = (GLfloat)tmp1.J();
+	this->_data[5] = (GLfloat)tmp1.K();
+	this->_data[6] = (GLfloat)p0.I();
+	this->_data[7] = (GLfloat)p0.J();
+	this->_data[8] = (GLfloat)p0.K();
 	tmp1 = p0 - (line0Norm * arrow) + (line0Dir * arrow);
-	this->_data[9] = tmp1.I();
-	this->_data[10] = tmp1.J();
-	this->_data[11] = tmp1.K();
+	this->_data[9] = (GLfloat)tmp1.I();
+	this->_data[10] = (GLfloat)tmp1.J();
+	this->_data[11] = (GLfloat)tmp1.K();
 
 	/*** Determine ending arrow values ***/
 
 	//Set ending arrow values
-	this->_data[12] = p1.I();
-	this->_data[13] = p1.J();
-	this->_data[14] = p1.K();
+	this->_data[12] = (GLfloat)p1.I();
+	this->_data[13] = (GLfloat)p1.J();
+	this->_data[14] = (GLfloat)p1.K();
 	tmp1 = p1 + (line1Norm * arrow) - (line1Dir * arrow);
-	this->_data[15] = tmp1.I();
-	this->_data[16] = tmp1.J();
-	this->_data[17] = tmp1.K();
-	this->_data[18] = p1.I();
-	this->_data[19] = p1.J();
-	this->_data[20] = p1.K();
+	this->_data[15] = (GLfloat)tmp1.I();
+	this->_data[16] = (GLfloat)tmp1.J();
+	this->_data[17] = (GLfloat)tmp1.K();
+	this->_data[18] = (GLfloat)p1.I();
+	this->_data[19] = (GLfloat)p1.J();
+	this->_data[20] = (GLfloat)p1.K();
 	tmp1 = p1 + (line1Norm * arrow) + (line1Dir * arrow);
-	this->_data[21] = tmp1.I();
-	this->_data[22] = tmp1.J();
-	this->_data[23] = tmp1.K();
+	this->_data[21] = (GLfloat)tmp1.I();
+	this->_data[22] = (GLfloat)tmp1.J();
+	this->_data[23] = (GLfloat)tmp1.K();
 		
 	/*** Determine position for label ***/
 	if (this->_isReversed) this->_labelPos = this->_curve->Evaluate(1.0 - this->_labelOffset);
@@ -175,7 +175,7 @@ void WCConstraintMeasureAngle::SlewOffsets(const WPFloat &xSlew, const WPFloat &
 	WCVector4 pt3D = this->_fromPlane * pt;
 
 	//Offset is distance from center to pt
-	this->_offset = std::max(0.0, this->_center.Distance(pt3D));
+	this->_offset = STDMAX(0.0, this->_center.Distance(pt3D));
 	WPFloat newAngle = Angle(this->_first, this->_center, pt3D) * M_PI / 180.0;
 	//See if pt is to the right of first
 	bool ptOnRight = IsOnRight2D(center.I(), center.J(), first.I(), first.J(), pt.I(), pt.J());
@@ -185,7 +185,7 @@ void WCConstraintMeasureAngle::SlewOffsets(const WPFloat &xSlew, const WPFloat &
 	//Label offset is percent of newAngle to angle
 	this->_labelOffset = newAngle / angle;
 	//Limit label offset to [0,1]
-	this->_labelOffset = std::max(0.0, std::min(1.0, this->_labelOffset));
+	this->_labelOffset = STDMAX(0.0, STDMIN(1.0, this->_labelOffset));
 	//Mark as dirty
 	this->_isDirty = true;
 }
@@ -231,10 +231,10 @@ void WCConstraintMeasureAngle::Render(const WCColor &color, const bool &selectMo
 		WCVector4 ur = this->_labelPos + (vUnit * height) + (uUnit * width);
 		WCVector4 lr = this->_labelPos + (uUnit * width);
 		//Load data
-		GLfloat vertData[12] = {this->_labelPos.I(), this->_labelPos.J(), this->_labelPos.K(), 
-								ul.I(), ul.J(), ul.K(),
-								ur.I(), ur.J(), ur.K(),
-								lr.I(), lr.J(), lr.K() };		
+		GLfloat vertData[12] = {(GLfloat)this->_labelPos.I(), (GLfloat)this->_labelPos.J(), (GLfloat)this->_labelPos.K(), 
+								(GLfloat)ul.I(), (GLfloat)ul.J(), (GLfloat)ul.K(),
+								(GLfloat)ur.I(), (GLfloat)ur.J(), (GLfloat)ur.K(),
+								(GLfloat)lr.I(), (GLfloat)lr.J(), (GLfloat)lr.K() };		
 		//Set drawing state
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glVertexPointer(3, GL_FLOAT, 0, vertData);

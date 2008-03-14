@@ -56,7 +56,6 @@ private:
 	WPFloat										_markX, _markY;										//!< Initial location
 	//Deny Access
 	WCSelectionMode();																				//!< Default constructor
-	
 public:
 	//Constructors and Destructors
 	WCSelectionMode(WCWorkbench *wb);																//!< Primary constructor

@@ -345,9 +345,15 @@ void WCCamera::AnimateToViewpoint(const WCQuaternion &rot, const WPFloat xPan, c
 	//Make sure the camera is moveable
 	if (!this->_isMoveable) return;
 	//Setup the animation information
+#ifdef __APPLE__
 	this->_start = UpTime();
 	Nanoseconds duration = UInt64ToUnsignedWide(1000000000L * seconds);
 	this->_stop = AddNanosecondsToAbsolute(duration, this->_start);
+#elif __WIN32__
+	this->_start = CFileTime::GetCurrentTime();
+	CFileTimeSpan duration(1000000L * (LONGLONG)seconds);
+	this->_stop = this->_start + duration;
+#endif
 	//Set the stop points
 	this->_aniQuaternion = new WCQuaternion(rot);
 	this->_aniPanX = xPan;
@@ -431,9 +437,17 @@ void WCCamera::ReadyScene(void) {
 	//Animation path
 	if (this->_isAnimating) {
 		//Calculate interpolate
+#ifdef __APPLE__
 		AbsoluteTime now = UpTime();
 		WPFloat elapsed = UnsignedWideToUInt64(AbsoluteDeltaToNanoseconds(now, this->_start)) / 10.0;
 		WPFloat togo = UnsignedWideToUInt64(AbsoluteDeltaToNanoseconds(this->_stop, now)) / 10.0;
+#elif __WIN32__
+		CFileTime now = CFileTime::GetCurrentTime();
+		CFileTimeSpan sofar = now - this->_start;
+		WPFloat elapsed = sofar.GetTimeSpan() / 10.0;
+		CFileTimeSpan remains = this->_stop - now;
+		WPFloat togo = remains.GetTimeSpan() / 10.0;
+#endif
 		WPFloat percent = elapsed / (elapsed + togo);
 		//Interpolate the quaternion
 		WPFloat sinAngle = sin(this->_aniAngle);

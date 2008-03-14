@@ -52,38 +52,38 @@ void WCConstraintMeasureTwoPoint::CalculateAbsolute(void) {
 	/*** First offset line ***/
 	tmp1 = p0 + (tan * overshoot);
 	tmp1 = this->_fromPlane * tmp1;
-	this->_data[0] = tmp1.I();				
-	this->_data[1] = tmp1.J();
-	this->_data[2] = tmp1.K();
+	this->_data[0] = (GLfloat)tmp1.I();				
+	this->_data[1] = (GLfloat)tmp1.J();
+	this->_data[2] = (GLfloat)tmp1.K();
 	tmp1 = p0 + (tan * (this->_offset+overshoot));
 	tmp1 = this->_fromPlane * tmp1;
-	this->_data[3] = tmp1.I();
-	this->_data[4] = tmp1.J();
-	this->_data[5] = tmp1.K();
+	this->_data[3] = (GLfloat)tmp1.I();
+	this->_data[4] = (GLfloat)tmp1.J();
+	this->_data[5] = (GLfloat)tmp1.K();
 
 	/*** Second offset line ***/
 	tmp1 = p1 + (tan * overshoot);
 	tmp1 = this->_fromPlane * tmp1;
-	this->_data[6] = tmp1.I();				
-	this->_data[7] = tmp1.J();
-	this->_data[8] = tmp1.K();
+	this->_data[6] = (GLfloat)tmp1.I();				
+	this->_data[7] = (GLfloat)tmp1.J();
+	this->_data[8] = (GLfloat)tmp1.K();
 	tmp1 = p1 + (tan * (this->_offset+overshoot));
 	tmp1 = this->_fromPlane * tmp1;
-	this->_data[9] = tmp1.I();
-	this->_data[10] = tmp1.J();
-	this->_data[11] = tmp1.K();
+	this->_data[9] = (GLfloat)tmp1.I();
+	this->_data[10] = (GLfloat)tmp1.J();
+	this->_data[11] = (GLfloat)tmp1.K();
 
 	/*** Cross line ***/
 	c0 = p0 + (tan * this->_offset);
 	c0t = this->_fromPlane * c0;
-	this->_data[12] = c0t.I();
-	this->_data[13] = c0t.J();
-	this->_data[14] = c0t.K();
+	this->_data[12] = (GLfloat)c0t.I();
+	this->_data[13] = (GLfloat)c0t.J();
+	this->_data[14] = (GLfloat)c0t.K();
 	c1 = p1 + (tan * this->_offset);
 	c1t = this->_fromPlane * c1;
-	this->_data[15] = c1t.I();
-	this->_data[16] = c1t.J();
-	this->_data[17] = c1t.K();	
+	this->_data[15] = (GLfloat)c1t.I();
+	this->_data[16] = (GLfloat)c1t.J();
+	this->_data[17] = (GLfloat)c1t.K();	
 
 	//Determine if arrows are inside or outside
 	if ((this->_labelOffset < 0.0) || (this->_labelOffset > 1.0)) arrowsOut = true;
@@ -103,18 +103,18 @@ void WCConstraintMeasureTwoPoint::CalculateAbsolute(void) {
 	}
 	tmp1 = this->_fromPlane * tmp1;
 	tmp2 = this->_fromPlane * tmp2;
-	this->_data[18] = c0t.I();
-	this->_data[19] = c0t.J();
-	this->_data[20] = c0t.K();
-	this->_data[21] = tmp1.I();
-	this->_data[22] = tmp1.J();
-	this->_data[23] = tmp1.K();
-	this->_data[24] = c0t.I();
-	this->_data[25] = c0t.J();
-	this->_data[26] = c0t.K();
-	this->_data[27] = tmp2.I();
-	this->_data[28] = tmp2.J();
-	this->_data[29] = tmp2.K();
+	this->_data[18] = (GLfloat)c0t.I();
+	this->_data[19] = (GLfloat)c0t.J();
+	this->_data[20] = (GLfloat)c0t.K();
+	this->_data[21] = (GLfloat)tmp1.I();
+	this->_data[22] = (GLfloat)tmp1.J();
+	this->_data[23] = (GLfloat)tmp1.K();
+	this->_data[24] = (GLfloat)c0t.I();
+	this->_data[25] = (GLfloat)c0t.J();
+	this->_data[26] = (GLfloat)c0t.K();
+	this->_data[27] = (GLfloat)tmp2.I();
+	this->_data[28] = (GLfloat)tmp2.J();
+	this->_data[29] = (GLfloat)tmp2.K();
 	
 	/*** End-end Arrows ***/
 	//Adjust for inside
@@ -128,18 +128,18 @@ void WCConstraintMeasureTwoPoint::CalculateAbsolute(void) {
 	}
 	tmp1 = this->_fromPlane * tmp1;
 	tmp2 = this->_fromPlane * tmp2;
-	this->_data[30] = c1t.I();
-	this->_data[31] = c1t.J();
-	this->_data[32] = c1t.K();
-	this->_data[33] = tmp1.I();
-	this->_data[34] = tmp1.J();
-	this->_data[35] = tmp1.K();
-	this->_data[36] = c1t.I();
-	this->_data[37] = c1t.J();
-	this->_data[38] = c1t.K();
-	this->_data[39] = tmp2.I();
-	this->_data[40] = tmp2.J();
-	this->_data[41] = tmp2.K();
+	this->_data[30] = (GLfloat)c1t.I();
+	this->_data[31] = (GLfloat)c1t.J();
+	this->_data[32] = (GLfloat)c1t.K();
+	this->_data[33] = (GLfloat)tmp1.I();
+	this->_data[34] = (GLfloat)tmp1.J();
+	this->_data[35] = (GLfloat)tmp1.K();
+	this->_data[36] = (GLfloat)c1t.I();
+	this->_data[37] = (GLfloat)c1t.J();
+	this->_data[38] = (GLfloat)c1t.K();
+	this->_data[39] = (GLfloat)tmp2.I();
+	this->_data[40] = (GLfloat)tmp2.J();
+	this->_data[41] = (GLfloat)tmp2.K();
 	
 	/*** Determine position for label ***/
 	//Orient unit vectors
@@ -177,12 +177,12 @@ void WCConstraintMeasureTwoPoint::CalculateHorizontal(void) {
 	//Transform to the plane
 	tmp1 = this->_fromPlane * tmp1;
 	tmp2 = this->_fromPlane * tmp2;
-	this->_data[0] = tmp1.I();				
-	this->_data[1] = tmp1.J();
-	this->_data[2] = tmp1.K();
-	this->_data[3] = tmp2.I();
-	this->_data[4] = tmp2.J();
-	this->_data[5] = tmp2.K();
+	this->_data[0] = (GLfloat)tmp1.I();				
+	this->_data[1] = (GLfloat)tmp1.J();
+	this->_data[2] = (GLfloat)tmp1.K();
+	this->_data[3] = (GLfloat)tmp2.I();
+	this->_data[4] = (GLfloat)tmp2.J();
+	this->_data[5] = (GLfloat)tmp2.K();
 
 	/*** Second offset line ***/
 	//Adjust for overshoot
@@ -193,24 +193,24 @@ void WCConstraintMeasureTwoPoint::CalculateHorizontal(void) {
 	//Transform to the plane
 	tmp1 = this->_fromPlane * tmp1;
 	tmp2 = this->_fromPlane * tmp2;
-	this->_data[6] = tmp1.I();				
-	this->_data[7] = tmp1.J();
-	this->_data[8] = tmp1.K();
-	this->_data[9] = tmp2.I();
-	this->_data[10] = tmp2.J();
-	this->_data[11] = tmp2.K();
+	this->_data[6] = (GLfloat)tmp1.I();				
+	this->_data[7] = (GLfloat)tmp1.J();
+	this->_data[8] = (GLfloat)tmp1.K();
+	this->_data[9] = (GLfloat)tmp2.I();
+	this->_data[10] = (GLfloat)tmp2.J();
+	this->_data[11] = (GLfloat)tmp2.K();
 
 	/*** Cross line ***/
 	WCVector4 c0(p0.I(), yVal, 0.0, 1.0);
 	WCVector4 c0t = this->_fromPlane * c0;
-	this->_data[12] = c0t.I();
-	this->_data[13] = c0t.J();
-	this->_data[14] = c0t.K();
+	this->_data[12] = (GLfloat)c0t.I();
+	this->_data[13] = (GLfloat)c0t.J();
+	this->_data[14] = (GLfloat)c0t.K();
 	WCVector4 c1(p1.I(), yVal, 0.0, 1.0);
 	WCVector4 c1t = this->_fromPlane * c1;
-	this->_data[15] = c1t.I();
-	this->_data[16] = c1t.J();
-	this->_data[17] = c1t.K();
+	this->_data[15] = (GLfloat)c1t.I();
+	this->_data[16] = (GLfloat)c1t.J();
+	this->_data[17] = (GLfloat)c1t.K();
 
 	//Determine if arrows are inside or outside
 	if ((this->_labelOffset < 0.0) || (this->_labelOffset > 1.0)) arrowsOut = true;
@@ -230,18 +230,18 @@ void WCConstraintMeasureTwoPoint::CalculateHorizontal(void) {
 	}
 	tmp1 = this->_fromPlane * tmp1;
 	tmp2 = this->_fromPlane * tmp2;
-	this->_data[18] = c0t.I();
-	this->_data[19] = c0t.J();
-	this->_data[20] = c0t.K();
-	this->_data[21] = tmp1.I();
-	this->_data[22] = tmp1.J();
-	this->_data[23] = tmp1.K();
-	this->_data[24] = c0t.I();
-	this->_data[25] = c0t.J();
-	this->_data[26] = c0t.K();
-	this->_data[27] = tmp2.I();
-	this->_data[28] = tmp2.J();
-	this->_data[29] = tmp2.K();
+	this->_data[18] = (GLfloat)c0t.I();
+	this->_data[19] = (GLfloat)c0t.J();
+	this->_data[20] = (GLfloat)c0t.K();
+	this->_data[21] = (GLfloat)tmp1.I();
+	this->_data[22] = (GLfloat)tmp1.J();
+	this->_data[23] = (GLfloat)tmp1.K();
+	this->_data[24] = (GLfloat)c0t.I();
+	this->_data[25] = (GLfloat)c0t.J();
+	this->_data[26] = (GLfloat)c0t.K();
+	this->_data[27] = (GLfloat)tmp2.I();
+	this->_data[28] = (GLfloat)tmp2.J();
+	this->_data[29] = (GLfloat)tmp2.K();
 
 	/*** End-end Arrows ***/
 	//Adjust for inside and top-bottom
@@ -255,18 +255,18 @@ void WCConstraintMeasureTwoPoint::CalculateHorizontal(void) {
 	}
 	tmp1 = this->_fromPlane * tmp1;
 	tmp2 = this->_fromPlane * tmp2;
-	this->_data[30] = c1t.I();
-	this->_data[31] = c1t.J();
-	this->_data[32] = c1t.K();
-	this->_data[33] = tmp1.I();
-	this->_data[34] = tmp1.J();
-	this->_data[35] = tmp1.K();
-	this->_data[36] = c1t.I();
-	this->_data[37] = c1t.J();
-	this->_data[38] = c1t.K();
-	this->_data[39] = tmp2.I();
-	this->_data[40] = tmp2.J();
-	this->_data[41] = tmp2.K();
+	this->_data[30] = (GLfloat)c1t.I();
+	this->_data[31] = (GLfloat)c1t.J();
+	this->_data[32] = (GLfloat)c1t.K();
+	this->_data[33] = (GLfloat)tmp1.I();
+	this->_data[34] = (GLfloat)tmp1.J();
+	this->_data[35] = (GLfloat)tmp1.K();
+	this->_data[36] = (GLfloat)c1t.I();
+	this->_data[37] = (GLfloat)c1t.J();
+	this->_data[38] = (GLfloat)c1t.K();
+	this->_data[39] = (GLfloat)tmp2.I();
+	this->_data[40] = (GLfloat)tmp2.J();
+	this->_data[41] = (GLfloat)tmp2.K();
 
 	/*** Determine position for label ***/
 	//Label Pos
@@ -302,12 +302,12 @@ void WCConstraintMeasureTwoPoint::CalculateVertical(void) {
 	//Transform to the plane
 	tmp1 = this->_fromPlane * tmp1;
 	tmp2 = this->_fromPlane * tmp2;
-	this->_data[0] = tmp1.I();				
-	this->_data[1] = tmp1.J();
-	this->_data[2] = tmp1.K();
-	this->_data[3] = tmp2.I();
-	this->_data[4] = tmp2.J();
-	this->_data[5] = tmp2.K();
+	this->_data[0] = (GLfloat)tmp1.I();				
+	this->_data[1] = (GLfloat)tmp1.J();
+	this->_data[2] = (GLfloat)tmp1.K();
+	this->_data[3] = (GLfloat)tmp2.I();
+	this->_data[4] = (GLfloat)tmp2.J();
+	this->_data[5] = (GLfloat)tmp2.K();
 
 	/*** Second offset line ***/
 	//Adjust for overshoot
@@ -318,24 +318,24 @@ void WCConstraintMeasureTwoPoint::CalculateVertical(void) {
 	//Transform to the plane
 	tmp1 = this->_fromPlane * tmp1;
 	tmp2 = this->_fromPlane * tmp2;
-	this->_data[6] = tmp1.I();				
-	this->_data[7] = tmp1.J();
-	this->_data[8] = tmp1.K();
-	this->_data[9] = tmp2.I();
-	this->_data[10] = tmp2.J();
-	this->_data[11] = tmp2.K();
+	this->_data[6] = (GLfloat)tmp1.I();				
+	this->_data[7] = (GLfloat)tmp1.J();
+	this->_data[8] = (GLfloat)tmp1.K();
+	this->_data[9] = (GLfloat)tmp2.I();
+	this->_data[10] = (GLfloat)tmp2.J();
+	this->_data[11] = (GLfloat)tmp2.K();
 
 	/*** Cross line ***/
 	WCVector4 c0(xVal, p0.J(), 0.0, 1.0);
 	WCVector4 c0t = this->_fromPlane * c0;
-	this->_data[12] = c0t.I();
-	this->_data[13] = c0t.J();
-	this->_data[14] = c0t.K();
+	this->_data[12] = (GLfloat)c0t.I();
+	this->_data[13] = (GLfloat)c0t.J();
+	this->_data[14] = (GLfloat)c0t.K();
 	WCVector4 c1(xVal, p1.J(), 0.0, 1.0);
 	WCVector4 c1t = this->_fromPlane * c1;
-	this->_data[15] = c1t.I();
-	this->_data[16] = c1t.J();
-	this->_data[17] = c1t.K();
+	this->_data[15] = (GLfloat)c1t.I();
+	this->_data[16] = (GLfloat)c1t.J();
+	this->_data[17] = (GLfloat)c1t.K();
 
 	//Determine if arrows are inside or outside
 	if ((this->_labelOffset < 0.0) || (this->_labelOffset > 1.0)) arrowsOut = true;
@@ -355,18 +355,18 @@ void WCConstraintMeasureTwoPoint::CalculateVertical(void) {
 	}
 	tmp1 = this->_fromPlane * tmp1;
 	tmp2 = this->_fromPlane * tmp2;
-	this->_data[18] = c0t.I();
-	this->_data[19] = c0t.J();
-	this->_data[20] = c0t.K();
-	this->_data[21] = tmp1.I();
-	this->_data[22] = tmp1.J();
-	this->_data[23] = tmp1.K();
-	this->_data[24] = c0t.I();
-	this->_data[25] = c0t.J();
-	this->_data[26] = c0t.K();
-	this->_data[27] = tmp2.I();
-	this->_data[28] = tmp2.J();
-	this->_data[29] = tmp2.K();
+	this->_data[18] = (GLfloat)c0t.I();
+	this->_data[19] = (GLfloat)c0t.J();
+	this->_data[20] = (GLfloat)c0t.K();
+	this->_data[21] = (GLfloat)tmp1.I();
+	this->_data[22] = (GLfloat)tmp1.J();
+	this->_data[23] = (GLfloat)tmp1.K();
+	this->_data[24] = (GLfloat)c0t.I();
+	this->_data[25] = (GLfloat)c0t.J();
+	this->_data[26] = (GLfloat)c0t.K();
+	this->_data[27] = (GLfloat)tmp2.I();
+	this->_data[28] = (GLfloat)tmp2.J();
+	this->_data[29] = (GLfloat)tmp2.K();
 
 	/*** End-end Arrows ***/
 	//Adjust for inside and top-bottom
@@ -380,18 +380,18 @@ void WCConstraintMeasureTwoPoint::CalculateVertical(void) {
 	}
 	tmp1 = this->_fromPlane * tmp1;
 	tmp2 = this->_fromPlane * tmp2;
-	this->_data[30] = c1t.I();
-	this->_data[31] = c1t.J();
-	this->_data[32] = c1t.K();
-	this->_data[33] = tmp1.I();
-	this->_data[34] = tmp1.J();
-	this->_data[35] = tmp1.K();
-	this->_data[36] = c1t.I();
-	this->_data[37] = c1t.J();
-	this->_data[38] = c1t.K();
-	this->_data[39] = tmp2.I();
-	this->_data[40] = tmp2.J();
-	this->_data[41] = tmp2.K();
+	this->_data[30] = (GLfloat)c1t.I();
+	this->_data[31] = (GLfloat)c1t.J();
+	this->_data[32] = (GLfloat)c1t.K();
+	this->_data[33] = (GLfloat)tmp1.I();
+	this->_data[34] = (GLfloat)tmp1.J();
+	this->_data[35] = (GLfloat)tmp1.K();
+	this->_data[36] = (GLfloat)c1t.I();
+	this->_data[37] = (GLfloat)c1t.J();
+	this->_data[38] = (GLfloat)c1t.K();
+	this->_data[39] = (GLfloat)tmp2.I();
+	this->_data[40] = (GLfloat)tmp2.J();
+	this->_data[41] = (GLfloat)tmp2.K();
 
 	/*** Determine position for label ***/
 	//Label Pos
@@ -445,7 +445,7 @@ void WCConstraintMeasureTwoPoint::SlewOffsets(const WPFloat &xSlew, const WPFloa
 		if (p1.J() > p0.I()) uSlew *= -1.0;
 		//Update offset values
 		this->_offset += vSlew;
-		this->_labelOffset -= (uSlew / std::fabs(p0.I() - p1.I()));
+		this->_labelOffset -= (uSlew / STDFABS(p0.I() - p1.I()));
 	}
 	//Must be vertical
 	else {
@@ -453,7 +453,7 @@ void WCConstraintMeasureTwoPoint::SlewOffsets(const WPFloat &xSlew, const WPFloa
 		if (p1.J() > p0.J()) vSlew *= -1.0;
 		//Update offset values
 		this->_offset += uSlew;
-		this->_labelOffset -= (vSlew / std::fabs(p0.J() - p1.J()));
+		this->_labelOffset -= (vSlew / STDFABS(p0.J() - p1.J()));
 	}
 	//Mark as dirty
 	this->_isDirty = true;
@@ -520,10 +520,10 @@ void WCConstraintMeasureTwoPoint::Render(const WCColor &color, const bool &selec
 		WCVector4 ur = this->_labelPos + (vUnit * height) + (uUnit * width);
 		WCVector4 lr = this->_labelPos + (uUnit * width);
 		//Load data
-		GLfloat vertData[12] = {this->_labelPos.I(), this->_labelPos.J(), this->_labelPos.K(), 
-								ul.I(), ul.J(), ul.K(),
-								ur.I(), ur.J(), ur.K(),
-								lr.I(), lr.J(), lr.K() };		
+		GLfloat vertData[12] = {(GLfloat)this->_labelPos.I(), (GLfloat)this->_labelPos.J(), (GLfloat)this->_labelPos.K(), 
+								(GLfloat)ul.I(), (GLfloat)ul.J(), (GLfloat)ul.K(),
+								(GLfloat)ur.I(), (GLfloat)ur.J(), (GLfloat)ur.K(),
+								(GLfloat)lr.I(), (GLfloat)lr.J(), (GLfloat)lr.K() };		
 		//Set drawing state
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glVertexPointer(3, GL_FLOAT, 0, vertData);

@@ -71,10 +71,10 @@ void WCSelectionMode::OnMouseUp(const WCMouseButton &button) {
 	WPFloat yMin = STDMIN(scene->MouseY(), this->_markY);
 	WPFloat yMax = STDMAX(scene->MouseY(), this->_markY);
 	//Convert scene position to screen position
-	WPUInt xMinPos = (xMin + (scene->Width()/2.0)) * (scene->WindowWidth() / scene->Width());
-	WPUInt xMaxPos = (xMax + (scene->Width()/2.0)) * (scene->WindowWidth() / scene->Width());
-	WPUInt yMinPos = scene->WindowHeight() - (yMin - scene->Height() / 2.0) * (-1.0 * scene->WindowHeight() / scene->Height());
-	WPUInt yMaxPos = scene->WindowHeight() - (yMax - scene->Height() / 2.0) * (-1.0 * scene->WindowHeight() / scene->Height());
+	WPUInt xMinPos = (WPUInt)((xMin + (scene->Width()/2.0)) * (scene->WindowWidth() / scene->Width()));
+	WPUInt xMaxPos = (WPUInt)((xMax + (scene->Width()/2.0)) * (scene->WindowWidth() / scene->Width()));
+	WPUInt yMinPos = (WPUInt)(scene->WindowHeight() - (yMin - scene->Height() / 2.0) * (-1.0 * scene->WindowHeight() / scene->Height()));
+	WPUInt yMaxPos = (WPUInt)(scene->WindowHeight() - (yMax - scene->Height() / 2.0) * (-1.0 * scene->WindowHeight() / scene->Height()));
 	//Clear if appropriate
 	if (!this->_workbench->IsMultiSelect()) this->_workbench->SelectionManager()->Clear(true);
 	//Call selection
@@ -104,8 +104,8 @@ void WCSelectionMode::OnMouseDown(const WCMouseButton &button) {
 	//Clear if appropriate
 	if (!this->_workbench->IsMultiSelect()) this->_workbench->SelectionManager()->Clear(true);
 	//Get pixel position
-	WPUInt x = (this->_markX + (scene->Width()/2.0)) * (scene->WindowWidth() / scene->Width());
-	WPUInt y = scene->WindowHeight() - (this->_markY - scene->Height() / 2.0) * (-1.0 * scene->WindowHeight() / scene->Height());
+	WPUInt x = (WPUInt)((this->_markX + (scene->Width()/2.0)) * (scene->WindowWidth() / scene->Width()));
+	WPUInt y = (WPUInt)(scene->WindowHeight() - (this->_markY - scene->Height() / 2.0) * (-1.0 * scene->WindowHeight() / scene->Height()));
 	//Call single select
 	this->_workbench->SelectionManager()->Select(x, x, y, y, true);
 }

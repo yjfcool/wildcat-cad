@@ -221,7 +221,7 @@ WCConstraintDistance::WCConstraintDistance(xercesc::DOMElement *element, WCSeria
 	dictionary->InsertGUID(guid, this);
 
 	//Setup type
-	this->_type = WCSerializeableObject::GetFloatAttrib(element, "type");
+	this->_type = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "type");
 	//Setup distance
 	this->_distance = WCSerializeableObject::GetFloatAttrib(element, "distance");
 	//Setup feature A
