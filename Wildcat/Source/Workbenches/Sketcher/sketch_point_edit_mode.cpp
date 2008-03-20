@@ -44,7 +44,7 @@ WCModeSketchPointEdit::WCModeSketchPointEdit(WCSketchPoint *point) : ::WCDrawing
 	//Add in alignment suggestion rules
 	this->_alignRules.push_back(WCSketchAlignmentSuggestion::CoincidentToPoint());
 	this->_alignRules.push_back(WCSketchAlignmentSuggestion::CoincidentToLine());
-	this->_alignRules.push_back(WCSketchAlignmentSuggestion::CoincidentToCurve());
+//	this->_alignRules.push_back(WCSketchAlignmentSuggestion::CoincidentToCurve());
 	this->_alignRules.push_back(WCSketchAlignmentSuggestion::HorizontalToPoint());
 	this->_alignRules.push_back(WCSketchAlignmentSuggestion::VerticalToPoint());
 }

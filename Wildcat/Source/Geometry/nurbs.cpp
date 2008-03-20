@@ -170,8 +170,6 @@ WPFloat* WCNurbs::BasisValues(const WPUInt &span, const WPFloat &u, const WPUInt
 			delete a[0];
 			delete a[1];
 			delete a;
-			delete left;
-			delete right;
 			//Return the values
 			return ders;
 	}
@@ -209,8 +207,9 @@ WPFloat* WCNurbs::BasisValues(const WPUInt &span, const WPFloat &u, const WPUInt
 	}
 	//Delete ndu and A arrays
 	for (WPUInt i=0; i<=degree; i++) delete ndu[i];
-	for (int i=0; i<2; i++) delete a[i];
 	delete ndu;
+	delete a[0];
+	delete a[1];
 	delete a;
 	
 	//Multiply each der value by the factorial
@@ -220,15 +219,6 @@ WPFloat* WCNurbs::BasisValues(const WPUInt &span, const WPFloat &u, const WPUInt
 			ders[k*(degree+1)+j] *= r;
 		r *= (degree - k);
 	}
-
-	//Delete arrays
-	for (WPUInt i=0; i<degree; i++) delete ndu[i];
-	delete ndu;
-	delete a[0];
-	delete a[1];
-	delete a;
-	delete left;
-	delete right;
 
 	/*** Debug ***
 	for (k=0; k<(der+1)*(degree+1); k++) 
@@ -391,7 +381,8 @@ void WCNurbs::CircularPoints(const WCVector4 &center, const WCVector4 &xUnit, co
 	WPUInt numControlPoints = 2 * numArcs + 1;
 	WPUInt numKnotPoints = 2 * numArcs + 4;
 	
-	WCVector4 *points = new WCVector4[numControlPoints+1];
+//	WCVector4 *points = new WCVector4[numControlPoints+1];
+	WCVector4 points[numControlPoints+1];
 	WPFloat *knots = new WPFloat[numKnotPoints];
 	
 	WPFloat w1 = cos(deltaTheta / 2.0);
@@ -440,16 +431,14 @@ void WCNurbs::CircularPoints(const WCVector4 &center, const WCVector4 &xUnit, co
 	knotPoints.clear();
 
 	//Create vector of control points
-//	std::vector<WCVector4> cp;
 	for (WPUInt i=0; i<numControlPoints; i++)
 		controlPoints.push_back(points[i]);
 	//Create vector of knot points
-//	std::vector<WPFloat> kp;
 	for (WPUInt i=0; i<numKnotPoints; i++)
 		knotPoints.push_back(knots[i]);
 
 	//Delete arrays
-	delete points;
+//	delete points;
 	delete knots;
 }
 
