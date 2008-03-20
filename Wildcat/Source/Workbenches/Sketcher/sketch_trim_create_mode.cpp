@@ -64,8 +64,8 @@ void WCModeSketchTrimCreate::OnMouseMove(const WPFloat &x, const WPFloat &y) {
 	//Clear if appropriate
 	if (!this->_workbench->IsMultiSelect()) this->_workbench->SelectionManager()->Clear(true);
 	//Get pixel position
-	WPUInt xPos = (x + (scene->Width()/2.0)) * (scene->WindowWidth() / scene->Width());
-	WPUInt yPos = scene->WindowHeight() - (y - scene->Height() / 2.0) * (-1.0 * scene->WindowHeight() / scene->Height());
+	WPUInt xPos = WPUInt((x + (scene->Width()/2.0)) * (scene->WindowWidth() / scene->Width()));
+	WPUInt yPos = WPUInt(scene->WindowHeight() - (y - scene->Height() / 2.0) * (-1.0 * scene->WindowHeight() / scene->Height()));
 	//Call single select
 	this->_workbench->SelectionManager()->Select(xPos, xPos, yPos, yPos, false);
 	if (this->_workbench->SelectionManager()->Count() != 1) return;
