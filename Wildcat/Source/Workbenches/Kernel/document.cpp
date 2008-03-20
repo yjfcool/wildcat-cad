@@ -365,7 +365,7 @@ bool WCDocument::Redo(const WPUInt &count) {
 	//Repeat count times
 	for (WPUInt i=0; i<count; i++) {
 		//Redo the last count redo actions
-		CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCDocument::Redo - Re-Executing: " << this->_actions.back()->Name() << ".");
+		CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCDocument::Redo - Re-Executing: " << this->_redoActions.back()->Name() << ".");
 		status = this->_redoActions.back()->Execute();
 		//If successfully rolledback
 		if (status != NULL) {

@@ -49,11 +49,11 @@ class WCFeaturePoint;
 
 class WCActionPartPlaneCreate : public WCAction {
 private:
+	WCGUID										_partGUID;											//!< GUID for associated objects
 	std::string									_planeName;											//!< Plane name
 	WCVector4									_p0, _p1, _p2;										//!< Three points
 	WCPartPlane									*_plane;											//!< Post-creation plane
-
-	//Deny Access
+	//Hidden Constructors
 	WCActionPartPlaneCreate();																		//!< Deny access to default constructor
 	WCActionPartPlaneCreate(const WCActionPartPlaneCreate &action);									//!< Deny access to copy constructor
 	WCActionPartPlaneCreate& operator=(const WCActionPartPlaneCreate& action);						//!< Deny access to equals operator
@@ -64,7 +64,7 @@ private:
 public:
 	//Constructors and Destructors
 	WCActionPartPlaneCreate(xercesc::DOMElement *element, WCSerialDictionary *dictionary);			//!< Persistance constructor
-	~WCActionPartPlaneCreate()						{ }												//!< Default destructor
+	~WCActionPartPlaneCreate()					{ }													//!< Default destructor
 
 	//Member Access Methods
 	inline WCPartPlane* Plane(void)				{ return this->_plane; }							//!< Get the plane
@@ -72,7 +72,7 @@ public:
 	//Inherited Methods
 	WCFeature* Execute(void);																		//!< Execute the action
 	bool Merge(WCAction *action)				{ return false; }									//!< Try to merge two actions
-	bool Rollback(void)							{ return false; }									//!< Try to rollback the action
+	bool Rollback(void);																			//!< Try to rollback the action
 	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
 };
 

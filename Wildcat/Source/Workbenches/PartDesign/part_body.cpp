@@ -80,15 +80,15 @@ WCPartBody::WCPartBody(xercesc::DOMElement *element, WCSerialDictionary *diction
 
 
 WCPartBody::~WCPartBody() {
-	//Remove the body from the document
-	this->_part->RemoveFeature(this);
-	//Delete objects
-	if (this->_treeElement != NULL) delete this->_treeElement;
-	if (this->_controller != NULL) delete this->_controller;
+	//Remove from the part
+	if (!this->_part->RemoveFeature(this, false)) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPartBody::~WCPartBody - Problem removing feature from part.");	
+	}
 }
 
 
 void WCPartBody::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
+	//Nothing to do yet...
 }
 
 
@@ -129,3 +129,4 @@ std::ostream& operator<<(std::ostream& out, const WCPartBody &body) {
 
 
 /***********************************************~***************************************************/
+

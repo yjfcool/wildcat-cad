@@ -84,12 +84,7 @@ void WCPartPlane::GenerateMatrices(void) {
 }
 
 
-/***********************************************~***************************************************/
-
-
-WCPartPlane::WCPartPlane(WCFeature *creator, const std::string &name, const WCVector4 &p0, const WCVector4 &p1, const WCVector4 &p2) : 
-	::WCPartFeature(creator, name), ::WCVisualObject(), _buffer(0), _base(p0), _uAxis(), _vAxis(), _matrix(), _inverseMatrix() {
-
+void WCPartPlane::Initialize(void) {
 	//Check feature name
 	if (this->_name == "") this->_name = this->_part->GenerateFeatureName(this);
 	//Create event handler
@@ -111,7 +106,14 @@ WCPartPlane::WCPartPlane(WCFeature *creator, const std::string &name, const WCVe
 	this->_isFeatureDirty = true;
 	//Retain the the camera) (get ModelView updates)
 	this->_document->Scene()->ActiveCamera()->Retain(*this);
-	
+}
+
+
+/***********************************************~***************************************************/
+
+
+WCPartPlane::WCPartPlane(WCFeature *creator, const std::string &name, const WCVector4 &p0, const WCVector4 &p1, const WCVector4 &p2) : 
+	::WCPartFeature(creator, name), ::WCVisualObject(), _buffer(0), _base(p0), _uAxis(), _vAxis(), _matrix(), _inverseMatrix() {
 	//uAxis, and vAxis
 	this->_uAxis = p1 - p0;
 	this->_uAxis.Normalize();
@@ -123,38 +125,19 @@ WCPartPlane::WCPartPlane(WCFeature *creator, const std::string &name, const WCVe
 	this->_vAxis.Normalize();
 	//Generate the matrices
 	this->GenerateMatrices();
+	//Finish initialization
+	this->Initialize();
 }
 
 
 WCPartPlane::WCPartPlane(xercesc::DOMElement *element, WCSerialDictionary *dictionary) : 
 	::WCPartFeature( WCSerializeableObject::ElementFromName(element,"PartFeature"), dictionary), 
 	::WCVisualObject(), _buffer(0), _base(), _uAxis(), _vAxis(), _matrix(), _inverseMatrix() {
-
 	//Make sure element if not null
 	if (element == NULL) return;
 	//Get GUID and register it
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
 	dictionary->InsertGUID(guid, this);
-
-	//Create event handler
-	this->_controller = new WCPartPlaneController(this);
-	//Create tree element
-	WSTexture* planeIcon = this->_document->Scene()->TextureManager()->TextureFromName("plane32");
-	this->_treeElement = new WCTreeElement(this->_document->TreeView(), this->_name, this->_controller, planeIcon);
-	//Add tree view element
-	this->_creator->TreeElement()->AddLastChild(this->_treeElement);
-	
-	//Add the plane to the part (true for visualize and select)
-	this->_part->AddFeature(this, true);
-	//Set default visibility
-	this->_isVisible = PARTPLANE_DEFAULT_VISIBILITY;
-	
-	//Generate the VBO
-	glGenBuffers(1, &this->_buffer);
-	//Mark as dirty
-	this->_isFeatureDirty = true;
-	//Retain the the camera) (get ModelView updates)
-	this->_document->Scene()->ActiveCamera()->Retain(*this);
 	
 	//Base, uAxis, and vAxis
 	this->_base.FromElement(  WCSerializeableObject::ElementFromName(element,"Base") );
@@ -162,16 +145,20 @@ WCPartPlane::WCPartPlane(xercesc::DOMElement *element, WCSerialDictionary *dicti
 	this->_vAxis.FromElement( WCSerializeableObject::ElementFromName(element,"VAxis") );
 	//Generate the matrices
 	this->GenerateMatrices();
+	//Finish initialization
+	this->Initialize();
 }
 
 
 WCPartPlane::~WCPartPlane() {
 	//Remove from the part
-	if (!this->_part->RemoveFeature(this)) {
+	if (!this->_part->RemoveFeature(this, true)) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPartPlane::~WCPartPlane - Problem removing feature from part.");	
 	}
 	//Delete the VBO
 	glDeleteBuffers(1, &this->_buffer);
+	//Release the camera
+	this->_document->Scene()->ActiveCamera()->Release(*this);
 }
 
 
@@ -191,7 +178,7 @@ xercesc::DOMElement* WCPartPlane::Serialize(xercesc::DOMDocument *document, WCSe
 	//Insert self into dictionary
 	WCGUID guid = dictionary->InsertAddress(this);
 	//Create the base element for the object
-	XMLCh* xmlString = xercesc::XMLString::transcode("Plane");
+	XMLCh* xmlString = xercesc::XMLString::transcode("PartPlane");
 	xercesc::DOMElement* element = document->createElement(xmlString);
 	xercesc::XMLString::release(&xmlString);
 	//Include the part feature element

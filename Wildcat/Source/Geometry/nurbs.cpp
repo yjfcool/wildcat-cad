@@ -122,10 +122,16 @@ void WCNurbs::FindSpanMultiplicity(const WPUInt &numCP, const WPUInt &degree, co
 
 
 WPFloat* WCNurbs::BasisValues(const WPUInt &span, const WPFloat &u, const WPUInt &degree, const WPFloat *knotPoints, const WPUInt &der) {
-	WPFloat ndu[degree+1][degree+1];
-	WPFloat a[2][degree+1];
-	WPFloat left[degree+1];
-	WPFloat right[degree+1];
+	//Initialize ndu and A as two-dimensional arrays
+	WPFloat **ndu = new WPFloat*[degree+1];
+	//Now create degree+1 arrays and place into ndu
+	for (WPUInt i=0; i<=degree; i++) ndu[i] = new WPFloat[degree+1];
+	WPFloat **a = new WPFloat*[2];
+	for(int i=0; i<2; i++) a[i] = new WPFloat[degree+1];
+
+	//Initialize remaining variables
+	WPFloat *left = new WPFloat[degree+1];
+	WPFloat *right = new WPFloat[degree+1];
 	int j, k, r, j1, j2, s1, s2, rk, pk;
 	WPFloat saved, temp, d;
 	WPUInt useDer = STDMIN(der, degree-1);
@@ -154,8 +160,19 @@ WPFloat* WCNurbs::BasisValues(const WPUInt &span, const WPFloat &u, const WPUInt
 	}
 	//Copy the basis values into the results
 	for (j=0; j<=(int)degree; j++) ders[j] = ndu[j][degree];
+	//Delete left and right arrays
+	delete left;
+	delete right;
 	//Check for der==0 optimization
-	if (der == 0) return ders;
+	if (der == 0) {
+		//Delete ndu and A arrays
+		for (WPUInt i=0; i<=degree; i++) delete ndu[i];
+		for (int i=0; i<2; i++) delete a[i];
+		delete ndu;
+		delete a;
+		//Return the ders
+		return ders;
+	}
 	
 	//Loop over function index
 	for (r=0; r<=(int)degree; r++) {
@@ -188,6 +205,12 @@ WPFloat* WCNurbs::BasisValues(const WPUInt &span, const WPFloat &u, const WPUInt
 			j = s1; s1 = s2; s2 = j;
 		}
 	}
+	//Delete ndu and A arrays
+	for (WPUInt i=0; i<=degree; i++) delete ndu[i];
+	for (int i=0; i<2; i++) delete a[i];
+	delete ndu;
+	delete a;
+	
 	//Multiply each der value by the factorial
 	r = degree;
 	for (k=1; k<=(int)useDer; k++) {

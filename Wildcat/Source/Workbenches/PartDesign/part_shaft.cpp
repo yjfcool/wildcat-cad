@@ -521,13 +521,7 @@ void WCPartShaft::GenerateTopology(const WCRay &ray) {
 }
 
 
-/***********************************************~***************************************************/
-
-
-WCPartShaft::WCPartShaft(WCPartBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,
-	WCSketchAxis *axis, const bool profilesOnRight, const WPFloat &cwAngle, const WPFloat &ccwAngle) : 
-	::WCPartFeature(body, name), _profiles(profiles), _axis(axis), _profilesOnRight(profilesOnRight),
-	_cwAngle(cwAngle), _ccwAngle(ccwAngle), _points(), _lines(), _curves(), _surfaces() {
+void WCPartShaft::Initialize(void) {
 	//Check feature name
 	if (this->_name == "") this->_name = this->_part->GenerateFeatureName(this);
 	//Create event handler
@@ -547,6 +541,33 @@ WCPartShaft::WCPartShaft(WCPartBody *body, const std::string &name, const std::l
 	//Add the shaft to the part (true for visualize and select)
 	this->_part->AddFeature(this, false);
 	
+	//Add all points into the part
+	//...
+	
+	//Add all lines into the part
+	std::list<WCGeometricLine*>::iterator lineIter;
+	for (lineIter = this->_lines.begin(); lineIter != this->_lines.end(); lineIter++)
+		this->_part->AddLine( *lineIter, this->_controller);
+
+	//Add all curves into the part	
+	std::list<WCNurbsCurve*>::iterator curveIter;
+	for (curveIter = this->_curves.begin(); curveIter != this->_curves.end(); curveIter++)
+		this->_part->AddCurve( *curveIter, this->_controller);
+
+	//Add all surfaces into the part
+	std::list<WCNurbsSurface*>::iterator surfIter;
+	for (surfIter = this->_surfaces.begin(); surfIter != this->_surfaces.end(); surfIter++)
+		this->_part->AddSurface( *surfIter, this->_controller);
+}
+
+
+/***********************************************~***************************************************/
+
+
+WCPartShaft::WCPartShaft(WCPartBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,
+	WCSketchAxis *axis, const bool profilesOnRight, const WPFloat &cwAngle, const WPFloat &ccwAngle) : 
+	::WCPartFeature(body, name), _profiles(profiles), _axis(axis), _profilesOnRight(profilesOnRight),
+	_cwAngle(cwAngle), _ccwAngle(ccwAngle), _points(), _lines(), _curves(), _surfaces() {
 	//Generate the points, curves, and surfaces
 	WCMatrix4 planeMatrix = this->_axis->Sketch()->ReferencePlane()->TransformMatrix();
 	//Get axis base
@@ -568,26 +589,39 @@ WCPartShaft::WCPartShaft(WCPartBody *body, const std::string &name, const std::l
 //	this->GeneratePoints(ray);
 	//Generate topological model
 //	this->GenerateTopology(ray);
-	
-	//Add all points into the part
+
+	//Finish initialization
+	this->Initialize();
+}
+
+
+WCPartShaft::WCPartShaft(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
+	::WCPartFeature( WCSerializeableObject::ElementFromName(element,"PartFeature"), dictionary),
+	_profiles(), _axis(NULL), _profilesOnRight(true), _cwAngle(0.0), _ccwAngle(0.0), _points(), _lines(), _curves(), _surfaces() {
+	//Restore the shaft here
 	//...
-	//Add all lines into the part
-	std::list<WCGeometricLine*>::iterator lineIter;
-	for (lineIter = this->_lines.begin(); lineIter != this->_lines.end(); lineIter++)
-		this->_part->AddLine( *lineIter, this->_controller);
-	//Add all curves into the part	
-	std::list<WCNurbsCurve*>::iterator curveIter;
-	for (curveIter = this->_curves.begin(); curveIter != this->_curves.end(); curveIter++)
-		
-		this->_part->AddCurve( *curveIter, this->_controller);
-	//Add all surfaces into the part
-	std::list<WCNurbsSurface*>::iterator surfIter;
-	for (surfIter = this->_surfaces.begin(); surfIter != this->_surfaces.end(); surfIter++)
-		this->_part->AddSurface( *surfIter, this->_controller);
 }
 
 
 WCPartShaft::~WCPartShaft() {
+	//Remove from the part
+	if (!this->_part->RemoveFeature(this, true)) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPartShaft::~WCPartShaft - Problem removing feature from part.");	
+	}
+	//Remove all points into the part
+	//...
+	//Remove all lines from part
+	std::list<WCGeometricLine*>::iterator lineIter;
+	for (lineIter = this->_lines.begin(); lineIter != this->_lines.end(); lineIter++)
+		this->_part->RemoveLine( *lineIter);
+	//Remove all curves from part	
+	std::list<WCNurbsCurve*>::iterator curveIter;
+	for (curveIter = this->_curves.begin(); curveIter != this->_curves.end(); curveIter++)
+		this->_part->RemoveCurve( *curveIter);
+	//Remove all surfaces from part
+	std::list<WCNurbsSurface*>::iterator surfIter;
+	for (surfIter = this->_surfaces.begin(); surfIter != this->_surfaces.end(); surfIter++)
+		this->_part->RemoveSurface( *surfIter);
 }
 
 	
@@ -595,12 +629,8 @@ void WCPartShaft::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 }
 
 
-xercesc::DOMElement* WCPartShaft::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
-	return NULL;
-}
-
-
-void WCPartShaft::Render(const GLuint defaultProg, const WCColor color) {
+bool WCPartShaft::Regenerate(void) {
+	return false;
 }
 
 
@@ -645,6 +675,25 @@ void WCPartShaft::OnDeselection(const bool fromManager) {
 		(*surfIter)->Color( WCPartFeature::DefaultSurfaceColor );
 	//Mark as not selected
 	this->_isSelected = false;
+}
+
+
+xercesc::DOMElement* WCPartShaft::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
+	//Insert self into dictionary
+	WCGUID guid = dictionary->InsertAddress(this);
+	//Create the base element for the object
+	XMLCh* xmlString = xercesc::XMLString::transcode("PartShaft");
+	xercesc::DOMElement* element = document->createElement(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	//Include the part feature element
+	xercesc::DOMElement* featureElement = this->WCPartFeature::Serialize(document, dictionary);
+	element->appendChild(featureElement);
+
+	//Add GUID attribute
+	WCSerializeableObject::AddStringAttrib(element, "guid", guid);
+
+	//Return the primary element
+	return element;
 }
 
 

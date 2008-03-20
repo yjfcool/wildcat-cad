@@ -62,15 +62,14 @@ protected:
 	std::list<WCNurbsCurve*>					_curves;											//!< List of revolution curves
 	std::list<WCNurbsSurface*>					_surfaces;											//!< List of revolution surfaces
 private:
-	//Private Methods
 	std::list<WCTrimProfile> GenerateFrontProfile(const WCRay &ray);								//!< Generate front profile
 	void GenerateBackProfile(const WCRay &ray);														//!< Generate back profile
 	void GenerateSurfaces(const WCRay &ray, const std::list<WCTrimProfile> &profileList);			//!< Private method to generate all surfaces
 	void GenerateCurves(const WCRay &ray, const std::list<WCTrimProfile> &profileList);				//!< Private method to generate all curves
 	void GeneratePoints(const WCRay &ray);															//!< Private method to generate all points
 	void GenerateTopology(const WCRay &ray);														//!< Private method to generate all topology
-	
-	//Deny Access
+	void Initialize(void);																			//!< Initialization method
+	//Hidden Constructors
 	WCPartShaft();																					//!< Deny access to default constructor
 	WCPartShaft(const WCPartShaft& shaft);															//!< Deny access to copy constructor
 	WCPartShaft& operator=(const WCPartShaft &shaft);												//!< Deny access to equals operator
@@ -91,11 +90,10 @@ public:
 	//Required Inherited Methods
 	virtual std::string RootName(void) const	{ return PARTSHAFT_CLASSNAME; }						//!< Get the class name
 	void ReceiveNotice(WCObjectMsg msg, WCObject *sender);											//!< Receive notice from point or curve
-	bool Regenerate(void)						{ return true; }									//!< Validate and rebuild
-	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
-	void Render(const GLuint defaultProg=0, const WCColor color=WCColor::Default());				//!< Render the object
+	bool Regenerate(void);																			//!< Validate and rebuild
 	void OnSelection(const bool fromManager, std::list<WCVisualObject*> objects);					//!< Called on selection
 	void OnDeselection(const bool fromManager);														//!< Called on deselection
+	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
 
 	/*** Static Processing Methods ***/
 	static bool QualifyProfiles(const std::list<WCSketchProfile*> &inputProfiles,					//!< Qualify a list of profiles for inclusion

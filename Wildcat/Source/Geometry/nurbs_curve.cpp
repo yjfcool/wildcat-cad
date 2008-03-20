@@ -1652,7 +1652,7 @@ WCNurbsCurve* WCNurbsCurve::Conic(WCGeometryContext *context, const WCVector4 &p
 	bool retVal = OneArcConic(p0, t0, p2, t2, p, p1);
 	//Check to make sure arc could be created
 	if (!retVal) return NULL;
-	std::cout << "P1: " << p1 << std::endl;
+//	std::cout << "P1: " << p1 << std::endl;
 	//Check for poorly formed conic
 	if (p1.L() <= -1.0) {
 		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsCurve::Conic - p1.W is <= -1.0.");

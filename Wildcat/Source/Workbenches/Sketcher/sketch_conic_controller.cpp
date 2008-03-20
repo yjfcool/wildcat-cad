@@ -55,10 +55,52 @@ inline WCObject* WCSketchConicController::Associate(void) {
 
 
 void WCSketchConicController::OnSelection(const bool fromManager, std::list<WCVisualObject*> objects) {
+//	std::cout << "Conic: " << this->_conic->GetName() << " was selected.\n";
+	this->_conic->Sketch()->Document()->Status("Conic " + this->_conic->GetName() + " was selected.");
+	//See if in sketcher or in other workbench
+	if (this->_conic->Sketch()->Workbench()->IsActive()) {
+		//Is this from the selection manager
+		if (!fromManager) {
+			//Clear selection buffer if appropriate
+			if (!this->_conic->Sketch()->Workbench()->IsMultiSelect())
+				this->_conic->Sketch()->Workbench()->SelectionManager()->Clear(true);
+			//Add this object to the selection manager
+			this->_conic->Sketch()->Workbench()->SelectionManager()->ForceSelection(this, false);
+		}
+		//Tell the object it has been selected
+		if (!this->_conic->IsSelected()) this->_conic->OnSelection(false, objects);
+		//Go into editing mode if this is only item selected and mouse is still down
+		if ((this->_conic->Sketch()->Workbench()->SelectionManager()->Count() == 1) && 
+			(this->_conic->Sketch()->Document()->Scene()->MouseState(WCMouseButton::Left()))){
+//			this->_conic->Sketch()->Workbench()->DrawingMode( WCSketchConic::ModeEdit(this->_circle) );
+		}
+	}
+	//Otherwise, let the sketch handle it
+	else {
+		//Tell the sketch
+		this->_conic->Sketch()->Controller()->OnSelection(fromManager, objects);
+	}
+	//Mark the tree element as selected
+	this->_conic->TreeElement()->IsSelected(true);
 }
 
 
 void WCSketchConicController::OnDeselection(const bool fromManager) {
+//	std::cout << "Conic: " << this->_conic->GetName() << " was deselected.\n";
+	//See if in sketcher or in other workbench
+	if (this->_conic->Sketch()->Workbench()->IsActive()) {
+		//Remove the item from the selection list, if not from manager
+		if (!fromManager) this->_conic->Sketch()->Workbench()->SelectionManager()->ForceDeselection(this, false);
+		//Tell the object it has been deselected
+		if (this->_conic->IsSelected()) this->_conic->OnDeselection(false);
+	}
+	//Otherwise, let the sketch handle it
+	else {
+		//Tell the sketch
+		this->_conic->Sketch()->Controller()->OnDeselection(fromManager);
+	}
+	//Mark the tree element as not selected
+	this->_conic->TreeElement()->IsSelected(false);
 }
 
 

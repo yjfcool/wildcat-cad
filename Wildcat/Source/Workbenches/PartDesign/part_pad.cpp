@@ -73,7 +73,6 @@ void WCPartPad::GenerateCurves(void) {
 				line = new WCGeometricLine(lower, upper);
 				//Set the properties for the line
 				line->Color( WCPartFeature::DefaultCurveColor );
-//				line->Layer(this->_part->LinesLayer());
 				line->Thickness( PARTFEATURE_LINE_THICKNESS );
 				//Add the line to the list of all lines
 				this->_lines.push_back(line);			
@@ -108,7 +107,6 @@ void WCPartPad::GenerateSurfaces(void) {
 					this->_posDepth, this->_negDepth, (*curveIter).second);
 			surface->Color( WCPartFeature::DefaultSurfaceColor );
 			surface->RenderProgram(WCPartFeature::DefaultSurfaceRenderer);
-//			surface->Layer(this->_part->SurfacesLayer());
 			this->_surfaces.push_back(surface);
 		}
 	}
@@ -152,7 +150,6 @@ void WCPartPad::GenerateTopBottom(void) {
 					tmpPt2 = lineEnd + this->_direction * this->_posDepth;
 					newLine = new WCGeometricLine(tmpPt1, tmpPt2);
 					newLine->Color( WCPartFeature::DefaultCurveColor );
-//					newLine->Layer(this->_part->LinesLayer());
 					newLine->Thickness(PARTFEATURE_LINE_THICKNESS);
 					//Add line to toplist and line list
 					topList.push_back( std::make_pair(newLine, (*curveIter).second) );
@@ -167,7 +164,6 @@ void WCPartPad::GenerateTopBottom(void) {
 					tmpPt2 = lineEnd + this->_direction * this->_negDepth;
 					newLine = new WCGeometricLine(tmpPt1, tmpPt2);
 					newLine->Color( WCPartFeature::DefaultCurveColor );
-//					newLine->Layer(this->_part->LinesLayer());
 					newLine->Thickness(PARTFEATURE_LINE_THICKNESS);
 					//Add line to bottomlist and line list
 					bottomList.push_back( std::make_pair(newLine, (*curveIter).second) );
@@ -187,7 +183,6 @@ void WCPartPad::GenerateTopBottom(void) {
 						newNurbs = new WCNurbsCurve( *nurbs );
 						newNurbs->ApplyTranslation( this->_direction * this->_posDepth );
 						newNurbs->Color( WCPartFeature::DefaultCurveColor );
-//						newNurbs->Layer(this->_part->CurvesLayer());
 						//Add nurbs to topList and curve list
 						topList.push_back( std::make_pair(newNurbs, (*curveIter).second) );
 						this->_curves.push_back( newNurbs );
@@ -200,7 +195,6 @@ void WCPartPad::GenerateTopBottom(void) {
 						newNurbs = new WCNurbsCurve( *nurbs );
 						newNurbs->ApplyTranslation( this->_direction * this->_negDepth );
 						newNurbs->Color( WCPartFeature::DefaultCurveColor );
-//						newNurbs->Layer(this->_part->CurvesLayer());
 						//Add nurbs to bottomList and curve list
 						bottomList.push_back( std::make_pair(newNurbs, (*curveIter).second) );
 						this->_curves.push_back( newNurbs );
@@ -270,7 +264,6 @@ void WCPartPad::GenerateTopBottom(void) {
 	top->TextureSize(1024);
 	top->Color( WCPartFeature::DefaultSurfaceColor );
 	top->RenderProgram(prog);
-//	top->Layer(this->_part->SurfacesLayer());
 	this->_surfaces.push_back(top);
 
 	/*** Bottom Trim Surface ***/
@@ -295,25 +288,17 @@ void WCPartPad::GenerateTopBottom(void) {
 	bottom->TextureSize(1024);
 	bottom->Color( WCPartFeature::DefaultSurfaceColor );
 	bottom->RenderProgram(prog);
-//	bottom->Layer(this->_part->SurfacesLayer());
 	this->_surfaces.push_back(bottom);
 
 	/*** End Top-Bottom Surface Generation ***/
 }
 
 
-
 void WCPartPad::GenerateTopology(void) {
 }
 
 
-/***********************************************~***************************************************/
-
-
-WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, const std::list< std::pair<WCSketchProfile*,bool> > &profiles, 
-	const WCVector4 &direction, const WPFloat &posDepth, const WPFloat &negDepth) : 
-	::WCPartFeature(body, name), _profiles(profiles), _direction(direction), _posDepth(posDepth), _negDepth(negDepth),
-	_points(), _lines(), _curves(), _surfaces() {
+void WCPartPad::Initialize(void) {
 	//Check feature name
 	if (this->_name == "") this->_name = this->_part->GenerateFeatureName(this);
 	//Create event handler
@@ -332,14 +317,7 @@ WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, const std::list<
 	
 	//Add the pad to the part (true for visualize and select)
 	this->_part->AddFeature(this, false);
-	
-	//Generate the points, curves, and surfaces
-	this->GeneratePoints();
-	this->GenerateCurves();
-	this->GenerateSurfaces();
-	this->GenerateTopBottom();
-	this->GenerateTopology();
-	
+
 	//Add all points into the part
 	//...
 	//Add all lines into the part
@@ -358,30 +336,79 @@ WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, const std::list<
 }
 
 
+/***********************************************~***************************************************/
+
+
+WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, const std::list< std::pair<WCSketchProfile*,bool> > &profiles, 
+	const WCVector4 &direction, const WPFloat &posDepth, const WPFloat &negDepth) : 
+	::WCPartFeature(body, name), _profiles(profiles), _direction(direction), _posDepth(posDepth), _negDepth(negDepth),
+	_points(), _lines(), _curves(), _surfaces() {
+	//Generate the points, curves, and surfaces
+	this->GeneratePoints();
+	this->GenerateCurves();
+	this->GenerateSurfaces();
+	this->GenerateTopBottom();
+	this->GenerateTopology();
+
+	//Finish initialization
+	this->Initialize();
+}
+
+
+WCPartPad::WCPartPad(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
+	::WCPartFeature( WCSerializeableObject::ElementFromName(element,"PartFeature"), dictionary),
+	_profiles(), _direction(), _posDepth(0.0), _negDepth(0.0), _points(), _lines(), _curves(), _surfaces() {
+	//Restore the pad here
+	//...
+}
+
+
 WCPartPad::~WCPartPad() {
+	//Remove from the part
+	if (!this->_part->RemoveFeature(this, true)) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPartShaft::~WCPartShaft - Problem removing feature from part.");	
+	}
+	//Remove all points into the part
+	//...
+	//Remove all lines from part
+	std::list<WCGeometricLine*>::iterator lineIter;
+	for (lineIter = this->_lines.begin(); lineIter != this->_lines.end(); lineIter++)
+		this->_part->RemoveLine( *lineIter);
+	//Remove all curves from part	
+	std::list<WCNurbsCurve*>::iterator curveIter;
+	for (curveIter = this->_curves.begin(); curveIter != this->_curves.end(); curveIter++)
+		this->_part->RemoveCurve( *curveIter);
+	//Remove all surfaces from part
+	std::list<WCNurbsSurface*>::iterator surfIter;
+	for (surfIter = this->_surfaces.begin(); surfIter != this->_surfaces.end(); surfIter++)
+		this->_part->RemoveSurface( *surfIter);
 }
 
 
 void WCPartPad::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
+	//Not yet implemented
+	//...
 }
 
 
-xercesc::DOMElement* WCPartPad::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
-	return NULL;
-}
-
-
-void WCPartPad::Render(const GLuint defaultProg, const WCColor color) {
+bool WCPartPad::Regenerate(void) {
+	//Not yet implemented
+	//...
+	return false;
 }
 
 
 void WCPartPad::OnSelection(const bool fromManager, std::list<WCVisualObject*> objects) {
 	//Change the color of all points
-	
+	//...
 	//Change the color of all lines
-	
+	std::list<WCGeometricLine*>::iterator lineIter;
+	for (lineIter = this->_lines.begin(); lineIter != this->_lines.end(); lineIter++)
+		(*lineIter)->Color( WCPartFeature::SelectedColor );
 	//Change the color of all curves
-	
+	std::list<WCNurbsCurve*>::iterator curveIter;
+	for (curveIter = this->_curves.begin(); curveIter != this->_curves.end(); curveIter++)
+		(*curveIter)->Color( WCPartFeature::SelectedColor );
 	//Change the color of all surfaces
 	std::list<WCNurbsSurface*>::iterator surfIter;
 	for (surfIter = this->_surfaces.begin(); surfIter != this->_surfaces.end(); surfIter++)
@@ -393,17 +420,40 @@ void WCPartPad::OnSelection(const bool fromManager, std::list<WCVisualObject*> o
 
 void WCPartPad::OnDeselection(const bool fromManager) {
 	//Change the color of all points
-	
+	//...
 	//Change the color of all lines
-	
+	std::list<WCGeometricLine*>::iterator lineIter;
+	for (lineIter = this->_lines.begin(); lineIter != this->_lines.end(); lineIter++)
+		(*lineIter)->Color( WCPartFeature::DefaultCurveColor );
 	//Change the color of all curves
-	
+	std::list<WCNurbsCurve*>::iterator curveIter;
+	for (curveIter = this->_curves.begin(); curveIter != this->_curves.end(); curveIter++)
+		(*curveIter)->Color( WCPartFeature::DefaultCurveColor );
 	//Change the color of all surfaces
 	std::list<WCNurbsSurface*>::iterator surfIter;
 	for (surfIter = this->_surfaces.begin(); surfIter != this->_surfaces.end(); surfIter++)
 		(*surfIter)->Color( WCPartFeature::DefaultSurfaceColor );
 	//Mark as not selected
 	this->_isSelected = false;
+}
+
+
+xercesc::DOMElement* WCPartPad::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
+	//Insert self into dictionary
+	WCGUID guid = dictionary->InsertAddress(this);
+	//Create the base element for the object
+	XMLCh* xmlString = xercesc::XMLString::transcode("PartPad");
+	xercesc::DOMElement* element = document->createElement(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	//Include the part feature element
+	xercesc::DOMElement* featureElement = this->WCPartFeature::Serialize(document, dictionary);
+	element->appendChild(featureElement);
+
+	//Add GUID attribute
+	WCSerializeableObject::AddStringAttrib(element, "guid", guid);
+
+	//Return the primary element
+	return element;
 }
 
 

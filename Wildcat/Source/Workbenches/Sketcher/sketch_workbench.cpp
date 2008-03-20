@@ -181,7 +181,7 @@ bool WCSketchWorkbench::OnEnter(void) {
 	this->WCWorkbench::OnEnter();
 	//Show sketcher toolbars
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Standard")->IsVisible(true);
-	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("View")->IsVisible(true);
+	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("View")->IsVisible(false);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Sketcher")->IsVisible(true);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Profiles")->IsVisible(true);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Operations")->IsVisible(true);
@@ -204,7 +204,7 @@ bool WCSketchWorkbench::OnExit(void) {
 	this->DrawingMode( WCDrawingMode::Selection( this ));
 	//Clear the selection buffer
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Standard")->IsVisible(false);
-	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("View")->IsVisible(false);
+	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("View")->IsVisible(true);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Sketcher")->IsVisible(false);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Profiles")->IsVisible(false);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Operations")->IsVisible(false);

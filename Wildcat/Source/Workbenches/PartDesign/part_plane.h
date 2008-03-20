@@ -59,6 +59,7 @@ protected:
 private:
 	void GenerateVBO(void);																			//!< Genreate the display VBO
 	void GenerateMatrices(void);																	//!< Generate the matrices
+	void Initialize(void);																			//!< Initialization method
 	//Deny Access
 	WCPartPlane();																					//!< Deny access to default constructor
 	WCPartPlane(const WCPartPlane &plane);															//!< Deny access to copy constructor

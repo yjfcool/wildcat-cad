@@ -96,10 +96,11 @@ float WCSerializeableObject::GetFloatAttrib(xercesc::DOMElement *element, const 
 	XMLCh* attribName = xercesc::XMLString::transcode( name.c_str() );
 	//Get the value of the attribute
 	const XMLCh* attribValue = element->getAttribute(attribName);
-	//Make sure attribute value is present
-//	if (attribValue == 0x5)
+	xercesc::XMLString::release(&attribName);
 	//Convert to std::string
-	std::string strValue = xercesc::XMLString::transcode(attribValue);
+	char *str = xercesc::XMLString::transcode(attribValue);
+	std::string strValue(str);
+	delete str;
 	//Convert to float
 	float value = (float)atof(strValue.c_str());
 	//Return the value	
@@ -112,10 +113,11 @@ std::string WCSerializeableObject::GetStringAttrib(xercesc::DOMElement *element,
 	XMLCh* attribName = xercesc::XMLString::transcode( name.c_str() );
 	//Get the value of the attribute
 	const XMLCh* attribValue = element->getAttribute(attribName);
-	//Make sure attribute value is present
-//	if (attribValue == 0x5)
+	xercesc::XMLString::release(&attribName);
 	//Convert to std::string
-	std::string value = xercesc::XMLString::transcode(attribValue);
+	char *str = xercesc::XMLString::transcode(attribValue);
+	std::string value(str);
+	delete str;
 	//Return the value	
 	return value;
 }
@@ -126,10 +128,11 @@ bool WCSerializeableObject::GetBoolAttrib(xercesc::DOMElement *element, const st
 	XMLCh* attribName = xercesc::XMLString::transcode( name.c_str() );
 	//Get the value of the attribute
 	const XMLCh* attribValue = element->getAttribute(attribName);
-	//Make sure attribute value is present
-//	if (attribValue == 0x5)
+	xercesc::XMLString::release(&attribName);
 	//Convert to std::string
-	std::string strValue = xercesc::XMLString::transcode(attribValue);
+	char *str = xercesc::XMLString::transcode(attribValue);
+	std::string strValue(str);
+	delete str;
 	//Return the value
 	if (strValue == "false") return false;
 	else return true;
@@ -141,10 +144,11 @@ void* WCSerializeableObject::GetGUIDAttrib(xercesc::DOMElement *element, const s
 	XMLCh* attribName = xercesc::XMLString::transcode( name.c_str() );
 	//Get the value of the attribute
 	const XMLCh* attribValue = element->getAttribute(attribName);
-	//Make sure attribute value is present
-//	if (attribValue == 0x5)
+	xercesc::XMLString::release(&attribName);
 	//Convert to WCGUID
-	WCGUID guid = xercesc::XMLString::transcode(attribValue);
+	char *str = xercesc::XMLString::transcode(attribValue);
+	WCGUID guid(str);
+	delete str;
 	void* value = dictionary->AddressFromGUID(guid);
 	//Return the value	
 	return value;

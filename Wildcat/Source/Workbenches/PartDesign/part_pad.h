@@ -60,14 +60,13 @@ protected:
 	std::list<WCNurbsCurve*>					_curves;											//!< List of extrusion curves
 	std::list<WCNurbsSurface*>					_surfaces;											//!< List of extrusion surfaces
 private:
-	//Private Methods
 	void GeneratePoints(void);																		//!< Private method to generate all points
 	void GenerateCurves(void);																		//!< Private method to generate all curves
 	void GenerateSurfaces(void);																	//!< Private method to generate all surfaces
 	void GenerateTopBottom(void);																	//!< Private method to generate top and bottom surfaces and profiles
 	void GenerateTopology(void);																	//!< Private method to generate topology model
-	
-	//Deny Access
+	void Initialize(void);																			//!< Initialization method
+	//Hidden Constructors
 	WCPartPad();																					//!< Deny access to default constructor
 	WCPartPad(const WCPartPad& pad);																//!< Deny access to copy constructor
 	WCPartPad& operator=(const WCPartPad &pad);														//!< Deny access to equals operator
@@ -87,11 +86,10 @@ public:
 	//Required Inherited Methods
 	virtual std::string RootName(void) const	{ return PARTPAD_CLASSNAME; }						//!< Get the class name
 	void ReceiveNotice(WCObjectMsg msg, WCObject *sender);											//!< Receive notice from point or curve
-	bool Regenerate(void)						{ return true; }									//!< Validate and rebuild
-	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
-	void Render(const GLuint defaultProg=0, const WCColor color=WCColor::Default());				//!< Render the object
+	bool Regenerate(void);																			//!< Validate and rebuild
 	void OnSelection(const bool fromManager, std::list<WCVisualObject*> objects);					//!< Called on selection
 	void OnDeselection(const bool fromManager);														//!< Called on deselection
+	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
 
 	/*** Actions ***/
 	static WCDrawingMode* ModeCreate(WCPartWorkbench *wb);											//!< Return create mode controller

@@ -1515,8 +1515,8 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 
 	//Holding arrays for sines and cosines
 	WPFloat theta = 0.0;
-	WPFloat cosines[numArcs+1];
-	WPFloat sines[numArcs+1];
+	WPFloat *cosines = new WPFloat[numArcs+1];
+	WPFloat *sines = new WPFloat[numArcs+1];
 	//Determine all angle values
 	for (WPUInt i=1; i<=numArcs; i++) {
 		theta = theta + deltaAngle;
@@ -1524,9 +1524,12 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 		sines[i] = sin(theta);
 	}
 
+	//Allocate array of vectors
+	WCVector4 **Pij = new WCVector4*[numCPU];
+	for (WPUInt i=0; i<numCPU; i++) Pij[i] = new WCVector4[numCPV];
+
 	WPFloat r, uDummy, vDummy;
 	WPFloat wm = cos(deltaAngle / 2.0), weight;
-	WCVector4 Pij[numCPU][numCPV];
 	WCVector4 O, x, y, t, P0, P2, T0, T2, pt, tmpVec;
 	int index;
 	//Loop and compute each u row of control points and weights
@@ -1566,13 +1569,19 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 			if (i < numArcs) { P0 = P2; T0 = T2; }
 		}
 	}
+	//Delete sines and cosines arrays
+	delete cosines;
+	delete sines;
 
 	//Convert Pij into vector
 	std::vector<WCVector4> controlPoints;
 	for (WPUInt j=0; j<numCPV; j++)
 		for (int i=numCPU-1; i>=0; i--)
 			controlPoints.push_back( Pij[i][j] );
-	
+	//Delete Pij
+	for (WPUInt i=0; i<numCPU; i++) delete Pij[i];
+	delete Pij;
+
 	//Convert knotPoints to vector
 	std::vector<WPFloat> knotPointsU;
 	for (WPUInt i=0; i<numKPU; i++) knotPointsU.push_back(knotPoints[i]);

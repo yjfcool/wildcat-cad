@@ -154,6 +154,7 @@ WSProgram* WCShaderManager::ParseProgram(xercesc::DOMElement *element, const boo
 		//Find the shader name
 		tmpChars = xercesc::XMLString::transcode(tmpNode->getNodeValue());
 		tmpStr = std::string(tmpChars);
+		xercesc::XMLString::release(&tmpChars);
 		//Look up in map
 		iter = this->_shaderMap.find(tmpStr);
 		//Is a valid shader found
@@ -199,17 +200,14 @@ WSProgram* WCShaderManager::ParseProgram(xercesc::DOMElement *element, const boo
 			tmpElement = (xercesc::DOMElement*)nodeList->item(index);
 			//Get the value node
 			tmpNode = tmpElement->getFirstChild();
-			//Get the name of the varying
-			tmpChars = xercesc::XMLString::transcode(tmpNode->getNodeValue());
-			//Create a new CString
-			char* str = new char[strlen(tmpChars)];
-			strncpy(str, tmpChars, strlen(tmpChars));
-			varyings[index] = str;
+			//Get the name of the varying and put into array
+			varyings[index] = xercesc::XMLString::transcode(tmpNode->getNodeValue());
 		}
 		//Set up the transform feedback for the program
 		glTransformFeedbackVaryingsEXT(program->_id, varyingCount, varyings, type);
 		//Delete all of the varyings
-//		for (int j=0; j<varyingCount; j++) delete varyings[j];
+		for (int j=0; j<varyingCount; j++) delete varyings[j];
+		delete varyings;
 	}
 
 	//Process geometry shader params (if present)

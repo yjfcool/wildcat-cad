@@ -30,7 +30,9 @@
 #include "PartDesign/part_feature.h"
 #include "PartDesign/part.h"
 #include "PartDesign/part_body.h"
+#include "PartDesign/part_pad.h"
 #include "PartDesign/part_plane.h"
+#include "PartDesign/part_shaft.h"
 #include "Sketcher/sketch.h"
 
 
@@ -139,15 +141,27 @@ bool WCPartFeature::Deserialize(xercesc::DOMElement* featureElement, WCSerialDic
 	std::string name( xercesc::XMLString::transcode(xmlString) );
 
 	//Find the feature to create
-	if (name == "Plane") {
+	if (name == "PartBody") {
+		//Create the body feature
+		new WCPartBody(featureElement, dictionary);
+		//All is good here
+		return true;
+	}
+	else if (name == "PartPad") {
+		//Create the pad feature
+		new WCPartPad(featureElement, dictionary);
+		//All is good here
+		return true;
+	}
+	else if (name == "PartPlane") {
 		//Create the plane feature
 		new WCPartPlane(featureElement, dictionary);
 		//All is good here
 		return true;
 	}
-	else if (name == "PartBody") {
-		//Create the body feature
-		new WCPartBody(featureElement, dictionary);
+	else if (name == "PartShaft") {
+		//Create the shaft feature
+		new WCPartShaft(featureElement, dictionary);
 		//All is good here
 		return true;
 	}
@@ -157,6 +171,7 @@ bool WCPartFeature::Deserialize(xercesc::DOMElement* featureElement, WCSerialDic
 		//All is good here
 		return true;
 	}
+
 	//Unknown part feature case
 	CLOGGER_WARN(WCLogManager::RootLogger(), "WCPartFeature::Deserialize - Unknown part feature: " << name);
 	return false;

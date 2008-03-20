@@ -158,7 +158,8 @@ WCPart::~WCPart() {
 
 void WCPart::Body(WCPartBody* body) {
 	//Make sure body is not null
-	if (body == NULL) {CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPart::Body - NULL value passed.");}
+	if (body == NULL) {CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPart::Body - NULL value passed."); }
+	//Otherwise, set the body
 	else this->_currentBody = body;
 }
 
@@ -260,13 +261,13 @@ bool WCPart::RemoveLine(WCGeometricLine *line) {
 bool WCPart::AddCurve(WCGeometricCurve *curve, WCEventController* controller) {
 	//Make sure curve is non-null
 	if (curve == NULL) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPart::AddCurve - NULL line passed.");
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPart::AddCurve - NULL curve passed.");
 		return false;
 	}
 	//Check to see if line already in list
 	std::map<WCGeometricCurve*,WCEventController*>::iterator iter = this->_curveMap.find(curve);
 	if (iter != this->_curveMap.end()) {
-		CLOGGER_WARN(WCLogManager::RootLogger(), "WCPart::AddCurve - Line is already in the part.");
+		CLOGGER_WARN(WCLogManager::RootLogger(), "WCPart::AddCurve - Curve is already in the part.");
 		return false;
 	}
 	//Add into the part list
@@ -285,7 +286,7 @@ bool WCPart::AddCurve(WCGeometricCurve *curve, WCEventController* controller) {
 bool WCPart::RemoveCurve(WCGeometricCurve *curve) {
 	//Make sure curve is non-null
 	if (curve == NULL) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPart::RemoveCurve - NULL line passed.");
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPart::RemoveCurve - NULL curve passed.");
 		return false;
 	}
 	//Try to erase it
@@ -330,17 +331,40 @@ bool WCPart::AddSurface(WCGeometricSurface *surface, WCEventController* controll
 
 
 bool WCPart::RemoveSurface(WCGeometricSurface *surface) {
+	//Make sure surface is non-null
+	if (surface == NULL) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPart::RemoveSurface - NULL surface passed.");
+		return false;
+	}
+	//Try to erase it
+	if (this->_surfaceMap.erase(surface) > 0) {
+		//Remove object from selector
+		this->_workbench->SelectionManager()->RemoveObject(surface);
+		//Remove object from layer
+		this->_surfaceLayer->RemoveObject(surface);
+		//Mark the sketch as dirty
+		this->_isFeatureDirty = true;
+		//Return true
+		return true;
+	}
+	//Otherwise, not found
 	return false;
 }
 
 
 bool WCPart::Name(const std::string &name) {
+	//Need to figure out how to set the name of the part
+	//...
+	//For now return false;
 	return false;
 }
 
 
 void WCPart::MarkDirty(void) {
+	//Mark part as dirty
 	this->_isFeatureDirty = true;
+	//Do we need to go up in the heirarchy?
+	//...
 }
 
 
@@ -350,7 +374,10 @@ void WCPart::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 
 
 bool WCPart::Regenerate(void) {
-	return false;
+	//Really need to figure out how we are going to implement this
+	//...
+	//For now always return true
+	return true;
 }
 
 
@@ -383,7 +410,7 @@ bool WCPart::AddFeature(WCPartFeature *feature, const bool &selectable) {
 }
 
 
-bool WCPart::RemoveFeature(WCPartFeature *feature) {
+bool WCPart::RemoveFeature(WCPartFeature *feature, const bool &selectable) {
 	//Make sure feature is non-null
 	if (feature == NULL) { 
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPart::RemoveFeature - Passed feature is null."); 
@@ -399,8 +426,16 @@ bool WCPart::RemoveFeature(WCPartFeature *feature) {
 	this->_featureMap.erase(iter);
 	//Remove the feature from the list
 	this->_featureList.remove((*iter).second);
-	//Retain the feature
-	feature->Retain(*this);
+	//Release the feature
+	feature->Release(*this);
+	//If selectable...
+	if (selectable) {
+		//Remove from selection manager
+		WCVisualObject *so = dynamic_cast<WCVisualObject*>(feature);
+		this->_workbench->SelectionManager()->RemoveObject(so);
+		//Remove from part workbench layer
+		this->_workbench->Layer()->RemoveObject(so);
+	}
 	//Force a regeneration of entire part
 	return this->Regenerate();
 }

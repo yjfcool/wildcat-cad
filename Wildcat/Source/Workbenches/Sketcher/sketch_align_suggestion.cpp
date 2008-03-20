@@ -449,6 +449,8 @@ public:
 		//Set up data
 		GLfloat data[6] = { (GLfloat)start.I(), (GLfloat)start.J(), (GLfloat)start.K(),
 							(GLfloat)end.I(), (GLfloat)end.J(), (GLfloat)end.K() };
+//		GLfloat data[6] = { start.I(), start.J(), start.K(),
+//							end.I(), end.J(), end.K() };
 		//Set up draw environment
 		glLineWidth(1.0);
 		glLineStipple(SKETCHWORKBENCH_SUGGEST_LINE_FACTOR, SKETCHWORKBENCH_SUGGEST_LINE_PATTERN);

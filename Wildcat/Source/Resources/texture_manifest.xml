@@ -49,6 +49,14 @@
 			<filter min="GL_NEAREST" mag="GL_NEAREST"/>
 			<wrap s="GL_CLAMP" t="GL_CLAMP"/>
 		</texture>
+		<texture name="conic32">
+			<target>GL_TEXTURE_RECTANGLE_ARB</target>
+			<miplevel>0</miplevel>
+			<format type="GL_RGBA" internal="GL_RGBA"/>
+			<type>GL_UNSIGNED_BYTE</type>
+			<filter min="GL_NEAREST" mag="GL_NEAREST"/>
+			<wrap s="GL_CLAMP" t="GL_CLAMP"/>
+		</texture>
 		<texture name="constraint32">
 			<target>GL_TEXTURE_RECTANGLE_ARB</target>
 			<miplevel>0</miplevel>
