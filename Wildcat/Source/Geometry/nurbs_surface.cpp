@@ -1554,11 +1554,6 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 
 	WPFloat r, uDummy, vDummy;
 	WPFloat wm = cos(deltaAngle / 2.0), weight;
-
-	//Allocate array of WCVector4s
-	WCVector4 **Pij = new WCVector4*[numCPU];
-	for (WPUInt i=0; i<numCPU; i++) Pij[i] = new WCVector4[numCPV];
-
 	WCVector4 O, x, y, t, P0, P2, T0, T2, pt, tmpVec;
 	int index;
 	//Loop and compute each u row of control points and weights
