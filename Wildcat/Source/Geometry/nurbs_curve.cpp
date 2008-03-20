@@ -50,7 +50,7 @@ extern WPFloat* __bezier_coef[8];
 void WCNurbsCurve::GenerateKnotPointsVBO(void) {
 	//Determine actual number of bytes needed in the buffer
 	WPUInt size = this->_kp * 4 * sizeof(GLfloat);
-	GLfloat data[size / sizeof(GLfloat)];	
+	GLfloat *data = new GLfloat[size / sizeof(GLfloat)];	
 	//Check to see if shader array is undersize	
 	if ((WPUInt)this->_context->CurveMinKPBufferSize() < size) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateKnotPointsVBO - Undersized array in shader.");
@@ -60,8 +60,9 @@ void WCNurbsCurve::GenerateKnotPointsVBO(void) {
 	//Bind the knot point buffer and load it
 	glBindBuffer(GL_ARRAY_BUFFER, this->_context->CurveKPBuffer());	
 	glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
-	//Unbind the buffer
+	//Unbind the buffer and delete array
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	delete data;
 	//Check for errors here
 	if (glGetError() != GL_NO_ERROR) 
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateKnotPointsVBO - Unspecified GL Error.");
@@ -77,7 +78,7 @@ void WCNurbsCurve::GenerateKnotPointsVBO(void) {
 
 void WCNurbsCurve::GenerateKnotPointsTexture(void) {
 	//Create temporary array for data
-	GLfloat data[4 * this->_kp];
+	GLfloat *data = new GLfloat[4 * this->_kp];
 	//Copy knot points into array (cast WPFloat to GLfloat)
 	for (WPUInt i=0; i<this->_kp; i++) data[i*4] = (GLfloat)this->_knotPoints[i];
 	//Set up some parameters
@@ -86,6 +87,8 @@ void WCNurbsCurve::GenerateKnotPointsTexture(void) {
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_context->CurveKPTex());	
 	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, this->_kp, 1, GL_RGBA, GL_FLOAT, data);
+	//Delete array and check for errors
+	delete data;
 	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsCurve::GenerateKnotPointsTexture Error - Texture Setup.\n";
 }
 
@@ -1131,7 +1134,7 @@ WCVector4 WCNurbsCurve::Evaluate(const WPFloat &u) {
 	//Bezier case
 	if (this->_mode == WCNurbsMode::Bezier()) {
 		WCMatrix n(this->_degree+1, this->_degree+1, __bezier_coef[this->_degree]);
-		WPFloat pts[(this->_degree+1)*4];
+		WPFloat *pts = new WPFloat[(this->_degree+1)*4];
 		WCVector w(this->_degree+1, 0.0);
 		WCVector4 tmpVec;
 		for (WPUInt i=0; i<=this->_degree; i++) {
@@ -1143,6 +1146,7 @@ WCVector4 WCNurbsCurve::Evaluate(const WPFloat &u) {
 			w.Set(i, tmpVec.L());
 		}
 		WCMatrix g(this->_degree+1, 4, pts);
+		delete pts;
 		WCMatrix ng = n * g;
 		//Calculate t vector
 		WCVector t(this->_degree+1, 1.0);			
@@ -1444,9 +1448,9 @@ void WCNurbsCurve::InsertKnot(const WPFloat &u, const WPUInt &multiplicity) {
 	WPUInt kp = this->_kp + multiplicity;
 	WPUInt cp = this->_cp + multiplicity;
 	//Allocate space for the new knot array
-	WPFloat alpha, UQ[kp];
-	WCVector4 Qw[cp];
-	WCVector4 Rw[this->_degree+1];
+	WPFloat alpha, *UQ = new WPFloat[kp];
+	WCVector4 *Qw = new WCVector4[cp];
+	WCVector4 *Rw = new WCVector4[this->_degree+1];
 	if ((UQ == NULL) || (Qw == NULL) || (Rw == NULL)) { 
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::InsertKnot - No memory for new vectors."); return; }	
 	WPUInt span, s, L;
@@ -1498,6 +1502,11 @@ void WCNurbsCurve::InsertKnot(const WPFloat &u, const WPUInt &multiplicity) {
 		this->_lod = (WPUInt)(length / NURBSCURVE_GENERATE_ACCURACY) + 1;	
 	}	
 	this->_isVisualDirty = true;
+
+	//Delete the arrays
+	delete UQ;
+	delete Qw;
+	delete Rw;
 }
 
 
@@ -1673,8 +1682,8 @@ WCNurbsCurve* WCNurbsCurve::Conic(WCGeometryContext *context, const WCVector4 &p
 	WPUInt n = 2 * nsegs;
 	WPUInt j = n + 1;
 	//Create knot point and control point arrays
-	WPFloat knots[j+3];
-	WCVector4 controlPoints[j];
+	WPFloat *knots = new WPFloat[j+3];
+	WCVector4 *controlPoints = new WCVector4[j];
 	
 	//Load end knots
 	for (int i=0; i<3; i++) {
@@ -1728,6 +1737,9 @@ WCNurbsCurve* WCNurbsCurve::Conic(WCGeometryContext *context, const WCVector4 &p
 	//Create vector of knot points
 	std::vector<WPFloat> kp;
 	for (WPUInt i=0; i<j+3; i++) kp.push_back(knots[i]);
+	//Delete the arrays
+	delete knots;
+	delete controlPoints;
 	//Create the curve
 	WCNurbsCurve *curve = new WCNurbsCurve(context, 2, cp, WCNurbsMode::Custom(), kp);
 	//Return the curve
