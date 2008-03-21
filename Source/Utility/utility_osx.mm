@@ -40,7 +40,7 @@
 
 
 std::string _ResourceDirectory(void) {
-	//Get the bundle
+	//Get the bundle for the main application
 	NSBundle* bundle = [NSBundle mainBundle];
 	NSString* nsStringPath = [bundle resourcePath];
 	std::string path([nsStringPath cStringUsingEncoding:NSUTF8StringEncoding]);
