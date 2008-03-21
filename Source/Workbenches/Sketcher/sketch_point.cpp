@@ -228,11 +228,7 @@ xercesc::DOMElement* WCSketchPoint::Serialize(xercesc::DOMDocument *document, WC
 	xercesc::DOMElement *pointElement = this->_base->Serialize(document, dictionary);
 	element->appendChild(pointElement);
 	//Add position vector
-	xmlString = xercesc::XMLString::transcode("Position");
-	xercesc::DOMElement* positionElement = document->createElement(xmlString);
-	xercesc::XMLString::release(&xmlString);
-	this->_position.ToElement(positionElement);
-	element->appendChild(positionElement);
+	this->_position.ToElement(element, "Position");
 
 	//Return the new element
 	return element;

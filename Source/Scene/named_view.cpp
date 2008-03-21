@@ -137,27 +137,12 @@ xercesc::DOMElement* WCNamedView::Serialize(xercesc::DOMDocument *document, WCSe
 	WCSerializeableObject::AddFloatAttrib(element, "panx", this->_panX);
 	//Add panY attribute
 	WCSerializeableObject::AddFloatAttrib(element, "pany", this->_panY);
-
 	//Add Origin vector
-	xmlString = xercesc::XMLString::transcode("Origin");
-	xercesc::DOMElement* originElem = document->createElement(xmlString);
-	xercesc::XMLString::release(&xmlString);
-	this->_origin.ToElement(originElem);
-	element->appendChild(originElem);
-
+	this->_origin.ToElement(element, "Origin");
 	//Add Target vector
-	xmlString = xercesc::XMLString::transcode("Target");
-	xercesc::DOMElement* targetElem = document->createElement(xmlString);
-	xercesc::XMLString::release(&xmlString);
-	this->_target.ToElement(targetElem);
-	element->appendChild(targetElem);
-
+	this->_target.ToElement(element, "Target");
 	//Add Quaternion
-	xmlString = xercesc::XMLString::transcode("Quaternion");
-	xercesc::DOMElement* quatElem = document->createElement(xmlString);
-	xercesc::XMLString::release(&xmlString);
-	this->_quaternion.ToElement(quatElem);
-	element->appendChild(quatElem);
+	this->_quaternion.ToElement(element, "Quaternion");
 
 	//Return the primary element
 	return element;

@@ -51,9 +51,10 @@ class WCPart;
 
 class WCPartBody : virtual public WCPartFeature {
 private:
-	//Deny Access
+	void Initialize(void);																			//!< Initialization method
+	//Hidden Constructors
 	WCPartBody();																					//!< Deny access to default constructor
-	WCPartBody(const WCPartBody& WCPartBody);															//!< Deny access to copy constructor
+	WCPartBody(const WCPartBody& WCPartBody);														//!< Deny access to copy constructor
 	WCPartBody& operator=(const WCPartBody &body);													//!< Deny access to equals operator
 public:
 	//Constructors and Destructors

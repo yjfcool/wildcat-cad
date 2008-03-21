@@ -49,7 +49,7 @@ class WCWorkbenchLayer : public WCVisualLayer {
 private:
 	bool										_isActive;											//!< Intercept mouse messages
 	WCDrawingMode								*_mode;												//!< DrawingMode object
-	//Deny access
+	//Hidden Constructors
 	WCWorkbenchLayer();																				//!< Deny access to default constructor
 	WCWorkbenchLayer(const WCWorkbenchLayer &layer);												//!< Deny access to copy constructor
 	WCWorkbenchLayer& operator=(const WCWorkbenchLayer &layer);										//!< Deny access to equals operator
@@ -57,7 +57,7 @@ private:
 public:
 	//Constructors and Destructors
 	WCWorkbenchLayer(WCScene *scene, std::string name);												//!< Primary constructor
-	~WCWorkbenchLayer();																			//!< Default destructor
+	virtual ~WCWorkbenchLayer();																	//!< Default destructor
 
 	inline void IsActive(const bool state)		{ this->_isActive = state; }						//!< Set active state
 	inline bool IsActive(void) const			{ return this->_isActive; }							//!< Get active state

@@ -255,10 +255,7 @@ xercesc::DOMElement* WCSketchCircle::Serialize(xercesc::DOMDocument *document, W
 	//Add radius attribute
 	WCSerializeableObject::AddFloatAttrib(element, "radius", this->_radius);
 	//Add center vector
-	xmlString = xercesc::XMLString::transcode("Center");
-	xercesc::DOMElement *centerElement = document->createElement(xmlString);
-	this->_center.ToElement(centerElement);
-	element->appendChild(centerElement);
+	this->_center.ToElement(element, "Center");
 	xercesc::XMLString::release(&xmlString);
 	//Add child geometric curve
 	xercesc::DOMElement *curveElement = this->_curve->Serialize(document, dictionary);

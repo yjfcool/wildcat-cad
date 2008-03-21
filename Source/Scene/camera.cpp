@@ -507,9 +507,6 @@ xercesc::DOMElement* WCCamera::Serialize(xercesc::DOMDocument *document, WCSeria
 	XMLCh* xmlString = xercesc::XMLString::transcode("Camera");
 	xercesc::DOMElement*  element = document->createElement(xmlString);
 	xercesc::XMLString::release(&xmlString);
-	//Add in parent object
-//	xercesc::DOMElement* baseElement = this->WCSerializeableObject::Serialize(document, dictionary);
-//	element->appendChild(baseElement);
 	//Add GUID attribute
 	WCSerializeableObject::AddStringAttrib(element, "guid", guid);
 
@@ -527,13 +524,8 @@ xercesc::DOMElement* WCCamera::Serialize(xercesc::DOMDocument *document, WCSeria
 	WCSerializeableObject::AddFloatAttrib(element, "panx", this->_panX);
 	//Add panY attribute
 	WCSerializeableObject::AddFloatAttrib(element, "pany", this->_panY);
-	
 	//Add quaternion
-	xmlString = xercesc::XMLString::transcode("Quaternion");
-	xercesc::DOMElement* quatElem = document->createElement(xmlString);
-	xercesc::XMLString::release(&xmlString);
-	this->_quaternion.ToElement(quatElem);
-	element->appendChild(quatElem);
+	this->_quaternion.ToElement(element, "Quaternion");
 	
 	//Add render state
 	xercesc::DOMElement* renderStateElement = this->_renderState->Serialize(document, dictionary);

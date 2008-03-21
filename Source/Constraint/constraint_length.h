@@ -57,10 +57,9 @@ protected:
 	WPFloat										_length;											//!< Length measure
 	WCConstraintMeasureTwoPoint					*_measure;											//!< Render measure
 private:
-	//Private Methods
-	void Initialize(const WPFloat &offset, const WPFloat &labelOffset);								//!< Initialize the measure
-
-	//Deny Access
+	void GenerateMeasure(const WPFloat &offset, const WPFloat &labelOffset);						//!< (Re)Create the measure
+	void Initialize(void);																			//!< Initialize the constraint
+	//Hidden Constructors
 	WCConstraintLength();																			//!< Deny access to default constructor
 	WCConstraintLength(const WCConstraintLength& constraint);										//!< Deny access to copy constructor
 	WCConstraintLength& operator=(const WCConstraintLength &constraint);							//!< Deny access to equals operator

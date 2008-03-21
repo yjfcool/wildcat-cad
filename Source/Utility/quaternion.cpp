@@ -177,15 +177,25 @@ void WCQuaternion::ToGLRotation(void) {
 }
 
 
-void WCQuaternion::ToElement(xercesc::DOMElement *element) {
+void WCQuaternion::ToElement(xercesc::DOMNode *parent, const std::string &name) {
+	//Name the node
+	XMLCh* xmlString = xmlString = xercesc::XMLString::transcode(name.c_str());
+	//Create the node in the document
+	xercesc::DOMElement* child = parent->getOwnerDocument()->createElement(xmlString);
+	//Make sure to release the name
+	xercesc::XMLString::release(&xmlString);
+
 	//Add i element
-	WCSerializeableObject::AddFloatAttrib(element, "i", this->_q[0]);
+	WCSerializeableObject::AddFloatAttrib(child, "i", this->_q[0]);
 	//Add j element
-	WCSerializeableObject::AddFloatAttrib(element, "j", this->_q[1]);
+	WCSerializeableObject::AddFloatAttrib(child, "j", this->_q[1]);
 	//Add k element
-	WCSerializeableObject::AddFloatAttrib(element, "k", this->_q[2]);
+	WCSerializeableObject::AddFloatAttrib(child, "k", this->_q[2]);
 	//Add l element
-	WCSerializeableObject::AddFloatAttrib(element, "l", this->_q[3]);
+	WCSerializeableObject::AddFloatAttrib(child, "l", this->_q[3]);
+
+	//Append child to parent
+	parent->appendChild(child);
 }
 
 

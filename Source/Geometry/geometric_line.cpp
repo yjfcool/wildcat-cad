@@ -383,17 +383,9 @@ xercesc::DOMElement* WCGeometricLine::Serialize(xercesc::DOMDocument *document, 
 	WCSerializeableObject::AddBoolAttrib(element, "infinite", this->_isInfinite);
 
 	//Add p0 vector
-	xmlString = xercesc::XMLString::transcode("P0");
-	xercesc::DOMElement* p0Element = document->createElement(xmlString);
-	xercesc::XMLString::release(&xmlString);
-	this->_p0.ToElement(p0Element);
-	element->appendChild(p0Element);
+	this->_p0.ToElement(element, "P0");
 	//Add p1 vector
-	xmlString = xercesc::XMLString::transcode("P1");
-	xercesc::DOMElement* p1Element = document->createElement(xmlString);
-	xercesc::XMLString::release(&xmlString);
-	this->_p1.ToElement(p1Element);
-	element->appendChild(p1Element);
+	this->_p1.ToElement(element, "P1");
 
 	//Return the element
 	return element;

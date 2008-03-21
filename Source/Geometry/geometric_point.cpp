@@ -295,13 +295,8 @@ xercesc::DOMElement* WCGeometricPoint::Serialize(xercesc::DOMDocument *document,
 
 	//Add Size attribute
 	WCSerializeableObject::AddFloatAttrib(element, "size", this->_size);
-	
 	//Add base vector
-	xmlString = xercesc::XMLString::transcode("Base");
-	xercesc::DOMElement* baseElemement = document->createElement(xmlString);
-	xercesc::XMLString::release(&xmlString);
-	this->_data.ToElement(baseElemement);
-	element->appendChild(baseElemement);
+	this->_data.ToElement(element, "Base");
 
 	//Return the element
 	return element;

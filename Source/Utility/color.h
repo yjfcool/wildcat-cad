@@ -72,7 +72,7 @@ public:
 	bool operator!=(const WCColor &col) const;														//!< Non-equality operator
 	
 	//Conversion Methods
-	void ToElement(xercesc::DOMElement *element);													//!< Serialize the object
+	void ToElement(xercesc::DOMNode *parent, const std::string &name);								//!< Serialize the object
 	void FromElement(xercesc::DOMElement *element);													//!< Deserialize the object
 	
 	//Static Creation Methods

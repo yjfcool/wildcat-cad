@@ -54,13 +54,13 @@ private:
 	WCWorkbench									*_workbench;										//!< Parent workbench
 	bool										_isSelecting;										//!< Selection state
 	WPFloat										_markX, _markY;										//!< Initial location
-	//Deny Access
-	WCSelectionMode();																			//!< Default constructor
+	//Hidden Constructors
+	WCSelectionMode();																				//!< Default constructor
 	WCSelectionMode(const WCSelectionMode &);														//!<
 public:
 	//Constructors and Destructors
 	WCSelectionMode(WCWorkbench *wb);																//!< Primary constructor
-	virtual ~WCSelectionMode()				{ }																//!< Default destructor
+	virtual ~WCSelectionMode()					{ }													//!< Default destructor
 	
 	//Virtual Methods
 	void OnEntry(void);																				//!< Handle entry into mode

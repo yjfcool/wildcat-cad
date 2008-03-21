@@ -34,6 +34,11 @@
 
 /***********************************************~***************************************************/
 
+void WCPart::Initialize(void) {
+}
+
+/***********************************************~***************************************************/
+
 
 WCPart::WCPart(std::string name, std::string filename) : ::WCDocument(NULL, name, filename), 
 	_featureMap(), _featureList(), _workbench(NULL), _currentBody(NULL),
@@ -80,7 +85,6 @@ WCPart::WCPart(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	_featureMap(), _featureList(), _workbench(NULL), _currentBody(NULL),
 	_pointLayer(NULL), _lineLayer(NULL), _curveLayer(NULL), _surfaceLayer(NULL),
 	_pointMap(), _lineMap(), _curveMap(), _surfaceMap() {
-	
 	//Make sure element if not null
 	if (element == NULL) return;
 	//Get GUID and register it

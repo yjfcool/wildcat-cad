@@ -81,7 +81,6 @@ WCPartFeature::WCPartFeature(WCFeature *creator, const std::string &name) : ::WC
 
 WCPartFeature::WCPartFeature(xercesc::DOMElement *element, WCSerialDictionary *dictionary) : 
 	::WCFeature( WCSerializeableObject::ElementFromName(element,"Feature"), dictionary) {
-
 	//Make sure element if not null
 	if (element == NULL) return;
 	//Get GUID and register it

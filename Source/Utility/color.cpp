@@ -98,15 +98,25 @@ bool WCColor::operator!=(const WCColor &color) const {
 }
 
 
-void WCColor::ToElement(xercesc::DOMElement *element) {
+void WCColor::ToElement(xercesc::DOMNode *parent, const std::string &name) {
+	//Name the node
+	XMLCh* xmlString = xmlString = xercesc::XMLString::transcode(name.c_str());
+	//Create the node in the document
+	xercesc::DOMElement* child = parent->getOwnerDocument()->createElement(xmlString);
+	//Make sure to release the name
+	xercesc::XMLString::release(&xmlString);
+
 	//Add r element
-	WCSerializeableObject::AddFloatAttrib(element, "r", this->_rgba[0]);
+	WCSerializeableObject::AddFloatAttrib(child, "r", this->_rgba[0]);
 	//Add g element
-	WCSerializeableObject::AddFloatAttrib(element, "g", this->_rgba[1]);
+	WCSerializeableObject::AddFloatAttrib(child, "g", this->_rgba[1]);
 	//Add b element
-	WCSerializeableObject::AddFloatAttrib(element, "b", this->_rgba[2]);
+	WCSerializeableObject::AddFloatAttrib(child, "b", this->_rgba[2]);
 	//Add a element
-	WCSerializeableObject::AddFloatAttrib(element, "a", this->_rgba[3]);
+	WCSerializeableObject::AddFloatAttrib(child, "a", this->_rgba[3]);
+
+	//Append child to parent
+	parent->appendChild(child);
 }
 
 

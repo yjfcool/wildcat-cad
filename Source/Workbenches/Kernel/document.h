@@ -75,7 +75,7 @@ protected:
 	WCUnitType									*_angleUnit;										//!< Angle unit type
 private:
 	void Initialize(void);																			//!< Initialization method
-	//Deny Access
+	//Hidden Constructors
 	WCDocument();																					//!< Deny access to default constructor
 	WCDocument(const WCDocument& doc);																//!< Deny access to copy constructor
 	WCDocument& operator=(const WCDocument& doc);													//!< Deny access to equals operator

@@ -38,10 +38,10 @@
 /***********************************************~***************************************************/
 
 
-void WCConstraintLength::Initialize(const WPFloat &offset, const WPFloat &labelOffset) {
+void WCConstraintLength::GenerateMeasure(const WPFloat &offset, const WPFloat &labelOffset) {
 	//Set the measure label
 	std::string label = this->_line->Document()->LengthUnit()->DisplayString(this->_length, 4);
-	
+
 	//Check to see if old measure needs to be deleted
 	if (this->_measure != NULL) delete this->_measure;
 	//Create the rendering measure
@@ -50,6 +50,33 @@ void WCConstraintLength::Initialize(const WPFloat &offset, const WPFloat &labelO
 	this->_measure = new WCConstraintMeasureTwoPoint(this, label, WCMeasureType::Absolute(), p0, p1, 
 		this->_sketch->ReferencePlane()->InverseTransformMatrix(),
 		this->_sketch->ReferencePlane()->TransformMatrix(), offset, labelOffset);
+}
+
+
+void WCConstraintLength::Initialize(void) {
+	//Retain the line
+	this->_line->Retain(*this);
+
+
+	//Add into sketch
+	if (!this->_sketch->AddConstraint(this)) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCConstraintLength::WCConstraintLength - Problem adding constraint to sketch.");
+		//Should delete base
+		//throw error
+		return;
+	}
+
+	//Create the measure
+	this->GenerateMeasure(0.25*this->_length, 0.5);
+
+	//Create the length controller
+	this->_controller = new WCConstraintLengthController(this);
+	//Create tree element and add into the tree (beneath the sketch features element)
+	WSTexture* constraintIcon = this->_document->Scene()->TextureManager()->TextureFromName("constraint32");
+	this->_treeElement = new WCTreeElement(	this->_sketch->Document()->TreeView(), this->_name, this->_controller, constraintIcon);
+	this->_sketch->ConstraintsTreeElement()->AddLastChild(this->_treeElement);
+	//Inject constraints into sketch planner
+	this->InjectConstraints(this->_sketch->ConstraintPlanner());
 }
 
 
@@ -71,28 +98,12 @@ WCConstraintLength::WCConstraintLength(WCSketch *sketch, const std::string &name
 	WCVector4 p0( this->_line->Base()->Begin() );
 	WCVector4 p1( this->_line->Base()->End() );
 	this->_length = p0.Distance(p1);
-	//Initialize the measure
-	this->Initialize(0.25*this->_length, 0.5);
 
 	//Check feature name
 	if (this->_name == "") this->_name = this->_sketch->GenerateFeatureName(this);
 	this->_color = WCSketchFeature::ConstraintColor;
-	//Retain the line
-	this->_line->Retain(*this);
-	//Add into sketch
-	if (!this->_sketch->AddConstraint(this)) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCConstraintLength::WCConstraintLength - Problem adding constraint to sketch.");
-		//Should delete base
-		//throw error
-		return;
-	}
-
-	//Create tree element and add into the tree (beneath the sketch features element)
-	WSTexture* constraintIcon = this->_document->Scene()->TextureManager()->TextureFromName("constraint32");
-	this->_treeElement = new WCTreeElement(	this->_sketch->Document()->TreeView(), this->_name, this->_controller, constraintIcon);
-	this->_sketch->ConstraintsTreeElement()->AddLastChild(this->_treeElement);
-	//Inject constraints into sketch planner
-	this->InjectConstraints(this->_sketch->ConstraintPlanner());
+	//Remaining initialization
+	this->Initialize();
 }
 
 
@@ -103,30 +114,14 @@ WCConstraintLength::WCConstraintLength(xercesc::DOMElement *element, WCSerialDic
 	if (element == NULL) return;
 	//Get GUID and register it
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
+	dictionary->InsertGUID(guid, this);
+
 	//Recreate the line
-	this->_line = (WCSketchLine*)WCSerializeableObject::GetGUIDAttrib(element, "sketchline", dictionary);
-	//Retain the line
-	this->_line->Retain(*this);
-
-	//Initialize the measure
-	this->Initialize(0.25*this->_length, 0.5);
-
-	//Add into sketch
-	if (!this->_sketch->AddConstraint(this)) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCConstraintLength::WCConstraintLength - Problem adding constraint to sketch.");
-		//Should delete base
-		//throw error
-		return;
-	}
-
-	//Create the length controller
-	this->_controller = new WCConstraintLengthController(this);
-	//Create tree element and add into the tree (beneath the sketch features element)
-	WSTexture* constraintIcon = this->_document->Scene()->TextureManager()->TextureFromName("constraint32");
-	this->_treeElement = new WCTreeElement(	this->_sketch->Document()->TreeView(), this->_name, this->_controller, constraintIcon);
-	this->_sketch->ConstraintsTreeElement()->AddLastChild(this->_treeElement);
-	//Inject constraints into sketch planner
-	this->InjectConstraints(this->_sketch->ConstraintPlanner());
+	this->_line = (WCSketchLine*)WCSerializeableObject::GetGUIDAttrib(element, "line", dictionary);
+	//Setup length
+	this->_length = WCSerializeableObject::GetFloatAttrib(element, "length");
+	//Remaining initialization
+	this->Initialize();
 }
 
 
@@ -220,7 +215,26 @@ void WCConstraintLength::Render(const GLuint &defaultProg, const WCColor &color,
 
 	
 xercesc::DOMElement* WCConstraintLength::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
-	return NULL;
+	//Insert self into dictionary
+	WCGUID guid = dictionary->InsertAddress(this);
+	//Create primary element for this object
+	XMLCh* xmlString = xercesc::XMLString::transcode("ConstraintLength");
+	xercesc::DOMElement* element = document->createElement(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	//Include the parent element
+	xercesc::DOMElement* featureElement = this->WCSketchConstraint::Serialize(document, dictionary);
+	element->appendChild(featureElement);
+	//Add GUID attribute
+	WCSerializeableObject::AddStringAttrib(element, "guid", guid);
+	dictionary->InsertGUID(guid, this);
+
+	//Add length attribute
+	WCSerializeableObject::AddFloatAttrib(element, "length", this->_length);
+	//Add line attribute
+	WCSerializeableObject::AddGUIDAttrib(element, "line", this->_line, dictionary);
+	
+	//Return the new element
+	return element;
 }
 
 

@@ -184,30 +184,15 @@ xercesc::DOMElement* WCPartPlane::Serialize(xercesc::DOMDocument *document, WCSe
 	//Include the part feature element
 	xercesc::DOMElement* featureElement = this->WCPartFeature::Serialize(document, dictionary);
 	element->appendChild(featureElement);
-
 	//Add GUID attribute
 	WCSerializeableObject::AddStringAttrib(element, "guid", guid);
 	
 	//Add the base vector
-	xmlString = xercesc::XMLString::transcode("Base");
-	xercesc::DOMElement* baseElement = document->createElement(xmlString);
-	this->_base.ToElement(baseElement);
-	element->appendChild(baseElement);
-	xercesc::XMLString::release(&xmlString);
-
+	this->_base.ToElement(element, "Base");
 	//Add the uAxis vector
-	xmlString = xercesc::XMLString::transcode("UAxis");
-	xercesc::DOMElement* uAxisElement = document->createElement(xmlString);
-	this->_uAxis.ToElement(uAxisElement);
-	element->appendChild(uAxisElement);
-	xercesc::XMLString::release(&xmlString);
-	
+	this->_uAxis.ToElement(element, "UAxis");
 	//Add the vAxis vector
-	xmlString = xercesc::XMLString::transcode("VAxis");
-	xercesc::DOMElement* vAxisElement = document->createElement(xmlString);
-	this->_vAxis.ToElement(vAxisElement);
-	element->appendChild(vAxisElement);
-	xercesc::XMLString::release(&xmlString);
+	this->_vAxis.ToElement(element, "VAxis");
 
 	//Return the primary element
 	return element;

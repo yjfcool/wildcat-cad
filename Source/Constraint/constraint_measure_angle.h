@@ -65,7 +65,7 @@ public:
 												const WCVector4 &center, const WCVector4 &first, const WCVector4 &second,
 												const bool &shortSide, const WCMatrix4 &toPlane, const WCMatrix4 &fromPlane,
 												const WPFloat offset,	const WPFloat labelOffset);
-	~WCConstraintMeasureAngle();																	//!< Default destructor
+	virtual ~WCConstraintMeasureAngle();															//!< Default destructor
 
 	//Render Methods
 	void SlewOffsets(const WPFloat &xSlew, const WPFloat &ySlew);									//!< Slew the offsets

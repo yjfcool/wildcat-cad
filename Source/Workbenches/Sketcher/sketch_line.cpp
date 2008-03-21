@@ -224,17 +224,9 @@ xercesc::DOMElement* WCSketchLine::Serialize(xercesc::DOMDocument *document, WCS
 	xercesc::DOMElement *lineElement = this->_line->Serialize(document, dictionary);
 	element->appendChild(lineElement);
 	//Add begin vector
-	xmlString = xercesc::XMLString::transcode("Begin");
-	xercesc::DOMElement* beginElement = document->createElement(xmlString);
-	xercesc::XMLString::release(&xmlString);
-	this->_begin.ToElement(beginElement);
-	element->appendChild(beginElement);
+	this->_begin.ToElement(element, "Begin");
 	//Add end vector
-	xmlString = xercesc::XMLString::transcode("End");
-	xercesc::DOMElement* endElement = document->createElement(xmlString);
-	xercesc::XMLString::release(&xmlString);
-	this->_end.ToElement(endElement);
-	element->appendChild(endElement);
+	this->_end.ToElement(element, "End");
 
 	//Return the new element
 	return element;

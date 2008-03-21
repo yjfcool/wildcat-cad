@@ -262,6 +262,8 @@ void WCSerialDictionary::InsertGUID(const WCGUID &guid, const void* address) {
 
 
 void* WCSerialDictionary::AddressFromGUID(const WCGUID &guid) {
+	//Catch NULL guid case
+	if (guid == "NULL") return NULL;
 	//Lookup guid in guid map
 	std::map<WCGUID,void*>::iterator mapIter = this->_guidMap.find(guid);
 	//If found

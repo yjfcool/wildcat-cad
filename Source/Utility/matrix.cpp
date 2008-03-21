@@ -29,6 +29,7 @@
 /*** Included Header Files ***/
 #include "Utility/matrix.h"
 #include "Utility/vector.h"
+#include "Utility/serializeable_object.h"
 
 
 /*** Platform Included Header Files ***/
@@ -118,13 +119,61 @@ WCMatrix WCMatrix4::ToMatrix(void) {
 }
 
 
-void WCMatrix4::ToElement(xercesc::DOMElement *element) {
-	std::cout << "!!!!!***** Need to implement WCMatrix4::ToElement\n";
+void WCMatrix4::ToElement(xercesc::DOMNode *parent, const std::string &name) {
+	//Name the node
+	XMLCh* xmlString = xmlString = xercesc::XMLString::transcode(name.c_str());
+	//Create the node in the document
+	xercesc::DOMElement* child = parent->getOwnerDocument()->createElement(xmlString);
+	//Make sure to release the name
+	xercesc::XMLString::release(&xmlString);
+
+	//Add elements
+	WCSerializeableObject::AddFloatAttrib(child, "i0", this->_data[0]);
+	WCSerializeableObject::AddFloatAttrib(child, "i1", this->_data[1]);
+	WCSerializeableObject::AddFloatAttrib(child, "i2", this->_data[2]);
+	WCSerializeableObject::AddFloatAttrib(child, "i3", this->_data[3]);
+
+	WCSerializeableObject::AddFloatAttrib(child, "i4", this->_data[4]);
+	WCSerializeableObject::AddFloatAttrib(child, "i5", this->_data[5]);
+	WCSerializeableObject::AddFloatAttrib(child, "i6", this->_data[6]);
+	WCSerializeableObject::AddFloatAttrib(child, "i7", this->_data[7]);
+
+	WCSerializeableObject::AddFloatAttrib(child, "i8", this->_data[8]);
+	WCSerializeableObject::AddFloatAttrib(child, "i9", this->_data[9]);
+	WCSerializeableObject::AddFloatAttrib(child, "i10", this->_data[10]);
+	WCSerializeableObject::AddFloatAttrib(child, "i11", this->_data[11]);
+
+	WCSerializeableObject::AddFloatAttrib(child, "i12", this->_data[12]);
+	WCSerializeableObject::AddFloatAttrib(child, "i13", this->_data[13]);
+	WCSerializeableObject::AddFloatAttrib(child, "i14", this->_data[14]);
+	WCSerializeableObject::AddFloatAttrib(child, "i15", this->_data[15]);
+
+	//Append child to parent
+	parent->appendChild(child);
 }
 
 
 void WCMatrix4::FromElement(xercesc::DOMElement *element) {
-	std::cout << "!!!!!***** Need to implement WCMatrix4::FromElement\n";
+	//Get elements
+	this->_data[0] = WCSerializeableObject::GetFloatAttrib(element, "i0");
+	this->_data[1] = WCSerializeableObject::GetFloatAttrib(element, "i1");
+	this->_data[2] = WCSerializeableObject::GetFloatAttrib(element, "i2");
+	this->_data[3] = WCSerializeableObject::GetFloatAttrib(element, "i3");
+
+	this->_data[4] = WCSerializeableObject::GetFloatAttrib(element, "i4");
+	this->_data[5] = WCSerializeableObject::GetFloatAttrib(element, "i5");
+	this->_data[6] = WCSerializeableObject::GetFloatAttrib(element, "i6");
+	this->_data[7] = WCSerializeableObject::GetFloatAttrib(element, "i7");
+
+	this->_data[8] = WCSerializeableObject::GetFloatAttrib(element, "i8");
+	this->_data[9] = WCSerializeableObject::GetFloatAttrib(element, "i9");
+	this->_data[10] = WCSerializeableObject::GetFloatAttrib(element, "i10");
+	this->_data[11] = WCSerializeableObject::GetFloatAttrib(element, "i11");
+
+	this->_data[12] = WCSerializeableObject::GetFloatAttrib(element, "i12");
+	this->_data[13] = WCSerializeableObject::GetFloatAttrib(element, "i13");
+	this->_data[14] = WCSerializeableObject::GetFloatAttrib(element, "i14");
+	this->_data[15] = WCSerializeableObject::GetFloatAttrib(element, "i15");
 }
 
 

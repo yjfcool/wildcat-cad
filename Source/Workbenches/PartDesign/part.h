@@ -73,6 +73,7 @@ protected:
 	//Topology Objects
 	//...
 private:
+	void Initialize(void);																			//!< Initialization method
 	//Hidden Constructors
 	WCPart();																						//!< Deny access to default constructor
 	WCPart(const WCPart& part);																		//!< Deny access to copy constructor

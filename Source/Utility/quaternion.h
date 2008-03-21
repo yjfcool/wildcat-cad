@@ -75,7 +75,7 @@ public:
 	void FromEulerAxis(const WPFloat &x, const WPFloat &y, const WPFloat &z, const WPFloat &deg);	//!< Load using Euler axis
 	WCMatrix4 ToDCM(void);																			//!< Output the DCM matrix (9 elements)
 	void ToGLRotation(void);																		//!< Make call to glRotated with values
-	void ToElement(xercesc::DOMElement *element);													//!< Serialize the object
+	void ToElement(xercesc::DOMNode *parent, const std::string &name);								//!< Serialize the object
 	void FromElement(xercesc::DOMElement *element);													//!< Deserialize the object
 
 

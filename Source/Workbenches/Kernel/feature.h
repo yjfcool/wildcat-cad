@@ -53,7 +53,7 @@ class WCTreeElement;
 /***********************************************~***************************************************/
 
 
-class WCFeature : public virtual WCSerializeableObject, virtual public WCSelectionObject {
+class WCFeature : virtual public WCSerializeableObject, virtual public WCSelectionObject {
 protected:
 	std::string									_name;												//!< Name of the feature
 	WCDocument									*_document;											//!< Parent document
@@ -64,13 +64,11 @@ protected:
 	bool										_isFixed;											//!< Fixed flag
 	bool										_isConstruction;									//!< Construction flag
 	bool										_isActive;											//!< Active flag
-
 private:
-	//Deny Access
+	//Hidden Constructors
 	WCFeature();																					//!< Deny access to default constructor
 	WCFeature(const WCFeature& feature);															//!< Deny access to copy constructor
 	WCFeature& operator=(const WCFeature& feature);													//!< Deny access to equals operator
-	
 public:
 	//Constructors and Destructors
 	WCFeature(WCFeature *creator, const std::string &name="");										//!< Primary constructor

@@ -64,7 +64,6 @@ WCFeature* WCActionPartPlaneCreate::Execute(void) {
 		return NULL;
 	}
 
-
 	//If a rollback execution, update guid and address
 	if (this->_rollback) this->_dictionary->UpdateAddress(this->_guid, plane);
 	//Set the plane pointer and return
@@ -108,23 +107,11 @@ xercesc::DOMElement* WCActionPartPlaneCreate::Serialize(xercesc::DOMDocument *do
 	//Add name attribute
 	WCSerializeableObject::AddStringAttrib(element, "planeName", this->_planeName);
 	//Add p0 vector
-	xmlString = xercesc::XMLString::transcode("P0");
-	xercesc::DOMElement *p0Element = document->createElement(xmlString);
-	this->_p0.ToElement(p0Element);
-	element->appendChild(p0Element);
-	xercesc::XMLString::release(&xmlString);
+	this->_p0.ToElement(element, "P0");
 	//Add p1 vector
-	xmlString = xercesc::XMLString::transcode("P1");
-	xercesc::DOMElement *p1Element = document->createElement(xmlString);
-	this->_p1.ToElement(p1Element);
-	element->appendChild(p1Element);
-	xercesc::XMLString::release(&xmlString);
+	this->_p1.ToElement(element, "P1");
 	//Add p2 vector
-	xmlString = xercesc::XMLString::transcode("P2");
-	xercesc::DOMElement *p2Element = document->createElement(xmlString);
-	this->_p2.ToElement(p2Element);
-	element->appendChild(p2Element);
-	xercesc::XMLString::release(&xmlString);
+	this->_p2.ToElement(element, "P2");
 	
 	//Return the new element
 	return element;

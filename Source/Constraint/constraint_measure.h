@@ -48,7 +48,7 @@
 /***********************************************~***************************************************/
 
 
-class WCConstraintMeasure {
+class WCConstraintMeasure : virtual public WCSerializeableObject {
 protected:
 	WCSketchFeature								*_parent;											//!< Parent feature
 	WCMatrix4									_toPlane, _fromPlane;								//!< Planar drawing units
@@ -57,15 +57,15 @@ protected:
 	WCText										*_text;												//!< Text for the label
 	WCVector4									_labelPos, _uUnit, _vUnit;							//!< Position of the label
 	bool										_isDirty;											//!< Dirty flag
-
 private:
-	//Deny Access
+	//Hidden Constructors
 	WCConstraintMeasure();																			//!< Deny access to default constructor
 	WCConstraintMeasure(const WCConstraintMeasure&);												//!< Deny access to copy constructor
 public:
 	//Constructors and Destructors
 	WCConstraintMeasure(WCSketchFeature *parent, const std::string &label, const WCMatrix4 &toPlane,//!< Primary constructor
 												const WCMatrix4 &fromPlane,	const WPFloat offset,	const WPFloat labelOffset);
+	WCConstraintMeasure(xercesc::DOMElement *element, WCSerialDictionary *dictionary);				//!< Persistance constructor
 	virtual ~WCConstraintMeasure();																	//!< Default destructor
 
 	//Member Access Methods
@@ -75,7 +75,10 @@ public:
 	virtual inline WCText* Text(void)			{ return this->_text; }								//!< Get the text pointer
 	virtual void Offsets(const WPFloat &offset,	const WPFloat &labelOffset);						//!< Set the offsets of the measure
 	virtual void Matrices(const WCMatrix4 &toPlane, const WCMatrix4 &fromPlane);					//!< Set the units of the measure
-	
+
+	//Inherited Methods
+	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
+
 	//Required Methods
 	virtual void SlewOffsets(const WPFloat &xSlew, const WPFloat &ySlew)=0;							//!< Required offsets slew method
 	virtual void Render(const WCColor &color, const bool &selectMode=false)=0;						//!< Required render method

@@ -35,8 +35,7 @@
 /***********************************************~***************************************************/
 
 
-WCPartBody::WCPartBody(WCPart *part, const std::string &name) : ::WCPartFeature(part, name) {
-
+void WCPartBody::Initialize(void) {
 	//Check feature name
 	if (this->_name == "") this->_name = this->_part->GenerateFeatureName(this);
 	//Create event handler
@@ -54,28 +53,39 @@ WCPartBody::WCPartBody(WCPart *part, const std::string &name) : ::WCPartFeature(
 	if (this->_part->Body() == NULL) this->_part->Body(this);
 }
 
+
+/***********************************************~***************************************************/
+
+
+WCPartBody::WCPartBody(WCPart *part, const std::string &name) : ::WCPartFeature(part, name) {
+	//All we need to do for now is initialize
+	this->Initialize();
+}
+
 WCPartBody::WCPartBody(xercesc::DOMElement *element, WCSerialDictionary *dictionary) : 
 	::WCPartFeature( WCSerializeableObject::ElementFromName(element,"PartFeature"), dictionary ) {
-
 	//Make sure element if not null
 	if (element == NULL) return;
 	//Get GUID and register it
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
 	dictionary->InsertGUID(guid, this);
 
-	//Create event handler
-	this->_controller = new WCPartBodyController(this);
-	//Create tree element
-	WSTexture* bodyIcon = this->_document->Scene()->TextureManager()->TextureFromName("body32");
-	this->_treeElement = new WCTreeElement(this->_document->TreeView(), this->_name, this->_controller, bodyIcon);
-	//Add tree view element
-	this->_creator->TreeElement()->AddLastChild(this->_treeElement);
-	//Open the tree element
-	this->_treeElement->IsOpen(true);
-	//Add the body to the document
-	this->_part->AddFeature(this, false);
-	//Check to see if part has a current body
-	if (this->_part->Body() == NULL) this->_part->Body(this);
+	//Perform remaining initialization
+	this->Initialize();
+
+//	//Create event handler
+//	this->_controller = new WCPartBodyController(this);
+//	//Create tree element
+//	WSTexture* bodyIcon = this->_document->Scene()->TextureManager()->TextureFromName("body32");
+//	this->_treeElement = new WCTreeElement(this->_document->TreeView(), this->_name, this->_controller, bodyIcon);
+//	//Add tree view element
+//	this->_creator->TreeElement()->AddLastChild(this->_treeElement);
+//	//Open the tree element
+//	this->_treeElement->IsOpen(true);
+//	//Add the body to the document
+//	this->_part->AddFeature(this, false);
+//	//Check to see if part has a current body
+//	if (this->_part->Body() == NULL) this->_part->Body(this);
 }
 
 

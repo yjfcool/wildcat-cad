@@ -62,7 +62,7 @@ protected:
 	std::map<std::string, WCToolbar*>			_toolbarMap;										//!< Map of toolbars
 	WCKeyMap									*_keyMap;											//!< Keymap for the workbench
 private:
-	//Deny Access
+	//Hidden Constructors
 	WCWorkbench();																					//!< Deny access to default constructor
 	WCWorkbench(const WCWorkbench& wb);																//!< Deny access to copy constructor
 	WCWorkbench& operator=(const WCWorkbench& wb);													//!< Deny access to equals operator

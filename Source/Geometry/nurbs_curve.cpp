@@ -1608,15 +1608,9 @@ xercesc::DOMElement* WCNurbsCurve::Serialize(xercesc::DOMDocument *document, WCS
 	element->appendChild(modeElement);
 	xercesc::XMLString::release(&xmlString);
 
-	//List of control points
-	xmlString = xercesc::XMLString::transcode("ControlPoint");
-	xercesc::DOMElement *cpElement;
-	for (WPUInt i=0; i<this->_cp; i++) {
-		cpElement = document->createElement(xmlString);
-		this->_controlPoints.at(i).ToElement(cpElement);
-		element->appendChild(cpElement);
-	}
-	xercesc::XMLString::release(&xmlString);
+	//Add list of control points
+	for (WPUInt i=0; i<this->_cp; i++)
+		this->_controlPoints.at(i).ToElement(element, "ControlPoint");
 
 	//List of knot points
 	xmlString = xercesc::XMLString::transcode("KnotPoint");

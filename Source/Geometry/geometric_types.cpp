@@ -80,13 +80,8 @@ xercesc::DOMElement* WCGeometricObject::Serialize(xercesc::DOMDocument *document
 	WCSerializeableObject::AddBoolAttrib(element, "visible", this->_isVisible);
 	//Set the renderProg attribute
 	WCSerializeableObject::AddFloatAttrib(element, "renderProg", this->_renderProg);
-
 	//Add the color value
-	xmlString = xercesc::XMLString::transcode("Color");
-	xercesc::DOMElement* colorElem = document->createElement(xmlString);
-	xercesc::XMLString::release(&xmlString);
-	this->_color.ToElement(colorElem);
-	element->appendChild(colorElem);	
+	this->_color.ToElement(element, "Color");
 
 	//Return the new element
 	return element;
