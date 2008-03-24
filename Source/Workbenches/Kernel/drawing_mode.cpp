@@ -29,9 +29,16 @@
 /*** Included Header Files ***/
 #include "Kernel/drawing_mode.h"
 #include "Kernel/workbench.h"
+#include "Kernel/selection_mode.h"
 
 
 /***********************************************~***************************************************/
+
+
+static WCSelectionMode* WCDrawingMode::Selection(WCWorkbench *wb) {
+	//Create a new selection mode and return it
+	return new WCSelectionMode(wb);
+}
 
 
 /***********************************************~***************************************************/

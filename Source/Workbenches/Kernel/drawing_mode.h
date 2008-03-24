@@ -42,6 +42,7 @@
 class WCDocument;
 class WCFeature;
 class WCWorkbench;
+class WCSelectionMode;
 
 
 /***********************************************~***************************************************/
@@ -77,6 +78,7 @@ public:
 
 	//Staic Initializers
 	static WCDrawingMode* Default(void)			{ return NULL; }									//!< Default controller
+	static WCSelectionMode* Selection(WCWorkbench *workbench);										//!< Selection mode controller
 };
 
 
