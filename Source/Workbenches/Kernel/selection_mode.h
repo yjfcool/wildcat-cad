@@ -55,8 +55,8 @@ private:
 	bool										_isSelecting;										//!< Selection state
 	WPFloat										_markX, _markY;										//!< Initial location
 	//Hidden Constructors
-	WCSelectionMode();																				//!< Default constructor
-	WCSelectionMode(const WCSelectionMode &);														//!<
+	WCSelectionMode();																				//!< Deny access to default constructor
+	WCSelectionMode(const WCSelectionMode &);														//!< Deny access to copy constructor
 public:
 	//Constructors and Destructors
 	WCSelectionMode(WCWorkbench *wb);																//!< Primary constructor

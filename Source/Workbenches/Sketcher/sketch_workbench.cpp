@@ -141,13 +141,13 @@ WCSketchWorkbench::WCSketchWorkbench(WCSketch *sketch) : ::WCWorkbench(sketch, "
 	//Determine view quaternion from reference plane
 	this->_defaultView.Quaternion( WCQuaternion(this->_sketch->ReferencePlane()->TransformMatrix()) );
 	this->_defaultView.Zoom(1.0);
-	
-	//Set selection as initial mode
-	this->DrawingMode( WCDrawingMode::Selection(this) );
 }
 
 
 WCSketchWorkbench::~WCSketchWorkbench() {
+	//Remove the sketch and the grid from the layer
+	this->_layer->RemoveObject(this->_grid);
+	this->_layer->RemoveObject(this->_sketch);
 	//Delete the grid
 	if (this->_grid != NULL) delete this->_grid;
 }
@@ -190,9 +190,11 @@ bool WCSketchWorkbench::OnEnter(void) {
 	//Clear the selection buffer
 	this->_selectionManager->Clear(true);
 	//Set previous workbench to selection mode
-	this->_sketch->Part()->Workbench()->DrawingMode( WCDrawingMode::Selection( this->_sketch->Part()->Workbench()) );
+//	this->_sketch->Part()->Workbench()->DrawingMode( WCDrawingMode::Selection( this->_sketch->Part()->Workbench()) );
+	this->_sketch->Part()->Workbench()->DrawingMode( new WCSelectionMode( this->_sketch->Part()->Workbench()) );
 	//Go into selection mode
-	this->DrawingMode( WCDrawingMode::Selection( this ));
+//	this->DrawingMode( WCDrawingMode::Selection( this ));
+	this->DrawingMode( new WCSelectionMode( this ) );
 	return true;
 }
 
@@ -201,7 +203,8 @@ bool WCSketchWorkbench::OnExit(void) {
 	//Clear the selection buffer
 	this->_selectionManager->Clear(true);
 	//Go into selection mode
-	this->DrawingMode( WCDrawingMode::Selection( this ));
+//	this->DrawingMode( WCDrawingMode::Selection( this ));
+	this->DrawingMode( new WCSelectionMode( this ));
 	//Clear the selection buffer
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Standard")->IsVisible(false);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("View")->IsVisible(true);
@@ -607,7 +610,8 @@ bool WCSketchWorkbench::OnUserMessage(const WCUserMessage &message) {
 	//Selection mode
 	else if (message == "select") {
 		//Revert to default drawing mode
-		this->DrawingMode( WCDrawingMode::Selection(this) );
+//		this->DrawingMode( WCDrawingMode::Selection(this) );
+		this->DrawingMode( new WCSelectionMode(this) );
 	}
 	//Set grid visibility
 	else if (message == "showGrid") {

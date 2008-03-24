@@ -149,6 +149,8 @@ WCPart::WCPart(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 
 
 WCPart::~WCPart() {
+	//Should really delete all features
+	//...
 	//Delete the workbench
 	this->_workbench->Release(*this);
 	if (this->_workbench != NULL) delete this->_workbench;
@@ -456,12 +458,15 @@ bool WCPart::DeleteFeatures(std::list<WCPartFeature*> features) {
 			//Iterate through the list of features
 			std::map<std::string,WCPartFeature*>::iterator featureIter;
 			found = false;
-			//Check to see if feature is still in sketch
+			//Check to see if feature is still in part
 			for (featureIter = this->_featureMap.begin(); featureIter != this->_featureMap.end(); featureIter++) {
 				if ((*iter) == (*featureIter).second) found = true;
 			}
 			//If the feature was found, it was still in the part
 			if (found) {
+				//Make sure to remove from selectable
+				this->_workbench->SelectionManager()->ForceDeselection((*iter)->Controller(), true);
+				//Delete the object
 				std::cout << "Deleting: " << (*iter)->GetName() << std::endl;
 				delete *iter;
 			}

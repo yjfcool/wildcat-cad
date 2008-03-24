@@ -355,7 +355,7 @@ void WCCamera::AnimateToViewpoint(const WCQuaternion &rot, const WPFloat xPan, c
 	this->_stop = this->_start + duration;
 #endif
 	//Set the stop points
-	this->_aniQuaternion = new WCQuaternion(rot);
+	this->_aniQuaternion = rot;
 	this->_aniPanX = xPan;
 	this->_aniPanY = yPan;
 	this->_aniZoom = zoom;

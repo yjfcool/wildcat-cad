@@ -274,7 +274,8 @@
 		//Capture escape
 		case 96:
 			//Revert to default drawing mode
-			_document->ActiveWorkbench()->DrawingMode( WCDrawingMode::Selection( _document->ActiveWorkbench() ));
+//			_document->ActiveWorkbench()->DrawingMode( WCDrawingMode::Selection( _document->ActiveWorkbench() ));
+			_document->ActiveWorkbench()->DrawingMode( new WCSelectionMode( _document->ActiveWorkbench() ) );
 			 return true;
 			break;
 	}

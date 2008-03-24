@@ -50,16 +50,18 @@ typedef	unsigned int					WCObjectMsg;
 class WCObject {
 protected:
 	std::list<WCObject*>						_refSet;											//!< List of dependent objects
+	bool										_debugFlag;											//!< Super secret debug flag
 private:
 /*** DEBUG ***/
 	static std::list<WCObject*>					_debugList;											//!< Debug global list of all objects
 /*** DEBUG ***/
 	//Deny Access
+//	WCObject();																						//!< Deny access to default constructor
 	WCObject(const WCObject& obj);																	//!< Deny access to copy constructor
 	WCObject& operator=(const WCObject& obj);														//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCObject();																						//!< Default constructor
+	WCObject(const bool &debugFlag=false);															//!< Default constructor
 	virtual ~WCObject();																			//!< Default destructor 
 
 	//Reference Dependency Methods

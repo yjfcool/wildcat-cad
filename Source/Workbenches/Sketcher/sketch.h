@@ -59,13 +59,13 @@ class WCSketchProfile;
 class WCSketch : public WCPartFeature, public virtual WCVisualObject {
 protected:
 	WCSketchWorkbench							*_workbench;										//!< Sketch workbench
-	WCPartPlane										*_refPlane;											//!< Reference plane
+	WCPartPlane									*_refPlane;											//!< Reference plane
 	WCConstraintPlanner							*_planner;											//!< Constraint planner
 	std::map<std::string, WCSketchFeature*>		_featureMap;										//!< Sketch features
 	std::list<WCSketchFeature*>					_featureList;										//!< List of features
 	std::map<WCGeometricPoint*,WCEventController*>	_pointMap;										//!< Sketch points
 	std::map<WCGeometricLine*,WCEventController*>	_lineMap;										//!< Sketch lines
-	std::map<WCNurbsCurve*,WCEventController*>		_curveMap;										//!< Sketch curves
+	std::map<WCNurbsCurve*,WCEventController*>	_curveMap;											//!< Sketch curves
 	std::list<WCSketchConstraint*>				_constraintList;									//!< Sketch constraint list
 	std::list<WCSketchProfile*>					_profileList;										//!< Sketch output profile list
 	WCTreeElement								*_refTreeElement;									//!< Holder for all reference elements
@@ -85,12 +85,12 @@ private:
 	WCSketch& operator=(const WCSketch& sketch);													//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCSketch(WCFeature *creator, const std::string &name, WCPartPlane* plane);							//!< Primary constructor
+	WCSketch(WCFeature *creator, const std::string &name, WCPartPlane* plane);						//!< Primary constructor
 	WCSketch(xercesc::DOMElement *element, WCSerialDictionary *dictionary);							//!< Persistance constructor
 	~WCSketch();																					//!< Default destructor
 	
 	//Member Access Methods
-	inline WCPartPlane* ReferencePlane(void)				{ return this->_refPlane; }					//!< Get reference plane
+	inline WCPartPlane* ReferencePlane(void)	{ return this->_refPlane; }							//!< Get reference plane
 	inline WCConstraintPlanner* ConstraintPlanner(void)	{ return this->_planner; }					//!< Get the constraint planner
 	inline std::map<std::string, WCSketchFeature*>& FeatureMap(void)								//!< Get the feature map
 												{ return  this->_featureMap; }

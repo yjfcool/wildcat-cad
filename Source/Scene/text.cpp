@@ -57,7 +57,6 @@ WCText::WCText(const std::string &text, const WCColor &color, const WCTextFont &
 	}
 	//Combine font and style
 	this->_fontName = fontName + "-" + fontStyle;
-
 	//Generate the textures
 	this->GenerateTexture();
 }

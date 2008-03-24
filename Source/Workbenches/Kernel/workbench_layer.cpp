@@ -90,10 +90,10 @@ bool WCWorkbenchLayer::OnReshape(const WPFloat width, const WPFloat height) {
 
 
 void WCWorkbenchLayer::Render(WCRenderState *state) {
-	//Render all children
-	this->WCVisualLayer::Render(state);
 	//Ignore if not visible or not active
 	if ((!this->_isVisible) || (!this->_isActive)) return;
+	//Render all children
+	this->WCVisualLayer::Render(state);
 	//Render drawMode
 	if (this->_mode != NULL) this->_mode->Render();
 }

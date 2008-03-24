@@ -86,6 +86,8 @@ WCWorkbench::~WCWorkbench() {
 		this->_selectionManager->Release(*this);
 		delete this->_selectionManager;
 	}
+	//Delete the keymap
+	if (this->_keyMap != NULL) delete this->_keyMap;
 }
 
 
@@ -141,7 +143,8 @@ bool WCWorkbench::OnEnter(void) {
 	//Orient the view to the drawing plane
 	this->_feature->Document()->Scene()->ActiveCamera()->AnimateToViewpoint(this->_defaultView, WORKBENCH_ANIMATE_DURATION);
 	//Set workbench mode to selection
-	this->DrawingMode( WCDrawingMode::Selection(this) );
+//	this->DrawingMode( WCDrawingMode::Selection(this) );
+	this->DrawingMode( new WCSelectionMode(this) );
 	return true;
 }
 
@@ -158,7 +161,6 @@ bool WCWorkbench::OnExit(void) {
 	this->_feature->Document()->Scene()->ActiveCamera()->AnimateToViewpoint(this->_restoreView, WORKBENCH_ANIMATE_DURATION);
 	return true;
 }
-
 
 
 void WCWorkbench::OnPanPress(void) {

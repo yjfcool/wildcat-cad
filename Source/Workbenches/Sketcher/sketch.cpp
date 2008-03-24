@@ -148,6 +148,15 @@ WCSketch::WCSketch(xercesc::DOMElement *element, WCSerialDictionary *dictionary)
 
 
 WCSketch::~WCSketch() {
+	//Remove the sketch to the part
+	this->_part->RemoveFeature(this, false);
+	//Need to delete all features (in reverse order)
+	WCSketchFeature *feature;
+	while (!this->_featureList.empty()) {
+		//Get the last feature
+		feature = this->_featureList.back();
+		delete feature;
+	}
 	//If not null, release the plane
 	if (this->_refPlane != NULL) this->_refPlane->Release(*this);
 	//If workbench is still null delete it

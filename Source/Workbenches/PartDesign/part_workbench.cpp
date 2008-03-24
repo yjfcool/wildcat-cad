@@ -69,8 +69,6 @@ WCPartWorkbench::WCPartWorkbench(WCPart *part) : ::WCWorkbench(part, "Part Desig
 		this->_frameRateMonitor->SetPlacement(WCPlacement::LowerRight());
 //		frm->IsVisible(true);
 	}
-	//Set the initial drawMode to point selection
-	this->DrawingMode( WCDrawingMode::Selection( this ));
 }
 
 
@@ -136,7 +134,8 @@ bool WCPartWorkbench::OnUserMessage(const WCUserMessage &message) {
 	//Is this a select mode message
 	if (message == "select") {
 		//Revert to default drawing mode
-		this->DrawingMode( WCDrawingMode::Selection( this->_part->ActiveWorkbench() ));
+//		this->DrawingMode( WCDrawingMode::Selection( this->_part->ActiveWorkbench() ));
+		this->DrawingMode( new WCSelectionMode( this->_part->ActiveWorkbench() ));
 	}
 	//Delete the selected elements
 	else if (message == "delete") {

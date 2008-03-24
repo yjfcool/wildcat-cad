@@ -70,6 +70,8 @@ WCTreeElement::~WCTreeElement() {
 	}
 	//Unregister the element
 	if 	(this->_tree != NULL) this->_tree->UnregisterElement(this);
+	//Delete the label
+	if (this->_label != NULL) delete this->_label;
 }
 
 

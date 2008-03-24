@@ -332,6 +332,9 @@ void WCScene::UnregisterLayer(WCLayer *layer) {
 	if (layer == this->_bottomLayer) this->_bottomLayer = layer->Previous();
 	if (layer->Next() != NULL) layer->Next()->Previous( layer->Previous() );
 	if (layer->Previous() != NULL) layer->Previous()->Next( layer->Next() );
+	//Mark layer next and previous as null
+	layer->Next(NULL);
+	layer->Previous(NULL);
 	//Release the layer
 	layer->Release(*this);
 }

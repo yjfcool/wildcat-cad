@@ -38,7 +38,7 @@ std::list<WCObject*> WCObject::_debugList;
 /***********************************************~***************************************************/
 
 
-WCObject::WCObject() {
+WCObject::WCObject(const bool &debugFlag) : _refSet(), _debugFlag(debugFlag) {
 /*** DEBUG ***/
 	WCObject::_debugList.push_back(this);
 //	std::cout << typeid(this).name() << " " << this << std::endl;
@@ -54,7 +54,7 @@ WCObject::~WCObject() {
 	this->SendBroadcastNotice(OBJECT_NOTIFY_DELETE);
 	//See how many retains are left
 	if (this->_refSet.size() > 0)
-		CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCObject::~WCObject - " << this->_refSet.size() << " reference remaining.");
+		CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCObject::~WCObject (" << this << ") - " << this->_refSet.size() << " reference remaining.");
 } 
 
 
@@ -63,6 +63,11 @@ WPUInt WCObject::Retain(WCObject &obj) {
 	for (std::list<WCObject*>::iterator iter = this->_refSet.begin(); iter != this->_refSet.end(); iter++) {
 		if (&obj == *iter) return this->_refSet.size();
 	}
+/*** DEBUG ***/
+	//Check secret debug flag
+	if (this->_debugFlag) 
+		CLOGGER_DEBUG(WCLogManager::RootLogger(), "Object being retained:" << this->_refSet.size());
+/*** DEBUG ***/
 	//Put the object into the list
 	this->_refSet.push_back(&obj);
 	//Now just return the reference count
@@ -71,6 +76,11 @@ WPUInt WCObject::Retain(WCObject &obj) {
 
 
 WPUInt WCObject::Release(WCObject &obj) {
+/*** DEBUG ***/
+	//Check secret debug flag
+	if (this->_debugFlag) 
+		CLOGGER_DEBUG(WCLogManager::RootLogger(), "Object being released:" << this->_refSet.size());
+/*** DEBUG ***/
 	//Otherwise, try to remove the obj from the refSet
 	this->_refSet.remove(&obj);
 	//Return the number of references

@@ -357,7 +357,8 @@ void WCModePartPadCreate::OnMouseUp(const WCMouseButton &button) {
 		//Clear selection
 		this->_workbench->SelectionManager()->Clear(true);
 		//Return to selection mode
-		this->_workbench->DrawingMode( WCDrawingMode::Selection(this->_workbench) );		
+//		this->_workbench->DrawingMode( WCDrawingMode::Selection(this->_workbench) );
+		this->_workbench->DrawingMode( new WCSelectionMode(this->_workbench) );
 	}
 }
 

@@ -230,13 +230,19 @@ WCGrid::WCGrid(WCSketch &sketch, const WPFloat &xSpacing, const WPFloat &ySpacin
 	//Create buffer object
 	glGenBuffers(1, &this->_buffer);
 	glGenBuffers(1, &this->_subBuffer);
-	//Retain the the camera) (get ModelView updates)
+	//Retain the the camera and scene (get ModelView updates)
 	this->_sketch->Document()->Scene()->ActiveCamera()->Retain(*this);
 	this->_sketch->Document()->Scene()->Retain(*this);
 }
 
 
 WCGrid::~WCGrid() {
+	//Release the the camera and scene
+	this->_sketch->Document()->Scene()->ActiveCamera()->Release(*this);
+	this->_sketch->Document()->Scene()->Release(*this);
+	//Destroy buffers
+	glDeleteBuffers(1, &this->_buffer);
+	glDeleteBuffers(1, &this->_subBuffer);
 }
 
 

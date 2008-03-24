@@ -52,10 +52,9 @@ class WCDrawingMode {
 protected:
 	WCFeature									*_creator;											//!< Creating feature
 	std::string									_name;												//!< Mode name
-protected:
+private:
 	//Deny Access
 	WCDrawingMode();																				//!< Deny access to default constructor
-private:
 	WCDrawingMode(const WCDrawingMode &mode);														//!< Deny access to copy constructor
 public:
 	//Constructors and Destructors
@@ -79,7 +78,7 @@ public:
 
 	//Staic Initializers
 	static WCDrawingMode* Default(void)			{ return NULL; }									//!< Default controller
-	static WCDrawingMode* Selection(WCWorkbench* wb);												//!< Selection controller
+//	static WCDrawingMode* Selection(WCWorkbench* wb);												//!< Selection controller
 };
 
 
