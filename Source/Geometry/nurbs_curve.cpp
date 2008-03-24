@@ -78,8 +78,8 @@ void WCNurbsCurve::GenerateKnotPointsVBO(void) {
 
 void WCNurbsCurve::GenerateKnotPointsTexture(void) {
 	//Create temporary array for data
-//	GLfloat *data = new GLfloat[4 * this->_kp];
-	GLfloat data[4 * this->_kp];
+	GLfloat *data = new GLfloat[4 * this->_kp];
+//	GLfloat data[4 * this->_kp];
 	//Copy knot points into array (cast WPFloat to GLfloat)
 	for (WPUInt i=0; i<this->_kp; i++) data[i*4] = (GLfloat)this->_knotPoints[i];
 	//Set up some parameters
@@ -90,7 +90,7 @@ void WCNurbsCurve::GenerateKnotPointsTexture(void) {
 	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, this->_kp, 1, GL_RGBA, GL_FLOAT, data);
 	//Delete array and check for errors
 	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsCurve::GenerateKnotPointsTexture Error - Texture Setup.\n";
-//	delete data;
+	delete data;
 }
 
 
@@ -134,8 +134,8 @@ void WCNurbsCurve::GenerateControlPointsVBO(void) {
 
 void WCNurbsCurve::GenerateControlPointsTexture(void) {
 	//Create temporary array for data
-//	GLfloat *data = new GLfloat[this->_cp * 4];
-	GLfloat data[this->_cp * 4];
+	GLfloat *data = new GLfloat[this->_cp * 4];
+//	GLfloat data[this->_cp * 4];
 	//Copy control points into array
 	WCVector4 controlPoint;
 	for (WPUInt i=0; i<this->_cp; i++) {
@@ -154,7 +154,7 @@ void WCNurbsCurve::GenerateControlPointsTexture(void) {
 	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, this->_cp, 1, GL_RGBA, GL_FLOAT, data);
 	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsCurve::GenerateControlPointsTexture Error - Texture Setup.\n";
 	//Delete data array
-//	delete data;
+	delete data;
 }
 
 
@@ -349,8 +349,8 @@ void WCNurbsCurve::GenerateCurveMedium(void) {
 	/*** Setup input texture ***/
 	
 	//Allocate space for the texture (w * h * RGBA)
-//	GLfloat *data = new GLfloat[this->_lod * 4];
-	GLfloat data[this->_lod * 4];
+	GLfloat *data = new GLfloat[this->_lod * 4];
+//	GLfloat data[this->_lod * 4];
 	WPFloat u = this->_knotPoints[0];
 	WPFloat range = this->_knotPoints[this->_kp-1] - this->_knotPoints[0];
 	WPFloat du = range / ((GLfloat)(this->_lod-1));	
@@ -371,7 +371,7 @@ void WCNurbsCurve::GenerateCurveMedium(void) {
 	if (glGetError() != GL_NO_ERROR) 
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Setup Input Texture.");
 	//Delete data array
-//	delete data;
+	delete data;
 
 	/*** Setup Viewport and Render***/
 
