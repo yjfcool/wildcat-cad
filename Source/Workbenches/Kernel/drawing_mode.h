@@ -41,7 +41,6 @@
 /*** Class Predefines ***/
 class WCDocument;
 class WCFeature;
-class WCSelectionMode;
 class WCWorkbench;
 
 
@@ -53,7 +52,7 @@ protected:
 	WCFeature									*_creator;											//!< Creating feature
 	std::string									_name;												//!< Mode name
 private:
-	//Deny Access
+	//Hidden Constructors
 	WCDrawingMode();																				//!< Deny access to default constructor
 	WCDrawingMode(const WCDrawingMode &mode);														//!< Deny access to copy constructor
 public:
@@ -78,7 +77,6 @@ public:
 
 	//Staic Initializers
 	static WCDrawingMode* Default(void)			{ return NULL; }									//!< Default controller
-//	static WCDrawingMode* Selection(WCWorkbench* wb);												//!< Selection controller
 };
 
 

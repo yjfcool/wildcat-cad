@@ -49,26 +49,25 @@
 /***********************************************~***************************************************/
 
 
-class WCSelectionMode : virtual public WCDrawingMode {
+class WCSelectionMode : public WCDrawingMode {
 private:
 	WCWorkbench									*_workbench;										//!< Parent workbench
 	bool										_isSelecting;										//!< Selection state
 	WPFloat										_markX, _markY;										//!< Initial location
 	//Hidden Constructors
 	WCSelectionMode();																				//!< Deny access to default constructor
-	WCSelectionMode(const WCSelectionMode &);														//!< Deny access to copy constructor
+	WCSelectionMode(const WCSelectionMode &mode);													//!< Deny access to copy constructor
 public:
 	//Constructors and Destructors
 	WCSelectionMode(WCWorkbench *wb);																//!< Primary constructor
 	virtual ~WCSelectionMode()					{ }													//!< Default destructor
 	
 	//Virtual Methods
-	void OnEntry(void);																				//!< Handle entry into mode
-	void OnExit(void);																				//!< Handle exit from mode
-	void OnMouseDown(const WCMouseButton &button);													//!< Handle mouse button press
-	void OnMouseMove(const WPFloat &x, const WPFloat &y);											//!< Handle mouse moves
-	void OnMouseUp(const WCMouseButton &button);													//!< Handle mouse button release
-	void Render(void);																				//!< Render the mode
+	virtual void OnEntry(void);																		//!< Handle entry into mode
+	virtual void OnExit(void);																		//!< Handle exit from mode
+	virtual void OnMouseDown(const WCMouseButton &button);											//!< Handle mouse button press
+	virtual void OnMouseUp(const WCMouseButton &button);											//!< Handle mouse button release
+	virtual void Render(void);																		//!< Render the mode
 };
 
 

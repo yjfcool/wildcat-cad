@@ -193,8 +193,8 @@ bool WCSketchWorkbench::OnEnter(void) {
 //	this->_sketch->Part()->Workbench()->DrawingMode( WCDrawingMode::Selection( this->_sketch->Part()->Workbench()) );
 	this->_sketch->Part()->Workbench()->DrawingMode( new WCSelectionMode( this->_sketch->Part()->Workbench()) );
 	//Go into selection mode
-//	this->DrawingMode( WCDrawingMode::Selection( this ));
-	this->DrawingMode( new WCSelectionMode( this ) );
+	WCSelectionMode *mode = new WCSelectionMode(this);
+	this->DrawingMode( mode );
 	return true;
 }
 

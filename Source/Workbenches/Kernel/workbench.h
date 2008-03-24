@@ -87,7 +87,7 @@ public:
 	virtual bool OnEnter(void)=0;																	//!< Entrance method
 	virtual bool OnExit(void)=0;																	//!< Forced exit method
 	virtual bool DrawingMode(WCDrawingMode *drawMode);												//!< Enter a drawing mode
-	virtual WCDrawingMode* DrawingMode(void) { return this->_drawMode; }							//!< Get the drawing mode controller
+	virtual WCDrawingMode* DrawingMode(void)	{ return this->_drawMode; }							//!< Get the drawing mode controller
 
 	//Event Response
 	virtual void OnPanPress(void);																	//!< React to pan press event

@@ -34,8 +34,9 @@
 /***********************************************~***************************************************/
 
 
-WCSelectionMode::WCSelectionMode(WCWorkbench *wb) : ::WCDrawingMode(wb->Feature(), SELECTIONMODE_NAME), 
-	_workbench(wb), _isSelecting(false), _markX(0.0), _markY(0.0) { 
+WCSelectionMode::WCSelectionMode(WCWorkbench *wb) : 
+//	::WCDrawingMode(wb->Feature(), SELECTIONMODE_NAME), _workbench(wb), _isSelecting(false), _markX(0.0), _markY(0.0) { 
+	::WCDrawingMode(wb->Feature(), ""), _workbench(wb), _isSelecting(false), _markX(0.0), _markY(0.0) { 
 	//Nothing else to do for now
 }
 
@@ -53,10 +54,6 @@ void WCSelectionMode::OnExit(void) {
 //	CLOGGER_DEBUG(WCLogManager::RootLogger(), "Exiting Selection Draw Mode:" << this);
 	//Set the icon to not active
 	this->_creator->Document()->ToolbarManager()->ButtonFromName("select")->IsActive(false);
-}
-
-
-void WCSelectionMode::OnMouseMove(const WPFloat &x, const WPFloat &y) {
 }
 
 
