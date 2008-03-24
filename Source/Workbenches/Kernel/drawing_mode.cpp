@@ -35,7 +35,7 @@
 /***********************************************~***************************************************/
 
 
-static WCSelectionMode* WCDrawingMode::Selection(WCWorkbench *wb) {
+WCSelectionMode* WCDrawingMode::Selection(WCWorkbench *wb) {
 	//Create a new selection mode and return it
 	return new WCSelectionMode(wb);
 }
