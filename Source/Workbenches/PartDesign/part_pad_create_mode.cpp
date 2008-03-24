@@ -278,8 +278,8 @@ void WCModePartPadCreate::OnMouseDown(const WCMouseButton &button) {
 		//Get the scene
 		WCScene* scene = this->_workbench->Feature()->Document()->Scene();
 		//Get pixel position
-		WPUInt x = (scene->MouseX() + (scene->Width()/2.0)) * (scene->WindowWidth() / scene->Width());
-		WPUInt y = scene->WindowHeight() - (scene->MouseY() - scene->Height() / 2.0) * (-1.0 * scene->WindowHeight() / scene->Height());
+		WPUInt x = WPUInt((scene->MouseX() + (scene->Width()/2.0)) * (scene->WindowWidth() / scene->Width()));
+		WPUInt y = WPUInt(scene->WindowHeight() - (scene->MouseY() - scene->Height() / 2.0) * (-1.0 * scene->WindowHeight() / scene->Height()));
 		//Call single select
 		this->_workbench->SelectionManager()->Select(x, x, y, y, true);
 		//Check selections
