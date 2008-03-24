@@ -51,7 +51,7 @@ class WCSketchAxis;
 /***********************************************~***************************************************/
 
 
-class WCPartShaft : virtual public WCPartFeature {
+class WCPartShaft : public WCPartFeature {
 protected:
 	std::list<std::pair<WCSketchProfile*,bool> >_profiles;											//!< List of included profiles
 	WCSketchAxis								*_axis;												//!< Revolution axis

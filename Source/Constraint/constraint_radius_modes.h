@@ -47,7 +47,7 @@ class WCConstraintRadius;
 /***********************************************~***************************************************/
 
 
-class WCModeConstraintRadiusEdit : virtual public WCDrawingMode {
+class WCModeConstraintRadiusEdit : public WCDrawingMode {
 private:
 	WCConstraintRadius							*_constraint;										//!< Object being edited
 	WCVector4									_position;											//!< Initial position

@@ -47,7 +47,7 @@ class WCConstraintAngle;
 /***********************************************~***************************************************/
 
 
-class WCModeConstraintAngleEdit : virtual public WCDrawingMode {
+class WCModeConstraintAngleEdit : public WCDrawingMode {
 private:
 	WCConstraintAngle							*_constraint;										//!< Object being edited
 	WCVector4									_position;											//!< Initial position

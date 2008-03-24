@@ -51,7 +51,7 @@ class WCPart;
 /***********************************************~***************************************************/
 
 
-class WCPartPlane : public virtual WCPartFeature, public virtual WCVisualObject {
+class WCPartPlane : public WCPartFeature, virtual public WCVisualObject {
 protected:
 	GLuint										_buffer;											//!< Corners buffer
 	WCVector4									_base, _uAxis, _vAxis;								//!< Orienting vectors

@@ -52,7 +52,7 @@ class WCSketch;
 /***********************************************~***************************************************/
 
 
-class WCSketchAxis : virtual public WCSketchFeature, virtual public WCVisualObject {
+class WCSketchAxis : public WCSketchFeature, virtual public WCVisualObject {
 protected:
 	WCVector4									_begin, _end;										//!< Start and end coordinates
 	WCGeometricLine								*_line;												//!< Cooresponding geometric line

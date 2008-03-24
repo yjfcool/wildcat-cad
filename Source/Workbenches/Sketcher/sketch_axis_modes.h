@@ -48,7 +48,7 @@ class WCSketchAxis;
 /***********************************************~***************************************************/
 
 
-class WCModeSketchAxisCreate : virtual public WCDrawingMode {
+class WCModeSketchAxisCreate : public WCDrawingMode {
 private:
 	WCSketchWorkbench							*_workbench;										//!< Parent sketch workbench
 	bool										_isDrawing;											//!< Has drawing started
@@ -78,7 +78,7 @@ public:
 /***********************************************~***************************************************/
 
 
-class WCModeSketchAxisEdit : virtual public WCDrawingMode {
+class WCModeSketchAxisEdit : public WCDrawingMode {
 private:
 	WCSketchAxis								*_axis;												//!< Parent sketch workbench
 	WCVector4									_position, _p0, _p1;								//!< Position information

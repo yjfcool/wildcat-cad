@@ -48,7 +48,7 @@ class WCSketchEllipse;
 /***********************************************~***************************************************/
 
 
-class WCModeSketchEllipseCreate : virtual public WCDrawingMode {
+class WCModeSketchEllipseCreate : public WCDrawingMode {
 private:
 	WCSketchWorkbench							*_workbench;										//!< Parent sketch workbench
 	WPUInt										_stage;												//!< Drawing stage
@@ -79,7 +79,7 @@ public:
 /***********************************************~***************************************************/
 
 
-class WCModeSketchEllipseEdit : virtual public WCDrawingMode {
+class WCModeSketchEllipseEdit : public WCDrawingMode {
 private:
 	WCSketchEllipse								*_ellipse;											//!< Parent sketch workbench
 	WCVector4									_center, _majorAxis, _position;						//!< Position and axis information

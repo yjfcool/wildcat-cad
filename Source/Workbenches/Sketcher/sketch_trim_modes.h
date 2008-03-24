@@ -48,7 +48,7 @@
 /***********************************************~***************************************************/
 
 
-class WCModeSketchTrimCreate : virtual public WCDrawingMode {
+class WCModeSketchTrimCreate : public WCDrawingMode {
 private:
 	WCSketchWorkbench							*_workbench;										//!< Parent sketch workbench
 	WCGeometricCurve*							_curve;

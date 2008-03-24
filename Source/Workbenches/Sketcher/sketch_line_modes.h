@@ -49,7 +49,7 @@ class WCSketchLine;
 /***********************************************~***************************************************/
 
 
-class WCModeSketchLineCreate : virtual public WCDrawingMode {
+class WCModeSketchLineCreate : public WCDrawingMode {
 private:
 	WCSketchWorkbench							*_workbench;										//!< Parent sketch workbench
 	bool										_isDrawing;											//!< Has drawing started
@@ -78,7 +78,7 @@ public:
 /***********************************************~***************************************************/
 
 
-class WCModeSketchLineEdit : virtual public WCDrawingMode {
+class WCModeSketchLineEdit : public WCDrawingMode {
 private:
 	WCSketchLine								*_line;												//!< Parent feature
 	WCVector4									_position, _p0, _p1;								//!< Position information

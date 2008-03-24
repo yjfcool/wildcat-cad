@@ -49,7 +49,7 @@ class WCSketchCircle;
 /***********************************************~***************************************************/
 
 
-class WCModeSketchConicTwoPointCreate : virtual public WCDrawingMode {
+class WCModeSketchConicTwoPointCreate : public WCDrawingMode {
 private:
 	WCSketchWorkbench							*_workbench;										//!< Parent sketch workbench
 	WPUInt										_stage;												//!< Has the first point been drawn

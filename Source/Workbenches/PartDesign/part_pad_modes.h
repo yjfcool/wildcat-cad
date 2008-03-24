@@ -49,7 +49,7 @@ class WCSketchProfile;
 /***********************************************~***************************************************/
 
 
-class WCModePartPadCreate : virtual public WCDrawingMode {
+class WCModePartPadCreate : public WCDrawingMode {
 private:
 	WCPartWorkbench								*_workbench;										//!< Parent part workbench
 	WPInt										_stage;												//!< Creation stage (nothing, profiles, 1st click, done)

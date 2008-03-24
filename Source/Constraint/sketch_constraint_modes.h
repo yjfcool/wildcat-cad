@@ -52,7 +52,7 @@ class WCConstraintMeasure;
 /***********************************************~***************************************************/
 
 
-class WCModeSketchConstraintDimensionalCreate : virtual public WCDrawingMode {
+class WCModeSketchConstraintDimensionalCreate : public WCDrawingMode {
 private:
 	WCSketchWorkbench							*_workbench;										//!< Parent sketch workbench
 	unsigned int								_stage;												//!< Stage of creating contraint
@@ -84,7 +84,7 @@ public:
 /***********************************************~***************************************************/
 
 
-class WCModeSketchConstraintGeometricCreate : virtual public WCDrawingMode {
+class WCModeSketchConstraintGeometricCreate : public WCDrawingMode {
 private:
 	WCSketchWorkbench							*_workbench;										//!< Parent sketch workbench
 

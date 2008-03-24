@@ -47,7 +47,7 @@ class WCConstraintLength;
 /***********************************************~***************************************************/
 
 
-class WCModeConstraintLengthEdit : virtual public WCDrawingMode {
+class WCModeConstraintLengthEdit : public WCDrawingMode {
 private:
 	WCConstraintLength							*_constraint;										//!< Object being edited
 	WCVector4									_position;											//!< Initial position

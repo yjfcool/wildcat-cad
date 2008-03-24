@@ -53,7 +53,7 @@ class WCNurbsCurve;
 /***********************************************~***************************************************/
 
 
-class WCModeSketchArcStandardCreate : virtual public WCDrawingMode {
+class WCModeSketchArcStandardCreate : public WCDrawingMode {
 private:
 	WCSketchWorkbench							*_workbench;										//!< Parent sketch workbench
 	WPUInt										_stage;												//!< Creation stage
@@ -86,7 +86,7 @@ public:
 /***********************************************~***************************************************/
 
 
-class WCModeSketchArcThreePointCreate : virtual public WCDrawingMode {
+class WCModeSketchArcThreePointCreate : public WCDrawingMode {
 private:
 	WCSketchWorkbench							*_workbench;										//!< Parent sketch workbench
 	WPUInt										_stage;												//!< Creation stage
@@ -119,7 +119,7 @@ public:
 /***********************************************~***************************************************/
 
 
-class WCModeSketchArcEdit : virtual public WCDrawingMode {
+class WCModeSketchArcEdit : public WCDrawingMode {
 private:
 	WCSketchArc									*_arc;												//!< Parent feature
 	WCVector4									_center, _position;									//!< Position information

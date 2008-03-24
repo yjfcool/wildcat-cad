@@ -53,7 +53,7 @@ std::ostream& operator<<(std::ostream& out, const WCBipartiteFlowNode &node) {
 
 
 WCBipartiteEdgeNode::WCBipartiteEdgeNode(WCConstraintEdge* ref, const WPInt &weight) :
-	WCBipartiteFlowNode::WCBipartiteFlowNode(weight), _ref(ref), _edgeA(NULL), _edgeB(NULL) {
+	::WCBipartiteFlowNode(weight), _ref(ref), _edgeA(NULL), _edgeB(NULL) {
 	//Do nothing else for now
 }
 
@@ -193,7 +193,7 @@ std::ostream& operator<<(std::ostream& out, const WCBipartiteEdgeNode &edge) {
 
 
 WCBipartiteVertexNode::WCBipartiteVertexNode(WCConstraintNode* ref, const WPUInt &weight) : 
-	WCBipartiteFlowNode::WCBipartiteFlowNode(weight), _ref(ref), _predecessor(NULL), _flows(0), _flowSnapshot(0) {
+	::WCBipartiteFlowNode(weight), _ref(ref), _predecessor(NULL), _flows(0), _flowSnapshot(0) {
 	//Nothing else to do
 }
 	
@@ -344,7 +344,7 @@ WCBipartiteVertexNode* WCBipartiteFlowNetwork::VertexNodeByReference(const void*
 
 
 WPUInt WCBipartiteFlowNetwork::LabeledDensity(void) {
-	WPUInt vSum=0, eSum;
+	WPUInt vSum=0, eSum=0;
 	std::list<WCBipartiteEdgeNode*>::iterator eIter;
 	std::list<WCBipartiteVertexNode*>::iterator vIter;
 	

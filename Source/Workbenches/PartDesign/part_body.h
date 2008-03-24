@@ -49,7 +49,7 @@ class WCPart;
 /***********************************************~***************************************************/
 
 
-class WCPartBody : virtual public WCPartFeature {
+class WCPartBody : public WCPartFeature {
 private:
 	void Initialize(void);																			//!< Initialization method
 	//Hidden Constructors

@@ -50,7 +50,7 @@ class WCSketchAxis;
 /***********************************************~***************************************************/
 
 
-class WCModePartShaftCreate : virtual public WCDrawingMode {
+class WCModePartShaftCreate : public WCDrawingMode {
 private:
 	WCPartWorkbench								*_workbench;										//!< Parent part workbench
 	WPInt										_stage;												//!< Creation stage (nothing, profiles, 1st click, done)

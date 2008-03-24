@@ -47,7 +47,7 @@ class WCSketchWorkbench;
 /***********************************************~***************************************************/
 
 
-class WCModeSketchRectangleCreate : virtual public WCDrawingMode {
+class WCModeSketchRectangleCreate : public WCDrawingMode {
 private:
 	WCSketchWorkbench							*_workbench;										//!< Parent sketch workbench
 	bool										_isDrawing;											//!< Has the first point been drawn

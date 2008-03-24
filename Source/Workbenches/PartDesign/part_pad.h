@@ -50,7 +50,7 @@ class WCSketchProfile;
 /***********************************************~***************************************************/
 
 
-class WCPartPad : virtual public WCPartFeature {
+class WCPartPad : public WCPartFeature {
 protected:
 	std::list<std::pair<WCSketchProfile*,bool> >_profiles;											//!< List of included profiles
 	WCVector4									_direction;											//!< Extrusion direction

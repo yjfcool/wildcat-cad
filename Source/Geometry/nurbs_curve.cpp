@@ -400,12 +400,12 @@ void WCNurbsCurve::GenerateCurveMedium(void) {
 
 	/*** Save output texture into vertex VBO using simple memory read ***/
 
-//	GLfloat *vertData = new GLfloat[this->_context->CurveMaxTextureSize() * 4];
-	GLfloat vertData[this->_context->CurveMaxTextureSize() * 4];
+	GLfloat *vertData = new GLfloat[this->_context->CurveMaxTextureSize() * 4];
+//	GLfloat vertData[this->_context->CurveMaxTextureSize() * 4];
 	glReadPixels(0, 0, this->_context->CurveMaxTextureSize(), 1, GL_RGBA, GL_FLOAT, vertData);
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);
 	glBufferData(GL_ARRAY_BUFFER, this->_context->CurveMaxTextureSize() * 4 * sizeof(GLfloat), vertData, GL_STATIC_DRAW);
-//	delete vertData;
+	delete vertData;
 
 	/*** Save output texture into vertex VBO using a PBO ***
 

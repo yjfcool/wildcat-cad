@@ -47,7 +47,7 @@ class WCConstraintDistance;
 /***********************************************~***************************************************/
 
 
-class WCModeConstraintDistanceEdit : virtual public WCDrawingMode {
+class WCModeConstraintDistanceEdit : public WCDrawingMode {
 private:
 	WCConstraintDistance						*_constraint;										//!< Object being edited
 	WCVector4									_position;											//!< Initial position

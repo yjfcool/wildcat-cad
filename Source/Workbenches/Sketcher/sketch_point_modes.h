@@ -49,7 +49,7 @@ class WCSketchPoint;
 /***********************************************~***************************************************/
 
 
-class WCModeSketchPointCreate : virtual public WCDrawingMode {
+class WCModeSketchPointCreate : public WCDrawingMode {
 private:
 	WCSketchWorkbench							*_workbench;										//!< Parent sketch workbench
 	WPFloat										_xSuggest, _ySuggest;								//!< Location of suggestion
@@ -75,7 +75,7 @@ public:
 /***********************************************~***************************************************/
 
 
-class WCModeSketchPointEdit : virtual public WCDrawingMode {
+class WCModeSketchPointEdit : public WCDrawingMode {
 private:
 	WCSketchPoint								*_point;											//!< Point being edited
 	WCVector4									_position;											//!< Initial position

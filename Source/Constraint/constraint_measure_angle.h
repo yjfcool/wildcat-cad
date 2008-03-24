@@ -46,7 +46,7 @@
 /***********************************************~***************************************************/
 
 
-class WCConstraintMeasureAngle : virtual public WCConstraintMeasure {
+class WCConstraintMeasureAngle : public WCConstraintMeasure {
 private:
 	WCVector4									_center, _first, _second;							//!< Reference points
 	WCNurbsCurve								*_curve;											//!< Display curve

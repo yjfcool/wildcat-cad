@@ -50,7 +50,7 @@ class WCSketchCircle;
 /***********************************************~***************************************************/
 
 
-class WCModeSketchCircleCreate : virtual public WCDrawingMode {
+class WCModeSketchCircleCreate : public WCDrawingMode {
 private:
 	WCSketchWorkbench							*_workbench;										//!< Parent sketch workbench
 	bool										_isDrawing;											//!< Has the first point been drawn
@@ -79,7 +79,7 @@ public:
 /***********************************************~***************************************************/
 
 
-class WCModeSketchCircleEdit : virtual public WCDrawingMode {
+class WCModeSketchCircleEdit : public WCDrawingMode {
 private:
 	WCSketchCircle								*_circle;											//!< Parent feature
 	WCVector4									_center, _position;									//!< Position information
