@@ -26,9 +26,8 @@
 ********************************************************************************/
 
 
-#include "Application/Win32/stdafx.h"
-#include "Application/Win32/wildcat_app.h"
 #include "Application/Win32/document_frame.h"
+#include "Application/Win32/document_view.h"
 
 
 /***********************************************~***************************************************/

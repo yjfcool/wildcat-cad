@@ -58,8 +58,8 @@
 #endif
 
 #ifdef __WIN32__
-#include <windows.h>					//Generic header file For Windows
-#include <Application/Win32/win_gl.h>	//Header file for windows platform
+#include "Application/Win32/stdafx.h"	//Generic header file For Windows
+#include "Application/Win32/win_gl.h"	//Header file for windows platform
 
 //Defines for std:: problem
 #define STDMIN	min

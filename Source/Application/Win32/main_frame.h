@@ -30,6 +30,10 @@
 #define __MAIN_FRAME_H__
 
 
+/*** Included Headers ***/
+#include "Utility/wutil.h"
+
+
 /*** Local Defines ***/
 //None
 

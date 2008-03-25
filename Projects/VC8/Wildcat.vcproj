@@ -1352,7 +1352,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\Source\Application\Win32\render_window.h"
+					RelativePath="..\..\Source\Application\Win32\part_document.h"
 					>
 				</File>
 				<File
@@ -1416,7 +1416,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\Source\Application\Win32\render_window.cpp"
+					RelativePath="..\..\Source\Application\Win32\part_document.cpp"
 					>
 				</File>
 				<File

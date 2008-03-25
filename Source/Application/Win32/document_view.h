@@ -30,33 +30,56 @@
 #define __DOCUMENT_VIEW_H__
 
 
+/*** Included Headers ***/
+#include "Utility/wutil.h"
+
+
+/*** Local Defines ***/
+//None
+
+
+/*** C++ Class Predefines ***/
+class WCDocument;
+
+
 /***********************************************~***************************************************/
 
 
 class WCDocumentView : public CWnd {
 protected:
-	HDC m_hgldc;		//GDI Device Context
-	HGLRC m_hglRC;		//Rendering context
+	HDC											m_hgldc;											//!< GDI Device Context
+	HGLRC										m_hglRC;											//!< Rendering context
+	WCDocument									*_document;											//!< Associated Wildcat document
 
-	afx_msg void OnPaint();
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg BOOL OnEraseBkgnd(CDC *pDC);
-	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
-	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	DECLARE_MESSAGE_MAP()
+	afx_msg void OnPaint();																			//!< Windows message function
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);											//!< Windows message function
+	afx_msg void OnSize(UINT nType, int cx, int cy);												//!< Windows message function
+	afx_msg BOOL OnEraseBkgnd(CDC *pDC);															//!< Windows message function
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);									//!< Windows message function
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);											//!< Windows message function
+	DECLARE_MESSAGE_MAP()																			//!< Windows message function
 public:
 	//Constructors and Destructors
-	WCDocumentView();
-	virtual ~WCDocumentView();
+	WCDocumentView();																				//!< Default constructor
+	virtual ~WCDocumentView();																		//!< Default destructor
+
+	//Member Access Methods
+	inline WCDocument* Document(void)			{ return this->_document; }							//!< Get the associated document
 
 	//Class Methods
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-	BOOL SetFormat(HDC hdc);
-	void GetGLInfo(void);
-	int DrawGLScene(void);
-	int InitGL(void);
-	void ResizeGLScene(int width, int height);
+	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);													//!< Standard pre-creation method
+	BOOL SetFormat(HDC hdc);																		//!< Set the pixel format
+
+	void OnInitGL(void);
+	void OnSetFocus(void);
+	void OnKillFocus(void);
+	void OnDisplay(void);
+	void OnResize(const int &width, const int &height);
+	void OnIdle(void);
+	void OnMousePress(void);
+	void OnMouseMove(void);
+	void OnKeyPress(void);
+	void OnWindowWillClose(void);
 };
 
 

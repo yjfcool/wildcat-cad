@@ -26,10 +26,11 @@
 ********************************************************************************/
 
 
-#include "Application/Win32/stdafx.h"
-#include "Application/Win32/wildcat_app.h"
+/*** Included Header Files ***/
 #include "Application/Win32/document_view.h"
-#include "Utility/wutil.h"
+#include "Kernel/document.h"
+#include "Kernel/workbench.h"
+#include "Kernel/selection_mode.h"
 
 
 /***********************************************~***************************************************/
@@ -58,28 +59,27 @@ END_MESSAGE_MAP()
 void WCDocumentView::OnPaint()  {
 	// device context for painting
 	CPaintDC dc(this);
-	DrawGLScene();
-	SwapBuffers(m_hgldc);
+	this->OnDisplay();
+	SwapBuffers(this->m_hgldc);
 }
 
 
 int WCDocumentView::OnCreate(LPCREATESTRUCT lpCreateStruct) {
-	m_hgldc = ::GetDC(m_hWnd);
+	this->m_hgldc = ::GetDC(this->m_hWnd);
 	//Check the pixel format
-	if (!SetFormat(m_hgldc)) {
+	if (!SetFormat(this->m_hgldc)) {
 		::MessageBox(::GetFocus(), _T("SetPixelFormat Failed!"), _T("Error"), MB_OK);
 		return -1;
 	}
-	m_hglRC = wglCreateContext(m_hgldc);
-	int i = wglMakeCurrent(m_hgldc, m_hglRC);
-	GetGLInfo();
-	InitGL();
+	this->m_hglRC = wglCreateContext(this->m_hgldc);
+	int i = wglMakeCurrent(this->m_hgldc, this->m_hglRC);
+	this->OnInitGL();
 	return 0;
 }
 
 
 void WCDocumentView::OnSize(UINT nType, int cx, int cy) {
-	ResizeGLScene(cx, cy);
+	this->OnResize(cx, cy);
 }
 
 
@@ -94,27 +94,28 @@ void WCDocumentView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 			exit(0);
 			break;
 		default:
+			this->OnKeyPress();
 			break;
 	}
 }
 
 
 void WCDocumentView::OnMouseMove(UINT nFlags, CPoint point) {
-	std::cout << "Here\n";
+	this->OnMouseMove();
 }
 
 
 /***********************************************~***************************************************/
 
 
-WCDocumentView::WCDocumentView() {
+WCDocumentView::WCDocumentView() : _document(NULL) {
 //	SetTimer();
 }
 
 
 WCDocumentView::~WCDocumentView() {
 	wglMakeCurrent(NULL, NULL);
-	wglDeleteContext(m_hglRC);
+	wglDeleteContext(this->m_hglRC);
 }
 
 
@@ -177,69 +178,84 @@ BOOL WCDocumentView::SetFormat(HDC hdc) {
 }
 
 
-void WCDocumentView::GetGLInfo(void) {
-	CString oglinfo;
-
-	oglinfo = "OpenGL Information\n\nWho: ";
-/*
-	oglinfo += ::glGetString( GL_VENDOR );
-	oglinfo += "\nWhich: ";
-	oglinfo += ::glGetString( GL_RENDERER );
-	oglinfo += "\nVersion: ";
-	oglinfo += ::glGetString( GL_VERSION );
-	oglinfo += "\nExtensions: ";
-	oglinfo += ::glGetString( GL_EXTENSIONS );
-*/
-	AfxMessageBox(oglinfo, MB_ICONINFORMATION);
-}
-
-
-int WCDocumentView::DrawGLScene(void) {
-	// from NeHe's Tutorial 3
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
-	glLoadIdentity();									// Reset The Current Modelview Matrix
-	glTranslated(-1.5,0.0,-6.0);						// Move Left 1.5 Units And Into The Screen 6.0
-	glBegin(GL_TRIANGLES);								// Drawing Using Triangles
-		glColor3d(1.0,0.0,0.0);							// Set The Color To Red
-		glVertex3d( 0.0, 1.0, 0.0);						// Top
-		glColor3d(0.0,1.0,0.0);							// Set The Color To Green
-		glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
-		glColor3d(0.0,0.0,1.0);							// Set The Color To Blue
-		glVertex3d( 1.0,-1.0, 0.0);						// Bottom Right
-	glEnd();											// Finished Drawing The Triangle
-	glTranslated(3.0,0.0,0.0);							// Move Right 3 Units
-	glColor3d(0.5,0.5,1.0);								// Set The Color To Blue One Time Only
-	glBegin(GL_QUADS);									// Draw A Quad
-		glVertex3d(-1.0, 1.0, 0.0);						// Top Left 
-		glVertex3d( 1.0, 1.0, 0.0);						// Top Right
-		glVertex3d( 1.0,-1.0, 0.0);						// Bottom Right
-		glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
-	glEnd();											// Done Drawing The Quad
-														// Keep Going
-	return TRUE;
-}
-
-
-int WCDocumentView::InitGL(void) {
+void WCDocumentView::OnInitGL(void) {
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0.0, 0.0, 0.0, 0.5);
 	glClearDepth(1.0);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
-	return TRUE;
 }
 
 
-void WCDocumentView::ResizeGLScene(int width, int height) {
-	if (height == 0) height = 1;
-	if (width == 0) width = 1;
+void WCDocumentView::OnSetFocus(void) {
+	//Turn on timer for idle
+}
+
+
+void WCDocumentView::OnKillFocus(void) {
+	//Turn off timer for idle
+}
+
+
+void WCDocumentView::OnDisplay(void) {
+	//// from NeHe's Tutorial 3
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
+	//glLoadIdentity();									// Reset The Current Modelview Matrix
+	//glTranslated(-1.5,0.0,-6.0);						// Move Left 1.5 Units And Into The Screen 6.0
+	//glBegin(GL_TRIANGLES);								// Drawing Using Triangles
+	//	glColor3d(1.0,0.0,0.0);							// Set The Color To Red
+	//	glVertex3d( 0.0, 1.0, 0.0);						// Top
+	//	glColor3d(0.0,1.0,0.0);							// Set The Color To Green
+	//	glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
+	//	glColor3d(0.0,0.0,1.0);							// Set The Color To Blue
+	//	glVertex3d( 1.0,-1.0, 0.0);						// Bottom Right
+	//glEnd();											// Finished Drawing The Triangle
+	//glTranslated(3.0,0.0,0.0);							// Move Right 3 Units
+	//glColor3d(0.5,0.5,1.0);								// Set The Color To Blue One Time Only
+	//glBegin(GL_QUADS);									// Draw A Quad
+	//	glVertex3d(-1.0, 1.0, 0.0);						// Top Left 
+	//	glVertex3d( 1.0, 1.0, 0.0);						// Top Right
+	//	glVertex3d( 1.0,-1.0, 0.0);						// Bottom Right
+	//	glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
+	//glEnd();											// Done Drawing The Quad
+
+	//Try drawing the document
+	if (this->_document != NULL) this->_document->ActiveWorkbench()->Render();
+}
+
+
+void WCDocumentView::OnResize(const int &width, const int &height) {
+	int localHeight = height;
+	int localWidth = width;
+	if (localHeight == 0) localHeight = 1;
+	if (localWidth == 0) localWidth = 1;
 	//Reset the viewport
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, localWidth, localHeight);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0, (float)width/(float)height, 0.1, 100.0);
+	gluPerspective(45.0, (float)localWidth/(float)localHeight, 0.1, 100.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+
+void WCDocumentView::OnIdle(void) {
+}
+
+
+void WCDocumentView::OnMousePress(void) {
+}
+
+
+void WCDocumentView::OnMouseMove(void) {
+}
+
+
+void WCDocumentView::OnKeyPress(void) {
+}
+
+
+void WCDocumentView::OnWindowWillClose(void) {
 }
 
 

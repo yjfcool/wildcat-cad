@@ -31,7 +31,7 @@
 
 
 /*** Included Headers ***/
-#include "Application/Win32/document_view.h"
+#include "Utility/wutil.h"
 
 
 /*** Local Defines ***/
@@ -39,7 +39,7 @@
 
 
 /*** C++ Class Predefines ***/
-//class WCDocumentView;
+class WCDocumentView;
 
 
 /***********************************************~***************************************************/
