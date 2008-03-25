@@ -63,7 +63,6 @@ class WCDocument;
 - (void)onDisplay;
 - (void)onResize:(NSSize)size;
 - (void)onIdle;
-- (void)onResize:(NSSize)size;
 - (void)onMousePress:(NSEvent*)theEvent;
 - (void)onMouseRelease:(NSEvent*)theEvent;
 - (void)onScrollWheel:(NSEvent *)theEvent;
