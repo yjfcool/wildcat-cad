@@ -12,9 +12,9 @@
 
 // CMainFrame
 
-IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWnd)
+IMPLEMENT_DYNAMIC(WCMainFrame, CMDIFrameWnd)
 
-BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
+BEGIN_MESSAGE_MAP(WCMainFrame, CMDIFrameWnd)
 	ON_WM_CREATE()
 END_MESSAGE_MAP()
 
@@ -29,17 +29,17 @@ static UINT indicators[] =
 
 // CMainFrame construction/destruction
 
-CMainFrame::CMainFrame()
+WCMainFrame::WCMainFrame()
 {
 	// TODO: add member initialization code here
 }
 
-CMainFrame::~CMainFrame()
+WCMainFrame::~WCMainFrame()
 {
 }
 
 
-int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
+int WCMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CMDIFrameWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
@@ -68,7 +68,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
-BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
+BOOL WCMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
 	if( !CMDIFrameWnd::PreCreateWindow(cs) )
 		return FALSE;
@@ -82,12 +82,12 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 // CMainFrame diagnostics
 
 #ifdef _DEBUG
-void CMainFrame::AssertValid() const
+void WCMainFrame::AssertValid() const
 {
 	CMDIFrameWnd::AssertValid();
 }
 
-void CMainFrame::Dump(CDumpContext& dc) const
+void WCMainFrame::Dump(CDumpContext& dc) const
 {
 	CMDIFrameWnd::Dump(dc);
 }

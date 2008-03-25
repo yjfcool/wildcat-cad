@@ -30,7 +30,7 @@
 #include "Application/Win32/stdafx.h"
 #include "Application/Win32/wildcat_app.h"
 #include "Application/Win32/main_frame.h"
-#include "Application/Win32/document.h"
+#include "Application/Win32/document_frame.h"
 #include "Utility/wutil.h"
 #include "Utility/log_manager.h"
 #include "Utility/log_appenders.h"
@@ -39,7 +39,7 @@
 /***********************************************~***************************************************/
 
 
-void InitApplication(void) {
+void InitializeApplication(void) {
 	//Initialize logger manager
 	WCLogManager::Initialize();
 	//Set root appender to a file appender
@@ -47,10 +47,13 @@ void InitApplication(void) {
 	WCLogManager::RootLogger()->SetAppender(appender);
 	//Initialize xml manager
 	xercesc::XMLPlatformUtils::Initialize();
+	//Initialize OpenGL
+	InitOpenGL();
 }
 
 
 void ShutdownApplication(void) {
+	CLOGGER_INFO(WCLogManager::RootLogger(), "WCWildcatApp::~WCWildcatApp - Shutting Down...");
 	//Terminate the managers
 	xercesc::XMLPlatformUtils::Terminate();
 	WCLogManager::Terminate();
@@ -67,15 +70,22 @@ END_MESSAGE_MAP()
 
 
 WCWildcatApp::WCWildcatApp() {
-	// TODO: add construction code here,
-	// Place all significant initialization in InitInstance
+	//Any other initialization code here...
 }
 
+
+WCWildcatApp::~WCWildcatApp() {
+	//Shutdown the Wildcat infrastructure
+	ShutdownApplication();
+}
 
 WCWildcatApp theApp;
 
 
 BOOL WCWildcatApp::InitInstance() {
+	//Initialize the Wildcat infrastructure
+	InitializeApplication();
+
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
 	// visual styles.  Otherwise, any window creation will fail.
@@ -98,7 +108,7 @@ BOOL WCWildcatApp::InitInstance() {
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 	// To create the main window, this code creates a new frame window
 	// object and then sets it as the application's main window object
-	CMDIFrameWnd* pFrame = new CMainFrame;
+	CMDIFrameWnd* pFrame = new WCMainFrame;
 	if (!pFrame)
 		return FALSE;
 	m_pMainWnd = pFrame;
@@ -106,15 +116,12 @@ BOOL WCWildcatApp::InitInstance() {
 	if (!pFrame->LoadFrame(IDR_MAINFRAME))
 		return FALSE;
 	// try to load shared MDI menus and accelerator table
+
 	//TODO: add additional member variables and load calls for
 	//	additional menu types your application may need
 	HINSTANCE hInst = AfxGetResourceHandle();
 	m_hMDIMenu  = ::LoadMenu(hInst, MAKEINTRESOURCE(IDR_WildcatTYPE));
 	m_hMDIAccel = ::LoadAccelerators(hInst, MAKEINTRESOURCE(IDR_WildcatTYPE));
-
-
-
-
 
 	// The main window has been initialized, so show and update it
 	pFrame->ShowWindow(m_nCmdShow);
@@ -123,8 +130,6 @@ BOOL WCWildcatApp::InitInstance() {
 	return TRUE;
 }
 
-
-// WCWildcatApp message handlers
 
 int WCWildcatApp::ExitInstance()  {
 	//TODO: handle additional resources you may have added
@@ -136,45 +141,14 @@ int WCWildcatApp::ExitInstance()  {
 	return CWinApp::ExitInstance();
 }
 
+
 void WCWildcatApp::OnFileNew()  {
-//	CMainFrame* pFrame = STATIC_DOWNCAST(CMainFrame, m_pMainWnd);
-//	// create a new MDI child window
-//	pFrame->CreateNewChild(
-//		RUNTIME_CLASS(CChildFrame), IDR_WildcatTYPE, m_hMDIMenu, m_hMDIAccel);
+	WCMainFrame* pFrame = STATIC_DOWNCAST(WCMainFrame, m_pMainWnd);
+	// create a new MDI child window
+	pFrame->CreateNewChild( RUNTIME_CLASS(WCDocumentFrame), IDR_WildcatTYPE, m_hMDIMenu, m_hMDIAccel );
 }
 
-/*
-// CAboutDlg dialog used for App About
 
-class CAboutDlg : public CDialog {
-public:
-	CAboutDlg();
-
-// Dialog Data
-	enum { IDD = IDD_ABOUTBOX };
-
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-
-// Implementation
-protected:
-	DECLARE_MESSAGE_MAP()
-};
-
-CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
-{
-}
-
-void CAboutDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-}
-
-BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
-END_MESSAGE_MAP()
-*/
-
-// App command to run the dialog
 void WCWildcatApp::OnAppAbout() {
 //	CAboutDlg aboutDlg;
 //	aboutDlg.DoModal();

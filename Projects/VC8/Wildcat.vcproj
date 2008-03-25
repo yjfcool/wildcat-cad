@@ -1328,11 +1328,15 @@
 				Name="Headers"
 				>
 				<File
-					RelativePath="..\..\Source\Application\Win32\child_frame.h"
+					RelativePath="..\..\Source\Application\Win32\child_view.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\Source\Application\Win32\document.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\document_frame.h"
 					>
 				</File>
 				<File
@@ -1400,7 +1404,7 @@
 				Name="Source"
 				>
 				<File
-					RelativePath="..\..\Source\Application\Win32\child_frame.cpp"
+					RelativePath="..\..\Source\Application\Win32\child_view.cpp"
 					>
 				</File>
 				<File
@@ -1424,6 +1428,10 @@
 							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\document_frame.cpp"
+					>
 				</File>
 				<File
 					RelativePath="..\..\Source\Application\keymap.cpp"
@@ -1452,18 +1460,6 @@
 				<File
 					RelativePath="..\..\Source\Application\Win32\toolbar_win32.cpp"
 					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Application\Win32\wildcat.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\Source\Application\Win32\wildcat_app.cpp"
