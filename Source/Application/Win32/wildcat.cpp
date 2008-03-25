@@ -27,8 +27,8 @@
 
 
 /*** Included Header Files ***/
-#include "utility/wutil.h"
-#include "utility/log_manager.h"
+#include "Utility/wutil.h"
+#include "Utility/log_manager.h"
 #include "Utility/log_appenders.h"
 
 

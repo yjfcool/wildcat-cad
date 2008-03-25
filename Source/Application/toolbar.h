@@ -58,9 +58,8 @@ class WCToolbarManager;
 class WCToolbarButton {
 private:
 	WCToolbarButton_Bridge						*_bridge;											//!< Bridge to platform indep.
-	//Deny Acces
+	//Hidden Constructor
 	WCToolbarButton();																				//!< Deny access to default constructor
-
 	//Friend Classes
 	friend class WCToolbar;																			//!< Declare toolbar to be a friend
 public:

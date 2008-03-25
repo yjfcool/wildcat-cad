@@ -207,7 +207,7 @@ void WCToolbarManager::ParseManifest(std::string manifest, std::string directory
 			//Add buttons to toolbars
 			buttonsList = toolbar->getElementsByTagName(xmlButton);
 			//Loop through all buttons
-			for (int buttonIndex=0; buttonIndex < buttonsList->getLength(); buttonIndex++) {
+			for (unsigned int buttonIndex=0; buttonIndex < buttonsList->getLength(); buttonIndex++) {
 				//Get the value node
 				tmpNode = buttonsList->item(buttonIndex)->getFirstChild();
 				//Find the button

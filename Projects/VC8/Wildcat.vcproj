@@ -20,6 +20,7 @@
 			OutputDirectory="..\..\Build\Win32"
 			IntermediateDirectory="..\..\Build\Win32"
 			ConfigurationType="1"
+			UseOfMFC="2"
 			CharacterSet="1"
 			>
 			<Tool
@@ -42,11 +43,11 @@
 				Optimization="0"
 				InlineFunctionExpansion="0"
 				AdditionalIncludeDirectories="&quot;..\..\Dependencies\xerces-c-src_2_8_0\include&quot;;..\..\Source\Workbenches;..\..\Source"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_CONSOLE;WIN32;__WIN32__;NDEBUG;_WINDOWS;XML_LIBRARY"
-				StringPooling="true"
+				PreprocessorDefinitions="WIN32;__WIN32__;_WINDOWS;XML_LIBRARY"
+				StringPooling="false"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				EnableEnhancedInstructionSet="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -68,7 +69,7 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;..\..\Dependencies\xerces-c-src_2_8_0\lib&quot;"
 				IgnoreAllDefaultLibraries="false"
-				IgnoreDefaultLibraryNames=""
+				IgnoreDefaultLibraryNames="LIBCMT"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				ImportLibrary=""
@@ -1309,6 +1310,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Source\Utility\utility_win32.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Source\Utility\vector.cpp"
 					>
 				</File>
@@ -1323,6 +1328,14 @@
 				Name="Headers"
 				>
 				<File
+					RelativePath="..\..\Source\Application\Win32\child_frame.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\document.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Source\Application\Win32\glext.h"
 					>
 				</File>
@@ -1331,7 +1344,51 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Source\Application\keymap.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\main_frame.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\render_window.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\resource.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\stdafx.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\toolbar.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\toolbar_bridge.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\toolbar_manager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\toolbar_win32.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Source\Application\Win32\wglext.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\wildcat.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\wildcat_app.h"
 					>
 				</File>
 				<File
@@ -1343,7 +1400,73 @@
 				Name="Source"
 				>
 				<File
+					RelativePath="..\..\Source\Application\Win32\child_frame.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\document.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(InputName)1.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(InputName)1.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\keymap.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\main_frame.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\render_window.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\toolbar.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\toolbar_bridge.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\toolbar_manager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\toolbar_win32.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Source\Application\Win32\wildcat.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\wildcat_app.cpp"
 					>
 				</File>
 				<File
@@ -1354,6 +1477,22 @@
 			<Filter
 				Name="Resources"
 				>
+				<File
+					RelativePath="..\..\Source\Application\Win32\res\Toolbar.bmp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\res\Wildcat.ico"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\Wildcat.rc"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\res\Wildcat.rc2"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -1776,6 +1915,10 @@
 				</File>
 				<File
 					RelativePath="..\..\Source\Scene\text.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Scene\text_win32.cpp"
 					>
 				</File>
 				<File
