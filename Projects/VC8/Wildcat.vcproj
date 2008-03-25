@@ -1328,15 +1328,11 @@
 				Name="Headers"
 				>
 				<File
-					RelativePath="..\..\Source\Application\Win32\child_view.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Application\Win32\document.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\Source\Application\Win32\document_frame.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\document_view.h"
 					>
 				</File>
 				<File
@@ -1404,33 +1400,11 @@
 				Name="Source"
 				>
 				<File
-					RelativePath="..\..\Source\Application\Win32\child_view.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Application\Win32\document.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)\$(InputName)1.obj"
-							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)\$(InputName)1.obj"
-							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath="..\..\Source\Application\Win32\document_frame.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\document_view.cpp"
 					>
 				</File>
 				<File

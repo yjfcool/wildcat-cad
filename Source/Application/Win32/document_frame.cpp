@@ -42,7 +42,8 @@ BEGIN_MESSAGE_MAP(WCDocumentFrame, CMDIChildWnd)
 END_MESSAGE_MAP()
 
 
-WCDocumentFrame::WCDocumentFrame() {
+WCDocumentFrame::WCDocumentFrame() : m_wndView(NULL) {
+	m_wndView = new WCDocumentView();
 	// TODO: add member initialization code here
 }
 
@@ -80,30 +81,29 @@ void WCDocumentFrame::OnFileClose()  {
 }
 
 int WCDocumentFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)  {
+	//Call to super OnCreate()
 	if (CMDIChildWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
 	
 	// create a view to occupy the client area of the frame
-	if (!m_wndView.Create(NULL, NULL, AFX_WS_DEFAULT_VIEW, 
-		CRect(0, 0, 0, 0), this, AFX_IDW_PANE_FIRST, NULL))
-	{
+	if (!m_wndView->Create(NULL, NULL, AFX_WS_DEFAULT_VIEW, CRect(0, 0, 0, 0), this, AFX_IDW_PANE_FIRST, NULL)) {
 		TRACE0("Failed to create view window\n");
 		return -1;
 	}
-
+	//Make sure all is good
 	return 0;
 }
 
 
 void WCDocumentFrame::OnSetFocus(CWnd* pOldWnd) {
 	CMDIChildWnd::OnSetFocus(pOldWnd);
-	m_wndView.SetFocus();
+	m_wndView->SetFocus();
 }
 
 
 BOOL WCDocumentFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo) {
 	// let the view have first crack at the command
-	if (m_wndView.OnCmdMsg(nID, nCode, pExtra, pHandlerInfo))
+	if (m_wndView->OnCmdMsg(nID, nCode, pExtra, pHandlerInfo))
 		return TRUE;
 	
 	// otherwise, do default handling

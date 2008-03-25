@@ -31,7 +31,7 @@
 
 
 /*** Included Headers ***/
-#include "Application/Win32/child_view.h"
+#include "Application/Win32/document_view.h"
 
 
 /*** Local Defines ***/
@@ -39,7 +39,7 @@
 
 
 /*** C++ Class Predefines ***/
-//None
+//class WCDocumentView;
 
 
 /***********************************************~***************************************************/
@@ -48,6 +48,8 @@
 class WCDocumentFrame : public CMDIChildWnd {
 	DECLARE_DYNCREATE(WCDocumentFrame)
 protected:
+	WCDocumentView								*m_wndView;											//!< Document view window
+
 	afx_msg void OnFileClose();
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
@@ -57,7 +59,7 @@ public:
 	WCDocumentFrame();
 	virtual ~WCDocumentFrame();
 
-	CChildView m_wndView;
+//	WCDocumentView m_wndView;
 
 	// Overrides
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
