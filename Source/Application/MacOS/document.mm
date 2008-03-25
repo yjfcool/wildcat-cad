@@ -145,8 +145,7 @@
 		[[_renderWindow statusText] setObjectValue:newStatus];
 	}
 	//Release the string
-	[newStatus release];
-
+	[newStatus release]
 }
 
 
