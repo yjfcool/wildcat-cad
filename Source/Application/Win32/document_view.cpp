@@ -219,27 +219,40 @@ void WCDocumentView::OnDisplay(void) {
 	//	glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
 	//glEnd();											// Done Drawing The Quad
 
+	//Make sure we have context
+	//...
+	//Update the status bar if needed
+	//...
 	//Try drawing the document
-	if (this->_document != NULL) this->_document->ActiveWorkbench()->Render();
+	this->_document->ActiveWorkbench()->Render();
 }
 
 
 void WCDocumentView::OnResize(const int &width, const int &height) {
-	int localHeight = height;
-	int localWidth = width;
-	if (localHeight == 0) localHeight = 1;
-	if (localWidth == 0) localWidth = 1;
-	//Reset the viewport
-	glViewport(0, 0, localWidth, localHeight);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45.0, (float)localWidth/(float)localHeight, 0.1, 100.0);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	//int localHeight = height;
+	//int localWidth = width;
+	//if (localHeight == 0) localHeight = 1;
+	//if (localWidth == 0) localWidth = 1;
+	////Reset the viewport
+	//glViewport(0, 0, localWidth, localHeight);
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
+	//gluPerspective(45.0, (float)localWidth/(float)localHeight, 0.1, 100.0);
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity();
+
+	//Set the window width and height parameters
+	this->_document->ActiveWorkbench()->OnReshape(width, height);
+	//Render the doc if it is dirty
+	if (this->_document->IsVisualDirty()) this->OnDisplay();
 }
 
 
 void WCDocumentView::OnIdle(void) {
+	//Call idle method
+	this->_document->ActiveWorkbench()->OnIdle();
+	//Render the doc if it is dirty
+	if (this->_document->IsVisualDirty()) this->OnDisplay();
 }
 
 
