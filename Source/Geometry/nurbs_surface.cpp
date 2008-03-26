@@ -1593,28 +1593,16 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 			if (i < numArcs) { P0 = P2; T0 = T2; }
 		}
 	}
-	//Delete sines and cosines arrays
-	delete cosines;
-	delete sines;
 
 	//Convert Pij into vector
 	std::vector<WCVector4> controlPoints;
 	for (WPUInt j=0; j<numCPV; j++)
 		for (int i=numCPU-1; i>=0; i--)
 			controlPoints.push_back( Pij[i][j] );
-	//Delete Pij
-	for (WPUInt i=0; i<numCPU; i++) delete Pij[i];
-	delete Pij;
 
 	//Convert knotPoints to vector
 	std::vector<WPFloat> knotPointsU;
 	for (WPUInt i=0; i<numKPU; i++) knotPointsU.push_back(knotPoints[i]);
-
-	//Delete arrays
-	delete cosines;
-	delete sines;
-	for (WPUInt i=0; i<numCPU; i++) delete Pij[i];
-	delete Pij;
 
 /*** DEBUG ***
 	std::cout << "DegreeU: 2\n";
@@ -1634,6 +1622,13 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 	//Create revolution surface
 	WCNurbsSurface *surface = new WCNurbsSurface(context, 2, curveDegree, numCPU, numCPV, controlPoints,
 		WCNurbsMode::Custom(), curveMode, knotPointsU, curveKP);
+
+	//Delete arrays
+	delete cosines;
+	delete sines;
+//	for (WPUInt i=0; i<numCPU; i++) delete Pij[i];
+	delete Pij;
+	//Return the new surface
 	return surface;
 }
 
