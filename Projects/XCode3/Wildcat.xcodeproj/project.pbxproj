@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		580873CC0D9A7C3600038336 /* wildcat.icns in Resources */ = {isa = PBXBuildFile; fileRef = 580873CB0D9A7C3600038336 /* wildcat.icns */; };
 		585258050D7F173A00A0C6C8 /* centeredParallelogram32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585257FD0D7F173A00A0C6C8 /* centeredParallelogram32.tiff */; };
 		585258060D7F173A00A0C6C8 /* centeredRect32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585257FE0D7F173A00A0C6C8 /* centeredRect32.tiff */; };
 		585258070D7F173A00A0C6C8 /* hexagon32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585257FF0D7F173A00A0C6C8 /* hexagon32.tiff */; };
@@ -315,6 +316,7 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		580873CB0D9A7C3600038336 /* wildcat.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = wildcat.icns; path = ../../Source/Application/MacOS/wildcat.icns; sourceTree = SOURCE_ROOT; };
 		585257FD0D7F173A00A0C6C8 /* centeredParallelogram32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = centeredParallelogram32.tiff; path = ../../Source/Resources/centeredParallelogram32.tiff; sourceTree = SOURCE_ROOT; };
 		585257FE0D7F173A00A0C6C8 /* centeredRect32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = centeredRect32.tiff; path = ../../Source/Resources/centeredRect32.tiff; sourceTree = SOURCE_ROOT; };
 		585257FF0D7F173A00A0C6C8 /* hexagon32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = hexagon32.tiff; path = ../../Source/Resources/hexagon32.tiff; sourceTree = SOURCE_ROOT; };
@@ -1871,6 +1873,7 @@
 		585F368D0D68B64500673AE6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				580873CB0D9A7C3600038336 /* wildcat.icns */,
 				585F36900D68B66E00673AE6 /* Credits.rtf */,
 				585F36920D68B66E00673AE6 /* InfoPlist.strings */,
 				585F36940D68B66E00673AE6 /* MainMenu.nib */,
@@ -2838,6 +2841,7 @@
 				5852580B0D7F173A00A0C6C8 /* orientedRect32.tiff in Resources */,
 				5852580C0D7F173A00A0C6C8 /* parallelogram32.tiff in Resources */,
 				5852581C0D7F179C00A0C6C8 /* keyhole32.tiff in Resources */,
+				580873CC0D9A7C3600038336 /* wildcat.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

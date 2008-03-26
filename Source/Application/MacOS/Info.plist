@@ -32,7 +32,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
-	<string></string>
+	<string>wildcat</string>
 	<key>CFBundleIdentifier</key>
 	<string>org.CerroKai.Wildcat</string>
 	<key>CFBundleInfoDictionaryVersion</key>
