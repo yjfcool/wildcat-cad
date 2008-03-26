@@ -43,12 +43,11 @@ void InitializeApplication(void) {
 	//Initialize logger manager
 	WCLogManager::Initialize();
 	//Set root appender to a file appender
-	WCFileAppender *appender = new WCFileAppender("wildcat.log");
+	WCFileAppender *appender = new WCFileAppender("wildcat.log", false);
 	WCLogManager::RootLogger()->SetAppender(appender);
+	CLOGGER_INFO(WCLogManager::RootLogger(), "WCWildcatApp::WCWildcatApp - Starting up...");
 	//Initialize xml manager
 	xercesc::XMLPlatformUtils::Initialize();
-	//Initialize OpenGL
-	InitOpenGL();
 }
 
 

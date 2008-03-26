@@ -33,7 +33,7 @@
 #include "Kernel/selection_mode.h"
 
 
-/***********************************************~***************************************************/
+/***********************************************~***************************************************
 
 
 BEGIN_MESSAGE_MAP(WCDocumentView, CWnd)
@@ -205,53 +205,62 @@ void WCDocumentView::OnKillFocus(void) {
 
 
 void WCDocumentView::OnDisplay(void) {
-	// from NeHe's Tutorial 3
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
-	glLoadIdentity();									// Reset The Current Modelview Matrix
-	glTranslated(-1.5,0.0,-6.0);						// Move Left 1.5 Units And Into The Screen 6.0
-	glBegin(GL_TRIANGLES);								// Drawing Using Triangles
-		glColor3d(1.0,0.0,0.0);							// Set The Color To Red
-		glVertex3d( 0.0, 1.0, 0.0);						// Top
-		glColor3d(0.0,1.0,0.0);							// Set The Color To Green
-		glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
-		glColor3d(0.0,0.0,1.0);							// Set The Color To Blue
-		glVertex3d( 1.0,-1.0, 0.0);						// Bottom Right
-	glEnd();											// Finished Drawing The Triangle
-	glTranslated(3.0,0.0,0.0);							// Move Right 3 Units
-	glColor3d(0.5,0.5,1.0);								// Set The Color To Blue One Time Only
-	glBegin(GL_QUADS);									// Draw A Quad
-		glVertex3d(-1.0, 1.0, 0.0);						// Top Left 
-		glVertex3d( 1.0, 1.0, 0.0);						// Top Right
-		glVertex3d( 1.0,-1.0, 0.0);						// Bottom Right
-		glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
-	glEnd();											// Done Drawing The Quad
+	//// from NeHe's Tutorial 3
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
+	//glLoadIdentity();									// Reset The Current Modelview Matrix
+	//glTranslated(-1.5,0.0,-6.0);						// Move Left 1.5 Units And Into The Screen 6.0
+	//glBegin(GL_TRIANGLES);								// Drawing Using Triangles
+	//	glColor3d(1.0,0.0,0.0);							// Set The Color To Red
+	//	glVertex3d( 0.0, 1.0, 0.0);						// Top
+	//	glColor3d(0.0,1.0,0.0);							// Set The Color To Green
+	//	glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
+	//	glColor3d(0.0,0.0,1.0);							// Set The Color To Blue
+	//	glVertex3d( 1.0,-1.0, 0.0);						// Bottom Right
+	//glEnd();											// Finished Drawing The Triangle
+	//glTranslated(3.0,0.0,0.0);							// Move Right 3 Units
+	//glColor3d(0.5,0.5,1.0);								// Set The Color To Blue One Time Only
+	//glBegin(GL_QUADS);									// Draw A Quad
+	//	glVertex3d(-1.0, 1.0, 0.0);						// Top Left 
+	//	glVertex3d( 1.0, 1.0, 0.0);						// Top Right
+	//	glVertex3d( 1.0,-1.0, 0.0);						// Bottom Right
+	//	glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
+	//glEnd();											// Done Drawing The Quad
+
+	//Device context for painting
+	CPaintDC dc(this);
 
 	//Make sure we have context
-	//...
+	BOOL retVal = wglMakeCurrent(this->m_hgldc, this->m_hglRC);
+	if (retVal == FALSE) {
+		::MessageBox(::GetFocus(), _T("WCDocumentView::OnDisplay - MakeCurrent Failed!"), _T("Error"), MB_OK);
+		return;
+	}
 	//Update the status bar if needed
 	//...
 	//Try drawing the document
-//	this->_document->ActiveWorkbench()->Render();
+	this->_document->ActiveWorkbench()->Render();
+	//Swap the buffers
+	SwapBuffers(this->m_hgldc);
 }
 
 
 void WCDocumentView::OnResize(const int &width, const int &height) {
-	int localHeight = height;
-	int localWidth = width;
-	if (localHeight == 0) localHeight = 1;
-	if (localWidth == 0) localWidth = 1;
-	//Reset the viewport
-	glViewport(0, 0, localWidth, localHeight);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45.0, (float)localWidth/(float)localHeight, 0.1, 100.0);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	//int localHeight = height;
+	//int localWidth = width;
+	//if (localHeight == 0) localHeight = 1;
+	//if (localWidth == 0) localWidth = 1;
+	////Reset the viewport
+	//glViewport(0, 0, localWidth, localHeight);
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
+	//gluPerspective(45.0, (float)localWidth/(float)localHeight, 0.1, 100.0);
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity();
 
 	//Set the window width and height parameters
-//	this->_document->ActiveWorkbench()->OnReshape(width, height);
+	this->_document->ActiveWorkbench()->OnReshape(width, height);
 	//Render the doc if it is dirty
-//	if (this->_document->IsVisualDirty()) this->OnDisplay();
+	if (this->_document->IsVisualDirty()) this->OnDisplay();
 }
 
 
@@ -264,18 +273,25 @@ void WCDocumentView::OnIdle(void) {
 
 
 void WCDocumentView::OnMousePress(void) {
+	std::cout << "Mouse Press\n";
 }
 
 
-void WCDocumentView::OnMouseMove(void) {
+void WCDocumentView::OnMouseMovement(const int &x, const int &y) {
+	//Pass message on to document
+	this->_document->ActiveWorkbench()->OnMouseMove(x, y);
+	//Render the doc if it is dirty
+	if (this->_document->IsVisualDirty()) this->OnDisplay();
 }
 
 
 void WCDocumentView::OnKeyPress(void) {
+	std::cout << "Key press\n";
 }
 
 
 void WCDocumentView::OnWindowWillClose(void) {
+	std::cout << "Window will close\n";
 }
 
 

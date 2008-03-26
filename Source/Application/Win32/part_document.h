@@ -49,12 +49,12 @@ class WCPartDocument : public WCDocumentView {
 protected:
 	WCPart										*_part;												//!< Associated Wildcat part
 
-//	afx_msg void OnPaint();																			//!< Windows message function
+	afx_msg void OnPaint();																			//!< Windows message function
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);											//!< Windows message function
-//	afx_msg void OnSize(UINT nType, int cx, int cy);												//!< Windows message function
-//	afx_msg BOOL OnEraseBkgnd(CDC *pDC);															//!< Windows message function
-//	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);									//!< Windows message function
-//	afx_msg void OnMouseMove(UINT nFlags, CPoint point);											//!< Windows message function
+	afx_msg void OnSize(UINT nType, int cx, int cy);												//!< Windows message function
+	afx_msg BOOL OnEraseBkgnd(CDC *pDC);															//!< Windows message function
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);									//!< Windows message function
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);											//!< Windows message function
 	DECLARE_MESSAGE_MAP()																			//!< Windows message function
 public:
 	//Constructors and Destructors
@@ -63,9 +63,6 @@ public:
 
 	//Member Access Methods
 	inline WCPart* Part(void)					{ return this->_part; }								//!< Get the associated part
-
-	//Class Methods
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);													//!< Standard pre-creation method
 };
 
 

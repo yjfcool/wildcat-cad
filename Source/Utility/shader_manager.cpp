@@ -39,7 +39,14 @@ GLuint CompileGLSLShader(GLenum type, const char* shader) {
 	//Create the shader object
 	GLuint shader_id = glCreateShader(type);
 	//Check to make sure you actually created it
-    if (!shader_id) { CLOGGER_ERROR(WCLogManager::RootLogger(), "ComplieGLSLShader - No shader object created"); return 0; }
+    if (!shader_id) {
+		//Check for GL errors
+		GLenum glErr = glGetError();
+		if (glErr != GL_NO_ERROR) 
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "ComplieGLSLShader - Unspecified GL Errors:" << glErr);
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "ComplieGLSLShader - No shader object created"); 
+		return 0;
+	}
 	glShaderSource(shader_id, 1, &shader, NULL);
 	glCompileShader(shader_id);
 	GLint status = 0;
@@ -126,7 +133,7 @@ WSShader* WCShaderManager::ParseShader(xercesc::DOMElement *element, const std::
 	obj->_id = CompileGLSLShaderFromFile(obj->_type, obj->_filename.c_str());
 	//Validate obj
 	if (obj->_id == 0) { 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::ParseShader - " << name << " did not compile."); 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::ParseShader - " << name << "(" << type << ": " << filename << ") did not compile."); 
 		delete obj;
 		return NULL;
 	}

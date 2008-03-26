@@ -35,7 +35,7 @@
 
 
 /*** Locally Defined Values ***/
-#define FILEAPPENDER_FLAGS		std::ios::out | std::ios::ate | std::ios::app
+//None
 
 
 /*** Class PreDefines ***/
@@ -75,7 +75,7 @@ private:
 	std::ofstream							_stream;												//!< File stream object
 	int										_count[6];												//!< Count of logging messages at each level
 public:
-	WCFileAppender(const std::string &fileName);													//!< Primary constructor
+	WCFileAppender(const std::string &fileName, const bool &append=true);							//!< Primary constructor
 	~WCFileAppender();																				//!< Default destructor
 	void ForcedLog(const int &level, const std::string &msg, const int &line,						//!< Required logging method
 												const std::string &file);

@@ -30,6 +30,11 @@
 #include "Utility/log_appenders.h"
 
 
+/*** Locall Defined Values ***/
+#define FILEAPPENDER_APPENDFLAGS				std::ios::out | std::ios::ate | std::ios::app
+#define FILEAPPENDER_NEWFLAGS					std::ios::out | std::ios::ate | std::ios::trunc
+
+
 /***********************************************~***************************************************/
 
 
@@ -73,9 +78,12 @@ void WCConsoleAppender::ForcedLog(const int &level, const std::string &msg, cons
 /***********************************************~***************************************************/
 
 
-WCFileAppender::WCFileAppender(const std::string &fileName) {
-	//Open a ifstream with the given filename
-	this->_stream.open(fileName.c_str(), FILEAPPENDER_FLAGS);
+WCFileAppender::WCFileAppender(const std::string &fileName, const bool &append) {
+	//Open a ifstream with the given filename (in either append or new mode)
+	if (append)
+		this->_stream.open(fileName.c_str(), FILEAPPENDER_APPENDFLAGS);
+	else
+		this->_stream.open(fileName.c_str(), FILEAPPENDER_NEWFLAGS);
 	//Make sure the stream is open for writing
 	if (!this->_stream) {
 		std::cerr << "WCFileAppender::WCFileAppender - Error: Not able to open file: " << fileName << " for output.\n";

@@ -37,12 +37,12 @@
 
 
 BEGIN_MESSAGE_MAP(WCPartDocument, CWnd)
-//	ON_WM_PAINT()
+	ON_WM_PAINT()
 	ON_WM_CREATE()
-//	ON_WM_SIZE()
-//	ON_WM_ERASEBKGND()
-//	ON_WM_KEYDOWN()
-//	ON_WM_MOUSEMOVE()
+	ON_WM_SIZE()
+	ON_WM_ERASEBKGND()
+	ON_WM_KEYDOWN()
+	ON_WM_MOUSEMOVE()
 //	ON_WM_SETFOCUS()
 //	ON_WM_KILLFOCUS()
 //	ON_WM_KEYUP()
@@ -56,14 +56,12 @@ BEGIN_MESSAGE_MAP(WCPartDocument, CWnd)
 END_MESSAGE_MAP()
 
 
-/*
+
 void WCPartDocument::OnPaint()  {
-	// device context for painting
-	CPaintDC dc(this);
+	//Call to super on display
 	this->OnDisplay();
-	SwapBuffers(this->m_hgldc);
 }
-*/
+
 
 int WCPartDocument::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	//Call to super OnCreate
@@ -82,7 +80,7 @@ int WCPartDocument::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	return 0;
 }
 
-/*
+
 void WCPartDocument::OnSize(UINT nType, int cx, int cy) {
 	this->OnResize(cx, cy);
 }
@@ -106,7 +104,8 @@ void WCPartDocument::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 
 
 void WCPartDocument::OnMouseMove(UINT nFlags, CPoint point) {
-	this->OnMouseMove();
+	//Pass mouse movement message on to super
+	this->OnMouseMovement(point.x, point.y);
 }
 
 
@@ -119,11 +118,8 @@ WCPartDocument::WCPartDocument() : ::WCDocumentView(), _part(NULL) {
 
 
 WCPartDocument::~WCPartDocument() {
-}
-
-
-BOOL WCPartDocument::PreCreateWindow(CREATESTRUCT& cs) {
-	return ::WCDocumentView::PreCreateWindow(cs);
+	//Delete part if it exists
+	if (this->_part != NULL) delete this->_part;
 }
 
 
