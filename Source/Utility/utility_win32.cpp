@@ -47,7 +47,7 @@ std::string _ResourceDirectory(void) {
 //GetModuleFileName
 
 //	LPSTR pathString = System::Environment::CurrentDirectory::get();
-	return "C:\\Documents and Settings\\ghemingway\\My Documents\\Wildcat\\Source\\Resources";
+	return "C:\\Documents and Settings\\ghemingway\\My Documents\\Wildcat\\Build\\Win32\\Resources";
 }
 
  

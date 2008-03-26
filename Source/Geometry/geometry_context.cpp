@@ -474,8 +474,8 @@ void WCGeometryContext::StopSurface(void) {
 
 WCGeometryContext::WCGeometryContext(const WPGLContext &context, WCShaderManager *shaderManager) : _glContext(context), _shaderManager(shaderManager) {
 	//Check to make sure context and shader manager are valid
-	if ((this->_shaderManager == NULL) || (this->_glContext == NULL)) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::WCGeometryContext - NULL context or Shader Manager passed."); 
+	if (this->_shaderManager == NULL) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::WCGeometryContext - NULL Shader Manager passed."); 
 		return;
 	}
 	//Initialize all NURBS curve parameters

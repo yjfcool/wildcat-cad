@@ -52,7 +52,7 @@ protected:
 	WCDocument									*_document;											//!< Associated Wildcat document
 
 	afx_msg void OnPaint();																			//!< Windows message function
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);											//!< Windows message function
+//	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);											//!< Windows message function
 	afx_msg void OnSize(UINT nType, int cx, int cy);												//!< Windows message function
 	afx_msg BOOL OnEraseBkgnd(CDC *pDC);															//!< Windows message function
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);									//!< Windows message function

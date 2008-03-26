@@ -38,7 +38,7 @@
 
 BEGIN_MESSAGE_MAP(WCDocumentView, CWnd)
 	ON_WM_PAINT()
-	ON_WM_CREATE()
+//	ON_WM_CREATE()
 	ON_WM_SIZE()
 	ON_WM_ERASEBKGND()
 	ON_WM_KEYDOWN()
@@ -64,18 +64,12 @@ void WCDocumentView::OnPaint()  {
 }
 
 
-int WCDocumentView::OnCreate(LPCREATESTRUCT lpCreateStruct) {
-	this->m_hgldc = ::GetDC(this->m_hWnd);
-	//Check the pixel format
-	if (!SetFormat(this->m_hgldc)) {
-		::MessageBox(::GetFocus(), _T("SetPixelFormat Failed!"), _T("Error"), MB_OK);
-		return -1;
-	}
-	this->m_hglRC = wglCreateContext(this->m_hgldc);
-	int i = wglMakeCurrent(this->m_hgldc, this->m_hglRC);
-	this->OnInitGL();
-	return 0;
-}
+//int WCDocumentView::OnCreate(LPCREATESTRUCT lpCreateStruct) {
+//	//Just call OnInitGL
+//	this->OnInitGL();
+//	//All good for now
+//	return 0;
+//}
 
 
 void WCDocumentView::OnSize(UINT nType, int cx, int cy) {
@@ -101,7 +95,7 @@ void WCDocumentView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 
 
 void WCDocumentView::OnMouseMove(UINT nFlags, CPoint point) {
-	this->OnMouseMove();
+	::MessageBox(::GetFocus(), _T("Mouse Moved!"), _T("Error"), MB_OK);
 }
 
 
@@ -179,11 +173,24 @@ BOOL WCDocumentView::SetFormat(HDC hdc) {
 
 
 void WCDocumentView::OnInitGL(void) {
-	glShadeModel(GL_SMOOTH);
-	glClearColor(0.0, 0.0, 0.0, 0.5);
-	glClearDepth(1.0);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
+	//glShadeModel(GL_SMOOTH);
+	//glClearColor(0.0, 0.0, 0.0, 0.5);
+	//glClearDepth(1.0);
+	//glEnable(GL_DEPTH_TEST);
+	//glDepthFunc(GL_LEQUAL);
+
+	this->m_hgldc = ::GetDC(this->m_hWnd);
+	//Check the pixel format
+	if (!SetFormat(this->m_hgldc)) {
+		::MessageBox(::GetFocus(), _T("SetPixelFormat Failed!"), _T("Error"), MB_OK);
+		return;
+	}
+	this->m_hglRC = wglCreateContext(this->m_hgldc);
+	BOOL retVal = wglMakeCurrent(this->m_hgldc, this->m_hglRC);
+	if (retVal == FALSE) {
+		::MessageBox(::GetFocus(), _T("MakeCurrent Failed!"), _T("Error"), MB_OK);
+		return;
+	}
 }
 
 
@@ -198,53 +205,53 @@ void WCDocumentView::OnKillFocus(void) {
 
 
 void WCDocumentView::OnDisplay(void) {
-	//// from NeHe's Tutorial 3
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
-	//glLoadIdentity();									// Reset The Current Modelview Matrix
-	//glTranslated(-1.5,0.0,-6.0);						// Move Left 1.5 Units And Into The Screen 6.0
-	//glBegin(GL_TRIANGLES);								// Drawing Using Triangles
-	//	glColor3d(1.0,0.0,0.0);							// Set The Color To Red
-	//	glVertex3d( 0.0, 1.0, 0.0);						// Top
-	//	glColor3d(0.0,1.0,0.0);							// Set The Color To Green
-	//	glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
-	//	glColor3d(0.0,0.0,1.0);							// Set The Color To Blue
-	//	glVertex3d( 1.0,-1.0, 0.0);						// Bottom Right
-	//glEnd();											// Finished Drawing The Triangle
-	//glTranslated(3.0,0.0,0.0);							// Move Right 3 Units
-	//glColor3d(0.5,0.5,1.0);								// Set The Color To Blue One Time Only
-	//glBegin(GL_QUADS);									// Draw A Quad
-	//	glVertex3d(-1.0, 1.0, 0.0);						// Top Left 
-	//	glVertex3d( 1.0, 1.0, 0.0);						// Top Right
-	//	glVertex3d( 1.0,-1.0, 0.0);						// Bottom Right
-	//	glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
-	//glEnd();											// Done Drawing The Quad
+	// from NeHe's Tutorial 3
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
+	glLoadIdentity();									// Reset The Current Modelview Matrix
+	glTranslated(-1.5,0.0,-6.0);						// Move Left 1.5 Units And Into The Screen 6.0
+	glBegin(GL_TRIANGLES);								// Drawing Using Triangles
+		glColor3d(1.0,0.0,0.0);							// Set The Color To Red
+		glVertex3d( 0.0, 1.0, 0.0);						// Top
+		glColor3d(0.0,1.0,0.0);							// Set The Color To Green
+		glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
+		glColor3d(0.0,0.0,1.0);							// Set The Color To Blue
+		glVertex3d( 1.0,-1.0, 0.0);						// Bottom Right
+	glEnd();											// Finished Drawing The Triangle
+	glTranslated(3.0,0.0,0.0);							// Move Right 3 Units
+	glColor3d(0.5,0.5,1.0);								// Set The Color To Blue One Time Only
+	glBegin(GL_QUADS);									// Draw A Quad
+		glVertex3d(-1.0, 1.0, 0.0);						// Top Left 
+		glVertex3d( 1.0, 1.0, 0.0);						// Top Right
+		glVertex3d( 1.0,-1.0, 0.0);						// Bottom Right
+		glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
+	glEnd();											// Done Drawing The Quad
 
 	//Make sure we have context
 	//...
 	//Update the status bar if needed
 	//...
 	//Try drawing the document
-	this->_document->ActiveWorkbench()->Render();
+//	this->_document->ActiveWorkbench()->Render();
 }
 
 
 void WCDocumentView::OnResize(const int &width, const int &height) {
-	//int localHeight = height;
-	//int localWidth = width;
-	//if (localHeight == 0) localHeight = 1;
-	//if (localWidth == 0) localWidth = 1;
-	////Reset the viewport
-	//glViewport(0, 0, localWidth, localHeight);
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
-	//gluPerspective(45.0, (float)localWidth/(float)localHeight, 0.1, 100.0);
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
+	int localHeight = height;
+	int localWidth = width;
+	if (localHeight == 0) localHeight = 1;
+	if (localWidth == 0) localWidth = 1;
+	//Reset the viewport
+	glViewport(0, 0, localWidth, localHeight);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(45.0, (float)localWidth/(float)localHeight, 0.1, 100.0);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
 	//Set the window width and height parameters
-	this->_document->ActiveWorkbench()->OnReshape(width, height);
+//	this->_document->ActiveWorkbench()->OnReshape(width, height);
 	//Render the doc if it is dirty
-	if (this->_document->IsVisualDirty()) this->OnDisplay();
+//	if (this->_document->IsVisualDirty()) this->OnDisplay();
 }
 
 

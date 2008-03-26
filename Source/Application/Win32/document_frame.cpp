@@ -28,6 +28,7 @@
 
 #include "Application/Win32/document_frame.h"
 #include "Application/Win32/document_view.h"
+#include "Application/Win32/part_document.h"
 
 
 /***********************************************~***************************************************/
@@ -42,8 +43,8 @@ END_MESSAGE_MAP()
 
 
 WCDocumentFrame::WCDocumentFrame() : m_wndView(NULL) {
-	m_wndView = new WCDocumentView();
-	// TODO: add member initialization code here
+	//Try creating a part document
+	m_wndView = new WCPartDocument();
 }
 
 

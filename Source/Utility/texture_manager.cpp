@@ -43,7 +43,12 @@ void WCTextureManager::ParseManifest(const std::string &manifest, const std::str
 	parser->setErrorHandler(errHandler);
 
 	//Get the full path to the manifest
+#ifdef __WIN32__
+	std::string fullPath = directory + "\\" + manifest;
+#else
+	//Forward slash for OSX and linux
 	std::string fullPath = directory + "/" + manifest;
+#endif
 	const char* xmlFile = fullPath.c_str();
 	WSTexture *newTexture;
 	xercesc::DOMNode *textureNode, *nameNode;
@@ -123,6 +128,9 @@ WCTextureManager::WCTextureManager(const std::string &manifest, const std::strin
 	_textureMap() {
 	//Parse the passed manifest
 	this->ParseManifest(manifest, directory, verbose);
+	//Check for errors
+	if (glGetError() != GL_NO_ERROR) 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTextureManager::WCTextureManager - Unspecified Errors.");
 }
 
 

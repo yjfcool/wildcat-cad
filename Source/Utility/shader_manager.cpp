@@ -111,7 +111,14 @@ WSShader* WCShaderManager::ParseShader(xercesc::DOMElement *element, const std::
 	//Create shader object
 	WSShader *obj = new WSShader();
 	obj->_name = name;
+	//Create full path name
+#ifdef __WIN32__
+	//Backslash for windows
+	obj->_filename = directory + "\\" + filename;
+#else
+	//Forward slash for OSX and linux
 	obj->_filename = directory + "/" + filename;
+#endif
 	if (type == "GL_VERTEX_SHADER") obj->_type = GL_VERTEX_SHADER;
 	else if (type == "GL_FRAGMENT_SHADER") obj->_type = GL_FRAGMENT_SHADER;
 	else if (type == "GL_GEOMETRY_SHADER_EXT") obj->_type = GL_GEOMETRY_SHADER_EXT;
@@ -351,6 +358,9 @@ WCShaderManager::WCShaderManager(const std::string &manifest, const std::string 
 	_programMap(), _shaderMap() {
 	//Parse the passed manifest
 	this->ParseManifest(manifest, directory, verbose);
+	//Check for errors
+	if (glGetError() != GL_NO_ERROR) 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::WCShaderManager - Unspecified Errors.");
 }
 
 

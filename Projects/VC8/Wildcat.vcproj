@@ -43,7 +43,7 @@
 				Optimization="0"
 				InlineFunctionExpansion="0"
 				AdditionalIncludeDirectories="&quot;..\..\Dependencies\xerces-c-src_2_8_0\include&quot;;..\..\Source\Workbenches;..\..\Source"
-				PreprocessorDefinitions="WIN32;__WIN32__;_WINDOWS;XML_LIBRARY"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;WIN32;__WIN32__;_WINDOWS;XML_LIBRARY"
 				StringPooling="false"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
@@ -98,6 +98,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Copy all of the resources into the correct directory"
+				CommandLine="copyResources &quot;..\..\Build\Win32\Resources&quot;"
 			/>
 		</Configuration>
 		<Configuration
