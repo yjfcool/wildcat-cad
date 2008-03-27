@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		580873CC0D9A7C3600038336 /* wildcat.icns in Resources */ = {isa = PBXBuildFile; fileRef = 580873CB0D9A7C3600038336 /* wildcat.icns */; };
+		584C6CE70D9BE5D400FF721F /* fixedSelected32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 584C6CE60D9BE5D400FF721F /* fixedSelected32.tiff */; };
 		585258050D7F173A00A0C6C8 /* centeredParallelogram32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585257FD0D7F173A00A0C6C8 /* centeredParallelogram32.tiff */; };
 		585258060D7F173A00A0C6C8 /* centeredRect32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585257FE0D7F173A00A0C6C8 /* centeredRect32.tiff */; };
 		585258070D7F173A00A0C6C8 /* hexagon32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585257FF0D7F173A00A0C6C8 /* hexagon32.tiff */; };
@@ -295,7 +296,6 @@
 		585F37FE0D68B8D300673AE6 /* part_plane_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37E00D68B8D300673AE6 /* part_plane_actions.cpp */; };
 		585F37FF0D68B8D300673AE6 /* part_plane_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37E20D68B8D300673AE6 /* part_plane_controller.cpp */; };
 		587CB6EA0D89A48D00833178 /* sketch_arc_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */; };
-		588969E50D6E182C007C5F82 /* fixedSelected32.tif in Resources */ = {isa = PBXBuildFile; fileRef = 588969E40D6E182C007C5F82 /* fixedSelected32.tif */; };
 		589AC2190D73404F001725D0 /* constraint_coincidence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361C0D68B4B700673AE6 /* constraint_coincidence.cpp */; };
 		589AC2330D734343001725D0 /* constraint_coincidence_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361E0D68B4B700673AE6 /* constraint_coincidence_actions.cpp */; };
 		58B27F780D785FC4008951D9 /* sketch_circle_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */; };
@@ -317,6 +317,7 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		580873CB0D9A7C3600038336 /* wildcat.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = wildcat.icns; path = ../../Source/Application/MacOS/wildcat.icns; sourceTree = SOURCE_ROOT; };
+		584C6CE60D9BE5D400FF721F /* fixedSelected32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = fixedSelected32.tiff; path = ../../Source/Resources/fixedSelected32.tiff; sourceTree = SOURCE_ROOT; };
 		585257FD0D7F173A00A0C6C8 /* centeredParallelogram32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = centeredParallelogram32.tiff; path = ../../Source/Resources/centeredParallelogram32.tiff; sourceTree = SOURCE_ROOT; };
 		585257FE0D7F173A00A0C6C8 /* centeredRect32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = centeredRect32.tiff; path = ../../Source/Resources/centeredRect32.tiff; sourceTree = SOURCE_ROOT; };
 		585257FF0D7F173A00A0C6C8 /* hexagon32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = hexagon32.tiff; path = ../../Source/Resources/hexagon32.tiff; sourceTree = SOURCE_ROOT; };
@@ -819,7 +820,6 @@
 		585F37E20D68B8D300673AE6 /* part_plane_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = part_plane_controller.cpp; path = ../../Source/Workbenches/PartDesign/part_plane_controller.cpp; sourceTree = SOURCE_ROOT; };
 		585F37E30D68B8D300673AE6 /* part_plane_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_plane_controller.h; path = ../../Source/Workbenches/PartDesign/part_plane_controller.h; sourceTree = SOURCE_ROOT; };
 		587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_arc_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_arc_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
-		588969E40D6E182C007C5F82 /* fixedSelected32.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = fixedSelected32.tif; path = ../../Source/Resources/fixedSelected32.tif; sourceTree = SOURCE_ROOT; };
 		58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_circle_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_circle_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		58DAD6400D69C7610093679D /* constraint_measure_radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = constraint_measure_radius.h; path = ../../Source/Constraint/constraint_measure_radius.h; sourceTree = SOURCE_ROOT; };
 		58DAD6410D69C7610093679D /* constraint_measure_radius.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = constraint_measure_radius.cpp; path = ../../Source/Constraint/constraint_measure_radius.cpp; sourceTree = SOURCE_ROOT; };
@@ -1131,6 +1131,7 @@
 		585F34770D68B0CE00673AE6 /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				584C6CE60D9BE5D400FF721F /* fixedSelected32.tiff */,
 				585F34780D68B0EA00673AE6 /* angleConstraint32.tiff */,
 				585F34790D68B0EA00673AE6 /* autoConstraint32.tiff */,
 				585F347A0D68B0EA00673AE6 /* axisLine32.tiff */,
@@ -1151,7 +1152,6 @@
 				585F349B0D68B0EA00673AE6 /* ellipse32.tiff */,
 				585F349C0D68B0EA00673AE6 /* exit32.tiff */,
 				585F349D0D68B0EA00673AE6 /* fixed32.tiff */,
-				588969E40D6E182C007C5F82 /* fixedSelected32.tif */,
 				585F349E0D68B0EA00673AE6 /* folder32.tiff */,
 				585F349F0D68B0EA00673AE6 /* frontView32.tiff */,
 				585F34A00D68B0EA00673AE6 /* grid32.tiff */,
@@ -2832,7 +2832,6 @@
 				585F369C0D68B66E00673AE6 /* MainMenu.nib in Resources */,
 				585F369D0D68B66E00673AE6 /* ModalDialog.nib in Resources */,
 				585F369E0D68B66E00673AE6 /* RenderWindow.nib in Resources */,
-				588969E50D6E182C007C5F82 /* fixedSelected32.tif in Resources */,
 				585258050D7F173A00A0C6C8 /* centeredParallelogram32.tiff in Resources */,
 				585258060D7F173A00A0C6C8 /* centeredRect32.tiff in Resources */,
 				585258070D7F173A00A0C6C8 /* hexagon32.tiff in Resources */,
@@ -2842,6 +2841,7 @@
 				5852580C0D7F173A00A0C6C8 /* parallelogram32.tiff in Resources */,
 				5852581C0D7F179C00A0C6C8 /* keyhole32.tiff in Resources */,
 				580873CC0D9A7C3600038336 /* wildcat.icns in Resources */,
+				584C6CE70D9BE5D400FF721F /* fixedSelected32.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

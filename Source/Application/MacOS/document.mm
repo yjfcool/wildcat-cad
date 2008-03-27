@@ -147,8 +147,8 @@
 	//Release the string
 	[newStatus release];
 }
-
-
+ 
+ 
 - (void)onResize:(NSSize)size
 {
 	//Get the new renderView width and height
