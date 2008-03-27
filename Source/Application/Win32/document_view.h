@@ -50,14 +50,6 @@ protected:
 	HDC											m_hgldc;											//!< GDI Device Context
 	HGLRC										m_hglRC;											//!< Rendering context
 	WCDocument									*_document;											//!< Associated Wildcat document
-
-//	afx_msg void OnPaint();																			//!< Windows message function
-//	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);											//!< Windows message function
-//	afx_msg void OnSize(UINT nType, int cx, int cy);												//!< Windows message function
-//	afx_msg BOOL OnEraseBkgnd(CDC *pDC);															//!< Windows message function
-//	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);									//!< Windows message function
-//	afx_msg void OnMouseMove(UINT nFlags, CPoint point);											//!< Windows message function
-//	DECLARE_MESSAGE_MAP()																			//!< Windows message function
 public:
 	//Constructors and Destructors
 	WCDocumentView();																				//!< Default constructor
@@ -70,16 +62,13 @@ public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);													//!< Standard pre-creation method
 	BOOL SetFormat(HDC hdc);																		//!< Set the pixel format
 
-	void OnInitGL(void);
-	void OnSetFocus(void);
-	void OnKillFocus(void);
-	void OnDisplay(void);
-	void OnResize(const int &width, const int &height);
-	void OnIdle(void);
-	void OnMousePress(void);
-	void OnMouseMovement(const int &x, const int &y);
-	void OnKeyPress(void);
-	void OnWindowWillClose(void);
+	void OnInitGL(void);																			//!< Called on initialization
+	void OnDisplay(void);																			//!< On document display
+	void OnResize(const int &width, const int &height);												//!< On document window resize
+	void OnIdle(void);																				//!< On document idle loop execute
+	void OnMouseMovement(const int &x, const int &y);												//!< On mouse movement
+	bool OnKeyPress(UINT nChar, UINT nRepCnt, UINT nFlags);											//!< On key press
+	void OnWindowWillClose(void);																	//!< On window being asked to close
 };
 
 

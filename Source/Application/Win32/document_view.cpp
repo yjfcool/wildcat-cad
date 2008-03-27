@@ -33,70 +33,9 @@
 #include "Kernel/selection_mode.h"
 
 
-/***********************************************~***************************************************
-
-
-BEGIN_MESSAGE_MAP(WCDocumentView, CWnd)
-	ON_WM_PAINT()
-//	ON_WM_CREATE()
-	ON_WM_SIZE()
-	ON_WM_ERASEBKGND()
-	ON_WM_KEYDOWN()
-	ON_WM_MOUSEMOVE()
-//	ON_WM_SETFOCUS()
-//	ON_WM_KILLFOCUS()
-//	ON_WM_KEYUP()
-//	ON_WM_TIMER()
-//	ON_WM_MOUSEWHEEL()
-//	ON_WM_LBUTTONDOWN()
-//	ON_WM_LBUTTONUP()
-//	ON_WM_RBUTTONDOWN()
-//	ON_WM_RBUTTONUP()
-//	ON_WM_SIZING()
-END_MESSAGE_MAP()
-
-
-void WCDocumentView::OnPaint()  {
-	// device context for painting
-	CPaintDC dc(this);
-	this->OnDisplay();
-	SwapBuffers(this->m_hgldc);
-}
-
-
-//int WCDocumentView::OnCreate(LPCREATESTRUCT lpCreateStruct) {
-//	//Just call OnInitGL
-//	this->OnInitGL();
-//	//All good for now
-//	return 0;
-//}
-
-
-void WCDocumentView::OnSize(UINT nType, int cx, int cy) {
-	this->OnResize(cx, cy);
-}
-
-
-BOOL WCDocumentView::OnEraseBkgnd(CDC *pDC) {
-	return TRUE;
-}
-
-
-void WCDocumentView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
-	switch(nChar) {
-		case VK_ESCAPE:
-			exit(0);
-			break;
-		default:
-			this->OnKeyPress();
-			break;
-	}
-}
-
-
-void WCDocumentView::OnMouseMove(UINT nFlags, CPoint point) {
-	::MessageBox(::GetFocus(), _T("Mouse Moved!"), _T("Error"), MB_OK);
-}
+/*** Locally Defined Macros ***/
+#define KEY_UP(vk_code)							((GetAsyncKeyState(vk_code) & 0x8000) ? false : true)
+#define KEY_DOWN(vk_code)						((GetAsyncKeyState(vk_code) & 0x8000) ? true : false)
 
 
 /***********************************************~***************************************************/
@@ -194,38 +133,7 @@ void WCDocumentView::OnInitGL(void) {
 }
 
 
-void WCDocumentView::OnSetFocus(void) {
-	//Turn on timer for idle
-}
-
-
-void WCDocumentView::OnKillFocus(void) {
-	//Turn off timer for idle
-}
-
-
 void WCDocumentView::OnDisplay(void) {
-	//// from NeHe's Tutorial 3
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
-	//glLoadIdentity();									// Reset The Current Modelview Matrix
-	//glTranslated(-1.5,0.0,-6.0);						// Move Left 1.5 Units And Into The Screen 6.0
-	//glBegin(GL_TRIANGLES);								// Drawing Using Triangles
-	//	glColor3d(1.0,0.0,0.0);							// Set The Color To Red
-	//	glVertex3d( 0.0, 1.0, 0.0);						// Top
-	//	glColor3d(0.0,1.0,0.0);							// Set The Color To Green
-	//	glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
-	//	glColor3d(0.0,0.0,1.0);							// Set The Color To Blue
-	//	glVertex3d( 1.0,-1.0, 0.0);						// Bottom Right
-	//glEnd();											// Finished Drawing The Triangle
-	//glTranslated(3.0,0.0,0.0);							// Move Right 3 Units
-	//glColor3d(0.5,0.5,1.0);								// Set The Color To Blue One Time Only
-	//glBegin(GL_QUADS);									// Draw A Quad
-	//	glVertex3d(-1.0, 1.0, 0.0);						// Top Left 
-	//	glVertex3d( 1.0, 1.0, 0.0);						// Top Right
-	//	glVertex3d( 1.0,-1.0, 0.0);						// Bottom Right
-	//	glVertex3d(-1.0,-1.0, 0.0);						// Bottom Left
-	//glEnd();											// Done Drawing The Quad
-
 	//Device context for painting
 	CPaintDC dc(this);
 
@@ -245,18 +153,6 @@ void WCDocumentView::OnDisplay(void) {
 
 
 void WCDocumentView::OnResize(const int &width, const int &height) {
-	//int localHeight = height;
-	//int localWidth = width;
-	//if (localHeight == 0) localHeight = 1;
-	//if (localWidth == 0) localWidth = 1;
-	////Reset the viewport
-	//glViewport(0, 0, localWidth, localHeight);
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
-	//gluPerspective(45.0, (float)localWidth/(float)localHeight, 0.1, 100.0);
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
-
 	//Set the window width and height parameters
 	this->_document->ActiveWorkbench()->OnReshape(width, height);
 	//Render the doc if it is dirty
@@ -272,11 +168,6 @@ void WCDocumentView::OnIdle(void) {
 }
 
 
-void WCDocumentView::OnMousePress(void) {
-	std::cout << "Mouse Press\n";
-}
-
-
 void WCDocumentView::OnMouseMovement(const int &x, const int &y) {
 	//Pass message on to document
 	this->_document->ActiveWorkbench()->OnMouseMove(x, y);
@@ -285,8 +176,38 @@ void WCDocumentView::OnMouseMovement(const int &x, const int &y) {
 }
 
 
-void WCDocumentView::OnKeyPress(void) {
-	std::cout << "Key press\n";
+bool WCDocumentView::OnKeyPress(UINT nChar, UINT nRepCnt, UINT nFlags) {
+	char key = nChar;
+	//Make lower case if not shifted
+	if (KEY_UP(VK_SHIFT)) key = tolower(key);
+	//See what type of key is pressed
+	switch(key) {
+		//Capture arrow keys
+//		case NSUpArrowFunctionKey:		_document->Scene()->OnArrowKeyPress(WCArrowKey::Up()); return true; break;
+//		case NSLeftArrowFunctionKey:	_document->Scene()->OnArrowKeyPress(WCArrowKey::Left()); return true; break;
+//		case NSRightArrowFunctionKey:	_document->Scene()->OnArrowKeyPress(WCArrowKey::Right()); return true; break;
+//		case NSDownArrowFunctionKey:	_document->Scene()->OnArrowKeyPress(WCArrowKey::Down()); return true; break;
+
+		//Capture view keys
+		case '1': _document->ActiveWorkbench()->NamedView("Front"); return true; break;
+		case '2': _document->ActiveWorkbench()->NamedView("Back"); return true; break;
+		case '3': _document->ActiveWorkbench()->NamedView("Left"); return true; break;
+		case '4': _document->ActiveWorkbench()->NamedView("Right"); return true; break;
+		case '5': _document->ActiveWorkbench()->NamedView("Top"); return true; break;
+		case '6': _document->ActiveWorkbench()->NamedView("Bottom"); return true; break;
+		case '7': _document->ActiveWorkbench()->NamedView("Isometric"); return true; break;
+		case '8': _document->ActiveWorkbench()->ZoomToFit(); return true; break;
+		case 'v': _document->ActiveWorkbench()->SaveAs("test.xml"); return true; break;
+		//Capture escape
+		case 96:
+			//Revert to default drawing mode
+//			_document->ActiveWorkbench()->DrawingMode( WCDrawingMode::Selection( _document->ActiveWorkbench() ));
+			_document->ActiveWorkbench()->DrawingMode( new WCSelectionMode( _document->ActiveWorkbench() ) );
+			 return true;
+			break;
+	}
+	//Otherwise, did not capture
+	return false;
 }
 
 

@@ -108,49 +108,24 @@ void WCTextureManager::LoadTexture(WSTexture *texObj) {
 
 
 void WCTextureManager::LoadTexture(WSTexture *texObj) {
-	char emsg[1024];
-	TIFFRGBAImage img;
-	size_t npixels;
-	uint32 *data;
-
 	//Create the image from file
 	std::string filename = _ResourceDirectory() + "\\" + texObj->_name + ".tiff";
 	TIFF *tif = TIFFOpen(filename.c_str(), "r");
 	if (tif == NULL){
-		fprintf(stderr, "tif == NULL\n");
-		exit(1);
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTextureManager::LoadTexture - Not able to load: " << texObj->_name);
+		return;
 	}
 
-	if (TIFFRGBAImageBegin(&img, tif, 0, emsg)){
-		npixels = img.width*img.height;
-		data = (uint32 *)_TIFFmalloc(npixels*sizeof(uint32));
-		if (data != NULL){
-			if (TIFFRGBAImageGet(&img, data, img.width, img.height) == 0){
-//				TIFFError(name, emsg);
-				exit(1);
-			}
-		}
-		TIFFRGBAImageEnd(&img);
-//		fprintf(stderr, "Read image %s (%d x %d)\n", name, img.width, img.height);
-	}
-	else {
-//		TIFFError(name, emsg);
-		exit(1);
-	}
-  
-	// If cannot directly display ABGR format, we need to reverse the component ordering in each pixel. :-(
-	if (true) {
-		for (size_t i = 0; i < npixels; i++) {
-			unsigned char *cp = (unsigned char *) &data[i];
-			int t = cp[3];
-			cp[3] = cp[0];
-			cp[0] = t;
-			t = cp[2];
-			cp[2] = cp[1];
-			cp[1] = t;
-		}
-	}
-
+	//Read the tif image data into a buffer
+	char emsg[1024];
+	TIFFRGBAImage img;
+	TIFFRGBAImageBegin(&img, tif, 1, emsg);
+	size_t npixels = img.width*img.height;
+	uint32 *data = new uint32[npixels];
+	//Get all of the raster data
+	TIFFReadRGBAImageOriented(tif, img.width, img.height, data, ORIENTATION_TOPLEFT, 0);
+	TIFFRGBAImageEnd(&img);
+ 
 	//Enable texturing
 	glEnable(texObj->_target);
 	//Generate a new texture
@@ -170,6 +145,8 @@ void WCTextureManager::LoadTexture(WSTexture *texObj) {
 	//Get the object width and height
     texObj->_width = (GLfloat)img.width;
     texObj->_height = (GLfloat)img.height;
+	//Clean up
+	delete data;
 }
 
 

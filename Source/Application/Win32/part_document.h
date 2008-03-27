@@ -48,13 +48,23 @@ class WCPart;
 class WCPartDocument : public WCDocumentView {
 protected:
 	WCPart										*_part;												//!< Associated Wildcat part
-
+	UINT										_timer;												//!< Timer for idle loop
+	//Windows Message Methods
 	afx_msg void OnPaint();																			//!< Windows message function
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);											//!< Windows message function
 	afx_msg void OnSize(UINT nType, int cx, int cy);												//!< Windows message function
 	afx_msg BOOL OnEraseBkgnd(CDC *pDC);															//!< Windows message function
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);									//!< Windows message function
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);											//!< Windows message function
+	afx_msg void OnSetFocus(CWnd* pOldWnd);															//!< Windows message function
+	afx_msg void OnKillFocus(CWnd* pNewWnd);														//!< Windows message function
+	afx_msg void OnTimer(UINT nIDEvent);															//!< Windows message function
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);								//!< Windows message function
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);											//!< Windows message function
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);											//!< Windows message function
+	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);											//!< Windows message function
+	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);											//!< Windows message function
+	afx_msg void OnSizing(UINT nSide, LPRECT lpRect);												//!< Windows message function
 	DECLARE_MESSAGE_MAP()																			//!< Windows message function
 public:
 	//Constructors and Destructors

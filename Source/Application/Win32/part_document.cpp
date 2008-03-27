@@ -33,6 +33,11 @@
 #include "Application/keymap.h"
 
 
+/*** Locally Defined Macros ***/
+#define KEY_UP(vk_code)							((GetAsyncKeyState(vk_code) & 0x8000) ? false : true)
+#define KEY_DOWN(vk_code)						((GetAsyncKeyState(vk_code) & 0x8000) ? true : false)
+
+
 /***********************************************~***************************************************/
 
 
@@ -43,18 +48,16 @@ BEGIN_MESSAGE_MAP(WCPartDocument, CWnd)
 	ON_WM_ERASEBKGND()
 	ON_WM_KEYDOWN()
 	ON_WM_MOUSEMOVE()
-//	ON_WM_SETFOCUS()
-//	ON_WM_KILLFOCUS()
-//	ON_WM_KEYUP()
-//	ON_WM_TIMER()
-//	ON_WM_MOUSEWHEEL()
-//	ON_WM_LBUTTONDOWN()
-//	ON_WM_LBUTTONUP()
-//	ON_WM_RBUTTONDOWN()
-//	ON_WM_RBUTTONUP()
-//	ON_WM_SIZING()
+	ON_WM_SETFOCUS()
+	ON_WM_KILLFOCUS()
+	ON_WM_TIMER()
+	ON_WM_MOUSEWHEEL()
+	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONUP()
+	ON_WM_RBUTTONDOWN()
+	ON_WM_RBUTTONUP()
+	ON_WM_SIZING()
 END_MESSAGE_MAP()
-
 
 
 void WCPartDocument::OnPaint()  {
@@ -82,6 +85,7 @@ int WCPartDocument::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 
 
 void WCPartDocument::OnSize(UINT nType, int cx, int cy) {
+	//Call to super
 	this->OnResize(cx, cy);
 }
 
@@ -92,14 +96,32 @@ BOOL WCPartDocument::OnEraseBkgnd(CDC *pDC) {
 
 
 void WCPartDocument::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
-	switch(nChar) {
-		case VK_ESCAPE:
-			exit(0);
-			break;
-		default:
-			this->OnKeyPress();
-			break;
-	}
+	//Try to let super handle it
+	if (this->OnKeyPress(nChar, nRepCnt, nFlags)) return;
+
+	//Otherwise, get event key & modifiers
+	bool control = KEY_DOWN(VK_CONTROL);
+	bool option = false;
+	bool alt = KEY_DOWN(VK_MENU);
+	bool command = KEY_DOWN(VK_LWIN);
+	bool esc = KEY_DOWN(VK_ESCAPE);
+	char key = nChar;
+	//Make lower case if not shifted
+	if (KEY_UP(VK_SHIFT)) key = tolower(key);
+
+	//Are there any that we want to handle here
+	//Nothing for now...
+
+	//Create the key event
+	WCKeyEvent event(key, control, option, alt, command, esc);
+	WCUserMessage message = _part->ActiveWorkbench()->KeyMap()->MessageFromKeyEvent( event );
+	//If no message return false
+	if (message == "") return;
+	
+	//Pass the message to the part
+	_part->ActiveWorkbench()->OnUserMessage(message);
+	//Check to see if is dirty
+	if (_part->IsVisualDirty()) this->OnDisplay();
 }
 
 
@@ -109,17 +131,97 @@ void WCPartDocument::OnMouseMove(UINT nFlags, CPoint point) {
 }
 
 
+void WCPartDocument::OnSetFocus(CWnd* pOldWnd) {
+	//Setup the idle loop timer
+	this->_timer = SetTimer(1, 10, 0);
+}
+
+
+void WCPartDocument::OnKillFocus(CWnd* pNewWnd) {
+	//Stop the idle loop timer
+	KillTimer(this->_timer);
+}
+
+
+void WCPartDocument::OnTimer(UINT nIDEvent) {
+	//Call to super onIdle
+	this->OnIdle();
+}
+
+
+BOOL WCPartDocument::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
+	//Pass scrollWheel event on to the document
+//	_document->ActiveWorkbench()->OnScroll((WPFloat)[theEvent deltaX], (WPFloat)[theEvent deltaY]);
+	//Render the part if it's dirty
+	if (_document->IsVisualDirty()) this->OnDisplay();
+	return TRUE;
+}
+
+
+void WCPartDocument::OnLButtonDown(UINT nFlags, CPoint point) {
+	//See if modifier keys are pressed or released
+//	if (KEY_DOWN(VK_LWIN)) this->_document->ActiveWorkbench()->OnPanPress();
+//	else this->_document->ActiveWorkbench()->OnPanRelease();
+	if (KEY_DOWN(VK_SHIFT)) this->_document->ActiveWorkbench()->OnRotatePress();
+	else this->_document->ActiveWorkbench()->OnRotateRelease();
+//	if (KEY_DOWN(VK_MENU)) this->_document->ActiveWorkbench()->OnZoomPress();
+//	else this->_document->ActiveWorkbench()->OnZoomRelease();
+	if (KEY_DOWN(VK_CONTROL)) this->_document->ActiveWorkbench()->OnMultiSelectPress();
+	else this->_document->ActiveWorkbench()->OnMultiSelectRelease();
+
+	//Call to left button pressed
+	_document->ActiveWorkbench()->OnMouseDown(WCMouseButton::Left());
+	//Render the doc if it's dirty
+	if (_document->IsVisualDirty()) this->OnDisplay();
+}
+
+
+void WCPartDocument::OnLButtonUp(UINT nFlags, CPoint point) {
+	//Call to left button released
+	_document->ActiveWorkbench()->OnMouseUp(WCMouseButton::Left());
+	//Render the doc if it's dirty
+	if (_document->IsVisualDirty()) this->OnDisplay();
+}
+
+
+void WCPartDocument::OnRButtonDown(UINT nFlags, CPoint point) {
+	//Call to right button pressed
+	_document->ActiveWorkbench()->OnMouseDown(WCMouseButton::Right());
+	//Render the doc if it's dirty
+	if (_document->IsVisualDirty()) this->OnDisplay();
+}
+
+
+void WCPartDocument::OnRButtonUp(UINT nFlags, CPoint point) {
+	//Call to right button release
+	_document->ActiveWorkbench()->OnMouseUp(WCMouseButton::Right());
+	//Render the doc if it's dirty
+	if (_document->IsVisualDirty()) this->OnDisplay();
+}
+
+
+void WCPartDocument::OnSizing(UINT nSide, LPRECT lpRect) {
+	//Determine width and height
+	int width = lpRect->right - lpRect->left;
+	int height = lpRect->top - lpRect->bottom;
+	//Call to super
+	this->OnResize(width, height);
+}
+
+
 /***********************************************~***************************************************/
 
 
-WCPartDocument::WCPartDocument() : ::WCDocumentView(), _part(NULL) {
-//	SetTimer();
+WCPartDocument::WCPartDocument() : ::WCDocumentView(), _part(NULL), _timer(0) {
+	//Nothing else for now
 }
 
 
 WCPartDocument::~WCPartDocument() {
 	//Delete part if it exists
 	if (this->_part != NULL) delete this->_part;
+	//Might need to kill timer
+	//KillTimer(this->_timer);
 }
 
 

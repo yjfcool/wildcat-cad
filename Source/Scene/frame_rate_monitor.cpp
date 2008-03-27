@@ -72,7 +72,7 @@ void WCFrameRateMonitor::operator()(void) {
 		this->_start = UpTime();
 #elif __WIN32__
 		//Use MFC frameworks to get time
-		this->_start = CFileTime::GetCurrentTime();
+		this->_start = GetTickCount();
 #endif
 	//Calculate FPS every 100 frames
 	if (this->_frameCounter == 100) {
@@ -80,8 +80,9 @@ void WCFrameRateMonitor::operator()(void) {
 		Nanoseconds elapsed = AbsoluteDeltaToNanoseconds(UpTime(), this->_start);
 		this->_fps = 100.0 / UnsignedWideToUInt64(elapsed) * 1000000000;
 #elif __WIN32__
-		CFileTimeSpan elapsed = CFileTime::GetCurrentTime() - this->_start;
-		this->_fps = 100.0 / elapsed.GetTimeSpan() * 1000000000;
+		//Determine how much time has elapsed since start of 100 frame block
+		WPFloat elapsed = (WPFloat)(GetTickCount() - this->_start);
+		this->_fps = 100.0 / elapsed * 1000.0;
 #endif
 		if (this->_fps > 1000.0) this->_fps = -1.0f;
 		//Reset the counter to 0

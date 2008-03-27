@@ -350,8 +350,8 @@ void WCCamera::AnimateToViewpoint(const WCQuaternion &rot, const WPFloat xPan, c
 	Nanoseconds duration = UInt64ToUnsignedWide(1000000000L * seconds);
 	this->_stop = AddNanosecondsToAbsolute(duration, this->_start);
 #elif __WIN32__
-	this->_start = CFileTime::GetCurrentTime();
-	CFileTimeSpan duration(1000000L * (LONGLONG)seconds);
+	this->_start = GetTickCount();
+	WPTime duration = (WPTime)(1000L * seconds);
 	this->_stop = this->_start + duration;
 #endif
 	//Set the stop points
@@ -441,14 +441,14 @@ void WCCamera::ReadyScene(void) {
 		AbsoluteTime now = UpTime();
 		WPFloat elapsed = UnsignedWideToUInt64(AbsoluteDeltaToNanoseconds(now, this->_start)) / 10.0;
 		WPFloat togo = UnsignedWideToUInt64(AbsoluteDeltaToNanoseconds(this->_stop, now)) / 10.0;
-#elif __WIN32__
-		CFileTime now = CFileTime::GetCurrentTime();
-		CFileTimeSpan sofar = now - this->_start;
-		WPFloat elapsed = sofar.GetTimeSpan() / 10.0;
-		CFileTimeSpan remains = this->_stop - now;
-		WPFloat togo = remains.GetTimeSpan() / 10.0;
-#endif
 		WPFloat percent = elapsed / (elapsed + togo);
+#elif __WIN32__
+		WPTime now = GetTickCount();
+		WPFloat elapsed = WPFloat(now - this->_start);
+		WPFloat duration = WPFloat(this->_stop - this->_start);
+		WPFloat percent = elapsed / duration;
+		WPFloat togo = 1.0 - percent;
+#endif
 		//Interpolate the quaternion
 		WPFloat sinAngle = sin(this->_aniAngle);
 		WCQuaternion quat = this->_markQuaternion * (sin( (1.0-percent) * this->_aniAngle ) / sinAngle);
