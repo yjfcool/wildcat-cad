@@ -55,6 +55,7 @@ protected:
 	afx_msg void OnSize(UINT nType, int cx, int cy);												//!< Windows message function
 	afx_msg BOOL OnEraseBkgnd(CDC *pDC);															//!< Windows message function
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);									//!< Windows message function
+	afx_msg void OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags);									//!< Windows message function
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);											//!< Windows message function
 	afx_msg void OnSetFocus(CWnd* pOldWnd);															//!< Windows message function
 	afx_msg void OnKillFocus(CWnd* pNewWnd);														//!< Windows message function

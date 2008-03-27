@@ -383,11 +383,13 @@ void WCNurbs::CircularPoints(const WCVector4 &center, const WCVector4 &xUnit, co
 
 //Try to isolate some win32 specifics
 #ifdef __WIN32__
-	WCVector4 *points = new WCVector4[numControlPoints+1];
+	WCVector4 points[64];
+	WPFloat knots[64];
 #else
 	WCVector4 points[numControlPoints+1];
-#endif
 	WPFloat *knots = new WPFloat[numKnotPoints];
+#endif
+	
 	
 	WPFloat w1 = cos(deltaTheta / 2.0);
 	WCVector4 p0 = center + (xUnit * radius * cos(startAngle)) + (yUnit * radius * sin(startAngle));
@@ -442,10 +444,10 @@ void WCNurbs::CircularPoints(const WCVector4 &center, const WCVector4 &xUnit, co
 		knotPoints.push_back(knots[i]);
 
 	//Delete arrays
-#ifdef __WIN32__
-	delete points;
-#endif
+#ifndef __WIN32__
+//	delete points;
 	delete knots;
+#endif
 }
 
 

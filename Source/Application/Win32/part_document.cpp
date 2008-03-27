@@ -47,6 +47,7 @@ BEGIN_MESSAGE_MAP(WCPartDocument, CWnd)
 	ON_WM_SIZE()
 	ON_WM_ERASEBKGND()
 	ON_WM_KEYDOWN()
+	ON_WM_KEYUP()
 	ON_WM_MOUSEMOVE()
 	ON_WM_SETFOCUS()
 	ON_WM_KILLFOCUS()
@@ -125,6 +126,22 @@ void WCPartDocument::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 }
 
 
+void WCPartDocument::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags) {
+	//Check for pan key
+	if (KEY_UP(VK_LWIN) && this->_document->ActiveWorkbench()->IsPan())
+		this->_document->ActiveWorkbench()->OnPanRelease();
+	//Check for rotate key
+	if (KEY_UP(VK_SHIFT) && this->_document->ActiveWorkbench()->IsRotate()) 
+		this->_document->ActiveWorkbench()->OnRotateRelease();
+	//Check for zoom key
+	if (KEY_UP(VK_MENU) && this->_document->ActiveWorkbench()->IsZoom())
+		this->_document->ActiveWorkbench()->OnZoomRelease();
+	//Check for multi-select
+	if (KEY_UP(VK_CONTROL) && this->_document->ActiveWorkbench()->IsMultiSelect())
+		this->_document->ActiveWorkbench()->OnMultiSelectRelease();
+}
+
+
 void WCPartDocument::OnMouseMove(UINT nFlags, CPoint point) {
 	//Pass mouse movement message on to super
 	this->OnMouseMovement(point.x, point.y);
@@ -150,24 +167,22 @@ void WCPartDocument::OnTimer(UINT nIDEvent) {
 
 
 BOOL WCPartDocument::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
+	//Convert to normalized value
+	float yDist = (float)zDelta / 60.0f;
 	//Pass scrollWheel event on to the document
-//	_document->ActiveWorkbench()->OnScroll((WPFloat)[theEvent deltaX], (WPFloat)[theEvent deltaY]);
+	this->_document->ActiveWorkbench()->OnScroll(0.0f, yDist);
 	//Render the part if it's dirty
-	if (_document->IsVisualDirty()) this->OnDisplay();
+	if (this->_document->IsVisualDirty()) this->OnDisplay();
 	return TRUE;
 }
 
 
 void WCPartDocument::OnLButtonDown(UINT nFlags, CPoint point) {
 	//See if modifier keys are pressed or released
-//	if (KEY_DOWN(VK_LWIN)) this->_document->ActiveWorkbench()->OnPanPress();
-//	else this->_document->ActiveWorkbench()->OnPanRelease();
+	if (KEY_DOWN(VK_LWIN)) this->_document->ActiveWorkbench()->OnPanPress();
 	if (KEY_DOWN(VK_SHIFT)) this->_document->ActiveWorkbench()->OnRotatePress();
-	else this->_document->ActiveWorkbench()->OnRotateRelease();
-//	if (KEY_DOWN(VK_MENU)) this->_document->ActiveWorkbench()->OnZoomPress();
-//	else this->_document->ActiveWorkbench()->OnZoomRelease();
+	if (KEY_DOWN(VK_MENU)) this->_document->ActiveWorkbench()->OnZoomPress();
 	if (KEY_DOWN(VK_CONTROL)) this->_document->ActiveWorkbench()->OnMultiSelectPress();
-	else this->_document->ActiveWorkbench()->OnMultiSelectRelease();
 
 	//Call to left button pressed
 	_document->ActiveWorkbench()->OnMouseDown(WCMouseButton::Left());
