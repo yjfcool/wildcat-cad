@@ -112,7 +112,7 @@ WCScene::WCScene(xercesc::DOMElement* element, WCSerialDictionary *dictionary) :
 //Platform specific capture of current context
 #ifdef __APPLE__
 	this->_glContext = CGLGetCurrentContext();
-#elfi __WIN32__
+#elif __WIN32__
 	this->_fontManager = new WCFontManager("", "", false);
 	this->_glContext = NULL;
 #endif
