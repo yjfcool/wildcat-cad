@@ -112,8 +112,8 @@ void WCFrameRateMonitor::Render(void) {
 	//Check to make sure the compass is visible
 	if (this->_isVisible) {
 		this->_label->Text(str);
-		this->_label->DrawAtPoint((GLfloat)(this->_xMin + FRAMERATEMONITOR_BORDER),
-								  (GLfloat)(this->_yMin + FRAMERATEMONITOR_BORDER));
+//		this->_label->DrawAtPoint((GLfloat)(this->_xMin + FRAMERATEMONITOR_BORDER),
+//								  (GLfloat)(this->_yMin + FRAMERATEMONITOR_BORDER));
 	}
 	else {
 		if (this->_frameCounter == 99) std::cout << "FRM: " << str << std::endl;
