@@ -29,7 +29,7 @@
 /*** Included Header Files***/
 #include "Scene/text.h"
 //Include WCFont Support for Win32
-#ifndef __APPLE_
+#ifndef __APPLE__
 #include "Application/Win32/font_manager.h"
 #endif
 
@@ -39,7 +39,7 @@
 
 WCText::WCText(WCScene *scene, const std::string &text, const WCColor &color, const WCTextFont &textFont,
 	const WCTextStyle &textStyle, const float &fontSize) : _scene(scene), _text(text), _color(color), _fontName(""),
-	_fontSize(fontSize), _isUnderlined(false), _isDirty(true), _texture(0), _texWidth(0.0),
+	_fontSize(fontSize), _isUnderlined(false), _isDirty(true), _isBacked(false), _texture(0), _texWidth(0.0),
 	_texHeight(0.0) {
 
 	//Determine font name

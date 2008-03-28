@@ -103,6 +103,7 @@ private:
 	float										_fontSize;											//!< Font size
 	bool										_isUnderlined;										//!< Is the text underlined
 	bool										_isDirty;											//!< Dirty flag
+	bool										_isBacked;											//!< Display backside flag
 	WCFont										*_font;												//!< Point to font object (non-OSX only)
 	GLuint										_texture;											//!< Texture for text
 	GLfloat										_texWidth, _texHeight;								//!< Texture size info (generated)
@@ -129,6 +130,9 @@ public:
 	void FontSize(const float &fontSize);															//!< Set the text font size
 	inline bool IsUnderlined(void) const		{ return this->_isUnderlined; }						//!< Get the text underlined state
 	void IsUnderlined(const bool &state);															//!< Set the text underlined state
+	inline bool IsBacked(void) const			{ return this->_isBacked; }							//!< Get the text backing state
+	void IsBacked(const bool &state)			{ this->_isBacked = state; }						//!< Set the text backing state
+
 	
 	//Drawing Methods
 	void DrawAtPoint(const GLfloat &x, const GLfloat &y);											//!< Draw text at a certain 2D point
