@@ -51,6 +51,7 @@ class WCLayerNode;
 class WCCameraLayer;
 class WCCamera;
 class WCLightSource;
+class WCFontManager;
 
 
 /***********************************************~***************************************************/
@@ -66,6 +67,7 @@ protected:
 	WPGLContext									_glContext;											//!< OpenGL context structure
 	WCShaderManager								*_shaderManager;									//!< Shader manager for the scene
 	WCTextureManager							*_textureManager;									//!< Texture manager for the scene
+	WCFontManager								*_fontManager;										//!< Font manager for the scene
 	WCGeometryContext							*_geomContext;										//!< Geometry context pointer
 	bool										_isDirty;											//!< Does the scene need rerendering
 	bool										_useShadowPass;										//!< Shadow pass flag
@@ -148,6 +150,7 @@ public:
 	inline WPGLContext GLContext(void) const			{ return this->_glContext; }				//!< Get the OpenGL context for the scene
 	inline WCShaderManager* ShaderManager(void) const	{ return this->_shaderManager; }			//!< Get the scene's shader manager
 	inline WCTextureManager* TextureManager(void) const	{ return this->_textureManager; }			//!< Get the scene's texture manager
+	inline WCFontManager* FontManager(void) const		{ return this->_fontManager; }				//!< Get the scene's font manager
 	inline WCGeometryContext* GeometryContext(void) const{ return this->_geomContext; }				//!< Get the scene's geometry context
 
 	//LightSource Methods

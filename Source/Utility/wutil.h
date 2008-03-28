@@ -118,8 +118,12 @@ inline double round(const double &n) {
 /***********************************************~***************************************************/
 
 
-/*** Utility Functions ***/
+/*** Directory Functions ***/
 std::string _ResourceDirectory(void);
+std::string _ApplicationDirectory(void);
+std::string _FontDirectory(void);
+std::string _UserSettingsDirectory(void);
+std::string _UserDocumentsDirectory(void);
 
 
 /***********************************************~***************************************************/

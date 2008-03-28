@@ -28,18 +28,16 @@
 
 /*** Included Header Files ***/
 #include "Utility/wutil.h"
-#include <ft2build.h>
-#include <freetype2/freetype.h>
-#include <freetype2/ftglyph.h>
-#include <freetype2/ftoutln.h>
-#include <freetype2/fttrigon.h>
-
 
 
 /*** Library Support ***/
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
 #pragma comment( lib, "glaux.lib" )								// Search For GLaux.lib While Linking
+
+
+/*** Locally Defined Values ***/
+//None
 
 
 /***********************************************~***************************************************/
@@ -93,6 +91,7 @@ PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC				glCompressedTexSubImage2d = NULL;
 PFNGLCOMPRESSEDTEXSUBIMAGE1DPROC				glCompressedTexSubImage1d = NULL;
 PFNGLGETCOMPRESSEDTEXIMAGEPROC					glCompressedTexImage = NULL;
 
+
 // GL version 1.5 functions
 PFNGLGENQUERIESPROC								glGenQueries = NULL;
 PFNGLDELETEQUERIESPROC							glDeleteQueries = NULL;
@@ -113,6 +112,7 @@ PFNGLMAPBUFFERPROC								glMapBuffer = NULL;
 PFNGLUNMAPBUFFERPROC							glUnmapBuffer = NULL;
 PFNGLGETBUFFERPARAMETERIVPROC					glGetBufferParameteriv = NULL;
 PFNGLGETBUFFERPOINTERVPROC						glGetBufferPointerv = NULL;
+
 
 // GL version 2.0 functions
 PFNGLBLENDEQUATIONSEPARATEPROC					glBlendEquationSeparate = NULL;

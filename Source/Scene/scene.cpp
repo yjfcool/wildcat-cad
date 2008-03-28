@@ -31,6 +31,10 @@
 #include "Scene/camera.h"
 #include "Scene/light_source.h"
 #include "Scene/camera_layer.h"
+//Include Font Manager only if not on OSX
+#ifndef __APPLE__
+#include "Application/Win32/font_manager.h"
+#endif
 
 
 //Initialize shader manifest statics
@@ -43,7 +47,7 @@ std::string WCScene::TextureManifest = "texture_manifest.xml";
 
 
 WCScene::WCScene() : :: WCSerializeableObject(), 
-	_glContext(NULL), _shaderManager(NULL), _textureManager(NULL), _geomContext(NULL), _isDirty(true),
+	_glContext(NULL), _shaderManager(NULL), _textureManager(NULL), _fontManager(NULL), _geomContext(NULL), _isDirty(true),
 	_useShadowPass(false), _useSelectionPass(false),
 	_xMin(-1.0), _yMin(-1.0), _xMax(1.0), _yMax(1.0), _width(2.0), _height(2.0), _winWidth(1), _winHeight(1),
 	_projectionInverse(true), _mouseX(0.0), _mouseY(0.0), _activeCamera(NULL), _defaultCamera(NULL),
@@ -58,7 +62,8 @@ WCScene::WCScene() : :: WCSerializeableObject(),
 //Platform specific capture of current context
 #ifdef __APPLE__
 	this->_glContext = CGLGetCurrentContext();
-#else
+#elif __WIN32__
+	this->_fontManager = new WCFontManager("", "", false);
 	this->_glContext = NULL;
 #endif
 	//Create new geometry context
@@ -107,7 +112,8 @@ WCScene::WCScene(xercesc::DOMElement* element, WCSerialDictionary *dictionary) :
 //Platform specific capture of current context
 #ifdef __APPLE__
 	this->_glContext = CGLGetCurrentContext();
-#else
+#elfi __WIN32__
+	this->_fontManager = new WCFontManager("", "", false);
 	this->_glContext = NULL;
 #endif
 	//Create new geometry context
@@ -156,8 +162,13 @@ WCScene::~WCScene() {
 	if (this->_textureManager != NULL) delete this->_textureManager;
 	//Delete the geometryc context
 	if (this->_geomContext != NULL) delete this->_geomContext;
+#ifdef __APPLE__
 	//Delete the GL context
 //	CGLDestroyContext(this->_glContext);
+#elif __WIN32__
+	//Delete the font manager
+	if (this->_fontManager != NULL) delete this->_fontManager;
+#endif
 }
 
 

@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="..\..\Dependencies\freetype\include;..\..\Dependencies\libtiff\include;&quot;..\..\Dependencies\xerces-c-src_2_8_0\include&quot;;..\..\Source\Workbenches;..\..\Source"
+				AdditionalIncludeDirectories="..\..\Dependencies\freetype\include;..\..\Dependencies\freetype\include\freetype2;..\..\Dependencies\libtiff\include;&quot;..\..\Dependencies\xerces-c-src_2_8_0\include&quot;;..\..\Source\Workbenches;..\..\Source"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;WIN32;__WIN32__;_WINDOWS;XML_LIBRARY"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -99,7 +99,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy all of the resources into the correct directory"
-				CommandLine="copyResources &quot;..\..\Build\Win32\Resources&quot;"
+				CommandLine="copyResources &quot;..\..\Build\Win32&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -1338,6 +1338,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Source\Application\Win32\font_manager.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Source\Application\Win32\glext.h"
 					>
 				</File>
@@ -1407,6 +1411,10 @@
 				</File>
 				<File
 					RelativePath="..\..\Source\Application\Win32\document_view.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\font_manager.cpp"
 					>
 				</File>
 				<File

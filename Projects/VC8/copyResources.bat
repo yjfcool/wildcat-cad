@@ -1,22 +1,23 @@
 @echo off
-set dirPath=%1
+set recPath=%1\Resources
 
 echo Creating Resources Directory...
-rmdir /q /s %dirPath%
-mkdir %dirPath%
+rmdir /q /s %recPath%
+mkdir %recPath%
 
 echo Copying Manifests...
-copy ..\..\Source\Resources\*.xml %dirPath%
+copy ..\..\Source\Resources\*.xml %recPath%
 
 echo Copying Textures...
-copy ..\..\Source\Resources\*.tiff %dirPath%
+copy ..\..\Source\Resources\*.tiff %recPath%
 
 echo Copying Shader Resources...
-copy ..\..\Source\Shaders\*.vsh %dirPath%
-copy ..\..\Source\Shaders\*.gsh %dirPath%
-copy ..\..\Source\Shaders\*.fsh %dirPath%
+copy ..\..\Source\Shaders\*.vsh %recPath%
+copy ..\..\Source\Shaders\*.gsh %recPath%
+copy ..\..\Source\Shaders\*.fsh %recPath%
 
-echo Copying Dependencies
-copy ..\..\Dependencies\   jpeg63.dll
-libtiff3.dll
-zlib1.dll
+echo Copying Dependency Libraries
+copy ..\..\Dependencies\libtiff\lib\zlib1.dll %1\zlib1.dll
+copy ..\..\Dependencies\libtiff\lib\jpeg62.dll %1\jpeg62.dll
+copy ..\..\Dependencies\libtiff\lib\libtiff3.dll %1\libtiff3.dll
+copy ..\..\Dependencies\freetype\lib\freetype6.dll %1\freetype6.dll

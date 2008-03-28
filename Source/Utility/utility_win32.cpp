@@ -40,14 +40,31 @@
 
 
 std::string _ResourceDirectory(void) {
-//	LPTSTR WINAPI GetCommandLine(void);
-//char lpCurrentDirectory[_MAX_PATH];
-//::GetCurrentDirectory( _MAX_PATH - 1, lpCurrentDirectory );
-//System::Environment::CurrentDirectory::get().
-//GetModuleFileName
+	//Take the application directory and add \Resources
+	return _ApplicationDirectory() + "\\Resources";
+}
 
-//	LPSTR pathString = System::Environment::CurrentDirectory::get();
-	return "C:\\Documents and Settings\\ghemingway\\My Documents\\Wildcat\\Build\\Win32\\Resources";
+
+std::string _ApplicationDirectory(void) {
+	//Directory where this application resides
+	return "C:\\Documents and Settings\\ghemingway\\My Documents\\Wildcat\\Build\\Win32";
+}
+
+std::string _FontDirectory(void) {
+	//Directory in which to look for system fonts
+	return "C:\\Windows\\Fonts";
+}
+
+
+std::string _UserSettingsDirectory(void) {
+	//Directory in which to look for user settings
+	return "C:\\Documents and Settings\\ghemingway\\Application Data\\Wildcat";
+}
+
+
+std::string _UserDocumentsDirectory(void) {
+	//Directory in which to look for user documents
+	return "C:\\Documents and Settings\\ghemingway\\My Documents";
 }
 
  
