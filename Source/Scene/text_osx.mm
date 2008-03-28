@@ -31,9 +31,7 @@
 
 
 /*** Platform Specific Included Headers ***/
-#ifdef __APPLE__
 #import <Cocoa/Cocoa.h>
-#endif
 
 
 /***********************************************~***************************************************/
@@ -123,6 +121,103 @@ void WCText::GenerateTexture(void) {
 	}
 	//No longer dirty
 	this->_isDirty = false;
+}
+
+
+void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
+	//Generate texture if needed
+	if (this->_isDirty) this->GenerateTexture();
+	//If there is a texture, draw with it
+	if (this->_texture != 0) {
+		//Determine size of texture
+		GLfloat width = (GLfloat)(this->_texWidth * SCREEN_PIXEL_WIDTH);
+		GLfloat height = (GLfloat)(this->_texHeight * SCREEN_PIXEL_WIDTH);
+		GLfloat vertData[8] = {x, y, x, y+height, x+width, y+height, x+width, y };
+		GLfloat texData[8] = {0.0, this->_texHeight, 0.0, 0.0, this->_texWidth, 0.0, this->_texWidth, this->_texHeight };
+
+		//Enable the texture for use
+		glEnable(GL_TEXTURE_RECTANGLE_ARB);	
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_texture);
+		//Setup vertex array
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(2, GL_FLOAT, 0, vertData);
+		//Setup texture array
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glTexCoordPointer(2, GL_FLOAT, 0, texData);
+
+		//Draw textured quad
+		glColor4f(1.0, 1.0, 1.0, 1.0);
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		//Make sure that vertex and normal arrays are disabled
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
+		//Clean up
+		glDisable(GL_TEXTURE_RECTANGLE_ARB);
+	}
+}
+
+
+void WCText::DrawAtPoint(const WCVector4 &pt, const WCVector4 &uUnit, const WCVector4 &vUnit) {
+	//Generate texture if needed
+	if (this->_isDirty) this->GenerateTexture();
+	//If there is a texture, draw with it
+	if (this->_texture != 0) {
+		//Determine size of texture
+		GLfloat width = (GLfloat)(this->_texWidth * SCREEN_PIXEL_WIDTH);
+		GLfloat height = (GLfloat)(this->_texHeight * SCREEN_PIXEL_WIDTH);
+		//Find rect corners
+		WCVector4 ul = pt + (vUnit * height);
+		WCVector4 ur = pt + (vUnit * height) + (uUnit * width);
+		WCVector4 lr = pt + (uUnit * width);
+		//Load data
+		GLfloat vertData[12] = {(GLfloat)pt.I(), (GLfloat)pt.J(), (GLfloat)pt.K(), 
+								(GLfloat)ul.I(), (GLfloat)ul.J(), (GLfloat)ul.K(),
+								(GLfloat)ur.I(), (GLfloat)ur.J(), (GLfloat)ur.K(),
+								(GLfloat)lr.I(), (GLfloat)lr.J(), (GLfloat)lr.K() };
+		GLfloat texData[8] = {0.0, this->_texHeight, 
+							  0.0, 0.0, 
+							  this->_texWidth, 0.0, 
+							  this->_texWidth, this->_texHeight };
+		//Set up GL drawing 
+		glDisable (GL_DEPTH_TEST);
+		//Enable the texture for use
+		glEnable(GL_TEXTURE_RECTANGLE_ARB);	
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_texture);
+		//Setup vertex array
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(3, GL_FLOAT, 0, vertData);
+		//Setup texture array
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glTexCoordPointer(2, GL_FLOAT, 0, texData);
+
+		//Draw textured quad
+		glColor4f(1.0, 1.0, 1.0, 1.0);
+		glDrawArrays(GL_QUADS, 0, 4);
+		//Do we need to draw the backside also
+		if (this->_isBacked) {
+			//Load data
+			GLfloat backVertData[12] = {(GLfloat)lr.I(), (GLfloat)lr.J(), (GLfloat)lr.K(),
+										(GLfloat)ur.I(), (GLfloat)ur.J(), (GLfloat)ur.K(),
+										(GLfloat)ul.I(), (GLfloat)ul.J(), (GLfloat)ul.K(),
+										(GLfloat)pt.I(), (GLfloat)pt.J(), (GLfloat)pt.K() };
+			GLfloat backTexData[8] = {0.0, this->_texHeight, 
+									  0.0, 0.0, 
+									  this->_texWidth, 0.0, 
+									  this->_texWidth, this->_texHeight };			
+			//Update pointers
+			glVertexPointer(3, GL_FLOAT, 0, backVertData);		
+			glTexCoordPointer(2, GL_FLOAT, 0, backTexData);
+			//Draw again
+			glDrawArrays(GL_QUADS, 0, 4);
+		}
+		
+		//Make sure that vertex and normal arrays are disabled
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
+		//Clean up
+		glDisable(GL_TEXTURE_RECTANGLE_ARB);
+	}
 }
 
 
