@@ -28,6 +28,7 @@
 
 /*** Included Header Files ***/
 #include "Constraint/constraint_measure.h"
+#include "Kernel/document.h"
 
 
 /***********************************************~***************************************************/
@@ -38,7 +39,8 @@ WCConstraintMeasure::WCConstraintMeasure(WCSketchFeature *parent, const std::str
 	_parent(parent), _toPlane(toPlane), _fromPlane(fromPlane), _offset(offset), _labelOffset(labelOffset),
 	_label(label), _text(NULL), _labelPos(), _uUnit(), _vUnit(), _isDirty(true) {
 	//Create text for the label
-	this->_text = new WCText(this->_label, WCColor(WCSketchFeature::DefaultTextColor), WCTextFont::Times(), WCTextStyle::Roman(), 18.0);
+	this->_text = new WCText(this->_parent->Document()->Scene(), this->_label, 
+							 WCColor(WCSketchFeature::DefaultTextColor), WCTextFont::Times(), WCTextStyle::Roman(), 18.0);
 }
 
 
@@ -72,7 +74,8 @@ WCConstraintMeasure::WCConstraintMeasure(xercesc::DOMElement *element, WCSerialD
 	this->_vUnit.FromElement( WCSerializeableObject::ElementFromName(element,"VUnit") );
 
 	//Create text for the label
-	this->_text = new WCText(this->_label, WCColor(WCSketchFeature::DefaultTextColor), WCTextFont::Times(), WCTextStyle::Roman(), 18.0);
+	this->_text = new WCText(NULL, this->_label, WCColor(WCSketchFeature::DefaultTextColor),
+							 WCTextFont::Times(), WCTextStyle::Roman(), 18.0);
 }
 
 

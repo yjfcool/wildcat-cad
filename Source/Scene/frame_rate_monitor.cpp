@@ -52,7 +52,8 @@ WCFrameRateMonitor::WCFrameRateMonitor(WCUserInterfaceLayer *layer) : ::WCOverla
 	//Install as scene frametick function
 	this->_layer->Scene()->FrameTick(this);
 	//Initialize label
-	this->_label = new WCText("0.00 FPS", this->_color, WCTextFont::Palatino(), WCTextStyle::Roman(), 20.0);	
+	this->_label = new WCText(this->_layer->Scene(), "0.00 FPS", this->_color,
+							  WCTextFont::Palatino(), WCTextStyle::Roman(), 20.0);	
 }
 
 

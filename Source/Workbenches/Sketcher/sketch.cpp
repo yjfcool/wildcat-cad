@@ -78,8 +78,10 @@ void WCSketch::Initialize(void) {
 	//Create workbench (CreateAction enters the workbench)
 	this->_workbench = new WCSketchWorkbench(this);
 	//Setup h and v text labels
-	this->_hText = new WCText("H", WCColor(1.0f, 1.0f, 0.0f, 1.0f), WCTextFont::Palatino(), WCTextStyle::Roman(), 15.0);
-	this->_vText = new WCText("V", WCColor(1.0f, 1.0f, 0.0f, 1.0f), WCTextFont::Palatino(), WCTextStyle::Roman(), 15.0);
+	this->_hText = new WCText(this->_document->Scene(), "H", WCColor(1.0f, 1.0f, 0.0f, 1.0f),
+							  WCTextFont::Palatino(), WCTextStyle::Roman(), 15.0);
+	this->_vText = new WCText(this->_document->Scene(), "V", WCColor(1.0f, 1.0f, 0.0f, 1.0f),
+							  WCTextFont::Palatino(), WCTextStyle::Roman(), 15.0);
 }
 
 

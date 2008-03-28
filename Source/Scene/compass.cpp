@@ -43,9 +43,10 @@ WCCompass::WCCompass(WCUserInterfaceLayer *layer) : ::WCOverlay(layer, false), _
 	this->_layer->RegisterWidget(this);
 	
 	//Setup x, y, and z text labels
-	this->_xText = new WCText("x", WCColor::Red(), WCTextFont::Palatino(), WCTextStyle::Roman(), 15.0);
-	this->_yText = new WCText("y", WCColor::Green(), WCTextFont::Palatino(), WCTextStyle::Roman(), 15.0);
-	this->_zText = new WCText("z", WCColor::Yellow(), WCTextFont::Palatino(), WCTextStyle::Roman(), 15.0);
+	WCScene *scene = this->_layer->Scene();
+	this->_xText = new WCText(scene, "x", WCColor::Red(), WCTextFont::Palatino(), WCTextStyle::Roman(), 15.0);
+	this->_yText = new WCText(scene, "y", WCColor::Green(), WCTextFont::Palatino(), WCTextStyle::Roman(), 15.0);
+	this->_zText = new WCText(scene, "z", WCColor::Yellow(), WCTextFont::Palatino(), WCTextStyle::Roman(), 15.0);
 }
 
 

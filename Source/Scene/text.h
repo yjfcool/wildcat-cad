@@ -39,7 +39,7 @@
 
 
 /*** Class Predefines ***/
-//None
+class WCFont;
 
 
 /***********************************************~***************************************************/
@@ -96,28 +96,27 @@ public:
 
 class WCText {
 private:
-	//Inherent Properties
+	WCScene										*_scene;											//!< Associated scene
 	std::string									_text;												//!< String of the text
 	WCColor										_color;												//!< Color of the text
 	std::string									_fontName;											//!< Name of the font
 	float										_fontSize;											//!< Font size
 	bool										_isUnderlined;										//!< Is the text underlined
-	bool										_isBacked;
 	bool										_isDirty;											//!< Dirty flag
-	//Generated Values
+	WCFont										*_font;												//!< Point to font object (non-OSX only)
 	GLuint										_texture;											//!< Texture for text
-	GLfloat										_texWidth, _texHeight;								//!< Texture size info
-	
+	GLfloat										_texWidth, _texHeight;								//!< Texture size info (generated)
 	//Private Methods
 	void GenerateTexture(void);																		//!< Generate the text texture
-
-	//Deny Access
-	WCText();																					//!< Deny access to default constructor
+	//Hidden Constructors
+	WCText();																						//!< Deny access to default constructor
+	WCText(const WCText&);																			//!< Deny access to copy constructor
+	WCText& operator=(const WCText&);																//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCText(const std::string &text, const WCColor &color, const WCTextFont &textFont, 			//!< Primary constructor
-												const WCTextStyle &textStyle, const float &size);
-	~WCText();																					//!< Default destructor
+	WCText(WCScene *scene, const std::string &text, const WCColor &color,							//!< Primary constructor
+												const WCTextFont &textFont, const WCTextStyle &textStyle, const float &size);
+	~WCText();																						//!< Default destructor
 	
 	//General Access Methods
 	inline GLfloat Width(void)					{ return (GLfloat)(this->_texWidth * SCREEN_PIXEL_WIDTH); }	//!< Get the width of the text
@@ -130,8 +129,6 @@ public:
 	void FontSize(const float &fontSize);															//!< Set the text font size
 	inline bool IsUnderlined(void) const		{ return this->_isUnderlined; }						//!< Get the text underlined state
 	void IsUnderlined(const bool &state);															//!< Set the text underlined state
-	inline bool IsBacked(void) const			{ return this->_isBacked; }							//!< Get the texture backed state
-	inline void IsBacked(const bool &state)		{ this->_isBacked = state; }						//!< Set the texture backed state
 	
 	//Drawing Methods
 	void DrawAtPoint(const GLfloat &x, const GLfloat &y);											//!< Draw text at a certain 2D point

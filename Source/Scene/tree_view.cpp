@@ -47,8 +47,9 @@
 /***********************************************~***************************************************/
 
 
-WCTreeElement::WCTreeElement(WCTreeView *tree, std::string name, WCEventController *controller, WSTexture *icon) : ::WCObject(),
-	_tree(tree), _name(name), _label(NULL), _controller(controller), _isSelected(false), _isMouseOver(false), _isOpen(true), _icon(icon) {
+WCTreeElement::WCTreeElement(WCTreeView *tree, std::string name, WCEventController *controller, WSTexture *icon) :
+	::WCObject(), _tree(tree), _name(name), _label(NULL), _controller(controller), _isSelected(false),
+	_isMouseOver(false), _isOpen(true), _icon(icon) {
 	//Make sure tree is not null
 	if (this->_tree == NULL) { 
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeElement::WCTreeElement - NULL TreeView passed."); 
@@ -56,7 +57,8 @@ WCTreeElement::WCTreeElement(WCTreeView *tree, std::string name, WCEventControll
 		return; 
 	}
 	//Create label for element
-	this->_label = new WCText(this->_name, WCColor(TREEVIEW_TEXT_COLOR), WCTextFont::Times(), WCTextStyle::Roman(), 16.0);
+	this->_label = new WCText(this->_tree->Layer()->Scene(), this->_name, WCColor(TREEVIEW_TEXT_COLOR),
+							  WCTextFont::Times(), WCTextStyle::Roman(), 16.0);
 	//Register the element
 	this->_tree->RegisterElement(this);
 }
