@@ -150,7 +150,7 @@ void WCPartDocument::OnMouseMove(UINT nFlags, CPoint point) {
 
 void WCPartDocument::OnSetFocus(CWnd* pOldWnd) {
 	//Setup the idle loop timer
-	this->_timer = SetTimer(1, 10, 0);
+	this->_timer = SetTimer(1, 1, 0);
 }
 
 

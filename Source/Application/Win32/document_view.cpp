@@ -164,7 +164,8 @@ void WCDocumentView::OnIdle(void) {
 	//Call idle method
 	this->_document->ActiveWorkbench()->OnIdle();
 	//Render the doc if it is dirty
-	if (this->_document->IsVisualDirty()) this->OnDisplay();
+//	if (this->_document->IsVisualDirty()) 
+	this->OnDisplay();
 }
 
 
