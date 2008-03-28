@@ -50,7 +50,7 @@ void WCText::GenerateTexture(void) {
 	}
 
 	//The the size of the entire text
-	this->_font->StringSize(this->_text, this->_texWidth, this->_texHeight);
+	this->_font->StringSize(this->_text, this->_texWidth, this->_texHeight, this->_texOrigin);
 	//Mark as clean
 	this->_isDirty = false;
 }
@@ -72,7 +72,8 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 	this->_color.Enable();
 
 	//Setup some data
-	GLfloat xPos = x, width, height;
+	GLfloat xPos = x, width, height, droop;
+	GLfloat yPos;
 	GLfloat vertData[8];
 	GLfloat texData[8];
 	//Get the c-string
@@ -83,6 +84,7 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 		//Get char width and height
 		width = sizes[ cStr[i] ].width;
 		height = sizes[ cStr[i] ].height;
+		droop = height - sizes[ cStr[i] ].bearing;
 		//Determine tex data
 		texData[0] = 0.0;
 		texData[1] = height;
@@ -93,17 +95,18 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 		texData[6] = width;
 		texData[7] = height;
 		//Change to screen sizes
-		width *= SCREEN_PIXEL_WIDTH;
-		height *= SCREEN_PIXEL_WIDTH;
+		width *= (GLfloat)SCREEN_PIXEL_WIDTH;
+		height *= (GLfloat)SCREEN_PIXEL_WIDTH;
+		yPos = y + (GLfloat)(this->_texOrigin * SCREEN_PIXEL_WIDTH) - (GLfloat)(droop * SCREEN_PIXEL_WIDTH);
 		//Determine vert data
 		vertData[0] = xPos;
-		vertData[1] = y;
+		vertData[1] = yPos;
 		vertData[2] = xPos;
-		vertData[3] = y + height;
+		vertData[3] = yPos + height;
 		vertData[4] = xPos + width;
 		vertData[5] = vertData[3];
 		vertData[6] = vertData[4];
-		vertData[7] = y;
+		vertData[7] = yPos;
 		//Set texture and pointers
 		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textures[ cStr[i] ]);
 		glVertexPointer(2, GL_FLOAT, 0, vertData);
@@ -119,6 +122,15 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
 	//Clean up
 	glDisable(GL_TEXTURE_RECTANGLE_ARB);
+
+	//See about underlined
+	if (this->_isUnderlined) {
+		glLineWidth(0.5);
+		glBegin(GL_LINES);
+			glVertex2f(x, y + this->_texOrigin * SCREEN_PIXEL_WIDTH);
+			glVertex2f(x + this->_texWidth * SCREEN_PIXEL_WIDTH, y + this->_texOrigin * SCREEN_PIXEL_WIDTH);
+		glEnd();
+	}
 }
 
 

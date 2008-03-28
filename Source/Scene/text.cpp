@@ -40,7 +40,7 @@
 WCText::WCText(WCScene *scene, const std::string &text, const WCColor &color, const WCTextFont &textFont,
 	const WCTextStyle &textStyle, const float &fontSize) : _scene(scene), _text(text), _color(color), _fontName(""),
 	_fontSize(fontSize), _isUnderlined(false), _isDirty(true), _isBacked(false), _texture(0), _texWidth(0.0),
-	_texHeight(0.0) {
+	_texHeight(0.0), _texOrigin(0.0) {
 
 	//Determine font name
 	std::string fontName;

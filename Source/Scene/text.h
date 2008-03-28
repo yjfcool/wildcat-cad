@@ -106,7 +106,7 @@ private:
 	bool										_isBacked;											//!< Display backside flag
 	WCFont										*_font;												//!< Point to font object (non-OSX only)
 	GLuint										_texture;											//!< Texture for text
-	GLfloat										_texWidth, _texHeight;								//!< Texture size info (generated)
+	GLfloat										_texWidth, _texHeight, _texOrigin;					//!< Texture size info (generated)
 	//Private Methods
 	void GenerateTexture(void);																		//!< Generate the text texture
 	//Hidden Constructors
@@ -122,6 +122,7 @@ public:
 	//General Access Methods
 	inline GLfloat Width(void)					{ return (GLfloat)(this->_texWidth * SCREEN_PIXEL_WIDTH); }	//!< Get the width of the text
 	inline GLfloat Height(void)					{ return (GLfloat)(this->_texHeight * SCREEN_PIXEL_WIDTH); }//!< Get the height of the text
+	inline GLfloat Origin(void)					{ return (GLfloat)(this->_texOrigin * SCREEN_PIXEL_WIDTH); }//!< Get the origin height of the text
 	inline std::string Text(void)				{ return this->_text; }								//!< Get the text string
 	void Text(const std::string &text);																//!< Set the text string
 	inline WCColor Color(void)					{ return this->_color; }							//!< Get the text color
