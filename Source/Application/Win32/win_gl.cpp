@@ -28,6 +28,12 @@
 
 /*** Included Header Files ***/
 #include "Utility/wutil.h"
+#include <ft2build.h>
+#include <freetype2/freetype.h>
+#include <freetype2/ftglyph.h>
+#include <freetype2/ftoutln.h>
+#include <freetype2/fttrigon.h>
+
 
 
 /*** Library Support ***/

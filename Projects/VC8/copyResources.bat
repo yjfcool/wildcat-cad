@@ -16,3 +16,7 @@ copy ..\..\Source\Shaders\*.vsh %dirPath%
 copy ..\..\Source\Shaders\*.gsh %dirPath%
 copy ..\..\Source\Shaders\*.fsh %dirPath%
 
+echo Copying Dependencies
+copy ..\..\Dependencies\   jpeg63.dll
+libtiff3.dll
+zlib1.dll

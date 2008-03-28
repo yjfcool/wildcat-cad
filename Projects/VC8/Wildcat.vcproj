@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="..\..\Dependencies\libtiff\include;&quot;..\..\Dependencies\xerces-c-src_2_8_0\include&quot;;..\..\Source\Workbenches;..\..\Source"
+				AdditionalIncludeDirectories="..\..\Dependencies\freetype\include;..\..\Dependencies\libtiff\include;&quot;..\..\Dependencies\xerces-c-src_2_8_0\include&quot;;..\..\Source\Workbenches;..\..\Source"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;WIN32;__WIN32__;_WINDOWS;XML_LIBRARY"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -65,9 +65,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenGL32.lib GLu32.lib GLaux.lib xerces-c_static_2.lib gdiplus.lib libtiff.lib $(NOINHERIT)"
+				AdditionalDependencies="OpenGL32.lib GLu32.lib GLaux.lib xerces-c_static_2.lib gdiplus.lib libtiff.lib freetype.lib $(NOINHERIT)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\Dependencies\libtiff\lib;&quot;..\..\Dependencies\xerces-c-src_2_8_0\lib&quot;"
+				AdditionalLibraryDirectories="..\..\Dependencies\freetype\lib;..\..\Dependencies\libtiff\lib;&quot;..\..\Dependencies\xerces-c-src_2_8_0\lib&quot;"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames="LIBCMT"
 				GenerateDebugInformation="true"
