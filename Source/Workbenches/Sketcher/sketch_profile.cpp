@@ -666,7 +666,7 @@ xercesc::DOMElement* WCSketchProfile::Serialize(xercesc::DOMDocument *document, 
 
 /***********************************************~***************************************************/
 
-
+/*
 std::list< std::pair<WCSketchProfile*,bool> > RecursiveFlatten(WCProfileTreeNode *node, bool outside) {
 	std::list< std::pair<WCSketchProfile*,bool> > outputList, tmpList;
 	std::list< std::pair<WCSketchProfile*,bool> >::iterator tmpListIter;
@@ -674,6 +674,33 @@ std::list< std::pair<WCSketchProfile*,bool> > RecursiveFlatten(WCProfileTreeNode
 	outputList.push_back( std::make_pair(node->profile, outside) );
 	//Add all children lists and return
 	std::list<WCProfileTreeNode*>::const_iterator childIter;
+	for (childIter = node->children.begin(); childIter != node->children.end(); childIter++) {
+		//Get the child's list
+		tmpList = RecursiveFlatten( *childIter, !outside );
+		//Merge it with this level's list
+		outputList.splice(outputList.end(), tmpList, tmpList.begin(), tmpList.end());
+	}
+	//Return the list
+	return outputList;
+}
+*/
+
+std::list< std::pair<WCSketchProfile*,bool> > RecursiveFlatten(WCProfileTreeNode *node, bool outside) {
+	std::list< std::pair<WCSketchProfile*,bool> > outputList, tmpList;
+	std::list< std::pair<WCSketchProfile*,bool> >::iterator tmpListIter;
+	std::list<WCProfileTreeNode*>::const_iterator childIter;
+
+	//If an outside profile
+	if (outside) {
+		//Add node to list
+		outputList.push_back( std::make_pair(node->profile, outside) );
+		//Add all children first if node is an outside node
+		for (childIter = node->children.begin(); childIter != node->children.end(); childIter++) {
+			//Add children to list
+			outputList.push_back( std::make_pair( (*childIter)->profile, !outside) );
+		}
+	}
+	//Recursively process children
 	for (childIter = node->children.begin(); childIter != node->children.end(); childIter++) {
 		//Get the child's list
 		tmpList = RecursiveFlatten( *childIter, !outside );
@@ -774,7 +801,6 @@ std::list<WCProfileTreeNode*> WCSketchProfile::CategorizeIntoTree(const std::lis
 
 std::list< std::pair<WCSketchProfile*,bool> > WCSketchProfile::FlattenCategorizationTree(std::list<WCProfileTreeNode*> &rootList) {
 	std::list< std::pair<WCSketchProfile*,bool> > outputList, tmpList;
-	std::list< std::pair<WCSketchProfile*,bool> >::iterator tmpListIter;
 	std::list<WCProfileTreeNode*>::const_iterator rootListIter;
 	//Merge each root node list with outputList
 	for(rootListIter = rootList.begin(); rootListIter != rootList.end(); rootListIter++) {
@@ -783,6 +809,11 @@ std::list< std::pair<WCSketchProfile*,bool> > WCSketchProfile::FlattenCategoriza
 		//Merge lists
 		outputList.splice(outputList.end(), tmpList, tmpList.begin(), tmpList.end());
 	}
+/*** DEBUG ***/
+	std::list< std::pair<WCSketchProfile*,bool> >::iterator outIter;
+	for (outIter = outputList.begin(); outIter != outputList.end(); outIter++)
+		std::cout << (*outIter).first->GetName() << ", " << (*outIter).second << std::endl;
+/*** DEBUG ***/
 	return outputList;
 }
 
