@@ -26,78 +26,64 @@
 ********************************************************************************/
 
 
-//Imported Header Files
-#import "Application/MacOS/modal_dialog.h"
+/*** Included Header Files ***/
+#include "RTVisualization/vis_listener.h"
+#include "RTVisualization/vis_listener_controller.h"
+#include "RTVisualization/visualization.h"
+#include "RTVisualization/vis_feature.h"
+#include "RTVisualization/vis_packet.h"
+#include "RTVisualization/vis_recorder.h"
+
+
+//Locally Defined Values
+#define SERV_MAXLINE							1024
 
 
 /***********************************************~***************************************************/
 
 
-@implementation WCModalDialog
-
-
-- (id)init
-{
-    // Do the regular Cocoa thing, specifying a particular nib.
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	location = [NSURL URLWithString:@"http://www.cerrokai.com"];
-    return self;
+void* WCVisListener::ThreadEntryPoint(void* listener) {
+	//Make sure we have a valid visListener object
+	WCVisListener *lis = (WCVisListener*)listener;
+	//Otherwise, start listening
+	lis->Listen();
+	//When done listening, quit thread
+	return NULL;
 }
 
 
-- (id)initWithLocation:(NSURL*)url
-{
-	//Do the cocoa thing
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	location = url;
-	return self;
+/***********************************************~***************************************************/
+
+
+
+WCVisListener::WCVisListener(WCVisualization *vis, const std::string &name, const unsigned int &port) :
+	::WCVisFeature(vis, name, 0), _isValid(true), _listener(NULL), _port(port), _socket(0) {
+	//Initialize the socket
+	this->_socket = socket(AF_INET, SOCK_DGRAM, 0);
+	bzero(&this->_serverAddress, sizeof(this->_serverAddress));
+	//Set up server address information
+	this->_serverAddress.sin_family      = AF_INET;
+	this->_serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
+	this->_serverAddress.sin_port        = htons(this->_port);
+
+	//Bind to the socket
+	int retVal = bind(this->_socket, (sockaddr*)&this->_serverAddress, sizeof(this->_serverAddress));
+	//Make sure the bind was successful
+	if (retVal != 0) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::WCVisListener - Bind was not successful.");
+		//throw error
+	}
 }
 
 
-- (id)initWithDialog:(WCDialog*)dialog
-{
-	//Set the dialog
-	_dialog = dialog;
-	//Get full path of dialog
-	std::string str = "/" + dialog->Name() + ".html";
-	NSString *cstr = [NSString stringWithCString:str.c_str() encoding:NSUTF8StringEncoding];
-	NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingString:cstr];
-	location = location = [NSURL URLWithString:path];
-
-	//Do the cocoa thing
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	//Set the windowsize
-	NSRect rect = [[self window] frame];
-	rect.size.width = dialog->Width();
-	rect.size.height = dialog->Height();
-	[[self window] setFrame:rect display:YES];
-	//Return the object
-	return self;	
+WCVisListener::~WCVisListener() {
+	//Shutdown the thread
+	this->_isValid = false;
+	//Wait for the thread to exit
+	pthread_join(this->_listener, NULL);
+	//Close the port
+	//...
 }
-
-
-- (void)dealloc
-{
-    // Do the regular Cocoa thing.
-    [super dealloc];
-}
-
-
-- (void)windowDidLoad
-{
-	//Try loading location into webview
-	WebFrame *frame = [webView mainFrame];
-	[frame loadRequest:[NSURLRequest requestWithURL:location]];
-}
-
-
-- (WebView*)WebView
-{
-	return webView;
-}
-
-
-@end
 
 
 /***********************************************~***************************************************/

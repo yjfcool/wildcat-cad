@@ -257,6 +257,14 @@
 			<filter min="GL_NEAREST" mag="GL_NEAREST"/>
 			<wrap s="GL_CLAMP" t="GL_CLAMP"/>
 		</texture>
+		<texture name="translate32">
+			<target>GL_TEXTURE_RECTANGLE_ARB</target>
+			<miplevel>0</miplevel>
+			<format type="GL_RGBA" internal="GL_RGBA"/>
+			<type>GL_UNSIGNED_BYTE</type>
+			<filter min="GL_NEAREST" mag="GL_NEAREST"/>
+			<wrap s="GL_CLAMP" t="GL_CLAMP"/>
+		</texture>
 		<texture name="horizontalSelected32">
 			<target>GL_TEXTURE_RECTANGLE_ARB</target>
 			<miplevel>0</miplevel>
@@ -282,6 +290,30 @@
 			<wrap s="GL_CLAMP" t="GL_CLAMP"/>
 		</texture>
 		<texture name="concentric32">
+			<target>GL_TEXTURE_RECTANGLE_ARB</target>
+			<miplevel>0</miplevel>
+			<format type="GL_RGBA" internal="GL_RGBA"/>
+			<type>GL_UNSIGNED_BYTE</type>
+			<filter min="GL_NEAREST" mag="GL_NEAREST"/>
+			<wrap s="GL_CLAMP" t="GL_CLAMP"/>
+		</texture>
+		<texture name="visualization32">
+			<target>GL_TEXTURE_RECTANGLE_ARB</target>
+			<miplevel>0</miplevel>
+			<format type="GL_RGBA" internal="GL_RGBA"/>
+			<type>GL_UNSIGNED_BYTE</type>
+			<filter min="GL_NEAREST" mag="GL_NEAREST"/>
+			<wrap s="GL_CLAMP" t="GL_CLAMP"/>
+		</texture>
+		<texture name="record32">
+			<target>GL_TEXTURE_RECTANGLE_ARB</target>
+			<miplevel>0</miplevel>
+			<format type="GL_RGBA" internal="GL_RGBA"/>
+			<type>GL_UNSIGNED_BYTE</type>
+			<filter min="GL_NEAREST" mag="GL_NEAREST"/>
+			<wrap s="GL_CLAMP" t="GL_CLAMP"/>
+		</texture>
+		<texture name="listener32">
 			<target>GL_TEXTURE_RECTANGLE_ARB</target>
 			<miplevel>0</miplevel>
 			<format type="GL_RGBA" internal="GL_RGBA"/>

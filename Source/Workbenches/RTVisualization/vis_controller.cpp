@@ -26,78 +26,54 @@
 ********************************************************************************/
 
 
-//Imported Header Files
-#import "Application/MacOS/modal_dialog.h"
+/*** Included Header Files ***/
+#include "RTVisualization/vis_controller.h"
+#include "RTVisualization/visualization.h"
 
 
 /***********************************************~***************************************************/
 
 
-@implementation WCModalDialog
-
-
-- (id)init
-{
-    // Do the regular Cocoa thing, specifying a particular nib.
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	location = [NSURL URLWithString:@"http://www.cerrokai.com"];
-    return self;
+WCVisController::WCVisController(WCVisualization *vis) : ::WCEventController(vis->TreeElement()), _visualization(vis) { 
+	//Nothing else for now
 }
 
 
-- (id)initWithLocation:(NSURL*)url
-{
-	//Do the cocoa thing
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	location = url;
-	return self;
+WCObject* WCVisController::Associate(void) {
+	return this->_visualization;
 }
 
 
-- (id)initWithDialog:(WCDialog*)dialog
-{
-	//Set the dialog
-	_dialog = dialog;
-	//Get full path of dialog
-	std::string str = "/" + dialog->Name() + ".html";
-	NSString *cstr = [NSString stringWithCString:str.c_str() encoding:NSUTF8StringEncoding];
-	NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingString:cstr];
-	location = location = [NSURL URLWithString:path];
-
-	//Do the cocoa thing
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	//Set the windowsize
-	NSRect rect = [[self window] frame];
-	rect.size.width = dialog->Width();
-	rect.size.height = dialog->Height();
-	[[self window] setFrame:rect display:YES];
-	//Return the object
-	return self;	
+void WCVisController::OnSelection(const bool fromManager, std::list<WCVisualObject*> objects) {
+	//Is this from the selection manager
+	if (!fromManager) {
+		//Clear selection buffer if appropriate
+		if (!this->_visualization->Document()->ActiveWorkbench()->IsMultiSelect())
+			this->_visualization->Document()->ActiveWorkbench()->SelectionManager()->Clear(true);
+		//Add this object to the selection manager
+		this->_visualization->Document()->ActiveWorkbench()->SelectionManager()->ForceSelection(this, false);
+	}
+	//Tell the object it has been selected
+//	if (!this->_visualization->IsSelected()) this->_visualization->OnSelection(false, std::list<WCVisualObject*>());
+	//Mark the tree element as selected
+	this->_visualization->TreeElement()->IsSelected(true);
 }
 
 
-- (void)dealloc
-{
-    // Do the regular Cocoa thing.
-    [super dealloc];
+void WCVisController::OnDeselection(const bool fromManager) {
+	if (!fromManager) {
+		//Remove the item from the selection list
+		this->_visualization->Document()->ActiveWorkbench()->SelectionManager()->ForceDeselection(this, false);
+	}
+	//Tell the object it has been deselected
+//	if (this->_visualization->IsSelected()) this->_visualization->OnDeselection(false);
+	//Mark the tree element as not selected
+	this->_visualization->TreeElement()->IsSelected(false);
 }
 
 
-- (void)windowDidLoad
-{
-	//Try loading location into webview
-	WebFrame *frame = [webView mainFrame];
-	[frame loadRequest:[NSURLRequest requestWithURL:location]];
+void WCVisController::OnContextClick(void) {
 }
-
-
-- (WebView*)WebView
-{
-	return webView;
-}
-
-
-@end
 
 
 /***********************************************~***************************************************/

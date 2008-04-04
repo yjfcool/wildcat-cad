@@ -26,79 +26,55 @@
 ********************************************************************************/
 
 
-//Imported Header Files
-#import "Application/MacOS/modal_dialog.h"
+#ifndef __SIGNAL_PORT_H__
+#define __SIGNAL_PORT_H__
+
+
+/*** Included Header Files ***/
+#include "RTVisualization/wrtv.h"
+#include "RTVisualization/vis_signal.h"
+
+
+/*** Local Defines ***/
+//None
+
+
+/*** Class Predefines ***/
+//None
 
 
 /***********************************************~***************************************************/
 
 
-@implementation WCModalDialog
+class WCSignalPort {
+private:
+	std::string									_name;												//!< Port name
+	WCVisFeature								*_feature;											//!< Associated feature
+	WCSignalType								_type;												//!< Data type
+	void*										_address;											//!< Port address
+	//Hidden Constructors
+	WCSignalPort();																					//!< Deny access to default constructor
+	WCSignalPort(const WCSignalPort&);																//!< Deny access to copy constructor
+	WCSignalPort& operator=(const WCSignalPort&);													//!< Deny access to equals operator
+public:
+	//Constructors and Destructors
+	WCSignalPort(const std::string &name, WCVisFeature* feature, const WCSignalType &type,			//!< Primary constructor
+												void *address) : _name(name), _feature(feature), _type(type), _address(address) { }
+	~WCSignalPort()								{ }													//!< Default destructor
 
+	//Member Access Methods
+	inline std::string Name(void)				{ return this->_name; }								//!<
+	inline WCVisFeature* Feature(void)			{ return this->_feature; }							//!<
+	inline WCSignalType& Type(void) const		{ return this->_type; }								//!<
+	inline void* Address(void)					{ return this->_address; }							//!<
 
-- (id)init
-{
-    // Do the regular Cocoa thing, specifying a particular nib.
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	location = [NSURL URLWithString:@"http://www.cerrokai.com"];
-    return self;
-}
-
-
-- (id)initWithLocation:(NSURL*)url
-{
-	//Do the cocoa thing
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	location = url;
-	return self;
-}
-
-
-- (id)initWithDialog:(WCDialog*)dialog
-{
-	//Set the dialog
-	_dialog = dialog;
-	//Get full path of dialog
-	std::string str = "/" + dialog->Name() + ".html";
-	NSString *cstr = [NSString stringWithCString:str.c_str() encoding:NSUTF8StringEncoding];
-	NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingString:cstr];
-	location = location = [NSURL URLWithString:path];
-
-	//Do the cocoa thing
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	//Set the windowsize
-	NSRect rect = [[self window] frame];
-	rect.size.width = dialog->Width();
-	rect.size.height = dialog->Height();
-	[[self window] setFrame:rect display:YES];
-	//Return the object
-	return self;	
-}
-
-
-- (void)dealloc
-{
-    // Do the regular Cocoa thing.
-    [super dealloc];
-}
-
-
-- (void)windowDidLoad
-{
-	//Try loading location into webview
-	WebFrame *frame = [webView mainFrame];
-	[frame loadRequest:[NSURLRequest requestWithURL:location]];
-}
-
-
-- (WebView*)WebView
-{
-	return webView;
-}
-
-
-@end
+	//Getting and Setting Methods
+	//...
+};
 
 
 /***********************************************~***************************************************/
+
+
+#endif //__SIGNAL_PORT_H__
 

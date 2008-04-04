@@ -115,8 +115,8 @@
 - (void)onResignKey
 {
 	//Invalidate the current timer and release
-	[_timer invalidate];
-	[_timer release];
+//	[_timer invalidate];
+//	[_timer release];
 
 	//Pass to active workbench
 	//...

@@ -7,7 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5806B9FD0DA3C0A800D9989D /* vis_listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5806B9FC0DA3C0A800D9989D /* vis_listener.cpp */; };
 		580873CC0D9A7C3600038336 /* wildcat.icns in Resources */ = {isa = PBXBuildFile; fileRef = 580873CB0D9A7C3600038336 /* wildcat.icns */; };
+		584541AA0DA53070005BC943 /* testvis.wildVis in Resources */ = {isa = PBXBuildFile; fileRef = 584541A90DA53070005BC943 /* testvis.wildVis */; };
+		584542840DA53E67005BC943 /* vis_udp_listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 584542830DA53E67005BC943 /* vis_udp_listener.cpp */; };
+		584542870DA53E78005BC943 /* vis_tcp_listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 584542860DA53E78005BC943 /* vis_tcp_listener.cpp */; };
+		5845428C0DA53F49005BC943 /* vis_listener_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5845428B0DA53F49005BC943 /* vis_listener_controller.cpp */; };
+		584542BC0DA54213005BC943 /* listener32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 584542BB0DA54213005BC943 /* listener32.tiff */; };
+		584542D30DA548EE005BC943 /* vis_recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 584542D20DA548EE005BC943 /* vis_recorder.cpp */; };
+		584543700DA55467005BC943 /* vis_recorder_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5845436F0DA55467005BC943 /* vis_recorder_controller.cpp */; };
+		5849B6050DA274890031E7CC /* visualization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B6040DA274890031E7CC /* visualization.cpp */; };
+		5849B6080DA275E20031E7CC /* vis_workbench.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B6070DA275E20031E7CC /* vis_workbench.cpp */; };
+		5849B60C0DA2873F0031E7CC /* vis_feature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B60B0DA2873F0031E7CC /* vis_feature.cpp */; };
+		5849B60F0DA287520031E7CC /* vis_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B60E0DA287520031E7CC /* vis_actions.cpp */; };
+		5849B6120DA287630031E7CC /* vis_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B6110DA287630031E7CC /* vis_controller.cpp */; };
+		5849B6280DA28D6C0031E7CC /* vis_document.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5849B6270DA28D6C0031E7CC /* vis_document.mm */; };
+		5849B62F0DA290990031E7CC /* visualization32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 5849B62E0DA290990031E7CC /* visualization32.tiff */; };
+		5849B6390DA291D90031E7CC /* vis_motiontracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B6380DA291D90031E7CC /* vis_motiontracker.cpp */; };
+		5849B6410DA2921C0031E7CC /* vis_motiontracker_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B6400DA2921C0031E7CC /* vis_motiontracker_controller.cpp */; };
+		5849B7220DA29B500031E7CC /* ground_plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B7210DA29B500031E7CC /* ground_plane.cpp */; };
 		584C6CE70D9BE5D400FF721F /* fixedSelected32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 584C6CE60D9BE5D400FF721F /* fixedSelected32.tiff */; };
 		585258050D7F173A00A0C6C8 /* centeredParallelogram32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585257FD0D7F173A00A0C6C8 /* centeredParallelogram32.tiff */; };
 		585258060D7F173A00A0C6C8 /* centeredRect32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585257FE0D7F173A00A0C6C8 /* centeredRect32.tiff */; };
@@ -93,7 +111,6 @@
 		585F350C0D68B0EA00673AE6 /* threePointArc32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585F34BC0D68B0EA00673AE6 /* threePointArc32.tiff */; };
 		585F350D0D68B0EA00673AE6 /* toolbar_manifest.xml in Resources */ = {isa = PBXBuildFile; fileRef = 585F34BD0D68B0EA00673AE6 /* toolbar_manifest.xml */; };
 		585F350E0D68B0EA00673AE6 /* topView32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585F34BE0D68B0EA00673AE6 /* topView32.tiff */; };
-		585F350F0D68B0EA00673AE6 /* translateIcon32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585F34BF0D68B0EA00673AE6 /* translateIcon32.tiff */; };
 		585F35100D68B0EA00673AE6 /* trim32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585F34C00D68B0EA00673AE6 /* trim32.tiff */; };
 		585F35110D68B0EA00673AE6 /* twoPointArc32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585F34C10D68B0EA00673AE6 /* twoPointArc32.tiff */; };
 		585F35120D68B0EA00673AE6 /* undo32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585F34C20D68B0EA00673AE6 /* undo32.tiff */; };
@@ -305,6 +322,13 @@
 		58DAD6500D69CC1E0093679D /* constraint_radius_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD64F0D69CC1E0093679D /* constraint_radius_controller.cpp */; };
 		58DAD6560D69CC4C0093679D /* constraint_radius_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD6550D69CC4C0093679D /* constraint_radius_edit_mode.cpp */; };
 		58DAD86D0D6A1E150093679D /* sketch_rectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37630D68B7DB00673AE6 /* sketch_rectangle.cpp */; };
+		58DB03930DA66B44008FF90E /* output1.signal in Resources */ = {isa = PBXBuildFile; fileRef = 58DB03920DA66B44008FF90E /* output1.signal */; };
+		58DB039A0DA6827A008FF90E /* record32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 58DB03990DA6827A008FF90E /* record32.tiff */; };
+		58DB039F0DA6834B008FF90E /* translate32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 58DB039E0DA6834B008FF90E /* translate32.tiff */; };
+		58DB05580DA6BC24008FF90E /* modal_dialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B20D68B69D00673AE6 /* modal_dialog.mm */; };
+		58DB05790DA6BD7D008FF90E /* docTypeSelector.html in Resources */ = {isa = PBXBuildFile; fileRef = 58DB05780DA6BD7D008FF90E /* docTypeSelector.html */; };
+		58DB05A20DA6BFF8008FF90E /* dialog_manifest.xml in Resources */ = {isa = PBXBuildFile; fileRef = 58DB05A10DA6BFF8008FF90E /* dialog_manifest.xml */; };
+		58DB05A70DA6C085008FF90E /* dialog_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DB05A60DA6C085008FF90E /* dialog_manager.cpp */; };
 		58F156D00D6B15A0008290F7 /* constraint_angle_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36140D68B4B700673AE6 /* constraint_angle_actions.cpp */; };
 		58F156D10D6B15A5008290F7 /* constraint_angle_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36160D68B4B700673AE6 /* constraint_angle_controller.cpp */; };
 		58F156DE0D6B18C4008290F7 /* constraint_angle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36120D68B4B700673AE6 /* constraint_angle.cpp */; };
@@ -316,7 +340,43 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		5806B9FB0DA3C0A800D9989D /* vis_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener.h; path = ../../Source/Workbenches/RTVisualization/vis_listener.h; sourceTree = SOURCE_ROOT; };
+		5806B9FC0DA3C0A800D9989D /* vis_listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener.cpp; sourceTree = SOURCE_ROOT; };
 		580873CB0D9A7C3600038336 /* wildcat.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = wildcat.icns; path = ../../Source/Application/MacOS/wildcat.icns; sourceTree = SOURCE_ROOT; };
+		584541A90DA53070005BC943 /* testvis.wildVis */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = testvis.wildVis; path = ../../Source/Workbenches/RTVisualization/testvis.wildVis; sourceTree = SOURCE_ROOT; };
+		584542820DA53E67005BC943 /* vis_udp_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_udp_listener.h; path = ../../Source/Workbenches/RTVisualization/vis_udp_listener.h; sourceTree = SOURCE_ROOT; };
+		584542830DA53E67005BC943 /* vis_udp_listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_udp_listener.cpp; path = ../../Source/Workbenches/RTVisualization/vis_udp_listener.cpp; sourceTree = SOURCE_ROOT; };
+		584542850DA53E78005BC943 /* vis_tcp_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_tcp_listener.h; path = ../../Source/Workbenches/RTVisualization/vis_tcp_listener.h; sourceTree = SOURCE_ROOT; };
+		584542860DA53E78005BC943 /* vis_tcp_listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_tcp_listener.cpp; path = ../../Source/Workbenches/RTVisualization/vis_tcp_listener.cpp; sourceTree = SOURCE_ROOT; };
+		5845428A0DA53F49005BC943 /* vis_listener_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_controller.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_controller.h; sourceTree = SOURCE_ROOT; };
+		5845428B0DA53F49005BC943 /* vis_listener_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener_controller.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener_controller.cpp; sourceTree = SOURCE_ROOT; };
+		584542BB0DA54213005BC943 /* listener32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = listener32.tiff; path = ../../Source/Resources/listener32.tiff; sourceTree = SOURCE_ROOT; };
+		584542D10DA548EE005BC943 /* vis_recorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_recorder.h; path = ../../Source/Workbenches/RTVisualization/vis_recorder.h; sourceTree = SOURCE_ROOT; };
+		584542D20DA548EE005BC943 /* vis_recorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_recorder.cpp; path = ../../Source/Workbenches/RTVisualization/vis_recorder.cpp; sourceTree = SOURCE_ROOT; };
+		584542EC0DA54ECD005BC943 /* vis_signal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_signal.h; path = ../../Source/Workbenches/RTVisualization/vis_signal.h; sourceTree = SOURCE_ROOT; };
+		5845436E0DA55467005BC943 /* vis_recorder_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_recorder_controller.h; path = ../../Source/Workbenches/RTVisualization/vis_recorder_controller.h; sourceTree = SOURCE_ROOT; };
+		5845436F0DA55467005BC943 /* vis_recorder_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_recorder_controller.cpp; path = ../../Source/Workbenches/RTVisualization/vis_recorder_controller.cpp; sourceTree = SOURCE_ROOT; };
+		5849B6030DA274890031E7CC /* visualization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = visualization.h; path = ../../Source/Workbenches/RTVisualization/visualization.h; sourceTree = SOURCE_ROOT; };
+		5849B6040DA274890031E7CC /* visualization.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = visualization.cpp; path = ../../Source/Workbenches/RTVisualization/visualization.cpp; sourceTree = SOURCE_ROOT; };
+		5849B6060DA275E20031E7CC /* vis_workbench.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_workbench.h; path = ../../Source/Workbenches/RTVisualization/vis_workbench.h; sourceTree = SOURCE_ROOT; };
+		5849B6070DA275E20031E7CC /* vis_workbench.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_workbench.cpp; path = ../../Source/Workbenches/RTVisualization/vis_workbench.cpp; sourceTree = SOURCE_ROOT; };
+		5849B60A0DA2873F0031E7CC /* vis_feature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_feature.h; path = ../../Source/Workbenches/RTVisualization/vis_feature.h; sourceTree = SOURCE_ROOT; };
+		5849B60B0DA2873F0031E7CC /* vis_feature.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_feature.cpp; path = ../../Source/Workbenches/RTVisualization/vis_feature.cpp; sourceTree = SOURCE_ROOT; };
+		5849B60D0DA287520031E7CC /* vis_actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_actions.h; path = ../../Source/Workbenches/RTVisualization/vis_actions.h; sourceTree = SOURCE_ROOT; };
+		5849B60E0DA287520031E7CC /* vis_actions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_actions.cpp; path = ../../Source/Workbenches/RTVisualization/vis_actions.cpp; sourceTree = SOURCE_ROOT; };
+		5849B6100DA287630031E7CC /* vis_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_controller.h; path = ../../Source/Workbenches/RTVisualization/vis_controller.h; sourceTree = SOURCE_ROOT; };
+		5849B6110DA287630031E7CC /* vis_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_controller.cpp; path = ../../Source/Workbenches/RTVisualization/vis_controller.cpp; sourceTree = SOURCE_ROOT; };
+		5849B6260DA28D6C0031E7CC /* vis_document.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_document.h; path = ../../Source/Application/MacOS/vis_document.h; sourceTree = SOURCE_ROOT; };
+		5849B6270DA28D6C0031E7CC /* vis_document.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = vis_document.mm; path = ../../Source/Application/MacOS/vis_document.mm; sourceTree = SOURCE_ROOT; };
+		5849B62E0DA290990031E7CC /* visualization32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = visualization32.tiff; path = ../../Source/Resources/visualization32.tiff; sourceTree = SOURCE_ROOT; };
+		5849B6370DA291D90031E7CC /* vis_motiontracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_motiontracker.h; path = ../../Source/Workbenches/RTVisualization/vis_motiontracker.h; sourceTree = SOURCE_ROOT; };
+		5849B6380DA291D90031E7CC /* vis_motiontracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_motiontracker.cpp; path = ../../Source/Workbenches/RTVisualization/vis_motiontracker.cpp; sourceTree = SOURCE_ROOT; };
+		5849B63F0DA2921C0031E7CC /* vis_motiontracker_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_motiontracker_controller.h; path = ../../Source/Workbenches/RTVisualization/vis_motiontracker_controller.h; sourceTree = SOURCE_ROOT; };
+		5849B6400DA2921C0031E7CC /* vis_motiontracker_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_motiontracker_controller.cpp; path = ../../Source/Workbenches/RTVisualization/vis_motiontracker_controller.cpp; sourceTree = SOURCE_ROOT; };
+		5849B7200DA29B500031E7CC /* ground_plane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ground_plane.h; path = ../../Source/Workbenches/RTVisualization/ground_plane.h; sourceTree = SOURCE_ROOT; };
+		5849B7210DA29B500031E7CC /* ground_plane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ground_plane.cpp; path = ../../Source/Workbenches/RTVisualization/ground_plane.cpp; sourceTree = SOURCE_ROOT; };
+		5849B8140DA2B55F0031E7CC /* vis_packet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_packet.h; path = ../../Source/Workbenches/RTVisualization/vis_packet.h; sourceTree = SOURCE_ROOT; };
+		5849B8150DA2B5980031E7CC /* wrtv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wrtv.h; path = ../../Source/Workbenches/RTVisualization/wrtv.h; sourceTree = SOURCE_ROOT; };
 		584C6CE60D9BE5D400FF721F /* fixedSelected32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = fixedSelected32.tiff; path = ../../Source/Resources/fixedSelected32.tiff; sourceTree = SOURCE_ROOT; };
 		585257FD0D7F173A00A0C6C8 /* centeredParallelogram32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = centeredParallelogram32.tiff; path = ../../Source/Resources/centeredParallelogram32.tiff; sourceTree = SOURCE_ROOT; };
 		585257FE0D7F173A00A0C6C8 /* centeredRect32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = centeredRect32.tiff; path = ../../Source/Resources/centeredRect32.tiff; sourceTree = SOURCE_ROOT; };
@@ -403,7 +463,6 @@
 		585F34BC0D68B0EA00673AE6 /* threePointArc32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = threePointArc32.tiff; path = ../../Source/Resources/threePointArc32.tiff; sourceTree = SOURCE_ROOT; };
 		585F34BD0D68B0EA00673AE6 /* toolbar_manifest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = toolbar_manifest.xml; path = ../../Source/Resources/toolbar_manifest.xml; sourceTree = SOURCE_ROOT; };
 		585F34BE0D68B0EA00673AE6 /* topView32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = topView32.tiff; path = ../../Source/Resources/topView32.tiff; sourceTree = SOURCE_ROOT; };
-		585F34BF0D68B0EA00673AE6 /* translateIcon32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = translateIcon32.tiff; path = ../../Source/Resources/translateIcon32.tiff; sourceTree = SOURCE_ROOT; };
 		585F34C00D68B0EA00673AE6 /* trim32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = trim32.tiff; path = ../../Source/Resources/trim32.tiff; sourceTree = SOURCE_ROOT; };
 		585F34C10D68B0EA00673AE6 /* twoPointArc32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = twoPointArc32.tiff; path = ../../Source/Resources/twoPointArc32.tiff; sourceTree = SOURCE_ROOT; };
 		585F34C20D68B0EA00673AE6 /* undo32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = undo32.tiff; path = ../../Source/Resources/undo32.tiff; sourceTree = SOURCE_ROOT; };
@@ -831,6 +890,14 @@
 		58DAD64F0D69CC1E0093679D /* constraint_radius_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = constraint_radius_controller.cpp; path = ../../Source/Constraint/constraint_radius_controller.cpp; sourceTree = SOURCE_ROOT; };
 		58DAD6540D69CC4C0093679D /* constraint_radius_modes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = constraint_radius_modes.h; path = ../../Source/Constraint/constraint_radius_modes.h; sourceTree = SOURCE_ROOT; };
 		58DAD6550D69CC4C0093679D /* constraint_radius_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = constraint_radius_edit_mode.cpp; path = ../../Source/Constraint/constraint_radius_modes.cpp; sourceTree = SOURCE_ROOT; };
+		58DB03920DA66B44008FF90E /* output1.signal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = output1.signal; path = ../../Source/Workbenches/RTVisualization/output1.signal; sourceTree = SOURCE_ROOT; };
+		58DB03990DA6827A008FF90E /* record32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = record32.tiff; path = ../../Source/Resources/record32.tiff; sourceTree = SOURCE_ROOT; };
+		58DB039E0DA6834B008FF90E /* translate32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = translate32.tiff; path = ../../Source/Resources/translate32.tiff; sourceTree = SOURCE_ROOT; };
+		58DB03A30DA6843C008FF90E /* signal_port.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = signal_port.h; path = ../../Source/Workbenches/RTVisualization/signal_port.h; sourceTree = SOURCE_ROOT; };
+		58DB05780DA6BD7D008FF90E /* docTypeSelector.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = docTypeSelector.html; path = ../../Source/Application/docTypeSelector.html; sourceTree = SOURCE_ROOT; };
+		58DB05A10DA6BFF8008FF90E /* dialog_manifest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = dialog_manifest.xml; path = ../../Source/Resources/dialog_manifest.xml; sourceTree = SOURCE_ROOT; };
+		58DB05A50DA6C085008FF90E /* dialog_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialog_manager.h; path = ../../Source/Application/dialog_manager.h; sourceTree = SOURCE_ROOT; };
+		58DB05A60DA6C085008FF90E /* dialog_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dialog_manager.cpp; path = ../../Source/Application/dialog_manager.cpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1011,6 +1078,160 @@
 			name = "Projection Point";
 			sourceTree = "<group>";
 		};
+		584541A60DA52FE6005BC943 /* Data Recorder */ = {
+			isa = PBXGroup;
+			children = (
+				584542CF0DA54309005BC943 /* Headers */,
+				584542CE0DA54304005BC943 /* Source */,
+			);
+			name = "Data Recorder";
+			sourceTree = "<group>";
+		};
+		584541A70DA52FF4005BC943 /* Scope */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Scope;
+			sourceTree = "<group>";
+		};
+		584541A80DA53053005BC943 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				58DB03920DA66B44008FF90E /* output1.signal */,
+				584541A90DA53070005BC943 /* testvis.wildVis */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		584541B50DA53450005BC943 /* Listeners */ = {
+			isa = PBXGroup;
+			children = (
+				584541B60DA5345F005BC943 /* Headers */,
+				584541B70DA53464005BC943 /* Source */,
+			);
+			name = Listeners;
+			sourceTree = "<group>";
+		};
+		584541B60DA5345F005BC943 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				5806B9FB0DA3C0A800D9989D /* vis_listener.h */,
+				5845428A0DA53F49005BC943 /* vis_listener_controller.h */,
+				584542850DA53E78005BC943 /* vis_tcp_listener.h */,
+				584542820DA53E67005BC943 /* vis_udp_listener.h */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		584541B70DA53464005BC943 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				5806B9FC0DA3C0A800D9989D /* vis_listener.cpp */,
+				5845428B0DA53F49005BC943 /* vis_listener_controller.cpp */,
+				584542860DA53E78005BC943 /* vis_tcp_listener.cpp */,
+				584542830DA53E67005BC943 /* vis_udp_listener.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		584542CE0DA54304005BC943 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				584542D20DA548EE005BC943 /* vis_recorder.cpp */,
+				5845436F0DA55467005BC943 /* vis_recorder_controller.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		584542CF0DA54309005BC943 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				584542D10DA548EE005BC943 /* vis_recorder.h */,
+				5845436E0DA55467005BC943 /* vis_recorder_controller.h */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		5849B5E80DA2741D0031E7CC /* RT Visualization */ = {
+			isa = PBXGroup;
+			children = (
+				584541A80DA53053005BC943 /* Resources */,
+				5849B5EB0DA2743A0031E7CC /* Headers */,
+				5849B5EA0DA274350031E7CC /* Source */,
+				5849B5E90DA2742E0031E7CC /* Features */,
+			);
+			name = "RT Visualization";
+			sourceTree = "<group>";
+		};
+		5849B5E90DA2742E0031E7CC /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				58DB03940DA67B83008FF90E /* Data Mapping */,
+				584541B50DA53450005BC943 /* Listeners */,
+				584541A60DA52FE6005BC943 /* Data Recorder */,
+				5849B6360DA291BB0031E7CC /* Motion Tracker */,
+				584541A70DA52FF4005BC943 /* Scope */,
+			);
+			name = Features;
+			sourceTree = "<group>";
+		};
+		5849B5EA0DA274350031E7CC /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				5849B7210DA29B500031E7CC /* ground_plane.cpp */,
+				5849B6040DA274890031E7CC /* visualization.cpp */,
+				5849B60E0DA287520031E7CC /* vis_actions.cpp */,
+				5849B6110DA287630031E7CC /* vis_controller.cpp */,
+				5849B60B0DA2873F0031E7CC /* vis_feature.cpp */,
+				5849B6070DA275E20031E7CC /* vis_workbench.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		5849B5EB0DA2743A0031E7CC /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				5849B8150DA2B5980031E7CC /* wrtv.h */,
+				5849B7200DA29B500031E7CC /* ground_plane.h */,
+				5849B6030DA274890031E7CC /* visualization.h */,
+				5849B60D0DA287520031E7CC /* vis_actions.h */,
+				5849B6100DA287630031E7CC /* vis_controller.h */,
+				5849B60A0DA2873F0031E7CC /* vis_feature.h */,
+				5849B8140DA2B55F0031E7CC /* vis_packet.h */,
+				58DB03A30DA6843C008FF90E /* signal_port.h */,
+				584542EC0DA54ECD005BC943 /* vis_signal.h */,
+				5849B6060DA275E20031E7CC /* vis_workbench.h */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		5849B6360DA291BB0031E7CC /* Motion Tracker */ = {
+			isa = PBXGroup;
+			children = (
+				5849B63B0DA291E30031E7CC /* Headers */,
+				5849B63A0DA291DE0031E7CC /* Source */,
+			);
+			name = "Motion Tracker";
+			sourceTree = "<group>";
+		};
+		5849B63A0DA291DE0031E7CC /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				5849B6380DA291D90031E7CC /* vis_motiontracker.cpp */,
+				5849B6400DA2921C0031E7CC /* vis_motiontracker_controller.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		5849B63B0DA291E30031E7CC /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				5849B6370DA291D90031E7CC /* vis_motiontracker.h */,
+				5849B63F0DA2921C0031E7CC /* vis_motiontracker_controller.h */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
 		585F346D0D68B06700673AE6 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
@@ -1066,6 +1287,7 @@
 				585F368A0D68B62400673AE6 /* Kernel */,
 				585F36890D68B61E00673AE6 /* Part Design */,
 				585F36870D68B60E00673AE6 /* Sketcher */,
+				5849B5E80DA2741D0031E7CC /* RT Visualization */,
 				585F36880D68B61500673AE6 /* To-Be Done */,
 			);
 			name = Workbenches;
@@ -1074,6 +1296,7 @@
 		585F34730D68B09200673AE6 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				58DB05A30DA6C020008FF90E /* Dialogs */,
 				585F368D0D68B64500673AE6 /* Resources */,
 				585F368C0D68B63B00673AE6 /* Headers */,
 				585F368B0D68B63300673AE6 /* Source */,
@@ -1084,6 +1307,7 @@
 		585F34740D68B09900673AE6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				58DB05A10DA6BFF8008FF90E /* dialog_manifest.xml */,
 				585F34B80D68B0EA00673AE6 /* shader_manifest.xml */,
 				585F34BB0D68B0EA00673AE6 /* texture_manifest.xml */,
 				585F34BD0D68B0EA00673AE6 /* toolbar_manifest.xml */,
@@ -1131,6 +1355,10 @@
 		585F34770D68B0CE00673AE6 /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				58DB039E0DA6834B008FF90E /* translate32.tiff */,
+				58DB03990DA6827A008FF90E /* record32.tiff */,
+				584542BB0DA54213005BC943 /* listener32.tiff */,
+				5849B62E0DA290990031E7CC /* visualization32.tiff */,
 				584C6CE60D9BE5D400FF721F /* fixedSelected32.tiff */,
 				585F34780D68B0EA00673AE6 /* angleConstraint32.tiff */,
 				585F34790D68B0EA00673AE6 /* autoConstraint32.tiff */,
@@ -1188,7 +1416,6 @@
 				585F34BA0D68B0EA00673AE6 /* sketch32.tiff */,
 				585F34BC0D68B0EA00673AE6 /* threePointArc32.tiff */,
 				585F34BE0D68B0EA00673AE6 /* topView32.tiff */,
-				585F34BF0D68B0EA00673AE6 /* translateIcon32.tiff */,
 				585F34C00D68B0EA00673AE6 /* trim32.tiff */,
 				585F34C10D68B0EA00673AE6 /* twoPointArc32.tiff */,
 				585F34C20D68B0EA00673AE6 /* undo32.tiff */,
@@ -1829,11 +2056,13 @@
 		585F368B0D68B63300673AE6 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				58DB05A60DA6C085008FF90E /* dialog_manager.cpp */,
 				585F36A80D68B69D00673AE6 /* document.mm */,
 				585F36AA0D68B69D00673AE6 /* HMBlkButton.m */,
 				585F36AC0D68B69D00673AE6 /* HMBlkButtonCell.m */,
 				585F36AE0D68B69D00673AE6 /* HMBlkContentView.m */,
 				585F36B00D68B69D00673AE6 /* HMBlkPanel.mm */,
+				585F369F0D68B68300673AE6 /* keymap.cpp */,
 				585F36B20D68B69D00673AE6 /* modal_dialog.mm */,
 				585F36B40D68B69D00673AE6 /* opengl_view.mm */,
 				585F36B60D68B69D00673AE6 /* part_document.mm */,
@@ -1841,9 +2070,9 @@
 				585F36B90D68B69D00673AE6 /* toolbar.mm */,
 				585F36BB0D68B69D00673AE6 /* toolbar_bridge.mm */,
 				585F36BD0D68B69D00673AE6 /* toolbar_osx.mm */,
-				585F36BE0D68B69D00673AE6 /* wildcat.mm */,
-				585F369F0D68B68300673AE6 /* keymap.cpp */,
 				585F36A20D68B68300673AE6 /* toolbar_manager.cpp */,
+				5849B6270DA28D6C0031E7CC /* vis_document.mm */,
+				585F36BE0D68B69D00673AE6 /* wildcat.mm */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -1851,20 +2080,22 @@
 		585F368C0D68B63B00673AE6 /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				58DB05A50DA6C085008FF90E /* dialog_manager.h */,
 				585F36A70D68B69D00673AE6 /* document.h */,
 				585F36A90D68B69D00673AE6 /* HMBlkButton.h */,
 				585F36AB0D68B69D00673AE6 /* HMBlkButtonCell.h */,
 				585F36AD0D68B69D00673AE6 /* HMBlkContentView.h */,
 				585F36AF0D68B69D00673AE6 /* HMBlkPanel.h */,
+				585F36A00D68B68300673AE6 /* keymap.h */,
 				585F36B10D68B69D00673AE6 /* modal_dialog.h */,
 				585F36B30D68B69D00673AE6 /* opengl_view.h */,
 				585F36B50D68B69D00673AE6 /* part_document.h */,
 				585F36B70D68B69D00673AE6 /* render_window.h */,
+				585F36A10D68B68300673AE6 /* toolbar.h */,
 				585F36BA0D68B69D00673AE6 /* toolbar_bridge.h */,
 				585F36BC0D68B69D00673AE6 /* toolbar_osx.h */,
-				585F36A00D68B68300673AE6 /* keymap.h */,
-				585F36A10D68B68300673AE6 /* toolbar.h */,
 				585F36A30D68B68300673AE6 /* toolbar_manager.h */,
+				5849B6260DA28D6C0031E7CC /* vis_document.h */,
 				585F36A40D68B68300673AE6 /* wildcat.h */,
 			);
 			name = Headers;
@@ -2679,6 +2910,37 @@
 			name = Headers;
 			sourceTree = "<group>";
 		};
+		58DB03940DA67B83008FF90E /* Data Mapping */ = {
+			isa = PBXGroup;
+			children = (
+				58DB03960DA67B94008FF90E /* Headers */,
+				58DB03950DA67B8B008FF90E /* Source */,
+			);
+			name = "Data Mapping";
+			sourceTree = "<group>";
+		};
+		58DB03950DA67B8B008FF90E /* Source */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		58DB03960DA67B94008FF90E /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		58DB05A30DA6C020008FF90E /* Dialogs */ = {
+			isa = PBXGroup;
+			children = (
+				58DB05780DA6BD7D008FF90E /* docTypeSelector.html */,
+			);
+			name = Dialogs;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2793,7 +3055,6 @@
 				585F350C0D68B0EA00673AE6 /* threePointArc32.tiff in Resources */,
 				585F350D0D68B0EA00673AE6 /* toolbar_manifest.xml in Resources */,
 				585F350E0D68B0EA00673AE6 /* topView32.tiff in Resources */,
-				585F350F0D68B0EA00673AE6 /* translateIcon32.tiff in Resources */,
 				585F35100D68B0EA00673AE6 /* trim32.tiff in Resources */,
 				585F35110D68B0EA00673AE6 /* twoPointArc32.tiff in Resources */,
 				585F35120D68B0EA00673AE6 /* undo32.tiff in Resources */,
@@ -2842,6 +3103,14 @@
 				5852581C0D7F179C00A0C6C8 /* keyhole32.tiff in Resources */,
 				580873CC0D9A7C3600038336 /* wildcat.icns in Resources */,
 				584C6CE70D9BE5D400FF721F /* fixedSelected32.tiff in Resources */,
+				5849B62F0DA290990031E7CC /* visualization32.tiff in Resources */,
+				584541AA0DA53070005BC943 /* testvis.wildVis in Resources */,
+				584542BC0DA54213005BC943 /* listener32.tiff in Resources */,
+				58DB03930DA66B44008FF90E /* output1.signal in Resources */,
+				58DB039A0DA6827A008FF90E /* record32.tiff in Resources */,
+				58DB039F0DA6834B008FF90E /* translate32.tiff in Resources */,
+				58DB05790DA6BD7D008FF90E /* docTypeSelector.html in Resources */,
+				58DB05A20DA6BFF8008FF90E /* dialog_manifest.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3029,6 +3298,23 @@
 				589AC2330D734343001725D0 /* constraint_coincidence_actions.cpp in Sources */,
 				58B27F780D785FC4008951D9 /* sketch_circle_edit_mode.cpp in Sources */,
 				587CB6EA0D89A48D00833178 /* sketch_arc_edit_mode.cpp in Sources */,
+				5849B6050DA274890031E7CC /* visualization.cpp in Sources */,
+				5849B6080DA275E20031E7CC /* vis_workbench.cpp in Sources */,
+				5849B60C0DA2873F0031E7CC /* vis_feature.cpp in Sources */,
+				5849B60F0DA287520031E7CC /* vis_actions.cpp in Sources */,
+				5849B6120DA287630031E7CC /* vis_controller.cpp in Sources */,
+				5849B6280DA28D6C0031E7CC /* vis_document.mm in Sources */,
+				5849B6390DA291D90031E7CC /* vis_motiontracker.cpp in Sources */,
+				5849B6410DA2921C0031E7CC /* vis_motiontracker_controller.cpp in Sources */,
+				5849B7220DA29B500031E7CC /* ground_plane.cpp in Sources */,
+				5806B9FD0DA3C0A800D9989D /* vis_listener.cpp in Sources */,
+				584542840DA53E67005BC943 /* vis_udp_listener.cpp in Sources */,
+				584542870DA53E78005BC943 /* vis_tcp_listener.cpp in Sources */,
+				5845428C0DA53F49005BC943 /* vis_listener_controller.cpp in Sources */,
+				584542D30DA548EE005BC943 /* vis_recorder.cpp in Sources */,
+				584543700DA55467005BC943 /* vis_recorder_controller.cpp in Sources */,
+				58DB05580DA6BC24008FF90E /* modal_dialog.mm in Sources */,
+				58DB05A70DA6C085008FF90E /* dialog_manager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

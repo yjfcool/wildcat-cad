@@ -59,8 +59,8 @@ private:
 	std::stack< std::list< std::pair<bool,WCToolbar*> > > _stateStack;								//!< Push/pop stack
 
 	//Private Methods
-	void ParseManifest(std::string manifest, std::string directory, bool verbose);					//!< Parse the given manifest
-	void ParseUserConfig(std::string prefFile, std::string directory, bool verbose);				//!< Parse the given user preferences
+	void ParseManifest(const std::string &manifest, const std::string &directory, const bool &verbose);		//!< Parse the given manifest
+	void ParseUserConfig(const std::string &prefFile, const std::string &directory, const bool &verbose);	//!< Parse the given user preferences
 	
 	//Deny Access
 	WCToolbarManager();																				//!< Deny access to default constructor

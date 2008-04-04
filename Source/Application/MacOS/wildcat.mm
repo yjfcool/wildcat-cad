@@ -29,6 +29,11 @@
 /*** Inluded Header Files ***/
 #import <Cocoa/Cocoa.h>
 #include "Utility/log_manager.h"
+#include "Application/dialog_manager.h"
+
+#import "Application/MacOS/modal_dialog.h"
+#import "Application/MacOS/part_document.h"
+#import "Application/MacOS/vis_document.h"
 
 
 /***********************************************~***************************************************/
@@ -44,9 +49,73 @@ void InitApplication(void) {
 
 void ShutdownApplication(void) {
 	//Terminate the managers
+	WCDialogManager::Terminate();
 	xercesc::XMLPlatformUtils::Terminate();
 	WCLogManager::Terminate();
 }
+
+
+/***********************************************~***************************************************/
+
+
+@interface WCDocumentController : NSDocumentController
+{
+}
+- (id)makeUntitledDocumentOfType:(NSString *)typeName error:(NSError **)outError;
+@end
+
+@implementation WCDocumentController
+
+- (id)makeUntitledDocumentOfType:(NSString *)typeName error:(NSError **)outError
+{
+	//Show dialog to ask for document type
+	WCDialog *dialog = WCDialogManager::DialogFromName("docTypeSelector");
+	WCModalDialog *typeSelector = [[WCModalDialog alloc] initWithDialog:dialog];
+	[[typeSelector window] orderFront:self];
+
+	//Lets create a VisDocument
+//	WCVisDocument *document = [[WCVisDocument alloc] initWithType:typeName error:outError];
+	WCPartDocument *document = [[WCPartDocument alloc] initWithType:typeName error:outError];
+	return document;
+}
+@end
+
+
+/***********************************************~***************************************************/
+
+
+@interface WCAppDelegate : NSObject
+{
+}
+- (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
+- (void)applicationWillTerminate:(NSNotification *)aNotification;
+@end
+
+@implementation WCAppDelegate
+- (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
+	//Initialize the dialog manager (must be here because needs Bundle to be active for resource directory path)
+	WCDialogManager::Initialize("dialog_manifest.xml", false);
+	//Create the default document controller
+	WCDocumentController *controller = [[WCDocumentController alloc] init];
+	//Make sure a valid controller was created
+	if (!controller) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCAppDelegate::applicationWillFinishLaunching - Not able to create Document Controller.");
+		//throw error
+		exit(-1);
+	}
+}
+
+
+- (void)applicationWillTerminate:(NSNotification *)aNotification
+{
+	//Shutdown the application
+	ShutdownApplication();
+}
+
+@end
+
+
+/***********************************************~***************************************************/
 
 
 int main(int argc, char *argv[])
@@ -54,15 +123,20 @@ int main(int argc, char *argv[])
 	//Init the app
 	InitApplication();
 
+	//Begin setting up the App delegate
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	WCAppDelegate *delegate = [[WCAppDelegate alloc] autorelease];
+
 	//Create the main application instance (NSApp is global instance)
-	[NSApplication sharedApplication];
+	NSApplication *app = [NSApplication sharedApplication];
+	[app setDelegate:delegate];
 	//Load the initial NIB
 	[NSBundle loadNibNamed:@"MainMenu" owner:NSApp];
 	//Run the main loop
 	[NSApp run];
 
-	//Shutdown the app
-	ShutdownApplication();
+	//Clean up the autoreleaes pool
+	 [pool release];
 
 	//Exit the application
 	return 1;

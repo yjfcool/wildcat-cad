@@ -34,7 +34,7 @@
 /***********************************************~***************************************************/
 
 
-void WCToolbarManager::ParseManifest(std::string manifest, std::string directory, bool verbose) {
+void WCToolbarManager::ParseManifest(const std::string &manifest, const std::string &directory, const bool &verbose) {
 	//Create xml parser
 	xercesc::XercesDOMParser* parser = new xercesc::XercesDOMParser();
 	//Set validation scheme
@@ -252,7 +252,7 @@ void WCToolbarManager::ParseManifest(std::string manifest, std::string directory
 }
 
 
-void WCToolbarManager::ParseUserConfig(std::string prefFile, std::string directory, bool verbose) {
+void WCToolbarManager::ParseUserConfig(const std::string &prefFile, const std::string &directory, const bool &verbose) {
 }
 
 

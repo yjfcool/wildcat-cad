@@ -24,6 +24,24 @@
 			<key>NSDocumentClass</key>
 			<string>WCPartDocument</string>
 		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>wildVis</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>wildcat</string>
+			<key>CFBundleTypeName</key>
+			<string>DocumentType</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>????</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>NSDocumentClass</key>
+			<string>WCVisDocument</string>
+		</dict>
 	</array>
 	<key>CFBundleHelpBookName</key>
 	<string>Wildcat Help</string>

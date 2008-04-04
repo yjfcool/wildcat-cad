@@ -26,79 +26,28 @@
 ********************************************************************************/
 
 
-//Imported Header Files
-#import "Application/MacOS/modal_dialog.h"
+#ifndef __WILDCAT_REALTIME_VISUALIZATION_LIBRARY_H__
+#define __WILDCAT_REALTIME_VISUALIZATION_LIBRARY_H__
 
 
 /***********************************************~***************************************************/
 
 
-@implementation WCModalDialog
+//Networking Included Headers
+#include <sys/types.h>	/* basic system data types */
+#include <sys/socket.h>	/* basic socket definitions */
+#include <sys/time.h>	/* timeval{} for select() */
+#include <netinet/in.h>	/* sockaddr_in{} and other Internet defns */
+#include <arpa/inet.h>	/* inet(3) functions */
+#include <pthread.h>
 
 
-- (id)init
-{
-    // Do the regular Cocoa thing, specifying a particular nib.
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	location = [NSURL URLWithString:@"http://www.cerrokai.com"];
-    return self;
-}
-
-
-- (id)initWithLocation:(NSURL*)url
-{
-	//Do the cocoa thing
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	location = url;
-	return self;
-}
-
-
-- (id)initWithDialog:(WCDialog*)dialog
-{
-	//Set the dialog
-	_dialog = dialog;
-	//Get full path of dialog
-	std::string str = "/" + dialog->Name() + ".html";
-	NSString *cstr = [NSString stringWithCString:str.c_str() encoding:NSUTF8StringEncoding];
-	NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingString:cstr];
-	location = location = [NSURL URLWithString:path];
-
-	//Do the cocoa thing
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	//Set the windowsize
-	NSRect rect = [[self window] frame];
-	rect.size.width = dialog->Width();
-	rect.size.height = dialog->Height();
-	[[self window] setFrame:rect display:YES];
-	//Return the object
-	return self;	
-}
-
-
-- (void)dealloc
-{
-    // Do the regular Cocoa thing.
-    [super dealloc];
-}
-
-
-- (void)windowDidLoad
-{
-	//Try loading location into webview
-	WebFrame *frame = [webView mainFrame];
-	[frame loadRequest:[NSURLRequest requestWithURL:location]];
-}
-
-
-- (WebView*)WebView
-{
-	return webView;
-}
-
-
-@end
+//Kernel Headers
+#include "Kernel/wftrl.h"
 
 
 /***********************************************~***************************************************/
+
+
+#endif //__WILDCAT_REALTIME_VISUALIZATION_LIBRARY_H__
 

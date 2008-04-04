@@ -38,6 +38,8 @@
 
 
 void WCText::GenerateTexture(void) {
+	//Check for empty string
+	if (this->_text == "") CLOGGER_ERROR(WCLogManager::RootLogger(), "WCText::GenerateTexture - Empty string passed for generation.");
 	//Set up the text color
 	NSColor *textColor = [NSColor colorWithCalibratedRed:this->_color.R() green:this->_color.G() blue:this->_color.B() alpha:this->_color.A()];
 	//Set up the font

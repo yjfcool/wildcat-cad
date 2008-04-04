@@ -26,79 +26,46 @@
 ********************************************************************************/
 
 
-//Imported Header Files
-#import "Application/MacOS/modal_dialog.h"
+#ifndef __VISUALIZATION_PACKET_H__
+#define __VISUALIZATION_PACKET_H__
+
+
+/*** Included Header Files ***/
+#include "RTVisualization/wrtv.h"
+
+
+/*** Local Defines ***/
+//None
+
+
+/*** Class Predefines ***/
+//None
 
 
 /***********************************************~***************************************************/
 
 
-@implementation WCModalDialog
+struct WSVisualizationHeader {
+	unsigned int								objectID;
+	unsigned int								size;
+	unsigned int								type;
+};
 
 
-- (id)init
-{
-    // Do the regular Cocoa thing, specifying a particular nib.
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	location = [NSURL URLWithString:@"http://www.cerrokai.com"];
-    return self;
-}
-
-
-- (id)initWithLocation:(NSURL*)url
-{
-	//Do the cocoa thing
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	location = url;
-	return self;
-}
-
-
-- (id)initWithDialog:(WCDialog*)dialog
-{
-	//Set the dialog
-	_dialog = dialog;
-	//Get full path of dialog
-	std::string str = "/" + dialog->Name() + ".html";
-	NSString *cstr = [NSString stringWithCString:str.c_str() encoding:NSUTF8StringEncoding];
-	NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingString:cstr];
-	location = location = [NSURL URLWithString:path];
-
-	//Do the cocoa thing
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	//Set the windowsize
-	NSRect rect = [[self window] frame];
-	rect.size.width = dialog->Width();
-	rect.size.height = dialog->Height();
-	[[self window] setFrame:rect display:YES];
-	//Return the object
-	return self;	
-}
-
-
-- (void)dealloc
-{
-    // Do the regular Cocoa thing.
-    [super dealloc];
-}
-
-
-- (void)windowDidLoad
-{
-	//Try loading location into webview
-	WebFrame *frame = [webView mainFrame];
-	[frame loadRequest:[NSURLRequest requestWithURL:location]];
-}
-
-
-- (WebView*)WebView
-{
-	return webView;
-}
-
-
-@end
+struct WSVisualizationPacket {
+	WSVisualizationHeader						header;
+	unsigned int								sequence;
+	float										xPosition, yPosition, zPosition;
+	float										xAngle, yAngle, zAngle;
+	float										xVelocity, yVelocity, zVelocity;
+	float										xAngularVelocity, yAngularVelocity, zAngularVelocity;
+	float										xAcceleration, yAcceleration, zAcceleration;
+	float										xAngularAcceleration, yAngularAcceleration, zAngularAcceleration;
+};
 
 
 /***********************************************~***************************************************/
+
+
+#endif //__VISUALIZATION_PACKET_H__
 
