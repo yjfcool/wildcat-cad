@@ -1,4 +1,3 @@
-/*** Imported Header Files ***/
 /*******************************************************************************
 * Copyright (c) 2007, 2008, CerroKai Development
 * All rights reserved.
@@ -27,6 +26,7 @@
 ********************************************************************************/
 
 
+/*** Imported Header Files ***/
 #import "Application/MacOS/document.h"
 #import "Application/MacOS/render_window.h"
 

@@ -26,45 +26,33 @@
 ********************************************************************************/
 
 
-#ifndef __MODAL_DIALOG_OSX_H__
-#define __MODAL_DIALOG_OSX_H__
+#ifndef __DOCUMENT_CONTROLLER_H__
+#define __DOCUMENT_CONTROLLER_H__
 
 
 /*** Imported Header Files ***/
 #import <Cocoa/Cocoa.h>
-#import <WebKit/WebView.h>
 
 
 /*** Included Header Files ***/
-#include "Application/dialog_manager.h"
+#include "Utility/wutil.h"
 
 
-/*** Objective-C Class Predefines ***/
+/*** C++ Class Predefinitions ***/
+//None
+
+
+/*** Objective-C Class Predefinitions ***/
 //None
 
 
 /***********************************************~***************************************************/
 
 
-@interface WCModalDialog : NSWindowController {
-	IBOutlet WebView							*webView;											//!< Associated webview object
-	NSURL										*location;											//!< Current location
-	WCDialog									*_dialog;											//!< Associated dialog object
-	NSModalSession								_session;											//!< Modal session info
-	NSString									*_docType;			/* value shared between Objective-C and JavaScript */
+@interface WCDocumentController : NSDocumentController
+{
 }
-
-- (id)initWithLocation:(NSURL*)url;																	//!< Initialize with a specific web location
-- (id)initWithDialog:(std::string)dialogName;														//!< Initialize with a specific dialog
-- (WebView*)WebView;																				//!< Get the embedded webview
-- (void)windowWillClose:(NSNotification *)notification;												//!< Make sure close of window is captured
-- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame;							//!< Act as delegate for webframe and get load status
-
-/*** Script Object Get Methods ***/
-- (std::string)getStringFromScript:(std::string)var;												//!< Deletegate calls to get script value
-- (WPFloat)getFloatFromScript:(std::string)var;														//!< Deletegate calls to get script value
-- (WPInt)getIntFromScript:(std::string)var;															//!< Deletegate calls to get script value
-- (WPUInt)getUnsignedIntFromScript:(std::string)var;													//!< Deletegate calls to get script value
+- (id)makeUntitledDocumentOfType:(NSString *)typeName error:(NSError **)outError;
 
 
 @end
@@ -73,5 +61,5 @@
 /***********************************************~***************************************************/
 
 
-#endif //__MODAL_DIALOG_OSX_H__
+#endif // __DOCUMENT_CONTROLLER_H__
 

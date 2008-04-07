@@ -30,10 +30,7 @@
 #import <Cocoa/Cocoa.h>
 #include "Utility/log_manager.h"
 #include "Application/dialog_manager.h"
-
-#import "Application/MacOS/modal_dialog.h"
-#import "Application/MacOS/part_document.h"
-#import "Application/MacOS/vis_document.h"
+#include "Application/MacOS/document_controller.h"
 
 
 /***********************************************~***************************************************/
@@ -58,38 +55,13 @@ void ShutdownApplication(void) {
 /***********************************************~***************************************************/
 
 
-@interface WCDocumentController : NSDocumentController
-{
-}
-- (id)makeUntitledDocumentOfType:(NSString *)typeName error:(NSError **)outError;
-@end
-
-@implementation WCDocumentController
-
-- (id)makeUntitledDocumentOfType:(NSString *)typeName error:(NSError **)outError
-{
-	//Show dialog to ask for document type
-	WCDialog *dialog = WCDialogManager::DialogFromName("docTypeSelector");
-	WCModalDialog *typeSelector = [[WCModalDialog alloc] initWithDialog:dialog];
-	[[typeSelector window] orderFront:self];
-
-	//Lets create a VisDocument
-//	WCVisDocument *document = [[WCVisDocument alloc] initWithType:typeName error:outError];
-	WCPartDocument *document = [[WCPartDocument alloc] initWithType:typeName error:outError];
-	return document;
-}
-@end
-
-
-/***********************************************~***************************************************/
-
-
 @interface WCAppDelegate : NSObject
 {
 }
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
 - (void)applicationWillTerminate:(NSNotification *)aNotification;
 @end
+
 
 @implementation WCAppDelegate
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
