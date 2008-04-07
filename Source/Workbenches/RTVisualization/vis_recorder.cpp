@@ -80,6 +80,27 @@ WCVisRecorder::WCVisRecorder(WCVisualization *vis, const std::string &name, cons
 }
 
 
+WCVisRecorder::WCVisRecorder(xercesc::DOMElement *element, WCSerialDictionary *dictionary) : 
+	::WCVisFeature( WCSerializeableObject::ElementFromName(element,"VisFeature"), dictionary),
+	_clearOnReset(true), _clearOnStart(false), _recordList(), _maxRecords(0) {
+	//Make sure element if not null
+	if (element == NULL) return;
+	//Get GUID and register it
+	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
+	dictionary->InsertGUID(guid, this);
+
+	//Set the clearOnReset flag
+	this->_clearOnReset = WCSerializeableObject::GetBoolAttrib(element, "clearOnReset");
+	//Set the clearOnStart flag
+	this->_clearOnStart = WCSerializeableObject::GetBoolAttrib(element, "clearOnStart");
+	//Set the max records
+	this->_maxRecords = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "maxRecords");
+
+	//Initialize the recorder
+	this->Initialize();
+}
+
+
 WCVisRecorder::~WCVisRecorder() {
 	//Make sure buffer is cleared
 	this->ClearBuffer();

@@ -14,7 +14,7 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>wildcat</string>
 			<key>CFBundleTypeName</key>
-			<string>DocumentType</string>
+			<string>Part Document</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>????</string>
@@ -28,11 +28,12 @@
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>wildVis</string>
+				<string>signal</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>wildcat</string>
 			<key>CFBundleTypeName</key>
-			<string>DocumentType</string>
+			<string>Visualization Document</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>????</string>
@@ -43,12 +44,12 @@
 			<string>WCVisDocument</string>
 		</dict>
 	</array>
-	<key>CFBundleHelpBookName</key>
-	<string>Wildcat Help</string>
-	<key>CFBundleHelpBookFolder</key>
-	<string>Wildcat Help</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleHelpBookFolder</key>
+	<string>Wildcat Help</string>
+	<key>CFBundleHelpBookName</key>
+	<string>Wildcat Help</string>
 	<key>CFBundleIconFile</key>
 	<string>wildcat</string>
 	<key>CFBundleIdentifier</key>

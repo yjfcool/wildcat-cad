@@ -117,8 +117,6 @@
 		[super document:_visualization];
 //		[super setFileName:@""];
 //		[[_renderWindow window] setTitle:@"Test me"];
-		//Set up default surface renderer
-//		WCPartFeature::DefaultSurfaceRenderer = _part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight");
 		//Try resize
 		[super onResize:[[_renderWindow renderView] frame].size];
 	}
@@ -171,8 +169,6 @@
 
 		//Set the super document's document pointer
 		[super document:_visualization];
-		//Set up default surface renderer
-//		WCPartFeature::DefaultSurfaceRenderer = _part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight");
 		//Try resize
 		[super onResize:[[_renderWindow renderView] frame].size];
 	}

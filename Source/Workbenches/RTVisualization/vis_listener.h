@@ -57,6 +57,7 @@ protected:
 protected:
 	virtual void Listen(void)=0;																	//!< Listen for data on the port
 	static void* ThreadEntryPoint(void* lisener);													//!< Primary thread entry callback
+	void Initialize(void);																			//!< Initialization method
 private:
 	//Hidden Constructors
 	WCVisListener();																				//!< Deny access to default constructor
@@ -65,7 +66,8 @@ private:
 public:
 	//Constructors and Destructors
 	WCVisListener(WCVisualization *vis, const std::string &name, const unsigned int &port);			//!< Primary constructor
-	virtual ~WCVisListener();																				//!< Default destructor
+	WCVisListener(xercesc::DOMElement *element, WCSerialDictionary *dictionary);					//!< Persistance constructor
+	virtual ~WCVisListener();																		//!< Default destructor
 	
 	//Member Access Methods
 	virtual unsigned int Port(void)				{ return this->_port; }								//!< Handle renaming the feature
@@ -81,6 +83,9 @@ public:
 
 	//Required Inherited Methods
 	virtual bool Regenerate(void)				{ return true; }									//!< Validate and rebuild
+
+	/*** Friend Methods ***/
+	friend std::ostream& operator<<(std::ostream& out, const WCVisListener &listener);				//!< Overloaded output operator	
 };
 
 

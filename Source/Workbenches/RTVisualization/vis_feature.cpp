@@ -30,6 +30,11 @@
 #include "RTVisualization/vis_feature.h"
 #include "RTVisualization/visualization.h"
 
+/*** Included Feature Headers ***/
+#include "RTVisualization/vis_recorder.h"
+#include "RTVisualization/vis_udp_listener.h"
+#include "RTVisualization/vis_motiontracker.h"
+
 
 /***********************************************~***************************************************/
 
@@ -44,14 +49,23 @@ WCVisFeature::WCVisFeature(WCVisualization *vis, const std::string &name, const 
 
 
 WCVisFeature::WCVisFeature(xercesc::DOMElement *element, WCSerialDictionary *dictionary) : 
-	::WCFeature( WCSerializeableObject::ElementFromName(element,"Feature"), dictionary) {
+	::WCFeature( WCSerializeableObject::ElementFromName(element,"Feature"), dictionary),
+	_visualization(NULL), _id(0) {
 	//Make sure element if not null
 	if (element == NULL) return;
 	//Get GUID and register it
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
 	dictionary->InsertGUID(guid, this);
+
+	//Initialize thread mutex
+	int retVal = pthread_mutex_init(&this->_mutex, NULL);
+	//Make sure return is happy
+	if (retVal != 0) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisFeature::WCVisFeature - Bad return from pthread_mutex_init: " << retVal);
+
 	//Set the visualization attribute
 	this->_visualization = (WCVisualization*)WCSerializeableObject::GetGUIDAttrib(element, "visualization", dictionary);
+	//Set the feature ID
+	this->_id = (unsigned int)WCSerializeableObject::GetFloatAttrib(element, "id");
 }
 
 
@@ -104,38 +118,25 @@ bool WCVisFeature::Deserialize(xercesc::DOMElement* featureElement, WCSerialDict
 	const XMLCh* xmlString = featureElement->getTagName();
 	std::string name( xercesc::XMLString::transcode(xmlString) );
 
-//	//Find the feature to create
-//	if (name == "PartBody") {
-//		//Create the body feature
-//		new WCPartBody(featureElement, dictionary);
-//		//All is good here
-//		return true;
-//	}
-//	else if (name == "PartPad") {
-//		//Create the pad feature
-//		new WCPartPad(featureElement, dictionary);
-//		//All is good here
-//		return true;
-//	}
-//	else if (name == "PartPlane") {
-//		//Create the plane feature
-//		new WCPartPlane(featureElement, dictionary);
-//		//All is good here
-//		return true;
-//	}
-//	else if (name == "PartShaft") {
-//		//Create the shaft feature
-//		new WCPartShaft(featureElement, dictionary);
-//		//All is good here
-//		return true;
-//	}
-//	else if (name == "Sketch") {
-//		//Create the sketch feature
-//		new WCSketch(featureElement, dictionary);
-//		//All is good here
-//		return true;
-//	}
-
+	//Find the feature to create
+	if (name == "VisDataRecorder") {
+		//Create the data recorder feature
+		new WCVisRecorder(featureElement, dictionary);
+		//All is good here
+		return true;
+	}
+	else if (name == "VisUDPListener") {
+		//Create the UDP Listener
+		new WCVisUDPListener(featureElement, dictionary);
+		//All is good here
+		return true;
+	}
+	else if (name == "VisMotionTracker") {
+		//Create the plane feature
+		new WCVisMotionTracker(featureElement, dictionary);
+		//All is good here
+		return true;
+	}
 	//Unknown feature case
 	CLOGGER_WARN(WCLogManager::RootLogger(), "WCVisFeature::Deserialize - Unknown part feature: " << name);
 	return false;

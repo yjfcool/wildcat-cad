@@ -45,7 +45,7 @@
 {
 	//Show dialog to ask for document type
 	WCModalDialog *typeSelector = [[WCModalDialog alloc] initWithDialog:"docTypeSelector"];
-	//Wiat for response
+	//Wait for response
 	//...
 	
 

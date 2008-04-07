@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-	<dialog name="docTypeSelector" width="100" height="100" modal="true"/>
+	<dialog name="docTypeSelector" width="300" height="100" modal="true" boundary="true"/>
 </manifest>

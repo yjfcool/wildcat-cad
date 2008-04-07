@@ -112,7 +112,7 @@ void WCVisUDPListener::Listen(void) {
 			memcpy(payload, (unsigned char*)data + headerSize, header->size);
 			//Send data to vis feature
 			feature = this->_visualization->FeatureFromID(header->objectID);
-			feature->OnReceiveData(header->type, payload);
+			if (feature != NULL) feature->OnReceiveData(header->type, payload);
 
 			//See about recording the data
 			if (this->_recorder != NULL) this->_recorder->OnReceiveData(header->type, data);
@@ -123,11 +123,7 @@ void WCVisUDPListener::Listen(void) {
 }
 
 
-/***********************************************~***************************************************/
-
-
-WCVisUDPListener::WCVisUDPListener(WCVisualization *vis, const std::string &name, const unsigned int &port) :
-	::WCVisListener(vis, name, port) {
+void WCVisUDPListener::Initialize(void) {
 	//Check feature name
 	if (this->_name == "") this->_name = this->_visualization->GenerateFeatureName(this);
 	//Create listener controller
@@ -140,6 +136,29 @@ WCVisUDPListener::WCVisUDPListener(WCVisualization *vis, const std::string &name
 
 	//Create thread and let it get to listening
 	pthread_create(&this->_listener, NULL, WCVisListener::ThreadEntryPoint, this);
+}
+
+
+/***********************************************~***************************************************/
+
+
+WCVisUDPListener::WCVisUDPListener(WCVisualization *vis, const std::string &name, const unsigned int &port) :
+	::WCVisListener(vis, name, port) {
+	//Initialize
+	this->Initialize();
+}
+
+
+WCVisUDPListener::WCVisUDPListener(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
+	::WCVisListener( WCSerializeableObject::ElementFromName(element,"VisListener"), dictionary) {
+	//Make sure element if not null
+	if (element == NULL) return;
+	//Get GUID and register it
+	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
+	dictionary->InsertGUID(guid, this);
+
+	//Initialize
+	this->Initialize();
 }
 
 

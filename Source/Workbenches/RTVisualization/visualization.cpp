@@ -67,9 +67,6 @@ void WCVisualization::Initialize(void) {
 	//Create workbench and enter it
 	this->_workbench = new WCVisWorkbench(this);
 	this->_workbench->Retain(*this);
-	this->_workbench->CreateInitialObjects();
-	if (this->_document == this)
-		this->EnterWorkbench(this->_workbench);
 }
 
 
@@ -81,6 +78,10 @@ WCVisualization::WCVisualization(const std::string &configFile, const std::strin
 	_featureTreeElement(NULL), _listenerTreeElement(NULL), _recorderTreeElement(NULL), _state(WCVisualizationState::Stopped()) {
 	//Just initialize the visualization
 	this->Initialize();
+	//Create initial object and enter the workbench
+	this->_workbench->CreateInitialObjects();
+	if (this->_document == this)
+		this->EnterWorkbench(this->_workbench);
 }
 
 
@@ -94,26 +95,13 @@ WCVisualization::WCVisualization(xercesc::DOMElement *element, WCSerialDictionar
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
 	dictionary->InsertGUID(guid, this);
 
-	//Create event handler
-	this->_controller = new WCVisController(this);
-	//Create tree element
-	WSTexture* icon = this->_scene->TextureManager()->TextureFromName("visualization32");
-	this->_treeElement = new WCTreeElement(this->_treeView, this->_name, this->_controller, icon);
-	
-	//Create rendering layers
-	this->_visualLayer = new WCVisualLayer(this->_scene, "Visualization");
-	//Register layers
-	this->_scene->RegisterLayer(this->_visualLayer);
-	//Need to order layers
-	this->_scene->LayerBelow(this->_visualLayer, this->_uiLayer);
+	//Initalize
+	this->Initialize();
 
-	//Create workbench and enter it
-	this->_workbench = new WCVisWorkbench(this);
-	this->_workbench->Retain(*this);
-	if (this->_document == this)
-		this->EnterWorkbench(this->_workbench);
-/*
-	//Create part features
+	//Read in all signals
+	//...
+
+	//Create visualization features
 	XMLCh* xmlString = xercesc::XMLString::transcode("Features");
 	xercesc::DOMNodeList *list = element->getElementsByTagName(xmlString)->item(0)->getChildNodes();
 	xercesc::XMLString::release(&xmlString);
@@ -129,15 +117,13 @@ WCVisualization::WCVisualization(xercesc::DOMElement *element, WCSerialDictionar
 			//Cast node to element
 			featureElement = (xercesc::DOMElement*)tmpNode;
 			//Pass to master part feature switch
-			retVal = WCPartFeature::Deserialize(featureElement, dictionary);
+			retVal = WCVisFeature::Deserialize(featureElement, dictionary);
 		}
 	}
-	//Get the current body
-	this->_currentBody = (WCPartBody*)WCSerializeableObject::GetGUIDAttrib(element, "currentbody", dictionary);
 
-	//Need to restore published geometry
-	//...
-*/
+	//Enter the workbench if primary document
+	if (this->_document == this)
+		this->EnterWorkbench(this->_workbench);
 }
 
 

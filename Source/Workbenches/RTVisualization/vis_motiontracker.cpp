@@ -134,6 +134,9 @@ void WCVisMotionTracker::Initialize(void) {
 	WSTexture *icon = this->_document->Scene()->TextureManager()->TextureFromName("translate32");
 	this->_treeElement = new WCTreeElement(this->_document->TreeView(), this->_name, this->_controller, icon);
 	this->_visualization->FeaturesTreeElement()->AddLastChild(this->_treeElement);
+
+	//Reset the visualization
+	this->ResetVisualization();
 }
 
 
@@ -142,33 +145,32 @@ void WCVisMotionTracker::Initialize(void) {
 
 WCVisMotionTracker::WCVisMotionTracker(WCVisualization *vis, const std::string &name, const unsigned int &id, 
 	WCVisMesh *mesh, const WPFloat &scale) : ::WCVisFeature(vis, name, id),
-	_position(0.0, 0.0, 0.0), _rotation(0.0, 0.0, 0.0), _scale(scale), _mesh(mesh), _vertBuffer(0), _normBuffer(0) {
+	_position(0.0, 0.0, 0.0), _rotation(0.0, 0.0, 0.0), _initPosition(0.0, 0.0, 0.0), _initRotation(0.0, 0.0, 0.0),
+	_scale(scale), _mesh(mesh), _vertBuffer(0), _normBuffer(0) {
 	//Load the visualization mesh
 	//...
-	//Check feature name
-	if (this->_name == "") this->_name = this->_visualization->GenerateFeatureName(this);
 	//Initialize the object
 	this->Initialize();
-	//Reset the visualization
-	this->ResetVisualization();
 }
 
 
 WCVisMotionTracker::WCVisMotionTracker(xercesc::DOMElement *element, WCSerialDictionary *dictionary) : 
-	::WCVisFeature( WCSerializeableObject::ElementFromName(element,"VisFeature"), dictionary) {
-	//Make sure element if not null
-	if (element == NULL) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisMotionTracker::WCVisMotionTracker - NULL Element passed.");
-		//throw error
-		return;
-	}
+	::WCVisFeature( WCSerializeableObject::ElementFromName(element,"VisFeature"), dictionary),
+	_position(0.0, 0.0, 0.0), _rotation(0.0, 0.0, 0.0), _initPosition(0.0, 0.0, 0.0), _initRotation(0.0, 0.0, 0.0),
+	_scale(1.0), _mesh(NULL), _vertBuffer(0), _normBuffer(0) {
 	//Get GUID and register it
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
 	dictionary->InsertGUID(guid, this);
-//	//Setup base
-//	this->_base = new WCGeometricPoint( WCSerializeableObject::ElementFromName(element,"GeometricPoint"), dictionary );
-//	//Setup position
-//	this->_position.FromElement(WCSerializeableObject::ElementFromName(element,"Position"));
+
+	//Get the mesh name
+	std::string meshName = WCSerializeableObject::GetStringAttrib(element, "mesh");
+	//Setup scale
+	this->_scale = WCSerializeableObject::GetFloatAttrib(element, "scale");
+	//Setup initial position
+	this->_initPosition.FromElement(WCSerializeableObject::ElementFromName(element,"InitialPosition"));
+	//Setup initi rotation
+	this->_initRotation.FromElement(WCSerializeableObject::ElementFromName(element,"InitialRotation"));
+
 	//Initialize the object
 	this->Initialize();
 }

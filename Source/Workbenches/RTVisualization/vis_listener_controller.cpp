@@ -67,7 +67,9 @@ void WCVisListenerController::OnSelection(const bool fromManager, std::list<WCVi
 			this->_listener->Visualization()->Workbench()->SelectionManager()->ForceSelection(this, false);
 		}
 		//Tell the object it has been selected
-		if (!this->_listener->IsSelected()) this->_listener->OnSelection(false, std::list<WCVisualObject*>());
+		if (!this->_listener->IsSelected()) { this->_listener->OnSelection(false, std::list<WCVisualObject*>());
+			std::cout << *this->_listener << std::endl;
+		}
 	}
 	//Otherwise, let the visualization handle it
 	else {

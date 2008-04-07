@@ -50,6 +50,7 @@ class WCVisUDPListener : public WCVisListener {
 protected:
 	virtual void Listen(void);																		//!< Listen for data on the port
 private:
+	void Initialize(void);																			//!< Initialize the class
 	//Hidden Constructors
 	WCVisUDPListener();																				//!< Deny access to default constructor
 	WCVisUDPListener(const WCVisUDPListener&);														//!< Deny access to copy constructor
@@ -57,6 +58,7 @@ private:
 public:
 	//Constructors and Destructors
 	WCVisUDPListener(WCVisualization *vis, const std::string &name, const unsigned int &port);		//!< Primary constructor
+	WCVisUDPListener(xercesc::DOMElement *element, WCSerialDictionary *dictionary);					//!< Persistance constructor
 	virtual ~WCVisUDPListener();																	//!< Default destructor
 
 	//Visualization Methods

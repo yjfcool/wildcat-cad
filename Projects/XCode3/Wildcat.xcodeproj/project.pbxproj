@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		5806B9FD0DA3C0A800D9989D /* vis_listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5806B9FC0DA3C0A800D9989D /* vis_listener.cpp */; };
 		580873CC0D9A7C3600038336 /* wildcat.icns in Resources */ = {isa = PBXBuildFile; fileRef = 580873CB0D9A7C3600038336 /* wildcat.icns */; };
-		584541AA0DA53070005BC943 /* testvis.wildVis in Resources */ = {isa = PBXBuildFile; fileRef = 584541A90DA53070005BC943 /* testvis.wildVis */; };
+		583FEAC80DAA69D100CCE245 /* document_controller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 583FEAC70DAA69D100CCE245 /* document_controller.mm */; };
 		584542840DA53E67005BC943 /* vis_udp_listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 584542830DA53E67005BC943 /* vis_udp_listener.cpp */; };
 		584542870DA53E78005BC943 /* vis_tcp_listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 584542860DA53E78005BC943 /* vis_tcp_listener.cpp */; };
 		5845428C0DA53F49005BC943 /* vis_listener_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5845428B0DA53F49005BC943 /* vis_listener_controller.cpp */; };
@@ -322,7 +322,6 @@
 		58DAD6500D69CC1E0093679D /* constraint_radius_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD64F0D69CC1E0093679D /* constraint_radius_controller.cpp */; };
 		58DAD6560D69CC4C0093679D /* constraint_radius_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD6550D69CC4C0093679D /* constraint_radius_edit_mode.cpp */; };
 		58DAD86D0D6A1E150093679D /* sketch_rectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37630D68B7DB00673AE6 /* sketch_rectangle.cpp */; };
-		58DB03930DA66B44008FF90E /* output1.signal in Resources */ = {isa = PBXBuildFile; fileRef = 58DB03920DA66B44008FF90E /* output1.signal */; };
 		58DB039A0DA6827A008FF90E /* record32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 58DB03990DA6827A008FF90E /* record32.tiff */; };
 		58DB039F0DA6834B008FF90E /* translate32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 58DB039E0DA6834B008FF90E /* translate32.tiff */; };
 		58DB05580DA6BC24008FF90E /* modal_dialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B20D68B69D00673AE6 /* modal_dialog.mm */; };
@@ -343,7 +342,8 @@
 		5806B9FB0DA3C0A800D9989D /* vis_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener.h; path = ../../Source/Workbenches/RTVisualization/vis_listener.h; sourceTree = SOURCE_ROOT; };
 		5806B9FC0DA3C0A800D9989D /* vis_listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener.cpp; sourceTree = SOURCE_ROOT; };
 		580873CB0D9A7C3600038336 /* wildcat.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = wildcat.icns; path = ../../Source/Application/MacOS/wildcat.icns; sourceTree = SOURCE_ROOT; };
-		584541A90DA53070005BC943 /* testvis.wildVis */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = testvis.wildVis; path = ../../Source/Workbenches/RTVisualization/testvis.wildVis; sourceTree = SOURCE_ROOT; };
+		583FEAC60DAA69D100CCE245 /* document_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = document_controller.h; path = ../../Source/Application/MacOS/document_controller.h; sourceTree = SOURCE_ROOT; };
+		583FEAC70DAA69D100CCE245 /* document_controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = document_controller.mm; path = ../../Source/Application/MacOS/document_controller.mm; sourceTree = SOURCE_ROOT; };
 		584542820DA53E67005BC943 /* vis_udp_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_udp_listener.h; path = ../../Source/Workbenches/RTVisualization/vis_udp_listener.h; sourceTree = SOURCE_ROOT; };
 		584542830DA53E67005BC943 /* vis_udp_listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_udp_listener.cpp; path = ../../Source/Workbenches/RTVisualization/vis_udp_listener.cpp; sourceTree = SOURCE_ROOT; };
 		584542850DA53E78005BC943 /* vis_tcp_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_tcp_listener.h; path = ../../Source/Workbenches/RTVisualization/vis_tcp_listener.h; sourceTree = SOURCE_ROOT; };
@@ -890,7 +890,6 @@
 		58DAD64F0D69CC1E0093679D /* constraint_radius_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = constraint_radius_controller.cpp; path = ../../Source/Constraint/constraint_radius_controller.cpp; sourceTree = SOURCE_ROOT; };
 		58DAD6540D69CC4C0093679D /* constraint_radius_modes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = constraint_radius_modes.h; path = ../../Source/Constraint/constraint_radius_modes.h; sourceTree = SOURCE_ROOT; };
 		58DAD6550D69CC4C0093679D /* constraint_radius_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = constraint_radius_edit_mode.cpp; path = ../../Source/Constraint/constraint_radius_modes.cpp; sourceTree = SOURCE_ROOT; };
-		58DB03920DA66B44008FF90E /* output1.signal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = output1.signal; path = ../../Source/Workbenches/RTVisualization/output1.signal; sourceTree = SOURCE_ROOT; };
 		58DB03990DA6827A008FF90E /* record32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = record32.tiff; path = ../../Source/Resources/record32.tiff; sourceTree = SOURCE_ROOT; };
 		58DB039E0DA6834B008FF90E /* translate32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = translate32.tiff; path = ../../Source/Resources/translate32.tiff; sourceTree = SOURCE_ROOT; };
 		58DB03A30DA6843C008FF90E /* signal_port.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = signal_port.h; path = ../../Source/Workbenches/RTVisualization/signal_port.h; sourceTree = SOURCE_ROOT; };
@@ -1097,8 +1096,6 @@
 		584541A80DA53053005BC943 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				58DB03920DA66B44008FF90E /* output1.signal */,
-				584541A90DA53070005BC943 /* testvis.wildVis */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2058,6 +2055,7 @@
 			children = (
 				58DB05A60DA6C085008FF90E /* dialog_manager.cpp */,
 				585F36A80D68B69D00673AE6 /* document.mm */,
+				583FEAC70DAA69D100CCE245 /* document_controller.mm */,
 				585F36AA0D68B69D00673AE6 /* HMBlkButton.m */,
 				585F36AC0D68B69D00673AE6 /* HMBlkButtonCell.m */,
 				585F36AE0D68B69D00673AE6 /* HMBlkContentView.m */,
@@ -2082,6 +2080,7 @@
 			children = (
 				58DB05A50DA6C085008FF90E /* dialog_manager.h */,
 				585F36A70D68B69D00673AE6 /* document.h */,
+				583FEAC60DAA69D100CCE245 /* document_controller.h */,
 				585F36A90D68B69D00673AE6 /* HMBlkButton.h */,
 				585F36AB0D68B69D00673AE6 /* HMBlkButtonCell.h */,
 				585F36AD0D68B69D00673AE6 /* HMBlkContentView.h */,
@@ -3104,9 +3103,7 @@
 				580873CC0D9A7C3600038336 /* wildcat.icns in Resources */,
 				584C6CE70D9BE5D400FF721F /* fixedSelected32.tiff in Resources */,
 				5849B62F0DA290990031E7CC /* visualization32.tiff in Resources */,
-				584541AA0DA53070005BC943 /* testvis.wildVis in Resources */,
 				584542BC0DA54213005BC943 /* listener32.tiff in Resources */,
-				58DB03930DA66B44008FF90E /* output1.signal in Resources */,
 				58DB039A0DA6827A008FF90E /* record32.tiff in Resources */,
 				58DB039F0DA6834B008FF90E /* translate32.tiff in Resources */,
 				58DB05790DA6BD7D008FF90E /* docTypeSelector.html in Resources */,
@@ -3315,6 +3312,7 @@
 				584543700DA55467005BC943 /* vis_recorder_controller.cpp in Sources */,
 				58DB05580DA6BC24008FF90E /* modal_dialog.mm in Sources */,
 				58DB05A70DA6C085008FF90E /* dialog_manager.cpp in Sources */,
+				583FEAC80DAA69D100CCE245 /* document_controller.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

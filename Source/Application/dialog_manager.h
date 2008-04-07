@@ -49,21 +49,23 @@ class WCDialog {
 private:
 	std::string									_name;												//!< Both the reference name and filename
 	unsigned int								_winWidth, _winHeight;								//!< Window width and height
-	bool										_modal;												//!< Is dialog modal flag
+	bool										_modal, _boundary;									//!< Is dialog modal flag
 	//Hidden Constructors
 	WCDialog();																						//!< Deny access to default constructor
 	WCDialog(const WCDialog&);																		//!< Deny access to copy constructor
 	WCDialog& operator=(const WCDialog&);															//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCDialog(const std::string &name, const unsigned int &width, const unsigned int &height, const bool &modal) :	//!< Primary constructor
-												_name(name), _winWidth(width), _winHeight(height), _modal(modal) { }
+	WCDialog(const std::string &name, const unsigned int &width, const unsigned int &height,		//!< Primary constructor
+												const bool &modal, const bool &boundary) :
+												_name(name), _winWidth(width), _winHeight(height), _modal(modal), _boundary(boundary) { }
 	~WCDialog()									{}
 	//Member Access Methods
 	inline std::string Name(void)				{ return this->_name; }								//!< Get the dialog name
 	inline unsigned int Width(void)				{ return this->_winWidth; }							//!< Get the window width
 	inline unsigned int Height(void)			{ return this->_winHeight; }						//!< Get the window height
-	inline bool Modal(void)						{ return this->_modal; }							//!< Get the modal flag
+	inline bool IsModal(void)					{ return this->_modal; }							//!< Get the modal flag
+	inline bool IsBoundary(void)				{ return this->_boundary; }							//!< Get the boundary flag
 };
 
 

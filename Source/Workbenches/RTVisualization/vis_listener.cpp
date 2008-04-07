@@ -52,14 +52,15 @@ void* WCVisListener::ThreadEntryPoint(void* listener) {
 }
 
 
-/***********************************************~***************************************************/
-
-
-
-WCVisListener::WCVisListener(WCVisualization *vis, const std::string &name, const unsigned int &port) :
-	::WCVisFeature(vis, name, 0), _isValid(true), _listener(NULL), _port(port), _socket(0) {
+void WCVisListener::Initialize(void) {
 	//Initialize the socket
 	this->_socket = socket(AF_INET, SOCK_DGRAM, 0);
+	//Make sure socket is valid
+	if (this->_socket < 0) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::WCVisListener - Socket was not successful.");
+		//throw error
+		return;
+	}
 	bzero(&this->_serverAddress, sizeof(this->_serverAddress));
 	//Set up server address information
 	this->_serverAddress.sin_family      = AF_INET;
@@ -76,13 +77,63 @@ WCVisListener::WCVisListener(WCVisualization *vis, const std::string &name, cons
 }
 
 
+/***********************************************~***************************************************/
+
+
+
+WCVisListener::WCVisListener(WCVisualization *vis, const std::string &name, const unsigned int &port) :
+	::WCVisFeature(vis, name, 0), _isValid(true), _listener(NULL), _port(port), _socket(0), _recorder(NULL) {
+	//Initialize the listener
+	this->Initialize();
+}
+
+
+WCVisListener::WCVisListener(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
+	::WCVisFeature( WCSerializeableObject::ElementFromName(element,"VisFeature"), dictionary),
+	_isValid(true), _listener(NULL), _port(0), _socket(0), _recorder(NULL) {
+	//Make sure element if not null
+	if (element == NULL) return;
+	//Get GUID and register it
+	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
+	dictionary->InsertGUID(guid, this);
+
+	//Set the port
+	this->_port = (unsigned int)WCSerializeableObject::GetFloatAttrib(element, "port");
+	//See about setting the recorder
+	this->_recorder = (WCVisRecorder*)WCSerializeableObject::GetGUIDAttrib(element, "recorder", dictionary);
+
+	//Initialize the listener
+	this->Initialize();
+}
+
 WCVisListener::~WCVisListener() {
 	//Shutdown the thread
 	this->_isValid = false;
 	//Wait for the thread to exit
 	pthread_join(this->_listener, NULL);
-	//Close the port
-	//...
+	//Close the socket
+	int retVal = close(this->_socket);
+	//Make sure close was successful
+	if (retVal < 0) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::~WCVisListener - Not able to close socket");
+}
+
+/***********************************************~***************************************************/
+
+
+std::ostream& operator<<(std::ostream& out, const WCVisListener &listener) {
+	//Print out some info
+	out << "Listener(" << &listener << ")\n";
+	//Print the scene
+//	out << "\t" << *(vis._scene);
+//	//Print the tree
+//	out << "\t" << *(vis._treeView);
+//	//Print all of the features in order
+//	out << "\t Features(" << vis._featureMap.size() << ")\n";
+//	std::list<WCVisFeature*>::iterator featureIter;
+//	for (featureIter = part._featureList.begin(); featureIter != part._featureList.end(); featureIter++) {
+//		out << "\t" << *featureIter << std::endl;
+//	}
+	return out;
 }
 
 

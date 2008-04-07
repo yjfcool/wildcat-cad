@@ -129,7 +129,7 @@ void WCGroundPlane::Render(const GLuint &defaultProg, const WCColor &color, cons
 	glNormalPointer(GL_FLOAT, 0, 0);
 
 	//Draw the mesh
-	glDrawArrays(GL_QUADS, 0, 24);
+	glDrawArrays(GL_QUADS, 0, 4);
 
 	//Bind back to nothing
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

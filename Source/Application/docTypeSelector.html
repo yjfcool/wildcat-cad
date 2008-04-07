@@ -1,8 +1,32 @@
 <HTML>
 <Head>
-<Title>This is my title</Title>
+<Title>New Document Selection</Title>
 </Head>
 <Body>
-Blah blah
+<script type="text/javascript" language="JavaScript1.4"><!--
+
+/* This variable holds the document type selected */
+var docType;
+
+/* Function calls modalDialog with desired document type*/
+function SetDocumentType(type) {
+	docType = type;
+	if ( console ) {
+		/* calls our Objective-C via console logging function */
+		console.sendMessage("SelectDocType");
+	}
+}
+
+/* Function calls modalDialog with message to change to open doc */
+function RequestOpenDocument() {
+	if (console) {
+		console.sendMessage("RequestOpenDocument");
+	}
+}
+
+//--></script>
+<input type=button value="Vis Doc" onClick="SetDocumentType('visDoc');">
+<input type=button value="Part Doc" onClick="SetDocumentType('partDoc');">
+<input type=button value="Open Document" onClick="RequestOpenDocument();">
 </Body>
 </HTML>

@@ -54,17 +54,18 @@ void WCDialogManager::ParseManifest(const std::string &manifest, const bool &ver
 #endif
 	const char* xmlFile = fullPath.c_str();
 	WCDialog *newDialog;
-	xercesc::DOMNode *dialogNode, *nameNode, *widthNode, *heightNode, *modalNode;
+	xercesc::DOMNode *dialogNode, *nameNode, *widthNode, *heightNode, *modalNode, *boundaryNode;
 	xercesc::DOMNamedNodeMap *nodeMap;
 	XMLCh *xmlDialogString = xercesc::XMLString::transcode("dialog");
 	XMLCh *xmlNameString = xercesc::XMLString::transcode("name");
 	XMLCh *xmlWidthString = xercesc::XMLString::transcode("width");
 	XMLCh *xmlHeightString = xercesc::XMLString::transcode("height");
 	XMLCh *xmlModalString = xercesc::XMLString::transcode("modal");
+	XMLCh *xmlBoundaryString = xercesc::XMLString::transcode("boundary");
 	char *tmpChars;
 	std::string name;
 	unsigned int width, height;
-	bool modal;
+	bool modal, boundary;
 
 	//Try to parse
 	try {
@@ -105,9 +106,16 @@ void WCDialogManager::ParseManifest(const std::string &manifest, const bool &ver
 			if (strncmp(tmpChars, "true", 4) == 0) modal = true;
 			else modal = false;
 			xercesc::XMLString::release(&tmpChars);
+
+			//Get the boundary flag
+			boundaryNode = nodeMap->getNamedItem(xmlBoundaryString);
+			tmpChars = xercesc::XMLString::transcode(modalNode->getNodeValue());
+			if (strncmp(tmpChars, "true", 4) == 0) modal = true;
+			else boundary = false;
+			xercesc::XMLString::release(&tmpChars);
 			
 			//Get values for  new dialog
-			newDialog = new WCDialog(name, width, height, modal);
+			newDialog = new WCDialog(name, width, height, modal, boundary);
 			//Be verbose if appropriate
 			if (verbose) 
 				CLOGGER_DEBUG(WCLogManager::RootLogger(), "Dialog " << newDialog->Name() << " successfully loaded.");
@@ -137,6 +145,7 @@ void WCDialogManager::ParseManifest(const std::string &manifest, const bool &ver
 	xercesc::XMLString::release(&xmlWidthString);
 	xercesc::XMLString::release(&xmlHeightString);
 	xercesc::XMLString::release(&xmlModalString);
+	xercesc::XMLString::release(&xmlBoundaryString);
 }
 
 

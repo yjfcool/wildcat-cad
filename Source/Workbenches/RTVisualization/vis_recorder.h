@@ -63,6 +63,7 @@ private:
 public:
 	//Constructors and Destructors
 	WCVisRecorder(WCVisualization *vis, const std::string &name, const WPUInt &maxRecords);			//!< Primary constructor
+	WCVisRecorder(xercesc::DOMElement *element, WCSerialDictionary *dictionary);					//!< Persistance constructor
 	~WCVisRecorder();																				//!< Default destructor
 
 	//Visualization Methods
