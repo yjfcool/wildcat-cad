@@ -52,8 +52,6 @@
 @interface WCDocumentController : NSDocumentController
 {
 }
-- (id)makeUntitledDocumentOfType:(NSString *)typeName error:(NSError **)outError;
-
 
 @end
 

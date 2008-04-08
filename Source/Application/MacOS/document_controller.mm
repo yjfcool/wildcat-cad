@@ -28,32 +28,76 @@
 
 /*** Imported Header Files ***/
 #import "Application/MacOS/document_controller.h"
-#import "Application/MacOS/modal_dialog.h"
+#import "Application/MacOS/document.h"
+
 #import "Application/MacOS/part_document.h"
 #import "Application/MacOS/vis_document.h"
 
 
 /*** Included Header Files ***/
-//None
+#include "Application/dialog_manager.h"
+#include "Application/dialog.h"
+
+
+/***********************************************~***************************************************/
+
+
+class WCDialogDocTypeSelector : public WCDialogController {
+public:
+	WCDialogDocTypeSelector() : ::WCDialogController() { }
+	virtual ~WCDialogDocTypeSelector() {}
+
+	virtual void ReceiveMessage(const std::string &message) {										//!< Receive message from a dialog
+		//See what type of message
+		if (message == "SelectDocType") {
+			std::string docType = this->_dialog->StringFromScript("docType");
+
+			//Lets create a VisDocument
+			NSError *outError = [NSError alloc];
+			WCDocument_OSX *document;
+			if (docType == "visDoc") {
+				document = [[WCVisDocument alloc] initWithType:@"Whatever" error:&outError];
+			}
+			if (docType == "partDoc") {
+				document = [[WCPartDocument alloc] initWithType:@"Whatever" error:&outError];
+			}
+			//Make sure document was created
+			if (document == nil) {
+				CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialogDocTypeSelector::ReceiveMessage - Not able to create document of type: " << docType);
+				return;
+			}
+			//Add the document into the controller
+			[[NSDocumentController sharedDocumentController] addDocument:document];
+			//Make the window controllers
+			[document makeWindowControllers];
+			//Show the document
+			[document showWindows];
+			//Close the dialog
+			this->_dialog->CloseWindow(false);
+		}
+		else if (message == "RequestOpenDocument") {
+			std::cout << "WCDialogDocTypeSelector switching to OpenDoc\n";
+		}
+		else {
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialogDocTypeSelector::ReceiveMessage - Unknown message: " << message);
+		}
+	}
+};
+
 
 
 /***********************************************~***************************************************/
 
 @implementation WCDocumentController
 
-- (id)makeUntitledDocumentOfType:(NSString *)typeName error:(NSError **)outError
+
+- (IBAction)newDocument:(id)sender
 {
 	//Show dialog to ask for document type
-	WCModalDialog *typeSelector = [[WCModalDialog alloc] initWithDialog:"docTypeSelector"];
-	//Wait for response
-	//...
-	
-
-	//Lets create a VisDocument
-	WCVisDocument *document = [[WCVisDocument alloc] initWithType:typeName error:outError];
-//	WCPartDocument *document = [[WCPartDocument alloc] initWithType:typeName error:outError];
-	return document;
+	WCDialogManager::DisplayDialog("docTypeSelector", new WCDialogDocTypeSelector());
 }
+
+
 @end
 
 

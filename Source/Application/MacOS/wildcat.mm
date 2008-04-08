@@ -64,6 +64,15 @@ void ShutdownApplication(void) {
 
 
 @implementation WCAppDelegate
+
+
+- (BOOL)applicationOpenUntitledFile:(NSApplication *)app
+{
+	[[NSDocumentController sharedDocumentController] newDocument:self];
+	return YES;
+}
+
+
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
 	//Initialize the dialog manager (must be here because needs Bundle to be active for resource directory path)
 	WCDialogManager::Initialize("dialog_manifest.xml", false);

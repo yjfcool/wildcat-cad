@@ -312,6 +312,7 @@
 		585F37FD0D68B8D300673AE6 /* part_plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37DE0D68B8D300673AE6 /* part_plane.cpp */; };
 		585F37FE0D68B8D300673AE6 /* part_plane_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37E00D68B8D300673AE6 /* part_plane_actions.cpp */; };
 		585F37FF0D68B8D300673AE6 /* part_plane_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37E20D68B8D300673AE6 /* part_plane_controller.cpp */; };
+		586BA53F0DABDE8F00E2DF91 /* dialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 586BA53E0DABDE8F00E2DF91 /* dialog.mm */; };
 		587CB6EA0D89A48D00833178 /* sketch_arc_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */; };
 		589AC2190D73404F001725D0 /* constraint_coincidence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361C0D68B4B700673AE6 /* constraint_coincidence.cpp */; };
 		589AC2330D734343001725D0 /* constraint_coincidence_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361E0D68B4B700673AE6 /* constraint_coincidence_actions.cpp */; };
@@ -324,7 +325,7 @@
 		58DAD86D0D6A1E150093679D /* sketch_rectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37630D68B7DB00673AE6 /* sketch_rectangle.cpp */; };
 		58DB039A0DA6827A008FF90E /* record32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 58DB03990DA6827A008FF90E /* record32.tiff */; };
 		58DB039F0DA6834B008FF90E /* translate32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 58DB039E0DA6834B008FF90E /* translate32.tiff */; };
-		58DB05580DA6BC24008FF90E /* modal_dialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B20D68B69D00673AE6 /* modal_dialog.mm */; };
+		58DB05580DA6BC24008FF90E /* dialog_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B20D68B69D00673AE6 /* dialog_osx.mm */; };
 		58DB05790DA6BD7D008FF90E /* docTypeSelector.html in Resources */ = {isa = PBXBuildFile; fileRef = 58DB05780DA6BD7D008FF90E /* docTypeSelector.html */; };
 		58DB05A20DA6BFF8008FF90E /* dialog_manifest.xml in Resources */ = {isa = PBXBuildFile; fileRef = 58DB05A10DA6BFF8008FF90E /* dialog_manifest.xml */; };
 		58DB05A70DA6C085008FF90E /* dialog_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DB05A60DA6C085008FF90E /* dialog_manager.cpp */; };
@@ -698,8 +699,8 @@
 		585F36AE0D68B69D00673AE6 /* HMBlkContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HMBlkContentView.m; path = ../../Source/Application/MacOS/HMBlkContentView.m; sourceTree = SOURCE_ROOT; };
 		585F36AF0D68B69D00673AE6 /* HMBlkPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HMBlkPanel.h; path = ../../Source/Application/MacOS/HMBlkPanel.h; sourceTree = SOURCE_ROOT; };
 		585F36B00D68B69D00673AE6 /* HMBlkPanel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = HMBlkPanel.mm; path = ../../Source/Application/MacOS/HMBlkPanel.mm; sourceTree = SOURCE_ROOT; };
-		585F36B10D68B69D00673AE6 /* modal_dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = modal_dialog.h; path = ../../Source/Application/MacOS/modal_dialog.h; sourceTree = SOURCE_ROOT; };
-		585F36B20D68B69D00673AE6 /* modal_dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = modal_dialog.mm; path = ../../Source/Application/MacOS/modal_dialog.mm; sourceTree = SOURCE_ROOT; };
+		585F36B10D68B69D00673AE6 /* dialog_osx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialog_osx.h; path = ../../Source/Application/MacOS/dialog_osx.h; sourceTree = SOURCE_ROOT; };
+		585F36B20D68B69D00673AE6 /* dialog_osx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = dialog_osx.mm; path = ../../Source/Application/MacOS/dialog_osx.mm; sourceTree = SOURCE_ROOT; };
 		585F36B30D68B69D00673AE6 /* opengl_view.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = opengl_view.h; path = ../../Source/Application/MacOS/opengl_view.h; sourceTree = SOURCE_ROOT; };
 		585F36B40D68B69D00673AE6 /* opengl_view.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = opengl_view.mm; path = ../../Source/Application/MacOS/opengl_view.mm; sourceTree = SOURCE_ROOT; };
 		585F36B50D68B69D00673AE6 /* part_document.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_document.h; path = ../../Source/Application/MacOS/part_document.h; sourceTree = SOURCE_ROOT; };
@@ -878,6 +879,8 @@
 		585F37E10D68B8D300673AE6 /* part_plane_actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_plane_actions.h; path = ../../Source/Workbenches/PartDesign/part_plane_actions.h; sourceTree = SOURCE_ROOT; };
 		585F37E20D68B8D300673AE6 /* part_plane_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = part_plane_controller.cpp; path = ../../Source/Workbenches/PartDesign/part_plane_controller.cpp; sourceTree = SOURCE_ROOT; };
 		585F37E30D68B8D300673AE6 /* part_plane_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_plane_controller.h; path = ../../Source/Workbenches/PartDesign/part_plane_controller.h; sourceTree = SOURCE_ROOT; };
+		586BA3B10DABC40400E2DF91 /* dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialog.h; path = ../../Source/Application/dialog.h; sourceTree = SOURCE_ROOT; };
+		586BA53E0DABDE8F00E2DF91 /* dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = dialog.mm; path = ../../Source/Application/MacOS/dialog.mm; sourceTree = SOURCE_ROOT; };
 		587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_arc_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_arc_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_circle_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_circle_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		58DAD6400D69C7610093679D /* constraint_measure_radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = constraint_measure_radius.h; path = ../../Source/Constraint/constraint_measure_radius.h; sourceTree = SOURCE_ROOT; };
@@ -2053,6 +2056,8 @@
 		585F368B0D68B63300673AE6 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				586BA53E0DABDE8F00E2DF91 /* dialog.mm */,
+				585F36B20D68B69D00673AE6 /* dialog_osx.mm */,
 				58DB05A60DA6C085008FF90E /* dialog_manager.cpp */,
 				585F36A80D68B69D00673AE6 /* document.mm */,
 				583FEAC70DAA69D100CCE245 /* document_controller.mm */,
@@ -2061,7 +2066,6 @@
 				585F36AE0D68B69D00673AE6 /* HMBlkContentView.m */,
 				585F36B00D68B69D00673AE6 /* HMBlkPanel.mm */,
 				585F369F0D68B68300673AE6 /* keymap.cpp */,
-				585F36B20D68B69D00673AE6 /* modal_dialog.mm */,
 				585F36B40D68B69D00673AE6 /* opengl_view.mm */,
 				585F36B60D68B69D00673AE6 /* part_document.mm */,
 				585F36B80D68B69D00673AE6 /* render_window.mm */,
@@ -2078,6 +2082,8 @@
 		585F368C0D68B63B00673AE6 /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				586BA3B10DABC40400E2DF91 /* dialog.h */,
+				585F36B10D68B69D00673AE6 /* dialog_osx.h */,
 				58DB05A50DA6C085008FF90E /* dialog_manager.h */,
 				585F36A70D68B69D00673AE6 /* document.h */,
 				583FEAC60DAA69D100CCE245 /* document_controller.h */,
@@ -2086,7 +2092,6 @@
 				585F36AD0D68B69D00673AE6 /* HMBlkContentView.h */,
 				585F36AF0D68B69D00673AE6 /* HMBlkPanel.h */,
 				585F36A00D68B68300673AE6 /* keymap.h */,
-				585F36B10D68B69D00673AE6 /* modal_dialog.h */,
 				585F36B30D68B69D00673AE6 /* opengl_view.h */,
 				585F36B50D68B69D00673AE6 /* part_document.h */,
 				585F36B70D68B69D00673AE6 /* render_window.h */,
@@ -3310,9 +3315,10 @@
 				5845428C0DA53F49005BC943 /* vis_listener_controller.cpp in Sources */,
 				584542D30DA548EE005BC943 /* vis_recorder.cpp in Sources */,
 				584543700DA55467005BC943 /* vis_recorder_controller.cpp in Sources */,
-				58DB05580DA6BC24008FF90E /* modal_dialog.mm in Sources */,
+				58DB05580DA6BC24008FF90E /* dialog_osx.mm in Sources */,
 				58DB05A70DA6C085008FF90E /* dialog_manager.cpp in Sources */,
 				583FEAC80DAA69D100CCE245 /* document_controller.mm in Sources */,
+				586BA53F0DABDE8F00E2DF91 /* dialog.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

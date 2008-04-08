@@ -28,6 +28,7 @@
 
 /*** Included Header Files ***/
 #include "Application/dialog_manager.h"
+#include "Application/dialog.h"
 
 
 /*** Static Member Initialization ***/
@@ -66,6 +67,7 @@ void WCDialogManager::ParseManifest(const std::string &manifest, const bool &ver
 	std::string name;
 	unsigned int width, height;
 	bool modal, boundary;
+	WCDialogMode mode(WCDialogMode::Default());
 
 	//Try to parse
 	try {
@@ -113,9 +115,12 @@ void WCDialogManager::ParseManifest(const std::string &manifest, const bool &ver
 			if (strncmp(tmpChars, "true", 4) == 0) modal = true;
 			else boundary = false;
 			xercesc::XMLString::release(&tmpChars);
+
+			//Get the mode type
+			//...
 			
 			//Get values for  new dialog
-			newDialog = new WCDialog(name, width, height, modal, boundary);
+			newDialog = new WCDialog(name, width, height, modal, boundary, mode);
 			//Be verbose if appropriate
 			if (verbose) 
 				CLOGGER_DEBUG(WCLogManager::RootLogger(), "Dialog " << newDialog->Name() << " successfully loaded.");
@@ -189,6 +194,20 @@ WCDialog*  WCDialogManager::DialogFromName(const std::string &name) {
 	}
 	//Otherwise, get the object
 	return (*iter).second;
+}
+
+
+WCDialog* WCDialogManager::DisplayDialog(const std::string &name, WCDialogController *controller) {
+	//Get the dialog
+	WCDialog *dialog = WCDialogManager::DialogFromName(name);
+	//If a valid dialog is returned
+	if (dialog != NULL) {
+		//Associated a controller with it
+		dialog->Controller(controller);
+		//Associate a dialog with the controller
+		controller->Dialog(dialog);
+	}
+	return dialog;
 }
 
 
