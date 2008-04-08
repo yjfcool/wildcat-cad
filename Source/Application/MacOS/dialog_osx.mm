@@ -27,7 +27,7 @@
 
 
 //Imported Header Files
-#import "Application/MacOS/modal_dialog.h"
+#import "Application/MacOS/dialog_osx.h"
 
 
 /***********************************************~***************************************************/
@@ -46,9 +46,10 @@ bool from_string(T& t,
 /***********************************************~***************************************************/
 
 
-@implementation WCModalDialog
+@implementation WCDialog_OSX
 
 
+/*
 - (id)init
 {
     // Do the regular Cocoa thing, specifying a particular nib.
@@ -65,17 +66,13 @@ bool from_string(T& t,
 	location = url;
 	return self;
 }
+*/
 
 
-- (id)initWithDialog:(std::string)dialogName
+- (id)initWithDialog:(WCDialog*)dialog
 {
 	//Set the dialog
-	_dialog = WCDialogManager::DialogFromName(dialogName);
-	if (_dialog == NULL) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCModalDialog::initWithDialog - Dialog: " << dialogName << " not found.");
-		//throw exception
-	}
-
+	_dialog = dialog;
 	//Get full path of dialog
 	std::string str = "/" + _dialog->Name() + ".html";
 	NSString *cstr = [NSString stringWithCString:str.c_str() encoding:NSUTF8StringEncoding];
@@ -123,6 +120,8 @@ bool from_string(T& t,
 
 - (void)windowWillClose:(NSNotification *)notification
 {
+	//Let dialog know that window is closing
+	_dialog->CloseWindow(true);
 	//If in modal, stop it
 	if (_dialog->IsModal())
 		[NSApp stopModal];
@@ -191,19 +190,12 @@ bool from_string(T& t,
 }
 
 
-
-	/* Here is our Objective-C implementation for the JavaScript console.log() method.
-	*/
 - (void)sendMessage:(NSString *)message {
 	//Get the message
 	const char* cString = [message cStringUsingEncoding:NSUTF8StringEncoding];
-	CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCModalDialog::sendMessage:" << cString);
-	//Dispatch the message back to the delegate
-	//...
-
-	//Sample of code to get the values for "docType"
-	std::string docType = [self getStringFromScript:"docType"];
-	std::cout << "DocType:" << docType << std::endl;
+	std::string str(cString);
+	//Dispatch the message back to the dialog class
+	if (_dialog->Controller() != NULL) _dialog->Controller()->ReceiveMessage(str);
 }
 
 
@@ -274,6 +266,47 @@ bool from_string(T& t,
 	from_string<WPUInt>(output, strValue, std::dec);
 	//Return the output
 	return output;
+}
+
+
+- (bool)getBoolFromScript:(std::string)var
+{
+	//Get the script object
+	WebScriptObject* scriptObject = [webView windowScriptObject];
+	//Create string with name of variable
+	NSString *variable = [[NSString alloc] initWithCString:var.c_str()];
+	NSString *value = [scriptObject valueForKey:variable];
+	[variable release];
+
+	//Convert newValue to an unsigned int
+	std::string strValue( [value cStringUsingEncoding:NSUTF8StringEncoding] );
+	if (strValue == "false") return false;
+	else return true;
+}
+
+
+- (void)setStringFromScript:(std::string)var withValue:(std::string)value
+{
+}
+
+
+- (void)setFloatFromScript:(std::string)var withValue:(WPFloat)value
+{
+}
+
+
+- (void)setIntFromScript:(std::string)var withValue:(WPInt)value
+{
+}
+
+
+- (void)setUnsignedIntFromScript:(std::string)var withValue:(WPUInt)value
+{
+}
+
+
+- (void)setBoolFromScript:(std::string)var withValue:(bool)value
+{
 }
 
 

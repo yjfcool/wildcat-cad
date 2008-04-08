@@ -26,8 +26,8 @@
 ********************************************************************************/
 
 
-#ifndef __MODAL_DIALOG_OSX_H__
-#define __MODAL_DIALOG_OSX_H__
+#ifndef __DIALOG_OSX_H__
+#define __DIALOG_OSX_H__
 
 
 /*** Imported Header Files ***/
@@ -36,7 +36,11 @@
 
 
 /*** Included Header Files ***/
-#include "Application/dialog_manager.h"
+#include "Application/dialog.h"
+
+
+/*** C++ Class Predefines ***/
+//None
 
 
 /*** Objective-C Class Predefines ***/
@@ -46,17 +50,20 @@
 /***********************************************~***************************************************/
 
 
-@interface WCModalDialog : NSWindowController {
+@interface WCDialog_OSX : NSWindowController {
 	IBOutlet WebView							*webView;											//!< Associated webview object
 	NSURL										*location;											//!< Current location
 	WCDialog									*_dialog;											//!< Associated dialog object
-	NSModalSession								_session;											//!< Modal session info
-	NSString									*_docType;			/* value shared between Objective-C and JavaScript */
 }
 
-- (id)initWithLocation:(NSURL*)url;																	//!< Initialize with a specific web location
-- (id)initWithDialog:(std::string)dialogName;														//!< Initialize with a specific dialog
+/*** Initialization Methods ***/
+//- (id)initWithLocation:(NSURL*)url;																//!< Initialize with a specific web location
+- (id)initWithDialog:(WCDialog*)dialog;																//!< Initialize with a specific dialog
+
+/*** Member Access Methods ***/
 - (WebView*)WebView;																				//!< Get the embedded webview
+
+/*** Delegate Methods ***/
 - (void)windowWillClose:(NSNotification *)notification;												//!< Make sure close of window is captured
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame;							//!< Act as delegate for webframe and get load status
 
@@ -64,8 +71,15 @@
 - (std::string)getStringFromScript:(std::string)var;												//!< Deletegate calls to get script value
 - (WPFloat)getFloatFromScript:(std::string)var;														//!< Deletegate calls to get script value
 - (WPInt)getIntFromScript:(std::string)var;															//!< Deletegate calls to get script value
-- (WPUInt)getUnsignedIntFromScript:(std::string)var;													//!< Deletegate calls to get script value
+- (WPUInt)getUnsignedIntFromScript:(std::string)var;												//!< Deletegate calls to get script value
+- (bool)getBoolFromScript:(std::string)var;															//!< Deletegate calls to get script value
 
+/*** Script Object Set Methods ***/
+- (void)setStringFromScript:(std::string)var withValue:(std::string)value;							//!< Deletegate calls to set script value
+- (void)setFloatFromScript:(std::string)var withValue:(WPFloat)value;								//!< Deletegate calls to set script value
+- (void)setIntFromScript:(std::string)var withValue:(WPInt)value;									//!< Deletegate calls to set script value
+- (void)setUnsignedIntFromScript:(std::string)var withValue:(WPUInt)value;							//!< Deletegate calls to set script value
+- (void)setBoolFromScript:(std::string)var withValue:(bool)value;									//!< Deletegate calls to set script value
 
 @end
 
@@ -73,5 +87,5 @@
 /***********************************************~***************************************************/
 
 
-#endif //__MODAL_DIALOG_OSX_H__
+#endif //__DIALOG_OSX_H__
 
