@@ -28,9 +28,7 @@
 
 /*** Included Header Files ***/
 #include "RTVisualization/vis_listener.h"
-#include "RTVisualization/vis_listener_controller.h"
 #include "RTVisualization/visualization.h"
-#include "RTVisualization/vis_feature.h"
 #include "RTVisualization/vis_packet.h"
 #include "RTVisualization/vis_recorder.h"
 
@@ -73,7 +71,11 @@ void WCVisListener::Initialize(void) {
 	if (retVal != 0) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::WCVisListener - Bind was not successful.");
 		//throw error
+		return;
 	}
+
+	//Add self to visualization
+	this->_visualization->AddListener(this);
 }
 
 
@@ -117,22 +119,25 @@ WCVisListener::~WCVisListener() {
 	if (retVal < 0) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::~WCVisListener - Not able to close socket");
 }
 
+
+/***********************************************~***************************************************/
+
+
+WCDrawingMode* WCVisListener::ModeCreate(WCVisWorkbench *wb) {
+	//Create a new drawing mode
+	return new WCModeVisListenerCreate(wb);
+}
+
+
 /***********************************************~***************************************************/
 
 
 std::ostream& operator<<(std::ostream& out, const WCVisListener &listener) {
 	//Print out some info
 	out << "Listener(" << &listener << ")\n";
-	//Print the scene
-//	out << "\t" << *(vis._scene);
-//	//Print the tree
-//	out << "\t" << *(vis._treeView);
-//	//Print all of the features in order
-//	out << "\t Features(" << vis._featureMap.size() << ")\n";
-//	std::list<WCVisFeature*>::iterator featureIter;
-//	for (featureIter = part._featureList.begin(); featureIter != part._featureList.end(); featureIter++) {
-//		out << "\t" << *featureIter << std::endl;
-//	}
+	//Print the port info
+	out << "\t" << "Port: " << listener._port << std::endl;
+	//Return the out
 	return out;
 }
 

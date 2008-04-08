@@ -35,11 +35,33 @@
 
 
 void WCDialog::Controller(WCDialogController *controller) {
-	//Set the controller
-	this->_controller = controller;
 	//Create the window if needed
-	if (this->_window == NULL) {
-		this->_window = (void*)[[WCDialog_OSX alloc] initWithDialog:this];
+	if (this->_controller == NULL) {
+		//Set the controller
+		this->_controller = controller;
+		//See if cached
+		if (this->_mode == WCDialogMode::Cached()) {
+			//Just need to display the window
+			WCDialog_OSX *window = (WCDialog_OSX*)this->_window;
+			//Order front the window
+			[[[window WebView] window] orderFront:window];
+		}
+		//Otherwise...
+		else {
+			//See if dynamic content needs to be generated
+			if (this->_mode == WCDialogMode::Dynamic()) {
+				//Generate the content...
+			}
+			//Create the window
+			this->_window = (void*)[[WCDialog_OSX alloc] initWithDialog:this];
+		}
+		//Mark as open
+		this->_isOpen = true;
+	}
+	//Check error case
+	else {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialog::Controller - Shouldn't set controller when already open.");
+		//throw error
 	}
 }
 
@@ -49,16 +71,19 @@ void WCDialog::Controller(WCDialogController *controller) {
 
 WCDialog::WCDialog(const std::string &name, const unsigned int &width, const unsigned int &height,
 	const bool &modal, const bool &boundary, const WCDialogMode &mode) :
-	_name(name), _winWidth(width), _winHeight(height), _modal(modal), _boundary(boundary), _mode(mode), _controller(NULL), _window(NULL) {
+	_name(name), _winWidth(width), _winHeight(height), _modal(modal), _boundary(boundary), _isOpen(false), _mode(mode), _controller(NULL), _window(NULL) {
 	//Create window here (if cached)
 	if (this->_mode == WCDialogMode::Cached()) {
+		//Create the window
 		this->_window = (void*)[[WCDialog_OSX alloc] initWithDialog:this];
+		//Mark as open
+		this->_isOpen = true;
 	}
 }
 
 WCDialog::~WCDialog() {
 	//Make sure window is closed
-	if (this->_window != NULL) {
+	if (this->_isOpen) {
 		//Cast the pointer
 		WCDialog_OSX *window = (WCDialog_OSX*)this->_window;
 		//Send the close message
@@ -72,18 +97,36 @@ void WCDialog::CloseWindow(const bool &fromWindow) {
 	if (!fromWindow) {
 		//Cast the pointer
 		WCDialog_OSX *window = (WCDialog_OSX*)this->_window;
-		//Send the close message
-		[window close];
+		//If modal
+		if (this->_mode == WCDialogMode::Cached()) {
+			//Just order out the window
+			WCDialog_OSX *window = (WCDialog_OSX*)this->_window;
+			//Break modal if needed
+			if (this->_modal) [NSApp stopModal];
+			//Reset the controller
+			this->_controller = NULL;
+			//Order front the window
+			[[[window WebView] window] orderOut:window];
+		}
+		//Otherwise...
+		else {
+			//Send the close message
+			[window close];
+		}
 	}
 	//Otherwise...
 	else {
-		//For now just set to NULL
-		this->_window = NULL;
+		//Mark as closed
+		this->_isOpen = false;
+		//For now just set controller to NULL
+		this->_controller = NULL;
 	}
 }
 
 
 std::string WCDialog::StringFromScript(const std::string &var) {
+	//Make sure window is open
+	if (!this->_isOpen) return "";
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
 	//Call to underlying method
@@ -92,6 +135,8 @@ std::string WCDialog::StringFromScript(const std::string &var) {
 
 
 WPFloat WCDialog::FloatFromScript(const std::string &var) {
+	//Make sure window is open
+	if (!this->_isOpen) return 0.0;
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
 	//Call to underlying method
@@ -100,6 +145,8 @@ WPFloat WCDialog::FloatFromScript(const std::string &var) {
 
 
 WPInt WCDialog::IntFromScript(const std::string &var) {
+	//Make sure window is open
+	if (!this->_isOpen) return 0;
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
 	//Call to underlying method
@@ -108,6 +155,8 @@ WPInt WCDialog::IntFromScript(const std::string &var) {
 
 
 WPUInt WCDialog::UnsignedIntFromScript(const std::string &var) {
+	//Make sure window is open
+	if (!this->_isOpen) return 0;
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
 	//Call to underlying method
@@ -116,6 +165,8 @@ WPUInt WCDialog::UnsignedIntFromScript(const std::string &var) {
 
 
 bool WCDialog::BoolFromScript(const std::string &var) {
+	//Make sure window is open
+	if (!this->_isOpen) return false;
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
 	//Call to underlying method
@@ -124,6 +175,8 @@ bool WCDialog::BoolFromScript(const std::string &var) {
 
 
 void WCDialog::StringFromScript(const std::string &var, const std::string &value) {
+	//Make sure window is open
+	if (!this->_isOpen) return;
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
 	//Call to underlying method
@@ -132,6 +185,8 @@ void WCDialog::StringFromScript(const std::string &var, const std::string &value
 
 
 void WCDialog::FloatFromScript(const std::string &var, const WPFloat &value) {
+	//Make sure window is open
+	if (!this->_isOpen) return;
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
 	//Call to underlying method
@@ -140,6 +195,8 @@ void WCDialog::FloatFromScript(const std::string &var, const WPFloat &value) {
 
 
 void WCDialog::IntFromScript(const std::string &var, const WPInt &value) {
+	//Make sure window is open
+	if (!this->_isOpen) return;
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
 	//Call to underlying method
@@ -148,6 +205,8 @@ void WCDialog::IntFromScript(const std::string &var, const WPInt &value) {
 
 
 void WCDialog::UnsignedIntFromScript(const std::string &var, const WPUInt &value) {
+	//Make sure window is open
+	if (!this->_isOpen) return;
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
 	//Call to underlying method
@@ -156,6 +215,8 @@ void WCDialog::UnsignedIntFromScript(const std::string &var, const WPUInt &value
 
 
 void WCDialog::BoolFromScript(const std::string &var, const bool &value) {
+	//Make sure window is open
+	if (!this->_isOpen) return;
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
 	//Call to underlying method

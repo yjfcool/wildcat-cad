@@ -333,6 +333,9 @@
 		58F156D10D6B15A5008290F7 /* constraint_angle_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36160D68B4B700673AE6 /* constraint_angle_controller.cpp */; };
 		58F156DE0D6B18C4008290F7 /* constraint_angle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36120D68B4B700673AE6 /* constraint_angle.cpp */; };
 		58F157040D6B1A04008290F7 /* constraint_angle_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36180D68B4B700673AE6 /* constraint_angle_edit_mode.cpp */; };
+		58F5E5170DABF54200DC39A2 /* newListener.html in Resources */ = {isa = PBXBuildFile; fileRef = 58F5E5160DABF54200DC39A2 /* newListener.html */; };
+		58F5E51C0DABF65600DC39A2 /* vis_listener_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58F5E51B0DABF65600DC39A2 /* vis_listener_actions.cpp */; };
+		58F5E5380DABF7CA00DC39A2 /* vis_listener_modes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58F5E5370DABF7CA00DC39A2 /* vis_listener_modes.cpp */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -900,6 +903,11 @@
 		58DB05A10DA6BFF8008FF90E /* dialog_manifest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = dialog_manifest.xml; path = ../../Source/Resources/dialog_manifest.xml; sourceTree = SOURCE_ROOT; };
 		58DB05A50DA6C085008FF90E /* dialog_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialog_manager.h; path = ../../Source/Application/dialog_manager.h; sourceTree = SOURCE_ROOT; };
 		58DB05A60DA6C085008FF90E /* dialog_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dialog_manager.cpp; path = ../../Source/Application/dialog_manager.cpp; sourceTree = SOURCE_ROOT; };
+		58F5E5160DABF54200DC39A2 /* newListener.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = newListener.html; path = ../../Source/Workbenches/RTVisualization/newListener.html; sourceTree = SOURCE_ROOT; };
+		58F5E51A0DABF65600DC39A2 /* vis_listener_actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_actions.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_actions.h; sourceTree = SOURCE_ROOT; };
+		58F5E51B0DABF65600DC39A2 /* vis_listener_actions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener_actions.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener_actions.cpp; sourceTree = SOURCE_ROOT; };
+		58F5E5360DABF7CA00DC39A2 /* vis_listener_modes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_modes.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_modes.h; sourceTree = SOURCE_ROOT; };
+		58F5E5370DABF7CA00DC39A2 /* vis_listener_modes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener_modes.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener_modes.cpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1106,6 +1114,7 @@
 		584541B50DA53450005BC943 /* Listeners */ = {
 			isa = PBXGroup;
 			children = (
+				58F5E5150DABF52800DC39A2 /* Dialogs */,
 				584541B60DA5345F005BC943 /* Headers */,
 				584541B70DA53464005BC943 /* Source */,
 			);
@@ -1116,7 +1125,9 @@
 			isa = PBXGroup;
 			children = (
 				5806B9FB0DA3C0A800D9989D /* vis_listener.h */,
+				58F5E51A0DABF65600DC39A2 /* vis_listener_actions.h */,
 				5845428A0DA53F49005BC943 /* vis_listener_controller.h */,
+				58F5E5360DABF7CA00DC39A2 /* vis_listener_modes.h */,
 				584542850DA53E78005BC943 /* vis_tcp_listener.h */,
 				584542820DA53E67005BC943 /* vis_udp_listener.h */,
 			);
@@ -1127,7 +1138,9 @@
 			isa = PBXGroup;
 			children = (
 				5806B9FC0DA3C0A800D9989D /* vis_listener.cpp */,
+				58F5E51B0DABF65600DC39A2 /* vis_listener_actions.cpp */,
 				5845428B0DA53F49005BC943 /* vis_listener_controller.cpp */,
+				58F5E5370DABF7CA00DC39A2 /* vis_listener_modes.cpp */,
 				584542860DA53E78005BC943 /* vis_tcp_listener.cpp */,
 				584542830DA53E67005BC943 /* vis_udp_listener.cpp */,
 			);
@@ -2945,6 +2958,14 @@
 			name = Dialogs;
 			sourceTree = "<group>";
 		};
+		58F5E5150DABF52800DC39A2 /* Dialogs */ = {
+			isa = PBXGroup;
+			children = (
+				58F5E5160DABF54200DC39A2 /* newListener.html */,
+			);
+			name = Dialogs;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -3113,6 +3134,7 @@
 				58DB039F0DA6834B008FF90E /* translate32.tiff in Resources */,
 				58DB05790DA6BD7D008FF90E /* docTypeSelector.html in Resources */,
 				58DB05A20DA6BFF8008FF90E /* dialog_manifest.xml in Resources */,
+				58F5E5170DABF54200DC39A2 /* newListener.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3319,6 +3341,8 @@
 				58DB05A70DA6C085008FF90E /* dialog_manager.cpp in Sources */,
 				583FEAC80DAA69D100CCE245 /* document_controller.mm in Sources */,
 				586BA53F0DABDE8F00E2DF91 /* dialog.mm in Sources */,
+				58F5E51C0DABF65600DC39A2 /* vis_listener_actions.cpp in Sources */,
+				58F5E5380DABF7CA00DC39A2 /* vis_listener_modes.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

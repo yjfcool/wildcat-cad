@@ -77,7 +77,7 @@ class WCDialog {
 private:
 	std::string									_name;												//!< Both the reference name and filename
 	unsigned int								_winWidth, _winHeight;								//!< Window width and height
-	bool										_modal, _boundary;									//!< Is dialog modal flag
+	bool										_modal, _boundary, _isOpen;							//!< Is dialog modal flag
 	WCDialogMode								_mode;												//!< Mode of the dialog
 	WCDialogController							*_controller;										//!< Associated controller
 	void										*_window;											//!< Void* to the underlying window
@@ -100,6 +100,7 @@ public:
 	inline unsigned int Height(void)			{ return this->_winHeight; }						//!< Get the window height
 	inline bool IsModal(void)					{ return this->_modal; }							//!< Get the modal flag
 	inline bool IsBoundary(void)				{ return this->_boundary; }							//!< Get the boundary flag
+	inline bool IsOpen(void)					{ return this->_isOpen; }							//!< Get the open flag
 	inline WCDialogMode Mode(void)				{ return this->_mode; }								//!< Get the mode
 	inline WCDialogController* Controller(void)	{ return this->_controller; }						//!< Get the controller
 

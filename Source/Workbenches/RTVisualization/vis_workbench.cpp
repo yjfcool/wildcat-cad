@@ -30,14 +30,18 @@
 #include "RTVisualization/vis_workbench.h"
 #include "RTVisualization/visualization.h"
 #include "RTVisualization/ground_plane.h"
-#include "RTVisualization/vis_motiontracker.h"
-#include "RTVisualization/vis_udp_listener.h"
-#include "RTVisualization/vis_recorder.h"
 #include "Application/keymap.h"
 #include "Kernel/document.h"
 #include "Kernel/workbench_layer.h"
 #include "Kernel/selection_mode.h"
 #include "Scene/frame_rate_monitor.h"
+
+
+/*** Included Feature Headers ***/
+#include "RTVisualization/vis_motiontracker.h"
+#include "RTVisualization/vis_udp_listener.h"
+#include "RTVisualization/vis_recorder.h"
+
 
 #define SERV_PORT								9877
 #define RECORDER_MAX							500
@@ -59,6 +63,8 @@ WCVisWorkbench::WCVisWorkbench(WCVisualization *vis) : ::WCWorkbench(vis, "Real-
 	this->_keyMap->AddMapping( WCKeyEvent('s'), WCUserMessage("start") );
 	this->_keyMap->AddMapping( WCKeyEvent('x'), WCUserMessage("stop") );
 	this->_keyMap->AddMapping( WCKeyEvent('p'), WCUserMessage("pause") );
+	this->_keyMap->AddMapping( WCKeyEvent('l'), WCUserMessage("listenerCreate") );
+	this->_keyMap->AddMapping( WCKeyEvent('`'), WCUserMessage("select") );
 	
 	//Create UI objects if part is root document
 	if (this->_visualization->Document() == this->_visualization) {
@@ -88,20 +94,19 @@ WCVisWorkbench::~WCVisWorkbench() {
 
 void WCVisWorkbench::CreateInitialObjects(void) {
 	//Create a listener
-	WCVisListener *listener1 = new WCVisUDPListener(this->_visualization, "", SERV_PORT);
-	this->_visualization->AddListener(listener1);
+//	WCVisListener *listener1 = new WCVisUDPListener(this->_visualization, "", SERV_PORT);
 
 	//Create a data recorder
-	WCVisRecorder *recorder = new WCVisRecorder(this->_visualization, "", RECORDER_MAX);
-	listener1->Recorder(recorder);
+//	WCVisRecorder *recorder = new WCVisRecorder(this->_visualization, "", RECORDER_MAX);
+//	listener1->Recorder(recorder);
 
 	//Create trackers
-	WCVisMotionTracker *tracker1 = new WCVisMotionTracker(this->_visualization, "", 1, NULL, 0.25);
-	WCVisMotionTracker *tracker2 = new WCVisMotionTracker(this->_visualization, "", 2, NULL, 0.5);
+//	WCVisMotionTracker *tracker1 = new WCVisMotionTracker(this->_visualization, "", 1, NULL, 0.25);
+//	WCVisMotionTracker *tracker2 = new WCVisMotionTracker(this->_visualization, "", 2, NULL, 0.5);
 
-	if ((tracker1 == NULL) || (tracker2 == NULL)) {
-		CLOGGER_FATAL(WCLogManager::RootLogger(), "WCVisWorkbench::CreateInitialObjects - Not able to create tracker.");
-	}
+//	if ((tracker1 == NULL) || (tracker2 == NULL)) {
+//		CLOGGER_FATAL(WCLogManager::RootLogger(), "WCVisWorkbench::CreateInitialObjects - Not able to create tracker.");
+//	}
 }
 
 
@@ -133,6 +138,11 @@ bool WCVisWorkbench::OnUserMessage(const WCUserMessage &message) {
 	//See if super wants to handle
 	if (this->WCWorkbench::OnUserMessage(message)) return true;
 
+	WCDrawingMode *mode;
+//	WCAction *action;
+
+/*** -- Visualization Control -- ***/
+
 	//Is this a select mode message
 	if (message == "start") {
 		//Start the visualization
@@ -152,6 +162,25 @@ bool WCVisWorkbench::OnUserMessage(const WCUserMessage &message) {
 	else if (message == "pause") {
 		//Pause
 		this->_visualization->PauseVisualization();
+	}
+
+/*** -- Features -- ***/
+
+	//Set the drawing mode to rectangle
+	else if (message == "listenerCreate") {
+		//Create a new drawing mode
+		mode = WCVisListener::ModeCreate(this);
+		//Go into listener create mode
+		this->DrawingMode(mode);
+	}
+
+/*** -- Other -- ***/
+
+	//Selection mode
+	else if (message == "select") {
+		//Revert to default drawing mode
+//		this->DrawingMode( WCDrawingMode::Selection(this) );
+		this->DrawingMode( new WCSelectionMode(this) );
 	}
 	//Message not captured
 	else {

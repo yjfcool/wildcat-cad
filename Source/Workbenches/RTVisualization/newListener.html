@@ -1,0 +1,57 @@
+<HTML>
+<Head>
+<Title>New Listener</Title>
+</Head>
+<Body>
+<script type="text/javascript" language="JavaScript1.4"><!--
+
+/* This variable holds the listern properties */
+var listenerType;
+var listenerPort;
+var listenerName;
+
+/* Function validates that input is an integer */
+function isInteger(inputVal) {
+	inputStr = inputVal.toString();
+	for (var i=0; i<inputStr.length; i++) {
+		var oneChar = inputStr.charAt(i);
+		if (i == 0 && oneChar == "-") { continue }
+		if (oneChar < "0" || oneChar > "9") { return false }
+	}
+	return true;
+}
+
+/* Function calls modalDialog */
+function CreateListener(type) {
+	/* Validate Variables */
+	listenerType = "UDP";
+	listenerPort = document.entry.port.value;
+	lisenerName = "Test";
+
+	/* Send message of CreateListener */
+	if (isInteger(listenerPort))
+		console.sendMessage("CreateListener");
+	else {
+		/* Send message about bad port format */
+		console.sendMessage("InvalidPortFormat");
+	}
+}
+
+function CloseDialog() {
+	/* Send message of CloseDialog */
+	console.sendMessage("CloseDialog");
+}
+
+//--></script>
+
+<Form name="entry">
+Listener Name:<input type=text name="name" value="Listener"><P>
+Listener Port:<input type=text name="port" value="9877"><P>
+Listener Type:
+<P>
+<input type=button value="Ok" onClick="CreateListener();">
+<input type=button value="Cancel" onClick="CloseDialog();">
+</Form>
+
+</Body>
+</HTML>

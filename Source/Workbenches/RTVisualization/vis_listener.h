@@ -33,6 +33,9 @@
 /*** Included Header Files ***/
 #include "RTVisualization/wrtv.h"
 #include "RTVisualization/vis_feature.h"
+#include "RTVisualization/vis_listener_actions.h"
+#include "RTVisualization/vis_listener_controller.h"
+#include "RTVisualization/vis_listener_modes.h"
 
 
 /*** Local Defines ***/
@@ -83,6 +86,14 @@ public:
 
 	//Required Inherited Methods
 	virtual bool Regenerate(void)				{ return true; }									//!< Validate and rebuild
+
+	/*** Drawing Modes and Actions ***/
+	static WCDrawingMode* ModeCreate(WCVisWorkbench *wb);											//!< Return a create mode controller
+//	static WCDrawingMode* ModeEdit(WCVisListener *listener);										//!< Return an edit mode controller
+//	
+//	static WCActionVisListenerCreate* ActionCreate(WCSketch *sketch, const std::string &pointName,	//!< Primary creation action
+//												const WCVector4 &pos);
+//	static WCAction* ActionMove(WCSketchPoint *point, const WCVector4 &pos);						//!< Primary modify action
 
 	/*** Friend Methods ***/
 	friend std::ostream& operator<<(std::ostream& out, const WCVisListener &listener);				//!< Overloaded output operator	

@@ -26,67 +26,62 @@
 ********************************************************************************/
 
 
-/*** Imported Header Files ***/
-#import "Application/MacOS/document_controller.h"
-#import "Application/MacOS/document.h"
-
-#import "Application/MacOS/part_document.h"
-#import "Application/MacOS/vis_document.h"
-
-
 /*** Included Header Files ***/
-#include "Application/dialog_manager.h"
-#include "Application/dialog.h"
+#include "RTVisualization/vis_listener_modes.h"
+#include "RTVisualization/vis_workbench.h"
+#include "RTVisualization/visualization.h"
+#include "RTVisualization/vis_udp_listener.h"
+
+//#include "Sketcher/sketch_point.h"
+//#include "Sketcher/sketch_align_suggestion.h"
+//#include "Constraint/constraint_distance.h"
+//#include "Kernel/document.h"
 
 
 /***********************************************~***************************************************/
 
 
-class WCDialogDocTypeSelector : public WCDialogController {
+class WCDialogNewListener : public WCDialogController {
+private:
+	WCVisualization								*_visualization;
 public:
-	WCDialogDocTypeSelector() : ::WCDialogController() { }
-	virtual ~WCDialogDocTypeSelector() {}
-
+	WCDialogNewListener(WCVisualization *vis) : _visualization(vis) { }
 	virtual void ReceiveMessage(const std::string &message) {										//!< Receive message from a dialog
+		std::cout << "ReceiveMessage: " << message << "---\n";
 		//See what type of message
-		if (message == "SelectDocType") {
-			std::string docType = this->_dialog->StringFromScript("docType");
+		if (message == "CreateListener") {
+			std::string name = "";
+			std::string type = this->_dialog->StringFromScript("listenerType");
+			unsigned int port = this->_dialog->UnsignedIntFromScript("listenerPort");
 
-			//Lets create a VisDocument
-			NSError *outError = [NSError alloc];
-			WCDocument_OSX *document;
-			if (docType == "visDoc") {
-				document = [[WCVisDocument alloc] initWithType:@"Whatever" error:&outError];
+			//Execute action to create listener
+			if (type == "UDP") {
+				new WCVisUDPListener(this->_visualization, name, port);
 			}
-			if (docType == "partDoc") {
-				document = [[WCPartDocument alloc] initWithType:@"Whatever" error:&outError];
+			else {
+			
 			}
-			//Make sure document was created
-			if (document == nil) {
-				//Close the dialog
-				WCDialogManager::CloseDialog(this->_dialog);
-				CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialogDocTypeSelector::ReceiveMessage - Not able to create document of type: " << docType);
-				return;
-			}
-			//Add the document into the controller
-			[[NSDocumentController sharedDocumentController] addDocument:document];
-			//Make the window controllers
-			[document makeWindowControllers];
-			//Show the document
-			[document showWindows];
+
 			//Close the dialog
 			WCDialogManager::CloseDialog(this->_dialog);
+			//Exit the workbench
+			this->_visualization->Workbench()->DrawingMode( new WCSelectionMode(this->_visualization->Workbench()) );
+			return;
 		}
-		else if (message == "RequestOpenDocument") {
+		//Check for invalid port format
+		else if (message == "InvalidPortFormat") {
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialogNewListener::ReceiveMessage - Invalid port format\n");
+		}
+		//Check for closing dialog
+		else if (message == "CloseDialog") {
 			//Close the dialog
 			WCDialogManager::CloseDialog(this->_dialog);
-			//Send open document message
-			[[NSDocumentController sharedDocumentController] openDocument:nil];
-			//Exit the method
+			//Exit the workbench
+			this->_visualization->Workbench()->DrawingMode( new WCSelectionMode(this->_visualization->Workbench()) );
 			return;
 		}
 		else {
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialogDocTypeSelector::ReceiveMessage - Unknown message: " << message);
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialogNewListener::ReceiveMessage - Unknown message: " << message);
 		}
 	}
 };
@@ -94,17 +89,31 @@ public:
 
 /***********************************************~***************************************************/
 
-@implementation WCDocumentController
 
-
-- (IBAction)newDocument:(id)sender
-{
-	//Show dialog to ask for document type
-	WCDialogManager::DisplayDialog("docTypeSelector", new WCDialogDocTypeSelector());
+WCModeVisListenerCreate::WCModeVisListenerCreate(WCVisWorkbench *wb) : ::WCDrawingMode(wb->Visualization(), VISLISTENERMODE_CREATE_NAME), 
+	_workbench(wb), _dialog(NULL) { 
+	//Nothing for now
+	//...
 }
 
 
-@end
+void WCModeVisListenerCreate::OnEntry(void) {
+	CLOGGER_DEBUG(WCLogManager::RootLogger(), "Entering VisListener Create Mode.");
+	//Create the dialog controller
+	this->_controller = new WCDialogNewListener(this->_workbench->Visualization());
+	//Open the dialog
+	this->_dialog = WCDialogManager::DisplayDialog("newListener", this->_controller);
+}
+
+
+void WCModeVisListenerCreate::OnExit(void) {
+	CLOGGER_DEBUG(WCLogManager::RootLogger(), "Exiting VisListener Create Mode.");
+	//Delete the controller
+	if (this->_controller != NULL) {
+		delete this->_controller;
+		this->_controller = NULL;
+	}
+}
 
 
 /***********************************************~***************************************************/

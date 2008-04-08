@@ -44,6 +44,7 @@
 
 //Kernel Headers
 #include "Kernel/wftrl.h"
+#include "Kernel/selection_mode.h"
 
 
 /***********************************************~***************************************************/

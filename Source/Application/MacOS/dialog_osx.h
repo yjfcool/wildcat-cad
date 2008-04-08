@@ -56,12 +56,11 @@
 	WCDialog									*_dialog;											//!< Associated dialog object
 }
 
-/*** Initialization Methods ***/
-//- (id)initWithLocation:(NSURL*)url;																//!< Initialize with a specific web location
+/*** Primary Methods ***/
 - (id)initWithDialog:(WCDialog*)dialog;																//!< Initialize with a specific dialog
-
-/*** Member Access Methods ***/
 - (WebView*)WebView;																				//!< Get the embedded webview
+- (void)showWindow;
+- (void)hideWindow;
 
 /*** Delegate Methods ***/
 - (void)windowWillClose:(NSNotification *)notification;												//!< Make sure close of window is captured

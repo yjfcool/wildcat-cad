@@ -55,7 +55,7 @@ void WCDialogManager::ParseManifest(const std::string &manifest, const bool &ver
 #endif
 	const char* xmlFile = fullPath.c_str();
 	WCDialog *newDialog;
-	xercesc::DOMNode *dialogNode, *nameNode, *widthNode, *heightNode, *modalNode, *boundaryNode;
+	xercesc::DOMNode *node;
 	xercesc::DOMNamedNodeMap *nodeMap;
 	XMLCh *xmlDialogString = xercesc::XMLString::transcode("dialog");
 	XMLCh *xmlNameString = xercesc::XMLString::transcode("name");
@@ -63,6 +63,7 @@ void WCDialogManager::ParseManifest(const std::string &manifest, const bool &ver
 	XMLCh *xmlHeightString = xercesc::XMLString::transcode("height");
 	XMLCh *xmlModalString = xercesc::XMLString::transcode("modal");
 	XMLCh *xmlBoundaryString = xercesc::XMLString::transcode("boundary");
+	XMLCh *xmlModeString = xercesc::XMLString::transcode("mode");
 	char *tmpChars;
 	std::string name;
 	unsigned int width, height;
@@ -81,44 +82,49 @@ void WCDialogManager::ParseManifest(const std::string &manifest, const bool &ver
 		//Loop through all nodes and extract dialog information
 		for (int index=0; index < dialogCount; index++) {
 			//Get the node at index
-			dialogNode = nodeList->item(index);
-			nodeMap = dialogNode->getAttributes();
+			node = nodeList->item(index);
+			nodeMap = node->getAttributes();
 
 			//Get the name
-			nameNode = nodeMap->getNamedItem(xmlNameString);
-			tmpChars = xercesc::XMLString::transcode(nameNode->getNodeValue());
+			node = nodeMap->getNamedItem(xmlNameString);
+			tmpChars = xercesc::XMLString::transcode(node->getNodeValue());
 			name = std::string(tmpChars);
 			xercesc::XMLString::release(&tmpChars);
 
 			//Get the width
-			widthNode = nodeMap->getNamedItem(xmlWidthString);
-			tmpChars = xercesc::XMLString::transcode(widthNode->getNodeValue());
+			node = nodeMap->getNamedItem(xmlWidthString);
+			tmpChars = xercesc::XMLString::transcode(node->getNodeValue());
 			width = (unsigned int)atoi(tmpChars);
 			xercesc::XMLString::release(&tmpChars);
 
 			//Get the height
-			heightNode = nodeMap->getNamedItem(xmlHeightString);
-			tmpChars = xercesc::XMLString::transcode(heightNode->getNodeValue());
+			node = nodeMap->getNamedItem(xmlHeightString);
+			tmpChars = xercesc::XMLString::transcode(node->getNodeValue());
 			height = (unsigned int)atoi(tmpChars);
 			xercesc::XMLString::release(&tmpChars);
 
 			//Get the modal flag
-			modalNode = nodeMap->getNamedItem(xmlModalString);
-			tmpChars = xercesc::XMLString::transcode(modalNode->getNodeValue());
+			node = nodeMap->getNamedItem(xmlModalString);
+			tmpChars = xercesc::XMLString::transcode(node->getNodeValue());
 			if (strncmp(tmpChars, "true", 4) == 0) modal = true;
 			else modal = false;
 			xercesc::XMLString::release(&tmpChars);
 
 			//Get the boundary flag
-			boundaryNode = nodeMap->getNamedItem(xmlBoundaryString);
-			tmpChars = xercesc::XMLString::transcode(modalNode->getNodeValue());
+			node = nodeMap->getNamedItem(xmlBoundaryString);
+			tmpChars = xercesc::XMLString::transcode(node->getNodeValue());
 			if (strncmp(tmpChars, "true", 4) == 0) modal = true;
 			else boundary = false;
 			xercesc::XMLString::release(&tmpChars);
 
-			//Get the mode type
-			//...
-			
+			//Get the mode type (remember default is type = Default)
+			node = nodeMap->getNamedItem(xmlModeString);
+			tmpChars = xercesc::XMLString::transcode(node->getNodeValue());
+			std::string modeString(tmpChars);
+			xercesc::XMLString::release(&tmpChars);
+			if (modeString == "dynamic") mode = WCDialogMode::Dynamic();
+			else if (modeString == "cached") mode = WCDialogMode::Cached();
+
 			//Get values for  new dialog
 			newDialog = new WCDialog(name, width, height, modal, boundary, mode);
 			//Be verbose if appropriate
@@ -189,7 +195,7 @@ WCDialog*  WCDialogManager::DialogFromName(const std::string &name) {
 	std::map<std::string,WCDialog*>::iterator iter = WCDialogManager::_dialogMap->find(name);
 	//See if you found anything
 	if( iter == WCDialogManager::_dialogMap->end() ) {
-		CLOGGER_WARN(WCLogManager::RootLogger(), "WCDialogManager::DialogFromName - Not able to find dialog: " << name);
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialogManager::DialogFromName - Not able to find dialog: " << name);
 		return NULL;
 	}
 	//Otherwise, get the object
@@ -198,6 +204,12 @@ WCDialog*  WCDialogManager::DialogFromName(const std::string &name) {
 
 
 WCDialog* WCDialogManager::DisplayDialog(const std::string &name, WCDialogController *controller) {
+	//Make sure controller is not null
+	if (controller == NULL) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialogManager::DialogFromName - NULL controller passed for dialog: " << name);
+		//throw error
+		return NULL;
+	}
 	//Get the dialog
 	WCDialog *dialog = WCDialogManager::DialogFromName(name);
 	//If a valid dialog is returned
@@ -208,6 +220,14 @@ WCDialog* WCDialogManager::DisplayDialog(const std::string &name, WCDialogContro
 		controller->Dialog(dialog);
 	}
 	return dialog;
+}
+
+
+void WCDialogManager::CloseDialog(WCDialog *dialog) {
+	//Make sure dialog is open
+	if (!dialog->IsOpen()) return;
+	//Otherwise, close the window
+	dialog->CloseWindow(false);
 }
 
 

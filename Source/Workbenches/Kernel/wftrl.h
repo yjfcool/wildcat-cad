@@ -74,6 +74,8 @@
 //Application Headers
 #include "Application/toolbar.h"
 #include "Application/toolbar_manager.h"
+#include "Application/dialog.h"
+#include "Application/dialog_manager.h"
 
 
 /***********************************************~***************************************************/

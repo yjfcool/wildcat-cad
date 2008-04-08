@@ -49,26 +49,6 @@ bool from_string(T& t,
 @implementation WCDialog_OSX
 
 
-/*
-- (id)init
-{
-    // Do the regular Cocoa thing, specifying a particular nib.
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	location = [NSURL URLWithString:@"http://www.cerrokai.com"];
-    return self;
-}
-
-
-- (id)initWithLocation:(NSURL*)url
-{
-	//Do the cocoa thing
-    self = [super initWithWindowNibName:@"ModalDialog"];
-	location = url;
-	return self;
-}
-*/
-
-
 - (id)initWithDialog:(WCDialog*)dialog
 {
 	//Set the dialog
@@ -118,6 +98,16 @@ bool from_string(T& t,
 }
 
 
+- (void)showWindow
+{
+}
+
+
+- (void)hideWindow
+{
+}
+
+
 - (void)windowWillClose:(NSNotification *)notification
 {
 	//Let dialog know that window is closing
@@ -130,11 +120,13 @@ bool from_string(T& t,
 
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
 {
-	//Page has fully loaded, now order front
-	[[sender window] orderFront:self];
+	//If window is cached, we are done
+	if (_dialog->Mode() != WCDialogMode::Cached()) {
+		//Page has fully loaded, now order front
+		[[sender window] orderFront:self];
+	}
 	//Run modal if appropriate
-	if (_dialog->IsModal())
-		[NSApp runModalForWindow:[self window]];
+	if (_dialog->IsModal()) [NSApp runModalForWindow:[self window]];
 }
 
 

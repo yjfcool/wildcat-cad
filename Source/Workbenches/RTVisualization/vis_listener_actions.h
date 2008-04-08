@@ -26,48 +26,58 @@
 ********************************************************************************/
 
 
-#ifndef __DIALOG_MANAGER_H__
-#define __DIALOG_MANAGER_H__
+#ifndef __VIS_LISTENER_ACTION_H__
+#define __VIS_LISTENER_ACTION_H__
 
 
-/*** Included Headers ***/
-#include "Application/wildcat.h"
+/*** Included Header Files ***/
+#include "Kernel/wftrl.h"
+#include "Kernel/action.h"
 
 
 /*** Local Defines ***/
 //None
 
 
-/*** C++ Class Predefines ***/
-class WCDialog;
-class WCDialogController;
+/*** Class Predefines ***/
+class WCVisUDPListener;
 
 
 /***********************************************~***************************************************/
 
 
-class WCDialogManager {
+class WCActionVisUDPListenerCreate : public WCAction {
 private:
-	static std::map<std::string, WCDialog*>*	_dialogMap;											//!< Map of all dialog objects
-	//Private Methods
-	static void ParseManifest(const std::string &manifest, const bool &verbose);					//!< Parse the given manifest
+	WCGUID										_visGUID;											//!< GUID for associated objects
+	std::string									_listenerName;										//!< Listener name
+	unsigned int								_port;												//!< Port
+	WCVisUDPListener							*_listener;											//!< Post-creation object
 	//Hidden Constructors
-	WCDialogManager();																				//!< Deny access to default constructor
-	WCDialogManager(const WCDialogManager&);														//!< Deny access to copy constructor
-	WCDialogManager& operator=(const WCDialogManager&);												//!< Deny access to equals operator
+	WCActionVisUDPListenerCreate();																	//!< Deny access to default constructor
+	WCActionVisUDPListenerCreate(const WCActionVisUDPListenerCreate&);								//!< Deny access to copy constructor
+	WCActionVisUDPListenerCreate& operator=(const WCActionVisUDPListenerCreate&);					//!< Deny access to equals operator
+	WCActionVisUDPListenerCreate(WCFeature *creator, const std::string &listenerName,				//!< Primary constructor
+												const unsigned int &port);
+	//Friend Declarations
+	friend class WCVisUDPListener;																		//!< Plane is a friend
 public:
 	//Constructors and Destructors
-	static bool Initialize(const std::string &manifest, const bool &verbose=false);					//!< Initialize the manager with a manifest
-	static bool Terminate();																		//!< Terminate the manager
-	//General Access Methods
-	static WCDialog* DialogFromName(const std::string &name);										//!< Get a dialog from a name
-	static WCDialog* DisplayDialog(const std::string &name, WCDialogController *controller);		//!< Display a dialog by name
-	static void CloseDialog(WCDialog *dialog);														//!< Close the dialog
+	WCActionVisUDPListenerCreate(xercesc::DOMElement *element, WCSerialDictionary *dictionary);		//!< Persistance constructor
+	~WCActionVisUDPListenerCreate()				{ }													//!< Default destructor
+
+	//Member Access Methods
+	inline WCVisUDPListener* Listener(void)		{ return this->_listener; }							//!< Get the listener
+
+	//Inherited Methods
+	WCFeature* Execute(void);																		//!< Execute the action
+	bool Merge(WCAction *action)				{ return false; }									//!< Try to merge two actions
+	bool Rollback(void);																			//!< Try to rollback the action
+	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
 };
 
 
 /***********************************************~***************************************************/
 
 
-#endif //__DIALOG_MANAGER_H__
+#endif //__VIS_LISTENER_ACTION_H__
 
