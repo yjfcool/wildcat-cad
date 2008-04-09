@@ -317,6 +317,7 @@
 		589AC2190D73404F001725D0 /* constraint_coincidence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361C0D68B4B700673AE6 /* constraint_coincidence.cpp */; };
 		589AC2330D734343001725D0 /* constraint_coincidence_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361E0D68B4B700673AE6 /* constraint_coincidence_actions.cpp */; };
 		58B27F780D785FC4008951D9 /* sketch_circle_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */; };
+		58C5E7400DAD250D00089549 /* newListener.html in Resources */ = {isa = PBXBuildFile; fileRef = 58F5E5160DABF54200DC39A2 /* newListener.html */; };
 		58DAD6420D69C7610093679D /* constraint_measure_radius.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD6410D69C7610093679D /* constraint_measure_radius.cpp */; };
 		58DAD64A0D69CB100093679D /* constraint_radius.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD6490D69CB100093679D /* constraint_radius.cpp */; };
 		58DAD64D0D69CC090093679D /* constraint_radius_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD64C0D69CC090093679D /* constraint_radius_actions.cpp */; };
@@ -333,7 +334,6 @@
 		58F156D10D6B15A5008290F7 /* constraint_angle_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36160D68B4B700673AE6 /* constraint_angle_controller.cpp */; };
 		58F156DE0D6B18C4008290F7 /* constraint_angle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36120D68B4B700673AE6 /* constraint_angle.cpp */; };
 		58F157040D6B1A04008290F7 /* constraint_angle_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36180D68B4B700673AE6 /* constraint_angle_edit_mode.cpp */; };
-		58F5E5170DABF54200DC39A2 /* newListener.html in Resources */ = {isa = PBXBuildFile; fileRef = 58F5E5160DABF54200DC39A2 /* newListener.html */; };
 		58F5E51C0DABF65600DC39A2 /* vis_listener_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58F5E51B0DABF65600DC39A2 /* vis_listener_actions.cpp */; };
 		58F5E5380DABF7CA00DC39A2 /* vis_listener_modes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58F5E5370DABF7CA00DC39A2 /* vis_listener_modes.cpp */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -3134,7 +3134,7 @@
 				58DB039F0DA6834B008FF90E /* translate32.tiff in Resources */,
 				58DB05790DA6BD7D008FF90E /* docTypeSelector.html in Resources */,
 				58DB05A20DA6BFF8008FF90E /* dialog_manifest.xml in Resources */,
-				58F5E5170DABF54200DC39A2 /* newListener.html in Resources */,
+				58C5E7400DAD250D00089549 /* newListener.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

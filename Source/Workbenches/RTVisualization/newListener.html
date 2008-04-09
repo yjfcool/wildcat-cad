@@ -10,17 +10,6 @@ var listenerName;
 var listenerType;
 var listenerPort;
 
-/* Function validates that input is an integer */
-function isInteger(inputVal) {
-	inputStr = inputVal.toString();
-	for (var i=0; i<inputStr.length; i++) {
-		var oneChar = inputStr.charAt(i);
-		if (i == 0 && oneChar == "-") { continue }
-		if (oneChar < "0" || oneChar > "9") { return false }
-	}
-	return true;
-}
-
 /* Function calls modalDialog */
 function CreateListener(type) {
 	/* Validate Variables */
@@ -28,12 +17,20 @@ function CreateListener(type) {
 	listenerPort = document.entry.port.value;
 	listenerName = document.entry.name.value;
 
-	/* Send message of CreateListener */
-	if (isInteger( document.entry.port.value))
-		console.sendMessage("CreateListener");
-	else {
+	/* Validate that port is actually an integer */
+	if (isNaN( document.entry.port.value)) {
 		/* Send message about bad port format */
-		console.sendMessage("InvalidPortFormat");
+		alert("Port must be an integer between 0 and 65255.");
+	}
+	else {
+		/* Make sure port is positive and within bounds */
+		var n = parseInt(listenerPort);
+		if (n < 0 || n > 65255) 
+			/* Send an alert about valid port values */
+			alert("Port must be an integer between 0 and 65255.");
+		else
+			/* Send message about bad port format */
+			console.sendMessage("CreateListener");
 	}
 }
 

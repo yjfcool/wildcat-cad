@@ -60,6 +60,7 @@ void WCVisUDPListener::Listen(void) {
 	while (this->_isValid) {
 		//Try to get some data (remember there is a one second timeout)
 		n = recvfrom(this->_socket, data, SERV_MAXLINE, 0, NULL, &len);
+//		std::cout << "Received: " << n << std::endl;
 		//Make sure visualization is valid, has read something, and is running
 		if ((this->_isValid) && (n > 0) && 
 			(this->_visualization->State() == WCVisualizationState::Running())) {

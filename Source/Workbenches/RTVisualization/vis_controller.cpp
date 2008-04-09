@@ -54,7 +54,7 @@ void WCVisController::OnSelection(const bool fromManager, std::list<WCVisualObje
 		this->_visualization->Document()->ActiveWorkbench()->SelectionManager()->ForceSelection(this, false);
 	}
 	//Tell the object it has been selected
-//	if (!this->_visualization->IsSelected()) this->_visualization->OnSelection(false, std::list<WCVisualObject*>());
+	if (!this->_visualization->IsSelected()) this->_visualization->OnSelection(false, std::list<WCVisualObject*>());
 	//Mark the tree element as selected
 	this->_visualization->TreeElement()->IsSelected(true);
 }
@@ -66,7 +66,7 @@ void WCVisController::OnDeselection(const bool fromManager) {
 		this->_visualization->Document()->ActiveWorkbench()->SelectionManager()->ForceDeselection(this, false);
 	}
 	//Tell the object it has been deselected
-//	if (this->_visualization->IsSelected()) this->_visualization->OnDeselection(false);
+	if (this->_visualization->IsSelected()) this->_visualization->OnDeselection(false);
 	//Mark the tree element as not selected
 	this->_visualization->TreeElement()->IsSelected(false);
 }

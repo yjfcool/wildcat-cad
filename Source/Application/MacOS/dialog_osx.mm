@@ -145,6 +145,27 @@ bool from_string(T& t,
     [windowScriptObject setValue:self forKey:@"console"];
 }
 
+
+- (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo {
+	//Nothing to do here (just have to have method for showing alert sheets)
+}
+
+
+	/* sent to the WebView's ui delegate when alert() is called in JavaScript.
+	If you call alert() in your JavaScript methods, it will call this
+	method and display the alert message in the log.  In Safari, this method
+	displays an alert that presents the message to the user.
+	*/
+- (void)webView:(WebView *)sender runJavaScriptAlertPanelWithMessage:(NSString *)message {
+	//Create a basic informative alert
+	NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+	[alert addButtonWithTitle:@"OK"];
+	[alert setMessageText:message];
+	[alert setAlertStyle:NSInformationalAlertStyle];
+	//Show the alert
+	[alert beginSheetModalForWindow:[self window] modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:nil];
+}
+
 	/* This method is called by the WebView when it is deciding what
 	methods on this object can be called by JavaScript.  The method
 	should return NO the methods we would like to be able to call from

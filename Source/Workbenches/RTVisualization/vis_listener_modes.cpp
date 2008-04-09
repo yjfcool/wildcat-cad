@@ -59,7 +59,6 @@ public:
 				//Create the horizontal distance constraint
 				WCAction *action = WCVisUDPListener::ActionCreate(this->_visualization, name, port);
 				this->_visualization->Document()->ExecuteAction( action);
-//				new WCVisUDPListener(this->_visualization, name, port);
 			}
 			else {
 				//Need to execute action to create TCP listener
@@ -71,10 +70,6 @@ public:
 			//Exit the workbench
 			this->_visualization->Workbench()->DrawingMode( new WCSelectionMode(this->_visualization->Workbench()) );
 			return;
-		}
-		//Check for invalid port format
-		else if (message == "InvalidPortFormat") {
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialogNewListener::ReceiveMessage - Invalid port format\n");
 		}
 		//Check for closing dialog
 		else if (message == "CloseDialog") {

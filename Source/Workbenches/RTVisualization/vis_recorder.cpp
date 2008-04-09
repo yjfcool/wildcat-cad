@@ -102,6 +102,10 @@ WCVisRecorder::WCVisRecorder(xercesc::DOMElement *element, WCSerialDictionary *d
 
 
 WCVisRecorder::~WCVisRecorder() {
+	//Remove from the visualization
+	if (!this->_visualization->RemoveFeature(this, false)) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisRecorder::~WCVisRecorder - Problem removing feature from visualization.");	
+	}
 	//Make sure buffer is cleared
 	this->ClearBuffer();
 }
@@ -112,7 +116,7 @@ void WCVisRecorder::OnReceiveData(const unsigned int &type, void* data) {
 
 /*** DEBUG ***/
 	//Set size based on type
-	if (type == 3) size = 88;
+	size = 88;
 /*** DEBUG ***/
 
 	//Create a local copy of the data

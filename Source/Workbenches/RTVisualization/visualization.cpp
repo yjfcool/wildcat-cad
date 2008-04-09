@@ -315,8 +315,7 @@ std::string WCVisualization::GenerateFeatureName(WCFeature *feature) {
 
 
 void WCVisualization::ResetVisualization(void) {
-	//Rest listening thread
-	//...
+	CLOGGER_INFO(WCLogManager::RootLogger(), "WCVisualization::ResetVisualization - Resetting...");
 	//Set state to reset
 	this->_state = WCVisualizationState::Reset();
 
@@ -330,6 +329,7 @@ void WCVisualization::ResetVisualization(void) {
 
 
 void WCVisualization::StartVisualization(void) {
+	CLOGGER_INFO(WCLogManager::RootLogger(), "WCVisualization::StartVisualization - Starting...");
 	//Set state to running
 	this->_state = WCVisualizationState::Running();
 
@@ -343,8 +343,7 @@ void WCVisualization::StartVisualization(void) {
 
 
 void WCVisualization::PauseVisualization(void) {
-	//Pause listening thread
-	//...
+	CLOGGER_INFO(WCLogManager::RootLogger(), "WCVisualization::PauseVisualization - Pausing...");
 	//Set state to pause
 	this->_state = WCVisualizationState::Paused();
 
@@ -358,6 +357,7 @@ void WCVisualization::PauseVisualization(void) {
 
 
 void WCVisualization::StopVisualization(void) {
+	CLOGGER_INFO(WCLogManager::RootLogger(), "WCVisualization::StopVisualization - Stopping...");
 	//Set state to stop
 	this->_state = WCVisualizationState::Stopped();
 
