@@ -5,10 +5,10 @@
 <Body>
 <script type="text/javascript" language="JavaScript1.4"><!--
 
-/* This variable holds the listern properties */
+/* This variable holds the listener properties */
+var listenerName;
 var listenerType;
 var listenerPort;
-var listenerName;
 
 /* Function validates that input is an integer */
 function isInteger(inputVal) {
@@ -24,12 +24,12 @@ function isInteger(inputVal) {
 /* Function calls modalDialog */
 function CreateListener(type) {
 	/* Validate Variables */
-	listenerType = "UDP";
+	listenerType = document.entry.type.value;
 	listenerPort = document.entry.port.value;
-	lisenerName = "Test";
+	listenerName = document.entry.name.value;
 
 	/* Send message of CreateListener */
-	if (isInteger(listenerPort))
+	if (isInteger( document.entry.port.value))
 		console.sendMessage("CreateListener");
 	else {
 		/* Send message about bad port format */
@@ -45,9 +45,15 @@ function CloseDialog() {
 //--></script>
 
 <Form name="entry">
-Listener Name:<input type=text name="name" value="Listener"><P>
-Listener Port:<input type=text name="port" value="9877"><P>
+Listener Name:
+<input type=text name="name" value="Listener"><P>
+Listener Port:
+<input type=text name="port" value="9877"><P>
 Listener Type:
+<select name="type">
+	<option selected value="UDP">UDP Listener
+	<option value="TCP">TCP Listener
+</select>
 <P>
 <input type=button value="Ok" onClick="CreateListener();">
 <input type=button value="Cancel" onClick="CloseDialog();">

@@ -28,59 +28,62 @@
 
 /*** Included Header Files ***/
 #include "RTVisualization/vis_listener_actions.h"
+#include "RTVisualization/vis_udp_listener.h"
+#include "RTVisualization/visualization.h"
 #include "Kernel/document.h"
 
 
-/***********************************************~***************************************************
+/***********************************************~***************************************************/
 
 
-WCActionPartPlaneCreate::WCActionPartPlaneCreate(WCFeature *creator, const std::string &planeName, const WCVector4 &p0,
-	const WCVector4 &p1, const WCVector4 &p2) : ::WCAction("Create Part Plane", creator),
-	_plane(NULL), _planeName(planeName), _p0(p0), _p1(p1), _p2(p2) {
+WCActionVisUDPListenerCreate::WCActionVisUDPListenerCreate(WCFeature *creator, const std::string &listenerName,
+	const unsigned int &port) : ::WCAction("Create Vis UDP Listener", creator),
+	_listener(NULL), _listenerName(listenerName), _port(port) {
 	//Nothing else for now
 }
 
 
-WCActionPartPlaneCreate::WCActionPartPlaneCreate(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
+WCActionVisUDPListenerCreate::WCActionVisUDPListenerCreate(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	::WCAction( WCSerializeableObject::ElementFromName(element,"Action"), dictionary ),
-	_plane(NULL), _planeName(""), _p0(), _p1(), _p2() {
+	_listener(NULL), _listenerName(""), _port(0) {
 	//Do something here
 }
 
 
-WCFeature* WCActionPartPlaneCreate::Execute(void) {
+WCFeature* WCActionVisUDPListenerCreate::Execute(void) {
 	//Update pointers (based on rollback flag)
 	if (this->_rollback) {
-		this->_creator = (WCPart*)this->_dictionary->AddressFromGUID(this->_partGUID);
+		this->_creator = (WCVisualization*)this->_dictionary->AddressFromGUID(this->_visGUID);
 	}
 
-	//Create the plane
-	WCPartPlane *plane = new WCPartPlane(this->_creator, this->_planeName, this->_p0, this->_p1, this->_p2);
-	//Make sure plane is not null
-	if (plane == NULL) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCActionPartPlaneCreate::Execute - Plane could not be created.");
+	//Create the UDP listener
+	WCVisualization *vis = dynamic_cast<WCVisualization*>(this->_creator);
+	WCVisUDPListener *listener = new WCVisUDPListener(vis, this->_listenerName, this->_port);
+	//Make sure listener is not null
+	if (listener == NULL) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCActionVisUDPListenerCreate::Execute - Listener could not be created.");
 		return NULL;
 	}
 
 	//If a rollback execution, update guid and address
-	if (this->_rollback) this->_dictionary->UpdateAddress(this->_guid, plane);
-	//Set the plane pointer and return
-	this->_plane = plane;
-	return plane;
+	if (this->_rollback) this->_dictionary->UpdateAddress(this->_guid, listener);
+	//Set the listener pointer and return
+	this->_listener = listener;
+	return listener;
 }
 
 
-bool WCActionPartPlaneCreate::Rollback(void) {
+bool WCActionVisUDPListenerCreate::Rollback(void) {
 	//If the object is preset
-	if (this->_plane != NULL) {
+	if (this->_listener != NULL) {
 		//Set the rollback flag
 		this->_rollback = true;
 		//Set self guid
-		this->_guid = this->_dictionary->InsertAddress(this->_plane);
+		this->_guid = this->_dictionary->InsertAddress(this->_listener);
 		//Delete the object
-		delete this->_plane;
-		//Record GUIDs for sketch
-		this->_partGUID = this->_dictionary->GUIDFromAddress(this->_creator);
+		delete this->_listener;
+		//Record GUIDs for visualization
+		this->_visGUID = this->_dictionary->GUIDFromAddress(this->_creator);
 		//Return success
 		return true;
 	}
@@ -89,11 +92,11 @@ bool WCActionPartPlaneCreate::Rollback(void) {
 }
 
 
-xercesc::DOMElement* WCActionPartPlaneCreate::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
+xercesc::DOMElement* WCActionVisUDPListenerCreate::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
 	//Insert self into dictionary
 	WCGUID guid = dictionary->InsertAddress(this);
 	//Create primary element for this object
-	XMLCh* xmlString = xercesc::XMLString::transcode("ActionPartPlaneCreate");
+	XMLCh* xmlString = xercesc::XMLString::transcode("ActionVisUDPListenerCreate");
 	xercesc::DOMElement* element = document->createElement(xmlString);
 	xercesc::XMLString::release(&xmlString);
 	//Include the parent element
@@ -103,13 +106,9 @@ xercesc::DOMElement* WCActionPartPlaneCreate::Serialize(xercesc::DOMDocument *do
 	WCSerializeableObject::AddStringAttrib(element, "guid", guid);
 
 	//Add name attribute
-	WCSerializeableObject::AddStringAttrib(element, "planeName", this->_planeName);
-	//Add p0 vector
-	this->_p0.ToElement(element, "P0");
-	//Add p1 vector
-	this->_p1.ToElement(element, "P1");
-	//Add p2 vector
-	this->_p2.ToElement(element, "P2");
+	WCSerializeableObject::AddStringAttrib(element, "listenerName", this->_listenerName);
+	//Add port attribute
+	WCSerializeableObject::AddFloatAttrib(element, "port", this->_port);
 	
 	//Return the new element
 	return element;

@@ -129,8 +129,13 @@ std::string WCDialog::StringFromScript(const std::string &var) {
 	if (!this->_isOpen) return "";
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
+	NSString *variableName = [[NSString alloc] initWithCString:var.c_str()];
 	//Call to underlying method
-	return [dialog getStringFromScript:var];
+	std::string value = [dialog getStringFromScript:variableName];
+	//Clean up a bit
+	[variableName release];
+	//Return the value
+	return value;
 }
 
 
@@ -139,8 +144,13 @@ WPFloat WCDialog::FloatFromScript(const std::string &var) {
 	if (!this->_isOpen) return 0.0;
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
+	NSString *variableName = [[NSString alloc] initWithCString:var.c_str()];
 	//Call to underlying method
-	return [dialog getFloatFromScript:var];
+	WPFloat value = [dialog getFloatFromScript:variableName];
+	//Clean up a bit
+	[variableName release];
+	//Return the value
+	return value;
 }
 
 
@@ -149,8 +159,13 @@ WPInt WCDialog::IntFromScript(const std::string &var) {
 	if (!this->_isOpen) return 0;
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
+	NSString *variableName = [[NSString alloc] initWithCString:var.c_str()];
 	//Call to underlying method
-	return [dialog getIntFromScript:var];
+	WPInt value = [dialog getIntFromScript:variableName];
+	//Clean up a bit
+	[variableName release];
+	//Return the value
+	return value;
 }
 
 
@@ -159,8 +174,13 @@ WPUInt WCDialog::UnsignedIntFromScript(const std::string &var) {
 	if (!this->_isOpen) return 0;
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
+	NSString *variableName = [[NSString alloc] initWithCString:var.c_str()];
 	//Call to underlying method
-	return [dialog getUnsignedIntFromScript:var];
+	WPUInt value = [dialog getUnsignedIntFromScript:variableName];
+	//Clean up a bit
+	[variableName release];
+	//Return the value
+	return value;
 }
 
 
@@ -169,8 +189,13 @@ bool WCDialog::BoolFromScript(const std::string &var) {
 	if (!this->_isOpen) return false;
 	//Cast to the OSX class
 	WCDialog_OSX *dialog = (WCDialog_OSX*)this->_window;
+	NSString *variableName = [[NSString alloc] initWithCString:var.c_str()];
 	//Call to underlying method
-	return [dialog getBoolFromScript:var];
+	bool value = [dialog getBoolFromScript:variableName];
+	//Clean up a bit
+	[variableName release];
+	//Return the value
+	return value;
 }
 
 

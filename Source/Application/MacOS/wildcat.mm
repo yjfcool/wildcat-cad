@@ -89,8 +89,7 @@ void ShutdownApplication(void) {
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification
 {
-	//Shutdown the application
-	ShutdownApplication();
+	//Do nothing for now...
 }
 
 @end
@@ -116,8 +115,10 @@ int main(int argc, char *argv[])
 	//Run the main loop
 	[NSApp run];
 
+	//Shutdown the application
+	ShutdownApplication();
 	//Clean up the autoreleaes pool
-	 [pool release];
+	[pool release];
 
 	//Exit the application
 	return 1;

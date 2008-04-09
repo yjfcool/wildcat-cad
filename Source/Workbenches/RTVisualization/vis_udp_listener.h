@@ -71,6 +71,10 @@ public:
 	//Required Inherited Methods
 	virtual inline std::string RootName(void) const	{ return VISUDPLISTENER_CLASSNAME; }			//!< Get the class name
 
+	/*** Drawing Modes and Actions ***/
+	static WCActionVisUDPListenerCreate* ActionCreate(WCVisualization *vis, const std::string &listenerName,	//!< Primary creation action
+												const unsigned int &port);
+
 	/*** Friend Methods ***/
 	friend std::ostream& operator<<(std::ostream& out, const WCVisUDPListener &listener);			//!< Overloaded output operator	
 };

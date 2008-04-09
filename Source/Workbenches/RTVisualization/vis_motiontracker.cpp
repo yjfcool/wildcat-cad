@@ -128,8 +128,6 @@ void WCVisMotionTracker::Initialize(void) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisMotionTracker::Initialize - Problem adding feature to visualization.");
 		//Should delete base
 	}
-	//Add into visual layer
-	this->_visualization->VisualizationLayer()->AddObject(this);
 	//Create tree element and add into the tree (beneath the features element)
 	WSTexture *icon = this->_document->Scene()->TextureManager()->TextureFromName("translate32");
 	this->_treeElement = new WCTreeElement(this->_document->TreeView(), this->_name, this->_controller, icon);

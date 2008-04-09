@@ -89,7 +89,6 @@ protected:
 	std::map<std::string, WCVisFeature*>		_featureMap;										//!< Map of all feature in the vis
 	std::map<unsigned int, WCVisFeature*>		_idMap;												//!< Map of features with ID
 	std::list<WCVisFeature*>					_featureList;										//!< List of all features in the vis
-	std::list<WCVisListener*>					_listenerList;										//!< List of listener objects
 	std::map<WPUInt,WCSignalDescriptor*>		_descriptorSizeMap;									//!< Map of sizes per signal descriptor
 	WCVisWorkbench								*_workbench;										//!< Associated visualization workbench
 	WCVisualLayer								*_visualLayer;										//!< Visualization layer
@@ -128,10 +127,6 @@ public:
 	std::string GenerateFeatureName(WCFeature *feature);											//< Find a good name
 	inline bool CheckName(const std::string &name){ return (this->_featureMap.find(name) ==			//!< See if name is used
 												  this->_featureMap.end()); }
-
-	//Listener Methods
-	bool AddListener(WCVisListener *listener);														//!< Add a listener
-	bool RemoveListener(WCVisFeature *feature);														//!< Remove a listener
 
 	//Visualization Methods
 	void ResetVisualization(void);																	//!< Signal a reset of the visualization

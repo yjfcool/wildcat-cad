@@ -47,19 +47,23 @@ private:
 public:
 	WCDialogNewListener(WCVisualization *vis) : _visualization(vis) { }
 	virtual void ReceiveMessage(const std::string &message) {										//!< Receive message from a dialog
-		std::cout << "ReceiveMessage: " << message << "---\n";
 		//See what type of message
 		if (message == "CreateListener") {
-			std::string name = "";
+			std::string name = this->_dialog->StringFromScript("listenerName");
 			std::string type = this->_dialog->StringFromScript("listenerType");
 			unsigned int port = this->_dialog->UnsignedIntFromScript("listenerPort");
 
 			//Execute action to create listener
 			if (type == "UDP") {
-				new WCVisUDPListener(this->_visualization, name, port);
+				//Need to execute action to create UDP Listener
+				//Create the horizontal distance constraint
+				WCAction *action = WCVisUDPListener::ActionCreate(this->_visualization, name, port);
+				this->_visualization->Document()->ExecuteAction( action);
+//				new WCVisUDPListener(this->_visualization, name, port);
 			}
 			else {
-			
+				//Need to execute action to create TCP listener
+				CLOGGER_WARN(WCLogManager::RootLogger(), "WCDialogNewListener::ReceiveMessage - TCP Listeners are not yet implemented.");
 			}
 
 			//Close the dialog

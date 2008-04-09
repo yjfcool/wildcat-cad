@@ -101,12 +101,12 @@ void WCVisWorkbench::CreateInitialObjects(void) {
 //	listener1->Recorder(recorder);
 
 	//Create trackers
-//	WCVisMotionTracker *tracker1 = new WCVisMotionTracker(this->_visualization, "", 1, NULL, 0.25);
-//	WCVisMotionTracker *tracker2 = new WCVisMotionTracker(this->_visualization, "", 2, NULL, 0.5);
+	WCVisMotionTracker *tracker1 = new WCVisMotionTracker(this->_visualization, "", 1, NULL, 0.25);
+	WCVisMotionTracker *tracker2 = new WCVisMotionTracker(this->_visualization, "", 2, NULL, 0.5);
 
-//	if ((tracker1 == NULL) || (tracker2 == NULL)) {
-//		CLOGGER_FATAL(WCLogManager::RootLogger(), "WCVisWorkbench::CreateInitialObjects - Not able to create tracker.");
-//	}
+	if ((tracker1 == NULL) || (tracker2 == NULL)) {
+		CLOGGER_FATAL(WCLogManager::RootLogger(), "WCVisWorkbench::CreateInitialObjects - Not able to create tracker.");
+	}
 }
 
 

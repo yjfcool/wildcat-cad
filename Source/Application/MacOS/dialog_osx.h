@@ -67,11 +67,11 @@
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame;							//!< Act as delegate for webframe and get load status
 
 /*** Script Object Get Methods ***/
-- (std::string)getStringFromScript:(std::string)var;												//!< Deletegate calls to get script value
-- (WPFloat)getFloatFromScript:(std::string)var;														//!< Deletegate calls to get script value
-- (WPInt)getIntFromScript:(std::string)var;															//!< Deletegate calls to get script value
-- (WPUInt)getUnsignedIntFromScript:(std::string)var;												//!< Deletegate calls to get script value
-- (bool)getBoolFromScript:(std::string)var;															//!< Deletegate calls to get script value
+- (std::string)getStringFromScript:(NSString*)name;													//!< Deletegate calls to get script value
+- (WPFloat)getFloatFromScript:(NSString*)name;														//!< Deletegate calls to get script value
+- (WPInt)getIntFromScript:(NSString*)name;															//!< Deletegate calls to get script value
+- (WPUInt)getUnsignedIntFromScript:(NSString*)name;													//!< Deletegate calls to get script value
+- (bool)getBoolFromScript:(NSString*)name;															//!< Deletegate calls to get script value
 
 /*** Script Object Set Methods ***/
 - (void)setStringFromScript:(std::string)var withValue:(std::string)value;							//!< Deletegate calls to set script value

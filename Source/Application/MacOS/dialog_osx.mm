@@ -160,6 +160,19 @@ bool from_string(T& t,
 }
 
 
+	/* This method is called by the WebView to decide what instance
+	variables should be shared with JavaScript.  The method should
+	return NO for all of the instance variables that should be shared
+	between JavaScript and Objective-C, and YES for all others.
+	*/
++ (BOOL)isKeyExcludedFromWebScript:(const char *)property {
+//	NSLog(@"%@ received %@ for '%s'", self, NSStringFromSelector(_cmd), property);
+//	if (strcmp(property, "sharedValue") == 0) {
+//		return NO;
+//	}
+	return YES;
+}
+
 	/* This method converts a selector value into the name we'll be using
 	to refer to it in JavaScript.  here, we are providing the following
 	Objective-C to JavaScript name mappings:
@@ -191,14 +204,17 @@ bool from_string(T& t,
 }
 
 
-- (std::string)getStringFromScript:(std::string)var
+- (std::string)getStringFromScript:(NSString*)name
 {
 	//Get the script object
-	WebScriptObject* scriptObject = [webView windowScriptObject];
-	//Create string with name of variable
-	NSString *variable = [[NSString alloc] initWithCString:var.c_str()];
-	NSString *value = [scriptObject valueForKey:variable];
-	[variable release];
+	id scriptObject = [webView windowScriptObject];
+	NSString *value;
+	@try {
+		value = [scriptObject valueForKey:name];
+	} @catch (NSException *e) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialog_OSX::getStringFromScript - Unknown variable: " << [name cStringUsingEncoding:NSUTF8StringEncoding]);
+		value = [[NSString alloc] initWithString:@""];
+	}
 
 	//Convert value to string
 	const char* cString = [value cStringUsingEncoding:NSUTF8StringEncoding];
@@ -207,68 +223,86 @@ bool from_string(T& t,
 }
 
 
-- (WPFloat)getFloatFromScript:(std::string)var
+- (WPFloat)getFloatFromScript:(NSString*)name
 {
 	//Get the script object
-	WebScriptObject* scriptObject = [webView windowScriptObject];
-	//Create string with name of variable
-	NSString *variable = [[NSString alloc] initWithCString:var.c_str()];
-	NSString *value = [scriptObject valueForKey:variable];
-	[variable release];
+	id scriptObject = [webView windowScriptObject];
+	NSString *value;
+	@try {
+		value = [scriptObject valueForKey:name];
+	} @catch (NSException *e) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialog_OSX::getFloatFromScript - Unknown variable: " << [name cStringUsingEncoding:NSUTF8StringEncoding]);
+		value = [[NSString alloc] initWithString:@"0.0"];
+	}
 
-	//Convert newValue to a float
+	//Convert value to a float
 	std::string strValue( [value cStringUsingEncoding:NSUTF8StringEncoding] );
 	WPFloat output;
-	from_string<WPFloat>(output, strValue, std::dec);
-	//Return the output
-	return output;
+	bool retVal = from_string<WPFloat>(output, strValue, std::dec);
+	//If conversion was valid, return output
+	if (retVal) return output;
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialog_OSX::getFloatFromScript - Invalid float conversion.");	
+	return 0.0;
 }
 
 
-- (WPInt)getIntFromScript:(std::string)var
+- (WPInt)getIntFromScript:(NSString*)name
 {
 	//Get the script object
-	WebScriptObject* scriptObject = [webView windowScriptObject];
-	//Create string with name of variable
-	NSString *variable = [[NSString alloc] initWithCString:var.c_str()];
-	NSString *value = [scriptObject valueForKey:variable];
-	[variable release];
+	id scriptObject = [webView windowScriptObject];
+	NSString *value;
+	@try {
+		value = [scriptObject valueForKey:name];
+	} @catch (NSException *e) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialog_OSX::getIntFromScript - Unknown variable: " << [name cStringUsingEncoding:NSUTF8StringEncoding]);
+		value = [[NSString alloc] initWithString:@"0.0"];
+	}
 
 	//Convert newValue to an int
 	std::string strValue( [value cStringUsingEncoding:NSUTF8StringEncoding] );
 	WPInt output;
-	from_string<WPInt>(output, strValue, std::dec);
-	//Return the output
-	return output;
+	bool retVal = from_string<WPInt>(output, strValue, std::dec);
+	//If conversion was valid, return output
+	if (retVal) return output;
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialog_OSX::getIntFromScript - Invalid float conversion.");	
+	return 0;
 }
 
 
-- (WPUInt)getUnsignedIntFromScript:(std::string)var
+- (WPUInt)getUnsignedIntFromScript:(NSString*)name
 {
 	//Get the script object
-	WebScriptObject* scriptObject = [webView windowScriptObject];
-	//Create string with name of variable
-	NSString *variable = [[NSString alloc] initWithCString:var.c_str()];
-	NSString *value = [scriptObject valueForKey:variable];
-	[variable release];
+	id scriptObject = [webView windowScriptObject];
+	NSString *value;
+	@try {
+		value = [scriptObject valueForKey:name];
+	} @catch (NSException *e) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialog_OSX::getUnsignedIntFromScript - Unknown variable: " << [name cStringUsingEncoding:NSUTF8StringEncoding]);
+		value = [[NSString alloc] initWithString:@"0.0"];
+	}
 
 	//Convert newValue to an unsigned int
 	std::string strValue( [value cStringUsingEncoding:NSUTF8StringEncoding] );
 	WPUInt output;
-	from_string<WPUInt>(output, strValue, std::dec);
-	//Return the output
-	return output;
+	bool retVal = from_string<WPUInt>(output, strValue, std::dec);
+	//If conversion was valid, return output
+	if (retVal) return output;
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialog_OSX::getUnsignedIntFromScript - Invalid float conversion.");	
+	return 0;
 }
 
 
-- (bool)getBoolFromScript:(std::string)var
+- (bool)getBoolFromScript:(NSString*)name
 {
 	//Get the script object
-	WebScriptObject* scriptObject = [webView windowScriptObject];
-	//Create string with name of variable
-	NSString *variable = [[NSString alloc] initWithCString:var.c_str()];
-	NSString *value = [scriptObject valueForKey:variable];
-	[variable release];
+	id scriptObject = [webView windowScriptObject];
+	NSString *value;
+	@try {
+		value = [scriptObject valueForKey:name];
+	} @catch (NSException *e) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDialog_OSX::getUnsignedIntFromScript - Unknown variable: " << [name cStringUsingEncoding:NSUTF8StringEncoding]);
+		value = [[NSString alloc] initWithString:@"0.0"];
+	}
 
 	//Convert newValue to an unsigned int
 	std::string strValue( [value cStringUsingEncoding:NSUTF8StringEncoding] );

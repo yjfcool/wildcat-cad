@@ -75,7 +75,7 @@ void WCVisListener::Initialize(void) {
 	}
 
 	//Add self to visualization
-	this->_visualization->AddListener(this);
+	this->_visualization->AddFeature(this, false);
 }
 
 
@@ -117,6 +117,10 @@ WCVisListener::~WCVisListener() {
 	int retVal = close(this->_socket);
 	//Make sure close was successful
 	if (retVal < 0) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::~WCVisListener - Not able to close socket");
+	//Remove from the sketch
+	if (!this->_visualization->RemoveFeature(this, false)) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::~WCVisListener - Problem removing feature from visualization.");	
+	}
 }
 
 

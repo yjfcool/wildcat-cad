@@ -131,16 +131,12 @@ WCVisualization::~WCVisualization() {
 	//Stop visualizing (if needed)
 	if (this->_state == WCVisualizationState::Running()) this->StopVisualization();
 
-	//Delete all listeners
-	while (!this->_listenerList.empty()) {
+	//Delete all features
+	while (!this->_featureList.empty()) {
 		//Delete the back listener
-		delete this->_listenerList.back();
-		//Remove from list
-		this->_listenerList.pop_back();
+		delete this->_featureList.back();
 	}
 
-	//Should really delete all features
-	//...
 	//Delete the workbench
 	this->_workbench->Release(*this);
 	if (this->_workbench != NULL) delete this->_workbench;
@@ -191,11 +187,12 @@ bool WCVisualization::AddFeature(WCVisFeature *feature, const bool &selectable) 
 	}
 	//Add the feature into the maps
 	this->_featureMap.insert( std::make_pair(feature->GetName(), feature) );
-	this->_idMap.insert( std::make_pair(feature->ID(), feature));
 	//Add the feature into the list
 	this->_featureList.push_back(feature);
 	//If selectable...
 	if (selectable) {
+		//For now this will hide the motion trackers vs. all other features
+		this->_idMap.insert( std::make_pair(feature->ID(), feature));
 		//Add to the selection manager
 		WCVisualObject *so = dynamic_cast<WCVisualObject*>(feature);
 		this->_workbench->SelectionManager()->AddObject(so, feature->Controller());
@@ -223,13 +220,14 @@ bool WCVisualization::RemoveFeature(WCVisFeature *feature, const bool &selectabl
 	}
 	//Remove the feature from the maps
 	this->_featureMap.erase(featureIter);
-	this->_idMap.erase(idIter);
 	//Remove the feature from the list
 	this->_featureList.remove((*featureIter).second);
 	//Release the feature
 	feature->Release(*this);
 	//If selectable...
 	if (selectable) {
+		//Remove from the id map
+		this->_idMap.erase(idIter);
 		//Remove from selection manager
 		WCVisualObject *so = dynamic_cast<WCVisualObject*>(feature);
 		this->_workbench->SelectionManager()->RemoveObject(so);
@@ -307,27 +305,12 @@ std::string WCVisualization::GenerateFeatureName(WCFeature *feature) {
 		std::stringstream ss;
 		ss << index;
 		ss >> id;
-		newString = root + "." + id;
+		newString = root + '.' + id;
 		index++;
 //		std::cout << "Index = " << index << " Name: " << newString << std::endl;
 	} while (!this->CheckName(newString));
 	//Found a good name
 	return newString;
-}
-
-
-bool WCVisualization::AddListener(WCVisListener *listener) {
-	//Add the listener to the list
-	this->_listenerList.push_back(listener);
-	//All is good
-	return true;
-}
-
-
-bool WCVisualization::RemoveListener(WCVisFeature *feature) {
-	//...
-	//For now all is good
-	return true;
 }
 
 

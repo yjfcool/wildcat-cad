@@ -60,8 +60,6 @@ void WCVisualLayer::AddObject(WCVisualObject *object) {
 	this->_objectList.push_back(object);
 	//Retain the object (should be item 0 in retain list)
 	object->Retain(*this);
-	//Set the layer for the object
-//	object->Layer(this);
 }
 
 
@@ -75,8 +73,6 @@ void WCVisualLayer::RemoveObject(WCVisualObject *object) {
 	this->_objectList.remove(object);
 	//Release the object (should be item 0 in retain list)
 	object->Release(*this);
-	//Unset the layer for the object
-//	object->Layer(NULL);
 }
 
 

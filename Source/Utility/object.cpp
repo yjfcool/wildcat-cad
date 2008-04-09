@@ -53,8 +53,10 @@ WCObject::~WCObject() {
 	//Notify all dependent objects that this object has been deleted
 	this->SendBroadcastNotice(OBJECT_NOTIFY_DELETE);
 	//See how many retains are left
-	if (this->_refSet.size() > 0)
+	if (this->_refSet.size() > 0) {
 		CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCObject::~WCObject (" << this << ") - " << this->_refSet.size() << " reference remaining.");
+		for (std::list<WCObject*>::iterator iter=this->_refSet.begin(); iter != this->_refSet.end(); iter++) std::cout << "Ref: " << *iter << std::endl;
+	}
 } 
 
 

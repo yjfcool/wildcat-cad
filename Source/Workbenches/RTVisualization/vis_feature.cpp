@@ -70,11 +70,20 @@ WCVisFeature::WCVisFeature(xercesc::DOMElement *element, WCSerialDictionary *dic
 
 
 WCVisFeature::~WCVisFeature() {
-	//Nothing to do here
+	//Delete the mutex thread
+	pthread_mutex_destroy(&this->_mutex);
 }
 
 
 bool WCVisFeature::Name(const std::string &name) {
+	//Check the name
+	bool retVal = this->_visualization->CheckName( name );
+	//If valid set the name
+	if (retVal) {
+		this->_name = name;
+		return true;
+	}
+	//Otherwise, return false
 	return false;
 }
 
