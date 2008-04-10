@@ -32,7 +32,7 @@
 
 /*** Included Feature Headers ***/
 #include "RTVisualization/vis_recorder.h"
-#include "RTVisualization/vis_udp_listener.h"
+#include "RTVisualization/vis_listener.h"
 #include "RTVisualization/vis_motiontracker.h"
 
 
@@ -134,9 +134,9 @@ bool WCVisFeature::Deserialize(xercesc::DOMElement* featureElement, WCSerialDict
 		//All is good here
 		return true;
 	}
-	else if (name == "VisUDPListener") {
-		//Create the UDP Listener
-		new WCVisUDPListener(featureElement, dictionary);
+	else if (name == "VisListener") {
+		//Create the Listener
+		new WCVisListener(featureElement, dictionary);
 		//All is good here
 		return true;
 	}

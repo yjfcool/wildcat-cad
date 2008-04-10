@@ -10,8 +10,6 @@
 		5806B9FD0DA3C0A800D9989D /* vis_listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5806B9FC0DA3C0A800D9989D /* vis_listener.cpp */; };
 		580873CC0D9A7C3600038336 /* wildcat.icns in Resources */ = {isa = PBXBuildFile; fileRef = 580873CB0D9A7C3600038336 /* wildcat.icns */; };
 		583FEAC80DAA69D100CCE245 /* document_controller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 583FEAC70DAA69D100CCE245 /* document_controller.mm */; };
-		584542840DA53E67005BC943 /* vis_udp_listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 584542830DA53E67005BC943 /* vis_udp_listener.cpp */; };
-		584542870DA53E78005BC943 /* vis_tcp_listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 584542860DA53E78005BC943 /* vis_tcp_listener.cpp */; };
 		5845428C0DA53F49005BC943 /* vis_listener_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5845428B0DA53F49005BC943 /* vis_listener_controller.cpp */; };
 		584542BC0DA54213005BC943 /* listener32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 584542BB0DA54213005BC943 /* listener32.tiff */; };
 		584542D30DA548EE005BC943 /* vis_recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 584542D20DA548EE005BC943 /* vis_recorder.cpp */; };
@@ -317,6 +315,7 @@
 		589AC2190D73404F001725D0 /* constraint_coincidence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361C0D68B4B700673AE6 /* constraint_coincidence.cpp */; };
 		589AC2330D734343001725D0 /* constraint_coincidence_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361E0D68B4B700673AE6 /* constraint_coincidence_actions.cpp */; };
 		58B27F780D785FC4008951D9 /* sketch_circle_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */; };
+		58C5DF3A0DAE700A00003673 /* vis_listener_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58F5E51B0DABF65600DC39A2 /* vis_listener_actions.cpp */; };
 		58C5E7400DAD250D00089549 /* newListener.html in Resources */ = {isa = PBXBuildFile; fileRef = 58F5E5160DABF54200DC39A2 /* newListener.html */; };
 		58DAD6420D69C7610093679D /* constraint_measure_radius.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD6410D69C7610093679D /* constraint_measure_radius.cpp */; };
 		58DAD64A0D69CB100093679D /* constraint_radius.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD6490D69CB100093679D /* constraint_radius.cpp */; };
@@ -334,7 +333,6 @@
 		58F156D10D6B15A5008290F7 /* constraint_angle_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36160D68B4B700673AE6 /* constraint_angle_controller.cpp */; };
 		58F156DE0D6B18C4008290F7 /* constraint_angle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36120D68B4B700673AE6 /* constraint_angle.cpp */; };
 		58F157040D6B1A04008290F7 /* constraint_angle_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36180D68B4B700673AE6 /* constraint_angle_edit_mode.cpp */; };
-		58F5E51C0DABF65600DC39A2 /* vis_listener_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58F5E51B0DABF65600DC39A2 /* vis_listener_actions.cpp */; };
 		58F5E5380DABF7CA00DC39A2 /* vis_listener_modes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58F5E5370DABF7CA00DC39A2 /* vis_listener_modes.cpp */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
@@ -348,10 +346,6 @@
 		580873CB0D9A7C3600038336 /* wildcat.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = wildcat.icns; path = ../../Source/Application/MacOS/wildcat.icns; sourceTree = SOURCE_ROOT; };
 		583FEAC60DAA69D100CCE245 /* document_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = document_controller.h; path = ../../Source/Application/MacOS/document_controller.h; sourceTree = SOURCE_ROOT; };
 		583FEAC70DAA69D100CCE245 /* document_controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = document_controller.mm; path = ../../Source/Application/MacOS/document_controller.mm; sourceTree = SOURCE_ROOT; };
-		584542820DA53E67005BC943 /* vis_udp_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_udp_listener.h; path = ../../Source/Workbenches/RTVisualization/vis_udp_listener.h; sourceTree = SOURCE_ROOT; };
-		584542830DA53E67005BC943 /* vis_udp_listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_udp_listener.cpp; path = ../../Source/Workbenches/RTVisualization/vis_udp_listener.cpp; sourceTree = SOURCE_ROOT; };
-		584542850DA53E78005BC943 /* vis_tcp_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_tcp_listener.h; path = ../../Source/Workbenches/RTVisualization/vis_tcp_listener.h; sourceTree = SOURCE_ROOT; };
-		584542860DA53E78005BC943 /* vis_tcp_listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_tcp_listener.cpp; path = ../../Source/Workbenches/RTVisualization/vis_tcp_listener.cpp; sourceTree = SOURCE_ROOT; };
 		5845428A0DA53F49005BC943 /* vis_listener_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_controller.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_controller.h; sourceTree = SOURCE_ROOT; };
 		5845428B0DA53F49005BC943 /* vis_listener_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener_controller.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener_controller.cpp; sourceTree = SOURCE_ROOT; };
 		584542BB0DA54213005BC943 /* listener32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = listener32.tiff; path = ../../Source/Resources/listener32.tiff; sourceTree = SOURCE_ROOT; };
@@ -886,6 +880,7 @@
 		586BA53E0DABDE8F00E2DF91 /* dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = dialog.mm; path = ../../Source/Application/MacOS/dialog.mm; sourceTree = SOURCE_ROOT; };
 		587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_arc_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_arc_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_circle_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_circle_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
+		58C5DE8D0DAE6E5900003673 /* vis_listener_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_types.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_types.h; sourceTree = SOURCE_ROOT; };
 		58DAD6400D69C7610093679D /* constraint_measure_radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = constraint_measure_radius.h; path = ../../Source/Constraint/constraint_measure_radius.h; sourceTree = SOURCE_ROOT; };
 		58DAD6410D69C7610093679D /* constraint_measure_radius.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = constraint_measure_radius.cpp; path = ../../Source/Constraint/constraint_measure_radius.cpp; sourceTree = SOURCE_ROOT; };
 		58DAD6480D69CB100093679D /* constraint_radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = constraint_radius.h; path = ../../Source/Constraint/constraint_radius.h; sourceTree = SOURCE_ROOT; };
@@ -1128,8 +1123,7 @@
 				58F5E51A0DABF65600DC39A2 /* vis_listener_actions.h */,
 				5845428A0DA53F49005BC943 /* vis_listener_controller.h */,
 				58F5E5360DABF7CA00DC39A2 /* vis_listener_modes.h */,
-				584542850DA53E78005BC943 /* vis_tcp_listener.h */,
-				584542820DA53E67005BC943 /* vis_udp_listener.h */,
+				58C5DE8D0DAE6E5900003673 /* vis_listener_types.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -1141,8 +1135,6 @@
 				58F5E51B0DABF65600DC39A2 /* vis_listener_actions.cpp */,
 				5845428B0DA53F49005BC943 /* vis_listener_controller.cpp */,
 				58F5E5370DABF7CA00DC39A2 /* vis_listener_modes.cpp */,
-				584542860DA53E78005BC943 /* vis_tcp_listener.cpp */,
-				584542830DA53E67005BC943 /* vis_udp_listener.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -3332,8 +3324,6 @@
 				5849B6410DA2921C0031E7CC /* vis_motiontracker_controller.cpp in Sources */,
 				5849B7220DA29B500031E7CC /* ground_plane.cpp in Sources */,
 				5806B9FD0DA3C0A800D9989D /* vis_listener.cpp in Sources */,
-				584542840DA53E67005BC943 /* vis_udp_listener.cpp in Sources */,
-				584542870DA53E78005BC943 /* vis_tcp_listener.cpp in Sources */,
 				5845428C0DA53F49005BC943 /* vis_listener_controller.cpp in Sources */,
 				584542D30DA548EE005BC943 /* vis_recorder.cpp in Sources */,
 				584543700DA55467005BC943 /* vis_recorder_controller.cpp in Sources */,
@@ -3341,8 +3331,8 @@
 				58DB05A70DA6C085008FF90E /* dialog_manager.cpp in Sources */,
 				583FEAC80DAA69D100CCE245 /* document_controller.mm in Sources */,
 				586BA53F0DABDE8F00E2DF91 /* dialog.mm in Sources */,
-				58F5E51C0DABF65600DC39A2 /* vis_listener_actions.cpp in Sources */,
 				58F5E5380DABF7CA00DC39A2 /* vis_listener_modes.cpp in Sources */,
+				58C5DF3A0DAE700A00003673 /* vis_listener_actions.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

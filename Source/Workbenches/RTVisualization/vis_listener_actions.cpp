@@ -28,7 +28,7 @@
 
 /*** Included Header Files ***/
 #include "RTVisualization/vis_listener_actions.h"
-#include "RTVisualization/vis_udp_listener.h"
+#include "RTVisualization/vis_listener.h"
 #include "RTVisualization/visualization.h"
 #include "Kernel/document.h"
 
@@ -36,21 +36,21 @@
 /***********************************************~***************************************************/
 
 
-WCActionVisUDPListenerCreate::WCActionVisUDPListenerCreate(WCFeature *creator, const std::string &listenerName,
-	const unsigned int &port) : ::WCAction("Create Vis UDP Listener", creator),
-	_listener(NULL), _listenerName(listenerName), _port(port) {
+WCActionVisListenerCreate::WCActionVisListenerCreate(WCFeature *creator, const std::string &listenerName,
+	const WCVisListenerType &type, const unsigned int &port) : ::WCAction("Create VisListener", creator),
+	_visGUID(""), _type(type), _listenerName(listenerName), _port(port), _listener(NULL) {
 	//Nothing else for now
 }
 
 
-WCActionVisUDPListenerCreate::WCActionVisUDPListenerCreate(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
+WCActionVisListenerCreate::WCActionVisListenerCreate(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	::WCAction( WCSerializeableObject::ElementFromName(element,"Action"), dictionary ),
-	_listener(NULL), _listenerName(""), _port(0) {
+	_visGUID(""), _type(WCVisListenerType::UDP()), _listenerName(""), _port(0), _listener(NULL) {
 	//Do something here
 }
 
 
-WCFeature* WCActionVisUDPListenerCreate::Execute(void) {
+WCFeature* WCActionVisListenerCreate::Execute(void) {
 	//Update pointers (based on rollback flag)
 	if (this->_rollback) {
 		this->_creator = (WCVisualization*)this->_dictionary->AddressFromGUID(this->_visGUID);
@@ -58,10 +58,10 @@ WCFeature* WCActionVisUDPListenerCreate::Execute(void) {
 
 	//Create the UDP listener
 	WCVisualization *vis = dynamic_cast<WCVisualization*>(this->_creator);
-	WCVisUDPListener *listener = new WCVisUDPListener(vis, this->_listenerName, this->_port);
+	WCVisListener *listener = new WCVisListener(vis, this->_listenerName, this->_type, this->_port);
 	//Make sure listener is not null
 	if (listener == NULL) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCActionVisUDPListenerCreate::Execute - Listener could not be created.");
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCActionVisListenerCreate::Execute - Listener could not be created.");
 		return NULL;
 	}
 
@@ -73,7 +73,7 @@ WCFeature* WCActionVisUDPListenerCreate::Execute(void) {
 }
 
 
-bool WCActionVisUDPListenerCreate::Rollback(void) {
+bool WCActionVisListenerCreate::Rollback(void) {
 	//If the object is preset
 	if (this->_listener != NULL) {
 		//Set the rollback flag
@@ -92,11 +92,11 @@ bool WCActionVisUDPListenerCreate::Rollback(void) {
 }
 
 
-xercesc::DOMElement* WCActionVisUDPListenerCreate::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
+xercesc::DOMElement* WCActionVisListenerCreate::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
 	//Insert self into dictionary
 	WCGUID guid = dictionary->InsertAddress(this);
 	//Create primary element for this object
-	XMLCh* xmlString = xercesc::XMLString::transcode("ActionVisUDPListenerCreate");
+	XMLCh* xmlString = xercesc::XMLString::transcode("ActionVisListenerCreate");
 	xercesc::DOMElement* element = document->createElement(xmlString);
 	xercesc::XMLString::release(&xmlString);
 	//Include the parent element
@@ -107,11 +107,46 @@ xercesc::DOMElement* WCActionVisUDPListenerCreate::Serialize(xercesc::DOMDocumen
 
 	//Add name attribute
 	WCSerializeableObject::AddStringAttrib(element, "listenerName", this->_listenerName);
+	//Add type attribute
+	//...
 	//Add port attribute
 	WCSerializeableObject::AddFloatAttrib(element, "port", this->_port);
 	
 	//Return the new element
 	return element;
+}
+
+
+/***********************************************~***************************************************/
+
+
+WCActionVisListenerModify::WCActionVisListenerModify(WCVisListener *listener, const std::string &listenerName,
+	const WCVisListenerType &type, const unsigned int &port) : ::WCAction("Modify VisListener", listener->Visualization()),
+	_listener(listener), _type(type), _listenerName(listenerName), _port(port) {
+	//Nothing else for now
+}
+
+
+WCActionVisListenerModify::WCActionVisListenerModify(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
+	::WCAction( WCSerializeableObject::ElementFromName(element,"Action"), dictionary ),
+	_listener(NULL), _type(WCVisListenerType::UDP()), _listenerName(""), _port(0) {
+	//Do something here
+}
+
+
+WCFeature* WCActionVisListenerModify::Execute(void) {
+	return NULL;
+}
+
+
+bool WCActionVisListenerModify::Rollback(void) {
+	//Not rolled back
+	return false;
+}
+
+
+xercesc::DOMElement* WCActionVisListenerModify::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
+	return NULL;
 }
 
 

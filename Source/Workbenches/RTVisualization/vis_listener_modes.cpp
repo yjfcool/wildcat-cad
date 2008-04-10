@@ -30,12 +30,7 @@
 #include "RTVisualization/vis_listener_modes.h"
 #include "RTVisualization/vis_workbench.h"
 #include "RTVisualization/visualization.h"
-#include "RTVisualization/vis_udp_listener.h"
-
-//#include "Sketcher/sketch_point.h"
-//#include "Sketcher/sketch_align_suggestion.h"
-//#include "Constraint/constraint_distance.h"
-//#include "Kernel/document.h"
+#include "RTVisualization/vis_listener.h"
 
 
 /***********************************************~***************************************************/
@@ -56,13 +51,13 @@ public:
 			//Execute action to create listener
 			if (type == "UDP") {
 				//Need to execute action to create UDP Listener
-				//Create the horizontal distance constraint
-				WCAction *action = WCVisUDPListener::ActionCreate(this->_visualization, name, port);
+				WCAction *action = WCVisListener::ActionCreate(this->_visualization, name, WCVisListenerType::UDP(), port);
 				this->_visualization->Document()->ExecuteAction( action);
 			}
 			else {
-				//Need to execute action to create TCP listener
-				CLOGGER_WARN(WCLogManager::RootLogger(), "WCDialogNewListener::ReceiveMessage - TCP Listeners are not yet implemented.");
+				//Need to execute action to create TCP Listener
+				WCAction *action = WCVisListener::ActionCreate(this->_visualization, name, WCVisListenerType::TCP(), port);
+				this->_visualization->Document()->ExecuteAction( action);
 			}
 
 			//Close the dialog

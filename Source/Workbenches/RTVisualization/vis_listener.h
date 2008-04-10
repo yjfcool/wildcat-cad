@@ -36,6 +36,7 @@
 #include "RTVisualization/vis_listener_actions.h"
 #include "RTVisualization/vis_listener_controller.h"
 #include "RTVisualization/vis_listener_modes.h"
+#include "RTVisualization/vis_listener_types.h"
 
 
 /*** Local Defines ***/
@@ -51,6 +52,7 @@ class WCVisRecorder;
 
 class WCVisListener : public WCVisFeature {
 protected:
+	WCVisListenerType							_type;												//!< Type of listener
 	bool										_isValid;											//!< Valid flag
 	pthread_t									_listener;											//!< Listener thread
 	unsigned int								_port;												//!< Port to listen on
@@ -58,7 +60,10 @@ protected:
 	struct sockaddr_in							_serverAddress;										//!< Server address structure
 	WCVisRecorder								*_recorder;											//!< Options data recorder
 protected:
-	virtual void Listen(void)=0;																	//!< Listen for data on the port
+	void UDPInitialize(void);																		//!< Initialize a UDP connection
+	void UDPListen(void);																			//!< Listen for a UDP connection
+	void TCPInitialize(void);																		//!< Initiailze a TCP connection
+	void TCPListen(void);																			//!< Listen for a TCP connection
 	static void* ThreadEntryPoint(void* lisener);													//!< Primary thread entry callback
 	void Initialize(void);																			//!< Initialization method
 private:
@@ -68,7 +73,8 @@ private:
 	WCVisListener&operator=(const WCVisListener&);													//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCVisListener(WCVisualization *vis, const std::string &name, const unsigned int &port);			//!< Primary constructor
+	WCVisListener(WCVisualization *vis, const std::string &name, const WCVisListenerType &type,		//!< Primary constructor
+												const unsigned int &port);
 	WCVisListener(xercesc::DOMElement *element, WCSerialDictionary *dictionary);					//!< Persistance constructor
 	virtual ~WCVisListener();																		//!< Default destructor
 	
@@ -76,6 +82,7 @@ public:
 	virtual unsigned int Port(void)				{ return this->_port; }								//!< Handle renaming the feature
 	virtual inline WCVisRecorder* Recorder(void){ return this->_recorder; }							//!< Get the data recorder
 	virtual inline void Recorder(WCVisRecorder *recorder){ this->_recorder = recorder; }			//!< Set the data recorder
+	virtual inline WCVisListenerType Type(void)	{ return this->_type; }								//!< Get the listener type
 
 	//Visualization Methods
 	virtual void OnReceiveData(const unsigned int &type, void* data) { }							//!< Receive data from a tracker
@@ -85,15 +92,18 @@ public:
 	virtual void ResetVisualization(void)		{ }													//!< Signal reset of the visualization
 
 	//Required Inherited Methods
-	virtual bool Regenerate(void)				{ return true; }									//!< Validate and rebuild
+	virtual inline std::string RootName(void) const	{ return VISLISTENER_CLASSNAME; }				//!< Get the class name
+	virtual bool Regenerate(void);																	//!< Validate and rebuild
+	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
 
 	/*** Drawing Modes and Actions ***/
 	static WCDrawingMode* ModeCreate(WCVisWorkbench *wb);											//!< Return a create mode controller
-//	static WCDrawingMode* ModeEdit(WCVisListener *listener);										//!< Return an edit mode controller
-//	
-//	static WCActionVisListenerCreate* ActionCreate(WCSketch *sketch, const std::string &pointName,	//!< Primary creation action
-//												const WCVector4 &pos);
-//	static WCAction* ActionMove(WCSketchPoint *point, const WCVector4 &pos);						//!< Primary modify action
+	static WCDrawingMode* ModeModify(WCVisListener *listener);										//!< Return an modify mode controller
+
+	static WCActionVisListenerCreate* ActionCreate(WCVisualization *vis, const std::string &listenerName,	//!< Primary creation action
+												const WCVisListenerType &type, const unsigned int &port);
+	static WCActionVisListenerModify* ActionModify(WCVisListener *listener, const std::string &name,		//!< Primary modify action
+												const WCVisListenerType &type, const unsigned int &port);
 
 	/*** Friend Methods ***/
 	friend std::ostream& operator<<(std::ostream& out, const WCVisListener &listener);				//!< Overloaded output operator	

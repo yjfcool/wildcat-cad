@@ -39,7 +39,7 @@
 
 /*** Included Feature Headers ***/
 #include "RTVisualization/vis_motiontracker.h"
-#include "RTVisualization/vis_udp_listener.h"
+#include "RTVisualization/vis_listener.h"
 #include "RTVisualization/vis_recorder.h"
 
 
@@ -94,7 +94,7 @@ WCVisWorkbench::~WCVisWorkbench() {
 
 void WCVisWorkbench::CreateInitialObjects(void) {
 	//Create a listener
-//	WCVisListener *listener1 = new WCVisUDPListener(this->_visualization, "", SERV_PORT);
+	WCVisListener *listener1 = new WCVisListener(this->_visualization, "", WCVisListenerType::UDP(), SERV_PORT);
 
 	//Create a data recorder
 //	WCVisRecorder *recorder = new WCVisRecorder(this->_visualization, "", RECORDER_MAX);

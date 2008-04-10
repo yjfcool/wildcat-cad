@@ -33,6 +33,7 @@
 /*** Included Header Files ***/
 #include "Kernel/wftrl.h"
 #include "Kernel/action.h"
+#include "RTVisualization/vis_listener_types.h"
 
 
 /*** Local Defines ***/
@@ -40,33 +41,67 @@
 
 
 /*** Class Predefines ***/
-class WCVisUDPListener;
+class WCVisListener;
 
 
 /***********************************************~***************************************************/
 
 
-class WCActionVisUDPListenerCreate : public WCAction {
+class WCActionVisListenerCreate : public WCAction {
 private:
 	WCGUID										_visGUID;											//!< GUID for associated objects
+	WCVisListenerType							_type;												//!< Listener type
 	std::string									_listenerName;										//!< Listener name
-	unsigned int								_port;												//!< Port
-	WCVisUDPListener							*_listener;											//!< Post-creation object
+	unsigned int								_port;												//!< Listener port
+	WCVisListener								*_listener;											//!< Post-creation object
 	//Hidden Constructors
-	WCActionVisUDPListenerCreate();																	//!< Deny access to default constructor
-	WCActionVisUDPListenerCreate(const WCActionVisUDPListenerCreate&);								//!< Deny access to copy constructor
-	WCActionVisUDPListenerCreate& operator=(const WCActionVisUDPListenerCreate&);					//!< Deny access to equals operator
-	WCActionVisUDPListenerCreate(WCFeature *creator, const std::string &listenerName,				//!< Primary constructor
-												const unsigned int &port);
+	WCActionVisListenerCreate();																	//!< Deny access to default constructor
+	WCActionVisListenerCreate(const WCActionVisListenerCreate&);									//!< Deny access to copy constructor
+	WCActionVisListenerCreate& operator=(const WCActionVisListenerCreate&);							//!< Deny access to equals operator
+	WCActionVisListenerCreate(WCFeature *creator, const std::string &listenerName,					//!< Primary constructor
+												const WCVisListenerType &type, const unsigned int &port);
 	//Friend Declarations
-	friend class WCVisUDPListener;																		//!< Plane is a friend
+	friend class WCVisListener;																		//!< Listener is a friend
 public:
 	//Constructors and Destructors
-	WCActionVisUDPListenerCreate(xercesc::DOMElement *element, WCSerialDictionary *dictionary);		//!< Persistance constructor
-	~WCActionVisUDPListenerCreate()				{ }													//!< Default destructor
+	WCActionVisListenerCreate(xercesc::DOMElement *element, WCSerialDictionary *dictionary);		//!< Persistance constructor
+	~WCActionVisListenerCreate()				{ }													//!< Default destructor
 
 	//Member Access Methods
-	inline WCVisUDPListener* Listener(void)		{ return this->_listener; }							//!< Get the listener
+	inline WCVisListener* Listener(void)		{ return this->_listener; }							//!< Get the listener
+
+	//Inherited Methods
+	WCFeature* Execute(void);																		//!< Execute the action
+	bool Merge(WCAction *action)				{ return false; }									//!< Try to merge two actions
+	bool Rollback(void);																			//!< Try to rollback the action
+	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
+};
+
+
+/***********************************************~***************************************************/
+
+
+class WCActionVisListenerModify : public WCAction {
+private:
+	WCVisListener								*_listener;											//!< Post-creation object
+	WCVisListenerType							_type;												//!< Listener type
+	std::string									_listenerName;										//!< Listener name
+	unsigned int								_port;												//!< Listener port
+	//Hidden Constructors
+	WCActionVisListenerModify();																	//!< Deny access to default constructor
+	WCActionVisListenerModify(const WCActionVisListenerModify&);									//!< Deny access to copy constructor
+	WCActionVisListenerModify& operator=(const WCActionVisListenerModify&);							//!< Deny access to equals operator
+	WCActionVisListenerModify(WCVisListener *listener, const std::string &listenerName,				//!< Primary constructor
+												const WCVisListenerType &type, const unsigned int &port);
+	//Friend Declarations
+	friend class WCVisListener;																		//!< Listener is a friend
+public:
+	//Constructors and Destructors
+	WCActionVisListenerModify(xercesc::DOMElement *element, WCSerialDictionary *dictionary);		//!< Persistance constructor
+	~WCActionVisListenerModify()				{ }													//!< Default destructor
+
+	//Member Access Methods
+	inline WCVisListener* Listener(void)		{ return this->_listener; }							//!< Get the listener
 
 	//Inherited Methods
 	WCFeature* Execute(void);																		//!< Execute the action
