@@ -38,6 +38,10 @@
 //None
 
 
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
 /*** Class Predefinitions ***/
 class WCConstraintSolver;
 class WCSketchFeature;
@@ -133,5 +137,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__CONSTRAINT_NODE_H__
 

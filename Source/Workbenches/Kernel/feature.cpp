@@ -120,7 +120,7 @@ xercesc::DOMElement* WCFeature::Serialize(xercesc::DOMDocument *document, WCSeri
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCFeature &feature) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCFeature &feature) {
 	//Print out some info
 	out << feature._name << " (" << &feature << ")\n";
 	return out;

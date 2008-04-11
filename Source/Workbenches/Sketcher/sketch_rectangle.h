@@ -36,8 +36,12 @@
 #include "Sketcher/sketch_rect_mode.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //None
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -93,5 +97,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_RECT_ACTION_H__
 

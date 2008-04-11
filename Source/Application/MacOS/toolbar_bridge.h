@@ -39,18 +39,22 @@
 #include "Utility/vector.h"
 
 
-/*** C++ Class Predefines ***/
-class WCToolbarButton;
-class WCToolbar;
-class WCDocument;
-class WCToolbar_Bridge;
-
-
 /*** Objective-C Class Predefines ***/
 @class NSString;
 @class NSImage;
 @class WCToolbarButton_OSX;
 @class WCToolbar_OSX;
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
+/*** C++ Class Predefines ***/
+class WCToolbarButton;
+class WCToolbar;
+class WCDocument;
+class WCToolbar_Bridge;
 
 
 /***********************************************~***************************************************/
@@ -122,5 +126,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__TOOLBAR_BRIDGE_H__
 

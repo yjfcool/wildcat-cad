@@ -30,13 +30,18 @@
 #define __BACKGROUND_LAYER_H__
 
 
-/*** Included Headers ***/
+/*** Included Header Files ***/
+#include "Scene/wscnl.h"
 #include "Scene/layer.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define BACKGROUNDLAYER_TOP_COLOR				0.3, 0.3, 0.8, 1.0
 #define BACKGROUNDLAYER_BOTTOM_COLOR			0.1, 0.1, 0.1, 1.0
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -70,5 +75,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__USER_INTERFACE_LAYER_H__
 

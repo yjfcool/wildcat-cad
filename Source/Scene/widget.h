@@ -35,9 +35,13 @@
 #include "Scene/user_interface_layer.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define WIDGET_RADIUS				6
 #define WIDGET_RADIUS_SEGMENTS		8
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -128,5 +132,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__WIDGET_H__
 

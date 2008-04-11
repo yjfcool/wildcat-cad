@@ -35,11 +35,7 @@
 #include "Geometry/nurbs_surface.h"
 
 
-/*** Class Predefines ***/
-//None
-
-
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define TRIMSURFACE_TEX_LOCATION				0
 #define TRIMSURFACE_DEFAULT_TEX_WIDTH			256
 #define TRIMSURFACE_DEFAULT_TEX_HEIGHT			256
@@ -47,6 +43,14 @@
 #define TRIMSURFACE_PERFLEVEL_HIGH				0
 #define TRIMSURFACE_PERFLEVEL_MEDIUM			1
 #define TRIMSURFACE_PERFLEVEL_LOW				2
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
+/*** Class Predefines ***/
+//None
 
 
 /***********************************************~***************************************************/
@@ -122,5 +126,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__TRIMMED_NURBS_SURFACE_H__
 

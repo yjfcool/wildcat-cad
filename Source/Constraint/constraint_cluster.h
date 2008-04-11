@@ -38,6 +38,10 @@
 //None
 
 
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
 /*** Class Predefinitions ***/
 class WCConstraintNode;
 class WCConstraintEdge;
@@ -83,5 +87,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__CONSTRAINT_CLUSTER_H__
 

@@ -35,8 +35,12 @@
 #include "Constraint/constraint_measure.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //None
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -84,5 +88,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__CONSTRAINT_MEASURE_TWOPOINT_H__
 

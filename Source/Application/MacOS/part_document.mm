@@ -223,7 +223,7 @@
 
 
 
-- (WCPart*)part
+- (__WILDCAT_NAMESPACE__::WCPart*)part
 {
 	//Return the associated Wildcat part
 	return _part;

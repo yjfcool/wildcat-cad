@@ -36,10 +36,14 @@
 #include "Scene/named_view.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define CAMERA_ANIMATE_DURATION					0.5
 #define CAMERA_THREEQUATER_VIEW					-0.209315, -0.508694, -0.767096, 0.330123
 #define CAMERA_FITWINDOW_BOUNDRY				0.25
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -130,5 +134,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__CAMERA_H__
 

@@ -34,8 +34,12 @@
 #include "Kernel/wftrl.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //None
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -107,5 +111,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__ACTION_H__
 

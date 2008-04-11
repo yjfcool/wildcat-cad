@@ -35,9 +35,13 @@
 #include "Kernel/drawing_mode.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define VISLISTENERMODE_CREATE_NAME				"VisListener Create Mode"
 #define VISLISTENERMODE_EDIT_NAME				"VisListener Edit Mode"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -92,5 +96,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__VIS_LISTENER_MODES_H__
 

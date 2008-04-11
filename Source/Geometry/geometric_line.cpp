@@ -395,7 +395,7 @@ xercesc::DOMElement* WCGeometricLine::Serialize(xercesc::DOMDocument *document, 
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCGeometricLine &line) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCGeometricLine &line) {
 	//Print out basic surface info
 	out << "GeometricLine(" << (void*)&line << "):\n";
 	out << "\t Begin: " << line._p0 << std::endl;

@@ -33,7 +33,7 @@
 #include "Application/toolbar_manager.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define DOCUMENT_NAMEDVIEW_FRONT				0.0,  0.0, 0.0, 1.0
 #define DOCUMENT_NAMEDVIEW_BACK					0.0, -1.0, 0.0, 0.0
 #define DOCUMENT_NAMEDVIEW_LEFT					0.0,  0.707106, 0.0, 0.707106
@@ -283,15 +283,30 @@ bool WCDocument::NamedView(const std::string &name) {
 
 
 WCFeature* WCDocument::ExecuteAction(WCAction *action) {
+	bool execStatus = true;
+	WCFeature *result;
+
 	//Make sure action is not null
 	if (action == NULL) return false;
 	CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCDocument::ExecuteAction - Executing: " << action->Name() << ".");
-	//Execute the action
-	WCFeature *result = action->Execute();
-	if(result == NULL) {
+	
+	//Try to execute the action
+	try {
+		//Execute the action
+		result = action->Execute();
+		//Make sure executed correctly
+		if (result == NULL) execStatus = false;
+	} catch (WCException &ex) {
+		//Try to recover from the exception
+		execStatus = false;
+		//...
+	}
+	//Check status
+	if(!execStatus) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDocument::ExecuteAction - Action execution failed.");
 		return false;
 	}
+
 	//Record the action
 	this->_actions.push_back(action);
 	//Retain the action
@@ -431,7 +446,7 @@ xercesc::DOMElement* WCDocument::Serialize(xercesc::DOMDocument *document, WCSer
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCDocument &document) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCDocument &document) {
 	//Print out some info
 	out << "Document: " << document._name << " (" << &document << ")\n";
 

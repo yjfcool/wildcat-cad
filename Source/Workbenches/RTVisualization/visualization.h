@@ -38,8 +38,12 @@
 #include "RTVisualization/vis_workbench.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define VISUALIZATION_CLASSNAME					"Visualzation"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -156,6 +160,6 @@ public:
 /***********************************************~***************************************************/
 
 
-
+}	   // End Wildcat Namespace
 #endif //__VISUALIZATION_H__
 

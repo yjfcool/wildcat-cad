@@ -34,7 +34,7 @@
 #include "Kernel/wftrl.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define FEATURE_DEFAULT_COLOR					1.0, 1.0, 1.0, 1.0
 #define FEATURE_SELECTED_COLOR					1.0, 1.0, 0.0, 1.0
 #define FEATURE_INPROCESS_COLOR					0.0, 1.0, 0.0, 1.0
@@ -42,6 +42,10 @@
 #define FEATURE_LINE_THICKNESS					2.0
 #define FEATURE_LINESTIPPLE_FACTOR				2.0
 #define FEATURE_LINESTIPPLE_PATTERN				0x5555
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -108,5 +112,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__FEATURE_H__
 

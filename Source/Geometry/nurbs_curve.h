@@ -35,7 +35,7 @@
 #include "Geometry/geometric_types.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //Size constants
 #define NURBSCURVE_MAX_LOD						1024
 #define NURBSCURVE_MAX_DEGREE					7			//Should be power of 2
@@ -64,6 +64,10 @@
 #define NURBSCURVE_PERFLEVEL_HIGH				0
 #define NURBSCURVE_PERFLEVEL_MEDIUM				1
 #define NURBSCURVE_PERFLEVEL_LOW				2
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -171,5 +175,6 @@ public:
 /***********************************************~****************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__NURBS_CURVE_H__
 

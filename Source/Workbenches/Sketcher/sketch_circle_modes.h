@@ -36,10 +36,14 @@
 #include "Sketcher/sketch_workbench.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHCIRCLEMODE_CREATE_NAME			"SketchCircle Create Mode"
 #define SKETCHCIRCLEMODE_EDIT_NAME				"SketchCircle Edit Mode"
 #define SKETCHCIRCLE_MIN_RADIUS					0.001
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -107,5 +111,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_CIRCLE_MODES_H__
 

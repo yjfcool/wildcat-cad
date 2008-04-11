@@ -38,9 +38,13 @@
 #include "Sketcher/sketch_point_modes.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHPOINT_CLASSNAME					"Point"
 #define SKETCHPOINT_CONSTRUCTION_DEFAULT		true
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -99,5 +103,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_POINT_H__
 

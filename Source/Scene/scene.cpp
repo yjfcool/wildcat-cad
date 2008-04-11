@@ -542,7 +542,7 @@ xercesc::DOMElement* WCScene::Serialize(xercesc::DOMDocument *document, WCSerial
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCScene &scene) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCScene &scene) {
 	//Print out basic surface info
 	out << "Scene(*:" << (void*)&scene << ", T:" << scene._topLayer << ", B:" << scene._bottomLayer << ")\n";
 

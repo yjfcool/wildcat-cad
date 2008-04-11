@@ -36,10 +36,11 @@
 
 /*** Included Header Files ***/
 #include "Utility/wutil.h"
+#include "Kernel/document.h"
 
 
 /*** C++ Class Predefinitions ***/
-class WCDocument;
+//None
 
 
 /*** Objective-C Class Predefinitions ***/
@@ -53,7 +54,7 @@ class WCDocument;
 {
 	NSTimer										*_timer;											//!< Timer for idle events
 	WCRenderWindow								*_renderWindow;										//!< Render window for the document
-	WCDocument									*_document;											//!< Associated wildcat document
+	__WILDCAT_NAMESPACE__::WCDocument			*_document;											//!< Associated wildcat document
 }
 
 /*** Event Methods ***/
@@ -72,8 +73,8 @@ class WCDocument;
 
 /*** Member Access Methods ***/
 - (WCRenderWindow*)renderWindow;
-- (void)document:(WCDocument*)document;
-- (WCDocument*)document;
+- (void)document:(__WILDCAT_NAMESPACE__::WCDocument*)document;
+- (__WILDCAT_NAMESPACE__::WCDocument*)document;
 
 
 @end

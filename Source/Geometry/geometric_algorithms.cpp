@@ -34,7 +34,7 @@
 
 
 /*** Line-Line intersection algorithm taken from http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline3d/ ***/
-WPUInt LineLineIntersection(const WCVector4 &p1, const WCVector4 &p2, const WCVector4 &p3, 
+WPUInt __WILDCAT_NAMESPACE__::LineLineIntersection(const WCVector4 &p1, const WCVector4 &p2, const WCVector4 &p3, 
 	const WCVector4 &p4, const bool &includeEnds, const WPFloat &tol, WCVector4 &value, WPFloat &uValue, WPFloat &vValue) {
 	//Make sure both lines have some minimal length
 	if ((p4.Distance(p3) < tol) || (p2.Distance(p1) < tol)) return INTERSECTION_NONE;
@@ -98,7 +98,7 @@ WPUInt LineLineIntersection(const WCVector4 &p1, const WCVector4 &p2, const WCVe
 /***********************************************~***************************************************/
 
 
-WPUInt RayRayIntersection(const WCVector4 &p0, const WCVector4 &t0, const WCVector4 &p2, const WCVector4 &t2,
+WPUInt __WILDCAT_NAMESPACE__::RayRayIntersection(const WCVector4 &p0, const WCVector4 &t0, const WCVector4 &p2, const WCVector4 &t2,
 	WPFloat &alf0, WPFloat &alf2, WCVector4 &p) {
 	//Make sure t0 and t2 are normalized
 	WCVector4 tn0( t0 );
@@ -140,7 +140,8 @@ WPUInt RayRayIntersection(const WCVector4 &p0, const WCVector4 &t0, const WCVect
 /***********************************************~***************************************************/
 
 
-bool OneArcConic(const WCVector4 &p0, const WCVector4 &t0, const WCVector4 &p2, const WCVector4 &t2, const WCVector4 &p, WCVector4 &p1) {
+bool __WILDCAT_NAMESPACE__::OneArcConic(const WCVector4 &p0, const WCVector4 &t0, const WCVector4 &p2,
+	const WCVector4 &t2, const WCVector4 &p, WCVector4 &p1) {
 	WCVector4 p2p0 = p2 - p0;
 	WCVector4 dumVec;
 	WPFloat alf0, alf2, w1, dummy;
@@ -195,7 +196,7 @@ bool OneArcConic(const WCVector4 &p0, const WCVector4 &t0, const WCVector4 &p2, 
 /***********************************************~***************************************************/
 
 
-WPFloat Angle(const WCVector4 &p0, const WCVector4 &p1, const WCVector4 &p2) {
+WPFloat __WILDCAT_NAMESPACE__::Angle(const WCVector4 &p0, const WCVector4 &p1, const WCVector4 &p2) {
 	//Temp variables
 	WCVector4 p2p1 = p2 - p1;
 	WCVector4 p0p1 = p0 - p1;
@@ -212,7 +213,8 @@ WPFloat Angle(const WCVector4 &p0, const WCVector4 &p1, const WCVector4 &p2) {
 /***********************************************~***************************************************/
 
 
-void SplitArc(const WCVector4 &p0, const WCVector4 &p1, const WCVector4 &p2, WCVector4 &q1, WCVector4 &s, WCVector4 &r1) {
+void __WILDCAT_NAMESPACE__::SplitArc(const WCVector4 &p0, const WCVector4 &p1, const WCVector4 &p2,
+	WCVector4 &q1, WCVector4 &s, WCVector4 &r1) {
 	//Set up q1 and r1
 	WPFloat w1 = p1.L();
 	q1 = p0 + (p1 * w1);
@@ -243,20 +245,20 @@ struct WCHeapNode {
 };
 
 
-void ConvexHullFlattenRecursive(WCHeapNode *node, std::list<WCVector4> &list) {
+void _ConvexHullFlattenRecursive(WCHeapNode *node, std::list<WCVector4> &list) {
 	//Add left children (if any)
-	if (node->left != NULL) ConvexHullFlattenRecursive(node->left, list);
+	if (node->left != NULL) _ConvexHullFlattenRecursive(node->left, list);
 	//Add this node
 	list.push_back(node->point);
 //	std::cout << "ConvexSort: " << node->point << std::endl;
 	//Add right children (if any)
-	if (node->right != NULL) ConvexHullFlattenRecursive(node->right, list);
+	if (node->right != NULL) _ConvexHullFlattenRecursive(node->right, list);
 	//Delete the node
 	delete node;
 }
 
 
-void ConvexHullRecursivePlaceNode(WCHeapNode *refNode, WCHeapNode *node, const WPFloat &tol) {
+void _ConvexHullRecursivePlaceNode(WCHeapNode *refNode, WCHeapNode *node, const WPFloat &tol) {
 	//Check same angle case
 	if ( fabs(node->angle - refNode->angle) < tol) {
 		//Check distances
@@ -274,18 +276,18 @@ void ConvexHullRecursivePlaceNode(WCHeapNode *refNode, WCHeapNode *node, const W
 		//Check to see if there is a left-child
 		if (refNode->left == NULL) refNode->left = node;
 		//If there is, recurse down the tree
-		else ConvexHullRecursivePlaceNode(refNode->left, node, tol);
+		else _ConvexHullRecursivePlaceNode(refNode->left, node, tol);
 		return;
 	}
 	//Must be right child
 	if (refNode->right == NULL) refNode->right = node;
-	else ConvexHullRecursivePlaceNode(refNode->right, node, tol);
+	else _ConvexHullRecursivePlaceNode(refNode->right, node, tol);
 }
 
 
 /*** Modified version of a heap sort - sort criteria is the angle from reference point.
 	Duplicate angle points have the nearest discarded ***/
-void ConvexHull2DSort(const WCVector4 &refPoint, std::list<WCVector4> &pointList, const WPFloat &tol) {
+void _ConvexHull2DSort(const WCVector4 &refPoint, std::list<WCVector4> &pointList, const WPFloat &tol) {
 	std::list<WCVector4>::iterator pointIter = pointList.begin();
 	WCHeapNode *root = new WCHeapNode(), *node;
 	root->point = *pointIter;
@@ -301,11 +303,11 @@ void ConvexHull2DSort(const WCVector4 &refPoint, std::list<WCVector4> &pointList
 		node->distance = refPoint.Distance( *pointIter );
 		node->left = NULL;
 		node->right = NULL;
-		ConvexHullRecursivePlaceNode(root, node, tol);
+		_ConvexHullRecursivePlaceNode(root, node, tol);
 	}
 	//Flatten heap into pointList (flatten deletes the nodes)
 	pointList.clear();
-	ConvexHullFlattenRecursive(root, pointList);
+	_ConvexHullFlattenRecursive(root, pointList);
 /*** DEBUG ***
 	for (pointIter = pointList.begin(); pointIter != pointList.end(); pointIter++) 
 		std::cout << "CB2DSort Point: " << *pointIter << std::endl;
@@ -315,7 +317,7 @@ void ConvexHull2DSort(const WCVector4 &refPoint, std::list<WCVector4> &pointList
 
 /*** ConvexHull2D algorithm taken from "Introduction to Algorithms" by T. Cormen, C. Leiserson, R. Rivest, and C. Stein 
 	 Referred to as Graham's Scan ***/
-std::list<WCVector4> ConvexHull2D(std::list<WCVector4> pointList, const WPFloat &tol) {
+std::list<WCVector4> __WILDCAT_NAMESPACE__::ConvexHull2D(std::list<WCVector4> pointList, const WPFloat &tol) {
 	//Check for size 1, 2, or 3
 	if (pointList.size() < 3) return pointList;
 	std::list<WCVector4> outputList;
@@ -337,7 +339,7 @@ std::list<WCVector4> ConvexHull2D(std::list<WCVector4> pointList, const WPFloat 
 	outputList.push_back(lowPoint);
 
 	//Sort the remaining points using lowPoint as reference
-	ConvexHull2DSort(lowPoint, pointList, tol);
+	_ConvexHull2DSort(lowPoint, pointList, tol);
 	
 	//Remove next two points from pointList and add to outputList
 	WCVector4 nextToTop = pointList.front();
@@ -403,7 +405,8 @@ std::list<WCVector4> ConvexHull2D(std::list<WCVector4> pointList, const WPFloat 
 /***********************************************~***************************************************/
 
 
-std::list<WCVector4> MinimumBoundingRectangleArea(std::list<WCVector4>::iterator firstIter, std::list<WCVector4> &convexHull, WPFloat &area) {
+std::list<WCVector4> _MinimumBoundingRectangleArea(std::list<WCVector4>::iterator firstIter,
+	std::list<WCVector4> &convexHull, WPFloat &area) {
 	//Give a starting point (and always moving clockwise) determine the area of the bounding rectangle
 	WPFloat posDist, negDist = 0.0, thirdDist = 0.0, tmpDist = 1.0;
 	std::list<WCVector4>::iterator tmpIter;
@@ -479,7 +482,8 @@ std::list<WCVector4> MinimumBoundingRectangleArea(std::list<WCVector4>::iterator
 //     More detail information taken from "Computational Geometry with the Rotating Calipers",
 //	   submitted as Master's Thesis by Hormoz Pirzadeh, 1999 ***/
 // Algorithm actually is just brute force for now.  Want to move to above algorithm...
-std::list<WCVector4> MinimumBoundingRectangle(const std::list<WCVector4> &pointList, const WCMatrix4 &toPlane, const WCMatrix4 &fromPlane) {
+std::list<WCVector4> __WILDCAT_NAMESPACE__::MinimumBoundingRectangle(const std::list<WCVector4> &pointList,
+	const WCMatrix4 &toPlane, const WCMatrix4 &fromPlane) {
 	//Check for size 1 or 2
 	if (pointList.size() <= 2) return pointList;
 	
@@ -506,7 +510,7 @@ std::list<WCVector4> MinimumBoundingRectangle(const std::list<WCVector4> &pointL
 	WPFloat tmpArea, minArea = 10000000000.0;
 	//Test each point as a starting point for a rectangle
 	for(convexIter = convexHull.begin(); convexIter != convexHull.end(); convexIter++) {
-		tmpList = MinimumBoundingRectangleArea(convexIter, convexHull, tmpArea);
+		tmpList = _MinimumBoundingRectangleArea(convexIter, convexHull, tmpArea);
 //		std::cout << "TmpArea: " << tmpArea << std::endl;
 		//Check to see if this one wins
 		if (tmpArea < minArea) {

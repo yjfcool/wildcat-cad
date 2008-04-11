@@ -321,7 +321,7 @@ bool WCQuaternion::operator==(const WCQuaternion &quat) {
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCQuaternion &quat) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCQuaternion &quat) {
 	//Print out basic surface info
 	out << "Quaternion(" << &quat << ") ";	
 	for(int i=0; i < 4; i++) std::cout << quat._q[i] << "\t";

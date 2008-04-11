@@ -37,8 +37,12 @@
 #include "Constraint/constraint_fix_controller.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define CONSTRAINTFIX_CLASSNAME					"Fix"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -93,5 +97,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__CONSTRAINT_FIX_H__
 

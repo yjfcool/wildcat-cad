@@ -37,11 +37,15 @@
 #include "PartDesign/part_plane_controller.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define PARTPLANE_CLASSNAME							"Plane"
 #define PARTPLANE_DEFAULT_VISIBILITY				true
 #define PARTPLANE_SCALE								0.25
 #define PARTPLANE_LINE_THICKNESS					1.5
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -99,5 +103,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__PART_PLANE_H__
 

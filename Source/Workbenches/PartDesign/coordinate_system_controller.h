@@ -7,7 +7,7 @@
 #include "event_controller.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //None
 
 

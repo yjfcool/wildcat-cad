@@ -399,7 +399,7 @@ WCMatrix4 WCMatrix4::Transpose(void) {
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCMatrix4 &matrix) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCMatrix4 &matrix) {
 	void* addr = (void*)&matrix;
 	
 	//Print out basic surface info
@@ -740,7 +740,7 @@ WCVector WCMatrix::Solve(WCVector &vector) {
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCMatrix &matrix) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCMatrix &matrix) {
 	void* addr = (void*)&matrix;
 	
 	//Print out basic surface info

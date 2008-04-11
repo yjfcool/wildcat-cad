@@ -40,6 +40,10 @@
 //None
 
 
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
 /*** Class Predefinitions ***/
 class WCBipartiteFlowNetwork;
 //class WCConstraintNode;
@@ -149,5 +153,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__CONSTRAINT_PLANNER_H__
 

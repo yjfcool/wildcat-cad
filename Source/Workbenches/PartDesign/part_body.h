@@ -37,9 +37,13 @@
 #include "PartDesign/part_body_controller.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define BODY_CLASSNAME							"Body"
 #define BODY_DEFAULT_VISIBILITY					false
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -79,5 +83,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__PART_BODY_H__
 

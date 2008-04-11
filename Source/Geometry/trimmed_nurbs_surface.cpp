@@ -597,7 +597,7 @@ xercesc::DOMElement* WCTrimmedNurbsSurface::Serialize(xercesc::DOMDocument *docu
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCTrimmedNurbsSurface &surface) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCTrimmedNurbsSurface &surface) {
 	out << "Trimmed Nurbs Surface\n";
 	return out;
 }	

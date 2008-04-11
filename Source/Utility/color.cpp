@@ -135,7 +135,7 @@ void WCColor::FromElement(xercesc::DOMElement *element) {
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCColor &color) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCColor &color) {
 	//Print out basic color info
 	out << "WCColor(" << &color << ") ";	
 	for(int i=0; i < 4; i++)

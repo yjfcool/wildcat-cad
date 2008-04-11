@@ -39,8 +39,12 @@
 #include "Constraint/constraint_angle_modes.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define CONSTRAINTANGLE_CLASSNAME				"Angle"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -103,5 +107,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__CONSTRAINT_ANGLE_H__
 

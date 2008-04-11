@@ -39,11 +39,15 @@
 #include "Constraint/constraint_distance_modes.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define CONSTRAINTDISTANCE_CLASSNAME			"Distance"
 #define CONSTRAINTDISTANCE_POINTPOINT			0
 #define CONSTRAINTDISTANCE_POINTCURVE			1
 #define CONSTRAINTDISTANCE_CURVECURVE			2
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -120,5 +124,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__CONSTRAINT_DISTANCE_H__
 

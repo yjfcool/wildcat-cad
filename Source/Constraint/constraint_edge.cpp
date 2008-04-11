@@ -72,7 +72,7 @@ bool WCConstraintEdge::EdgeSort(const WCConstraintEdge* edgeA, const WCConstrain
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCConstraintEdge &edge) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCConstraintEdge &edge) {
 	//Print some info
 	out << "ConstraitEdge(" << &edge << ")(W:" << edge._weight << ", nA:" << edge._nodeA << ", nB: " << edge._nodeB << ") ";
 	if (edge._constraint != NULL)

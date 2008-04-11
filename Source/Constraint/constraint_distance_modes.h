@@ -35,8 +35,12 @@
 #include "Kernel/drawing_mode.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define CONSTRAINTDISTANCEMODE_EDIT_NAME		"Distance Constraint Edit Mode"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -69,5 +73,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__CONSTRAINT_DISTANCE_MODES_H__
 

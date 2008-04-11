@@ -35,19 +35,11 @@
 
 
 /*** Included Header Files ***/
-//None
+#include "Utility/wutil.h"
+#include "Application/MacOS/toolbar_bridge.h"
 
 
-/*** C++ Class Predefines ***/
-class WCToolbarButton_Bridge;
-class WCToolbar_Bridge;
-
-
-/*** Objective-C Class Predefines ***/
-//None
-
-
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define TOOLBAR_ICON_SMALLSIZE					32
 #define TOOLBAR_ICON_LARGESIZE					64
 #define TOOLBAR_HEADER_HEIGHT					24
@@ -55,18 +47,26 @@ class WCToolbar_Bridge;
 #define TOOLBAR_ICON_PADDING					8
 
 
+/*** C++ Class Predefines ***/
+//None
+
+
+/*** Objective-C Class Predefines ***/
+//None
+
+
 /***********************************************~***************************************************/
 
 
 @interface WCToolbarButton_OSX : NSButton {
-	WCToolbarButton_Bridge						*_bridge;											//!< Pointer to bridge button
+	__WILDCAT_NAMESPACE__::WCToolbarButton_Bridge	*_bridge;										//!< Pointer to bridge button
 }
 
 /*** Constructors ***/
-- (id)initWithBridge:(WCToolbarButton_Bridge*)bridge frame:(NSRect)frame;							//!< Primary constructor
+- (id)initWithBridge:(__WILDCAT_NAMESPACE__::WCToolbarButton_Bridge*)bridge frame:(NSRect)frame;	//!< Primary constructor
 
 /*** Member Access Methods ***/
-- (WCToolbarButton_Bridge*)bridge;																	//!< Get the associated message
+- (__WILDCAT_NAMESPACE__::WCToolbarButton_Bridge*)bridge;											//!< Get the associated message
 
 @end
 

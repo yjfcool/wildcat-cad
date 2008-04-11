@@ -7,7 +7,7 @@
 #include "action.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //None
 
 

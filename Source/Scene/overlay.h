@@ -36,7 +36,7 @@
 #include "Scene/widget.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //Overlay defaults
 #define OVERLAY_BOUNDARY						8
 #define OVERLAY_DEFAULT_COLOR					0.20, 0.20, 0.20, 0.55
@@ -44,6 +44,10 @@
 #define OVERLAY_HEIGHT_MIN						OVERLAY_WIDTH_MIN
 #define OVERLAY_PLACEMENT_BORDER				0.25
 #define OVERLAY_DEFAULT_PLACEMENT				WCPlacement::LowerLeft()
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -90,5 +94,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__OVERLAY_H__
 

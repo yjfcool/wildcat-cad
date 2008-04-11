@@ -35,8 +35,12 @@
 #include "Utility/object.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define TEXTUREMANAGER_STRING_SIZE				256
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -87,5 +91,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__TEXTURE_MANAGER_H__
 

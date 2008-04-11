@@ -35,8 +35,12 @@
 #include "Geometry/geometric_types.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define GEOMETRICLINE_DEFAULT_EPSILON			0.001
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -98,5 +102,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__GEOMETRIC_LINE_H__
 

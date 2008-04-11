@@ -152,7 +152,7 @@ xercesc::DOMElement* WCNamedView::Serialize(xercesc::DOMDocument *document, WCSe
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCNamedView &view) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCNamedView &view) {
 	//Print out some info
 	out << "NamedView(" << &view << ") : " << view._name << std::endl;
 	out << "\tAuto: "; view._isAuto?out<<"True":out<<"False"; out<<std::endl;

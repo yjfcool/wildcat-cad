@@ -48,6 +48,10 @@
 #include "Utility/visual_object.h"
 
 
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
 //Type definitions
 typedef std::pair<WCVector4, std::pair<WPFloat,WPFloat> >	WPIntersectRec;
 
@@ -102,5 +106,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__WILDCAT_GEOMETRIC_LIBRARY_H__
 

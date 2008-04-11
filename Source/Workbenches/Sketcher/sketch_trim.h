@@ -38,8 +38,12 @@
 #include "Sketcher/sketch_trim_modes.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHTRIM_CLASSNAME					"Trim"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -92,5 +96,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_TRIM_H__
 

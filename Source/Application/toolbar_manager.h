@@ -34,7 +34,7 @@
 #include "Application/wildcat.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define TOOLBAR_ICON_SMALLSIZE					32
 #define TOOLBAR_ICON_LARGESIZE					64
 #define TOOLBAR_HEADER_HEIGHT					24
@@ -42,7 +42,11 @@
 #define TOOLBAR_ICON_PADDING					8
 
 
-/*** C++ Class Predefines ***/
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
+/*** Class Predefines ***/
 class WCToolbar;
 class WCToolbarButton;
 class WCDocument;
@@ -84,5 +88,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__TOOLBAR_MANAGER_H__
 

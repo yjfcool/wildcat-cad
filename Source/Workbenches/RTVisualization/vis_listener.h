@@ -39,8 +39,12 @@
 #include "RTVisualization/vis_listener_types.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define VISLISTENER_CLASSNAME					"Listener"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -113,5 +117,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__VIS_LISTENER_H__
 

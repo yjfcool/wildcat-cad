@@ -9,7 +9,7 @@
 #include "feature_point_action.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define FEATUREPOINT_CLASSNAME					"Point"
 
 

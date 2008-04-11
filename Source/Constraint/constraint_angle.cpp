@@ -283,7 +283,7 @@ WCActionConstraintAngleMove* WCConstraintAngle::ActionMove(WCConstraintAngle *co
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCConstraintAngle &constraint) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCConstraintAngle &constraint) {
 	std::cout << "Constraint Angle(" << &constraint << "): " << constraint._angle << std::endl;
 	return out;
 }

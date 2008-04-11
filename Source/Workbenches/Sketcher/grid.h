@@ -35,13 +35,17 @@
 #include "Sketcher/sketch.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define GRID_DEFAULT_COLOR						0.2f, 0.8f, 0.2f, 0.25f
 #define GRID_DEFAULT_GRADUATIONS				5
 #define GRID_SUBLINE_LIMIT						24
 #define GRID_LINEWIDTH							1.0
 #define GRID_LINESTIPPLE_FACTOR					2
 #define GRID_LINESTIPPLE_PATTERN				0x5555
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -110,5 +114,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__GRID_H__
 

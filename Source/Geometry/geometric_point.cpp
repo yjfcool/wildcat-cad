@@ -330,7 +330,7 @@ std::vector<WCGeometricPoint*> WCGeometricPoint::VectorFromArray(const WPUInt &c
 /***********************************************~***************************************************/
 		
 	
-std::ostream& operator<<(std::ostream& out, const WCGeometricPoint &point) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCGeometricPoint &point) {
 	//Print out basic surface info
 	out << "GeometricPoint(" << (void*)&point << ") {" << point.X() << ", " << point.Y() << ", " << point.Z() << ", " << point.W() << "}\n";
 	return out;

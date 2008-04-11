@@ -975,7 +975,7 @@ void WCTreeView::Render(void) {
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, WCTreeView &tree) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, WCTreeView &tree) {
 	//Print info about the tree
 	out << "TreeView(" << &tree << ")\n";
 	//Print out all registered elements

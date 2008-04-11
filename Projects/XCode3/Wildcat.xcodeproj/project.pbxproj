@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		5806B9FD0DA3C0A800D9989D /* vis_listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5806B9FC0DA3C0A800D9989D /* vis_listener.cpp */; };
 		580873CC0D9A7C3600038336 /* wildcat.icns in Resources */ = {isa = PBXBuildFile; fileRef = 580873CB0D9A7C3600038336 /* wildcat.icns */; };
-		583FEAC80DAA69D100CCE245 /* document_controller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 583FEAC70DAA69D100CCE245 /* document_controller.mm */; };
 		5845428C0DA53F49005BC943 /* vis_listener_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5845428B0DA53F49005BC943 /* vis_listener_controller.cpp */; };
 		584542BC0DA54213005BC943 /* listener32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 584542BB0DA54213005BC943 /* listener32.tiff */; };
 		584542D30DA548EE005BC943 /* vis_recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 584542D20DA548EE005BC943 /* vis_recorder.cpp */; };
@@ -19,7 +18,6 @@
 		5849B60C0DA2873F0031E7CC /* vis_feature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B60B0DA2873F0031E7CC /* vis_feature.cpp */; };
 		5849B60F0DA287520031E7CC /* vis_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B60E0DA287520031E7CC /* vis_actions.cpp */; };
 		5849B6120DA287630031E7CC /* vis_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B6110DA287630031E7CC /* vis_controller.cpp */; };
-		5849B6280DA28D6C0031E7CC /* vis_document.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5849B6270DA28D6C0031E7CC /* vis_document.mm */; };
 		5849B62F0DA290990031E7CC /* visualization32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 5849B62E0DA290990031E7CC /* visualization32.tiff */; };
 		5849B6390DA291D90031E7CC /* vis_motiontracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B6380DA291D90031E7CC /* vis_motiontracker.cpp */; };
 		5849B6410DA2921C0031E7CC /* vis_motiontracker_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B6400DA2921C0031E7CC /* vis_motiontracker_controller.cpp */; };
@@ -223,17 +221,10 @@
 		585F369E0D68B66E00673AE6 /* RenderWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 585F36980D68B66E00673AE6 /* RenderWindow.nib */; };
 		585F36A50D68B68300673AE6 /* keymap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F369F0D68B68300673AE6 /* keymap.cpp */; };
 		585F36A60D68B68300673AE6 /* toolbar_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36A20D68B68300673AE6 /* toolbar_manager.cpp */; };
-		585F36BF0D68B69E00673AE6 /* document.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36A80D68B69D00673AE6 /* document.mm */; };
 		585F36C00D68B69E00673AE6 /* HMBlkButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 585F36AA0D68B69D00673AE6 /* HMBlkButton.m */; };
 		585F36C10D68B69E00673AE6 /* HMBlkButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 585F36AC0D68B69D00673AE6 /* HMBlkButtonCell.m */; };
 		585F36C20D68B69E00673AE6 /* HMBlkContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 585F36AE0D68B69D00673AE6 /* HMBlkContentView.m */; };
 		585F36C30D68B69E00673AE6 /* HMBlkPanel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B00D68B69D00673AE6 /* HMBlkPanel.mm */; };
-		585F36C50D68B69E00673AE6 /* opengl_view.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B40D68B69D00673AE6 /* opengl_view.mm */; };
-		585F36C60D68B69E00673AE6 /* part_document.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B60D68B69D00673AE6 /* part_document.mm */; };
-		585F36C70D68B69E00673AE6 /* render_window.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B80D68B69D00673AE6 /* render_window.mm */; };
-		585F36C80D68B69E00673AE6 /* toolbar.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B90D68B69D00673AE6 /* toolbar.mm */; };
-		585F36C90D68B69E00673AE6 /* toolbar_bridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36BB0D68B69D00673AE6 /* toolbar_bridge.mm */; };
-		585F36CA0D68B69E00673AE6 /* toolbar_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36BD0D68B69D00673AE6 /* toolbar_osx.mm */; };
 		585F36CB0D68B69E00673AE6 /* wildcat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36BE0D68B69D00673AE6 /* wildcat.mm */; };
 		585F36E10D68B70200673AE6 /* action.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36D00D68B70200673AE6 /* action.cpp */; };
 		585F36E20D68B70200673AE6 /* document.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36D20D68B70200673AE6 /* document.cpp */; };
@@ -312,6 +303,15 @@
 		585F37FF0D68B8D300673AE6 /* part_plane_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37E20D68B8D300673AE6 /* part_plane_controller.cpp */; };
 		586BA53F0DABDE8F00E2DF91 /* dialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 586BA53E0DABDE8F00E2DF91 /* dialog.mm */; };
 		587CB6EA0D89A48D00833178 /* sketch_arc_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */; };
+		588D9C6A0DAFDCEB00BDDE8D /* toolbar.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B90D68B69D00673AE6 /* toolbar.mm */; };
+		588D9C6C0DAFDCF700BDDE8D /* toolbar_bridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36BB0D68B69D00673AE6 /* toolbar_bridge.mm */; };
+		588D9C6E0DAFDD1E00BDDE8D /* toolbar_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36BD0D68B69D00673AE6 /* toolbar_osx.mm */; };
+		588D9C900DAFDDE500BDDE8D /* document.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36A80D68B69D00673AE6 /* document.mm */; };
+		588D9C940DAFDE3000BDDE8D /* document_controller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 583FEAC70DAA69D100CCE245 /* document_controller.mm */; };
+		588D9CA00DAFDE8200BDDE8D /* opengl_view.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B40D68B69D00673AE6 /* opengl_view.mm */; };
+		588D9CA20DAFDE8D00BDDE8D /* render_window.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B80D68B69D00673AE6 /* render_window.mm */; };
+		588D9CA40DAFDE9800BDDE8D /* vis_document.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5849B6270DA28D6C0031E7CC /* vis_document.mm */; };
+		588D9CA50DAFDE9800BDDE8D /* part_document.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B60D68B69D00673AE6 /* part_document.mm */; };
 		589AC2190D73404F001725D0 /* constraint_coincidence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361C0D68B4B700673AE6 /* constraint_coincidence.cpp */; };
 		589AC2330D734343001725D0 /* constraint_coincidence_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361E0D68B4B700673AE6 /* constraint_coincidence_actions.cpp */; };
 		58B27F780D785FC4008951D9 /* sketch_circle_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */; };
@@ -879,6 +879,7 @@
 		586BA3B10DABC40400E2DF91 /* dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialog.h; path = ../../Source/Application/dialog.h; sourceTree = SOURCE_ROOT; };
 		586BA53E0DABDE8F00E2DF91 /* dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = dialog.mm; path = ../../Source/Application/MacOS/dialog.mm; sourceTree = SOURCE_ROOT; };
 		587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_arc_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_arc_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
+		588D973F0DAFA99800BDDE8D /* assert_exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = assert_exception.h; path = ../../Source/Utility/assert_exception.h; sourceTree = SOURCE_ROOT; };
 		58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_circle_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_circle_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		58C5DE8D0DAE6E5900003673 /* vis_listener_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_types.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_types.h; sourceTree = SOURCE_ROOT; };
 		58DAD6400D69C7610093679D /* constraint_measure_radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = constraint_measure_radius.h; path = ../../Source/Constraint/constraint_measure_radius.h; sourceTree = SOURCE_ROOT; };
@@ -1459,6 +1460,7 @@
 			children = (
 				585F35360D68B15E00673AE6 /* wutil.h */,
 				585F351B0D68B15E00673AE6 /* adapter.h */,
+				588D973F0DAFA99800BDDE8D /* assert_exception.h */,
 				585F351D0D68B15E00673AE6 /* bounding_object.h */,
 				585F351F0D68B15E00673AE6 /* color.h */,
 				585F35210D68B15E00673AE6 /* log_appenders.h */,
@@ -3213,17 +3215,10 @@
 				585F36780D68B4B700673AE6 /* sketch_constraint_geocreate_mode.cpp in Sources */,
 				585F36A50D68B68300673AE6 /* keymap.cpp in Sources */,
 				585F36A60D68B68300673AE6 /* toolbar_manager.cpp in Sources */,
-				585F36BF0D68B69E00673AE6 /* document.mm in Sources */,
 				585F36C00D68B69E00673AE6 /* HMBlkButton.m in Sources */,
 				585F36C10D68B69E00673AE6 /* HMBlkButtonCell.m in Sources */,
 				585F36C20D68B69E00673AE6 /* HMBlkContentView.m in Sources */,
 				585F36C30D68B69E00673AE6 /* HMBlkPanel.mm in Sources */,
-				585F36C50D68B69E00673AE6 /* opengl_view.mm in Sources */,
-				585F36C60D68B69E00673AE6 /* part_document.mm in Sources */,
-				585F36C70D68B69E00673AE6 /* render_window.mm in Sources */,
-				585F36C80D68B69E00673AE6 /* toolbar.mm in Sources */,
-				585F36C90D68B69E00673AE6 /* toolbar_bridge.mm in Sources */,
-				585F36CA0D68B69E00673AE6 /* toolbar_osx.mm in Sources */,
 				585F36CB0D68B69E00673AE6 /* wildcat.mm in Sources */,
 				585F36E10D68B70200673AE6 /* action.cpp in Sources */,
 				585F36E20D68B70200673AE6 /* document.cpp in Sources */,
@@ -3319,7 +3314,6 @@
 				5849B60C0DA2873F0031E7CC /* vis_feature.cpp in Sources */,
 				5849B60F0DA287520031E7CC /* vis_actions.cpp in Sources */,
 				5849B6120DA287630031E7CC /* vis_controller.cpp in Sources */,
-				5849B6280DA28D6C0031E7CC /* vis_document.mm in Sources */,
 				5849B6390DA291D90031E7CC /* vis_motiontracker.cpp in Sources */,
 				5849B6410DA2921C0031E7CC /* vis_motiontracker_controller.cpp in Sources */,
 				5849B7220DA29B500031E7CC /* ground_plane.cpp in Sources */,
@@ -3329,10 +3323,18 @@
 				584543700DA55467005BC943 /* vis_recorder_controller.cpp in Sources */,
 				58DB05580DA6BC24008FF90E /* dialog_osx.mm in Sources */,
 				58DB05A70DA6C085008FF90E /* dialog_manager.cpp in Sources */,
-				583FEAC80DAA69D100CCE245 /* document_controller.mm in Sources */,
 				586BA53F0DABDE8F00E2DF91 /* dialog.mm in Sources */,
 				58F5E5380DABF7CA00DC39A2 /* vis_listener_modes.cpp in Sources */,
 				58C5DF3A0DAE700A00003673 /* vis_listener_actions.cpp in Sources */,
+				588D9C6A0DAFDCEB00BDDE8D /* toolbar.mm in Sources */,
+				588D9C6C0DAFDCF700BDDE8D /* toolbar_bridge.mm in Sources */,
+				588D9C6E0DAFDD1E00BDDE8D /* toolbar_osx.mm in Sources */,
+				588D9C900DAFDDE500BDDE8D /* document.mm in Sources */,
+				588D9C940DAFDE3000BDDE8D /* document_controller.mm in Sources */,
+				588D9CA00DAFDE8200BDDE8D /* opengl_view.mm in Sources */,
+				588D9CA20DAFDE8D00BDDE8D /* render_window.mm in Sources */,
+				588D9CA40DAFDE9800BDDE8D /* vis_document.mm in Sources */,
+				588D9CA50DAFDE9800BDDE8D /* part_document.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

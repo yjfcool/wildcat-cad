@@ -41,7 +41,7 @@ std::map<std::string,WCLogger*>* WCLogManager::_loggerMap = NULL;
 /***********************************************~***************************************************/
 
 
-void LogCheck(int level, WCLogger* logger, std::string msg, int line, std::string file) {
+void __WILDCAT_NAMESPACE__::_LogCheck(int level, WCLogger* logger, std::string msg, int line, std::string file) {
 	//Check to see if the logger is valid or not
 	if (!WCLogManager::CheckLogger(logger)) {
 		std::cerr << "LogCheck Error - Tried logging to an invalid logger...\n";

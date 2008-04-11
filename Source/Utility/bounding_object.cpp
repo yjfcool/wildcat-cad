@@ -342,7 +342,7 @@ WCAlignedBoundingBox& WCAlignedBoundingBox::operator=(const WCAlignedBoundingBox
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCAlignedBoundingBox &box) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCAlignedBoundingBox &box) {
 	//Print out basic info
 	out << "AlignedBoundingBox(" << &box << ")";	
 	std::cout << " xMin: " << box._xMin;

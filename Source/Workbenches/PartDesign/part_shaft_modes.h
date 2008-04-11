@@ -35,9 +35,13 @@
 #include "Kernel/drawing_mode.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define PARTSHAFTMODE_CREATE_NAME				"Shaft Create Mode"
 #define PARTSHAFTMODE_EDIT_NAME					"Shaft Edit Mode"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -86,5 +90,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__PART_SHAFT_MODES_H__
 

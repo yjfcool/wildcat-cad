@@ -35,8 +35,12 @@
 #include "Kernel/drawing_mode.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define WORKBENCH_ANIMATE_DURATION		0.3
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -171,5 +175,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__WORKBENCH_H__
 

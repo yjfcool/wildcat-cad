@@ -35,12 +35,16 @@
 #include "Geometry/geometric_types.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define POINT_POINTSIZE							2.0
 #define POINT_FLOATS_PER_VERTEX					4
 #define POINT_HITTEST_RAYCAST					100
 #define POINT_EQUALITY_EPSILON					0.001
 #define POINT_BOUNDS_BOUNDARY					0.1
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -113,5 +117,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__POINT_H__
 

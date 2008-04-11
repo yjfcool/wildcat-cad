@@ -171,7 +171,7 @@ xercesc::DOMElement* WCRay::Serialize(xercesc::DOMDocument *document, WCSerialDi
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCRay &ray) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCRay &ray) {
 	void* addr = (void*)&ray;
 	
 	//Print out basic surface info

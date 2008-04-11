@@ -34,11 +34,15 @@
 #include "Application/wildcat.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //None
 
 
-/*** C++ Class Predefines ***/
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
+/*** Class Predefines ***/
 class WCKeyMap;
 
 
@@ -101,5 +105,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__KEYMAP_H__
 

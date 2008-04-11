@@ -36,9 +36,13 @@
 #include "Sketcher/sketch_profile_controller.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHPROFILE_CLASSNAME					"Profile"
 #define SKETCH_PROFILE_DEFAULT_TOLERANCE		0.00001
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -156,5 +160,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_PROFILE_H__
 

@@ -38,6 +38,14 @@
 //None
 
 
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
+/*** Class Predefines ***/
+//None
+
+
 /***********************************************~***************************************************/
 	//Matrix is row-major ordered for compatibility with BLAS functions
     //    A = |  0  1  2  3 |
@@ -162,6 +170,7 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__MATRIX_H__
 
 	

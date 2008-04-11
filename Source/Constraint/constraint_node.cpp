@@ -182,7 +182,7 @@ int WCConstraintNode::DistributeEdges(WCBipartiteFlowNetwork* bfNetwork, const W
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCConstraintNode &node) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCConstraintNode &node) {
 	std::list<WCConstraintEdge*>::const_iterator iter;
 	
 	//Show some info about the node

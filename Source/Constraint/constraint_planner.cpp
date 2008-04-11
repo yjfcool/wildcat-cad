@@ -59,7 +59,7 @@ void WCConstraintPlan::AddCluster(WCConstraintCluster* cluster) {
 }
 
 
-std::ostream& operator<<(std::ostream& out, const WCConstraintPlan &plan) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCConstraintPlan &plan) {
 	std::list<WCConstraintCluster*>::const_iterator cIter;
 	out << "Constraint Plan(" << &plan << ": ";
 	//Show plan status
@@ -321,7 +321,7 @@ WCConstraintPlan* WCConstraintPlanner::Solve(void) {
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCConstraintPlanner &planner) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCConstraintPlanner &planner) {
 	std::list<WCConstraintNode*>::const_iterator nodeIter;
 	std::list<WCConstraintEdge*>::const_iterator edgeIter;
 	WPInt density = planner.Density();

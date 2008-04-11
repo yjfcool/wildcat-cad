@@ -305,7 +305,7 @@ bool WCConstraintCluster::DepthSort(const WCConstraintCluster* clusterA, const W
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCConstraintCluster &cluster) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCConstraintCluster &cluster) {
 	std::list<WCConstraintNode*>::const_iterator nIter;
 	std::list<WCConstraintCluster*>::const_iterator cIter;
 	std::list<WCConstraintEdge*>::const_iterator eIter;

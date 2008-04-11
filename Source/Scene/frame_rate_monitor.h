@@ -35,11 +35,15 @@
 #include "Scene/overlay.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define FRAMERATEMONITOR_WIDTH					1.5
 #define FRAMERATEMONITOR_HEIGHT					0.4
 #define FRAMERATEMONITOR_BORDER					0.15
 #define FRAMERATEMONITOR_DEFAULT_COLOR			1.0, 1.0, 1.0, 1.0
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -80,5 +84,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__FRAME_RATE_MONITOR_H__
 

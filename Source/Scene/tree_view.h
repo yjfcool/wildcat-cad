@@ -35,8 +35,12 @@
 #include "Scene/overlay.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define TREEVIEW_DEFAULT_PLACEMENT				WCPlacement::UpperLeft()
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -175,5 +179,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__TREE_VIEW_H__
 

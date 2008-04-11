@@ -34,10 +34,14 @@
 #include "Utility/wutil.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define DPI 3.141592653589793238462643
 #define D2R 0.01745329251994329576923691
 #define R2D 57.29577951308232087679815
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -102,5 +106,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__QUATERNION_H__
 

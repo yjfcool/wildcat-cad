@@ -35,7 +35,15 @@
 #include "Geometry/geometric_types.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
+//None
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
+/*** Class Predefines ***/
 //None
 
 
@@ -87,5 +95,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__RAY_H__
 

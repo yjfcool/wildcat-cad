@@ -33,7 +33,7 @@
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCBipartiteFlowEdge &edge) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCBipartiteFlowEdge &edge) {
 	//Print some info
 	out << "BipartiteFlowEdge(" << &edge << ", Node:" << edge._node << ") - ";
 	out << "Flow:" << edge._flow << std::endl;
@@ -41,7 +41,7 @@ std::ostream& operator<<(std::ostream& out, const WCBipartiteFlowEdge &edge) {
 }
 
 
-std::ostream& operator<<(std::ostream& out, const WCBipartiteFlowNode &node) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCBipartiteFlowNode &node) {
 	//Print some info
 	out << "WCBipartiteFlowNode(" << &node << ") - ";
 	out << "Weight:" << node._weight << ", Label: " << node._label << std::endl;
@@ -175,7 +175,7 @@ void WCBipartiteEdgeNode::AdjustFlows(WCBipartiteVertexNode* vertex, const WPUIn
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCBipartiteEdgeNode &edge) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCBipartiteEdgeNode &edge) {
 	//Show some info about the node
 	out << "\t\tBipartiteEdgeNode(" << &edge << ")::(W:" << edge._weight << ", Ref:" << edge._ref << ")\n";
 	
@@ -221,7 +221,7 @@ void WCBipartiteVertexNode::LabelEdgeNodes(std::queue<WCBipartiteEdgeNode*> &que
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCBipartiteVertexNode &node) {	
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCBipartiteVertexNode &node) {	
 	//Show some info about the node
 	out << "\t\tBipartiteVertexNode(" << &node << ")::(W:" << node._weight << ", Ref:" << node._ref << ")\n";
 	
@@ -505,7 +505,7 @@ void WCBipartiteFlowNetwork::Restore(void) {
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCBipartiteFlowNetwork &network) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCBipartiteFlowNetwork &network) {
 	std::list<WCBipartiteEdgeNode*>::const_iterator eIter;
 	std::list<WCBipartiteVertexNode*>::const_iterator vIter;
 

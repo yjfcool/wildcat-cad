@@ -85,9 +85,13 @@ inline double round(const double &n) {
 
 
 /*** Locally Defined Values ***/
+//Namespace declaration
+#define __WILDCAT_NAMESPACE__					Wildcat
+
 //Configuration Values
 #define __WILDCAT_DEBUG_LOGGER__
 #define __WILDCAT_NO_THREADS__
+
 //Define Logger Values
 #define LOGGER_DEBUG							1
 #define LOGGER_INFO								2
@@ -113,6 +117,10 @@ inline double round(const double &n) {
 
 /*** External or Global Variables ***/
 //None
+
+
+/*** Used Namespaces ***/
+using namespace __WILDCAT_NAMESPACE__;
 
 
 /***********************************************~***************************************************/

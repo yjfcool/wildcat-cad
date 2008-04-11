@@ -39,8 +39,12 @@
 #include "Sketcher/sketch_arc_modes.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHARC_CLASSNAME						"Arc"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -123,5 +127,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_ARC_H__
 

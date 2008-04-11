@@ -39,8 +39,12 @@
 #include "Constraint/constraint_length_modes.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define CONSTRAINTLENGTH_CLASSNAME				"Length"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -102,5 +106,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__CONSTRAINT_LENGTH_H__
 

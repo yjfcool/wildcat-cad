@@ -34,8 +34,16 @@
 #include "Geometry/wgeol.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 extern WPFloat* __bezier_coef[8];
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
+/*** Class Predefines ***/
+//None
 
 
 /***********************************************~***************************************************/
@@ -72,5 +80,6 @@ public:
 /***********************************************~****************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__NURBS_H__
 

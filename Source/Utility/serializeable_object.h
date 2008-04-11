@@ -35,12 +35,16 @@
 #include "Utility/object.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define	SERIALIZATION_UNKNOWN_GUID				"UNKNOWN"
-typedef std::string								WCGUID;												//!< Typedef for a global unique ID
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
+typedef std::string								WCGUID;												//!< Typedef for a global unique ID
 class WCSerialDictionary;
 
 
@@ -116,5 +120,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SERIALIZEBALE_OBJECT_H__
 

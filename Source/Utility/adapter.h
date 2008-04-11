@@ -34,7 +34,7 @@
 #include "Utility/wutil.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define ADAPTER_OPENGL_VERSION_14				0
 #define ADAPTER_OPENGL_VERSION_15				1
 #define ADAPTER_OPENGL_VERSION_20				2
@@ -42,6 +42,10 @@
 #define ADAPTER_OPENGL_VERSION_30				4
 #define ADAPTER_EXTENSION_COUNT					348
 #define CHKINIT { if(!WCAdapter::_isInitialized) WCAdapter::Initialize(); }
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /***********************************************~***************************************************/
@@ -84,9 +88,11 @@ public:
 
 /***********************************************~***************************************************/
 
+
 /*** Any Undefines ***/
 #undef CHKINIT
 
 
+}	   // End Wildcat Namespace
 #endif //__GRAPHICS_ADAPTER_H__
 

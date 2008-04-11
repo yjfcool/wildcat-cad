@@ -36,11 +36,11 @@
 
 
 /*** Included Header Files ***/
-#include <string>
+#include "PartDesign/part.h"
 
 
 /*** C++ Class Predefinitions ***/
-class WCPart;
+//None
 
 
 /*** Objective-C Class Predefinitions ***/
@@ -52,7 +52,7 @@ class WCPart;
 
 @interface WCPartDocument : WCDocument_OSX
 {
-	WCPart										*_part;												//!<
+	__WILDCAT_NAMESPACE__::WCPart				*_part;												//!<
 	std::string									*_filePath;											//!<
 }
 
@@ -63,7 +63,7 @@ class WCPart;
 - (NSString*)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData;
 
 /*** Member Access Methods ***/
-- (WCPart*)part;
+- (__WILDCAT_NAMESPACE__::WCPart*)part;
 
 
 @end

@@ -585,7 +585,7 @@ WCActionPartDelete* WCPart::ActionDelete(WCPart *part, std::list<WCPartFeature*>
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCPart &part) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCPart &part) {
 	//Print out some info
 	out << "Part(" << &part << ")\n";
 	//Print the scene

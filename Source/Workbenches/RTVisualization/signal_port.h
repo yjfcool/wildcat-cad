@@ -35,8 +35,12 @@
 #include "RTVisualization/vis_signal.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //None
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -76,5 +80,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SIGNAL_PORT_H__
 

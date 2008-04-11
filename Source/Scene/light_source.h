@@ -30,16 +30,20 @@
 #define __LIGHT_SOURCE_H__
 
 
-/*** Included Headers ***/
+/*** Included Header Files ***/
 #include "Scene/wscnl.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define LIGHTSOURCE_DEFAULT_AMBIENT				1.0, 1.0, 1.0, 1.0
 #define LIGHTSOURCE_DEFAULT_DIFFUSE				1.0, 1.0, 1.0, 1.0
 #define LIGHTSOURCE_DEFAULT_SPECULAR			1.0, 1.0, 1.0, 1.0
 #define LIGHTSOURCE_DEFAULT_POSITION			0.0, 0.0, 2.0
 #define LIGHTSOURCE_DEFAULT_DIRECTION			0.0, 0.0, -1.0
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -122,5 +126,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__LIGHT_SOURCE_H__
 

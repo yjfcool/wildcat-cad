@@ -496,7 +496,7 @@ WCGeometryContext::~WCGeometryContext() {
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCGeometryContext &context) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCGeometryContext &context) {
 	out << "GeometryContext(" << &context << ")\n";
 	out << "\t GLContext: " << context._glContext << std::endl;
 	out << "\t Shader Manager: " << context._shaderManager << std::endl;

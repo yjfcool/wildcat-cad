@@ -37,8 +37,12 @@
 #include "Constraint/constraint_horizontal_controller.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define CONSTRAINTHORIZONTAL_CLASSNAME			"Horizontal"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -96,5 +100,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__CONSTRAINT_HORIZONTAL_H__
 

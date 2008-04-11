@@ -36,10 +36,15 @@
 #include "Sketcher/sketch_align_suggestion.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHWORKBENCH_CROSSHAIR_SIZE			0.125f
 #define SKETCHWORKBENCH_POINTER_DEFAULT_COLOR		1.0f, 0.0f, 0.0f, 1.0f
 #define SKETCHWORKBENCH_POINTER_CONSTRUCTION_COLOR	0.4f, 0.4f, 1.0f, 1.0f
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
 
 /*** Class Predefines ***/
 class WCSketch;
@@ -118,5 +123,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_WORKBENCH_H__
 

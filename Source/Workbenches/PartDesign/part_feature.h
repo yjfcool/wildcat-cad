@@ -35,12 +35,16 @@
 #include "Kernel/feature.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define PARTFEATURE_POINT_SIZE					4.0
 #define PARTFEATURE_LINE_THICKNESS				2.0
 #define PARTFEATURE_LINESTIPPLE_FACTOR			2.0
 #define PARTFEATURE_LINESTIPPLE_PATTERN			0x5555
 #define PARTFEATURE_DEFAULT_CONSTRUCTION		false
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -97,5 +101,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__PART_FEATURE_H__
 

@@ -37,11 +37,15 @@
 #include "Sketcher/sketch_workbench.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHCONSTRAINT_DIMCREATE_NAME				"SketchConstraint Dimensional Create Mode"
 #define SKETCHCONSTRAINT_DIMEDIT_NAME				"SketchConstraint Dimensional Edit Mode"
 #define SKETCHCONSTRAINT_GEOCREATE_NAME				"SketchConstraint Geometric Create Mode"
 #define SKETCHCONSTRAINT_GEOEDIT_NAME				"SketchConstraint Geometric Edit Mode"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -108,5 +112,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_CONSTRAINT_MODES_H__
 

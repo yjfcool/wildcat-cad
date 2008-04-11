@@ -53,7 +53,7 @@
 @interface WCDialog_OSX : NSWindowController {
 	IBOutlet WebView							*webView;											//!< Associated webview object
 	NSURL										*location;											//!< Current location
-	WCDialog									*_dialog;											//!< Associated dialog object
+	__WILDCAT_NAMESPACE__::WCDialog				*_dialog;											//!< Associated dialog object
 }
 
 /*** Primary Methods ***/

@@ -34,8 +34,12 @@
 #include "Application/wildcat.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //None
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** C++ Class Predefines ***/
@@ -83,11 +87,8 @@ public:
 class WCToolbar {
 private:
 	WCToolbar_Bridge							*_bridge;											//!< Bridge to platform dependent implementation
-
-	//Private Methods
 	void AddButton(WCToolbarButton *button);														//!< Add an element to the toolbar
-
-	//Deny Access
+	//Hidden Constructors
 	WCToolbar();																					//!< Deny access to default constructor
 	WCToolbar(const WCToolbar& toolbar);															//!< Deny access to copy constructor
 	WCToolbar& operator=(const WCToolbar& toolbar);													//!< Deny access to equals operator
@@ -109,5 +110,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__TOOLBAR_H__
 

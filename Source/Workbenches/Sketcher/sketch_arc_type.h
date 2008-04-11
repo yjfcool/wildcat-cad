@@ -34,9 +34,13 @@
 #include "Kernel/wftrl.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHARC_TYPE_STANDARD					1
 #define SKETCHARC_TYPE_THREEPOINT				2
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -74,5 +78,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_ARC_TYPE_H__
 

@@ -35,9 +35,13 @@
 #include "Kernel/drawing_mode.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define PARTPADMODE_CREATE_NAME					"Pad Create Mode"
 #define PARTPADMODE_EDIT_NAME					"Pad Edit Mode"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -86,5 +90,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__PART_PAD_MODES_H__
 

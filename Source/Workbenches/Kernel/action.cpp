@@ -116,7 +116,7 @@ bool WCAction::Deserialize(xercesc::DOMElement* actionElement, WCSerialDictionar
 }
 
 
-std::ostream& operator<<(std::ostream& out, const WCAction &action) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCAction &action) {
 	//Print out some info
 	out << "Action: " << action._name << " (" << &action << ")\n";
 	return out;

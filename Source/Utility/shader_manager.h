@@ -34,8 +34,12 @@
 #include "Utility/wutil.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SHADERMANAGER_STRING_SIZE				256
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -97,5 +101,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SHADER_MANAGER_H__
 

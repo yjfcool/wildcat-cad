@@ -35,8 +35,12 @@
 #include "Scene/selection_manager.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //None
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -49,7 +53,6 @@ class WCTreeElement;
 class WCEventController : virtual public WCSelectionObject {
 protected:
 	WCTreeElement								*_treeElement;										//!< Corresponding tree element
-	
 private:
 	//Deny Access
 	WCEventController();																			//!< Deny access to default constructor
@@ -69,5 +72,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__EVENT_CONTROLLER_H__
 

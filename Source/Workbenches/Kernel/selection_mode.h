@@ -36,10 +36,14 @@
 #include "Kernel/workbench.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SELECTIONMODE_NAME						"SelectionMode"
 #define SELECTIONMODE_COLOR						1.0, 1.0, 1.0, 0.1
 #define SELECTIONMODE_COLOR_BORDER				0.5, 0.5, 0.5, 0.5
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -74,5 +78,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SELECTION_MODE_H__
 

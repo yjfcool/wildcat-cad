@@ -34,8 +34,12 @@
 #include "Application/wildcat.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //None
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** C++ Class Predefines ***/
@@ -147,5 +151,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__DIALOG_H__
 

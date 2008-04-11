@@ -453,7 +453,7 @@ WCVector4 WCVector4::CrossProduct(const WCVector4 &vector) const {
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCVector4 &vec) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCVector4 &vec) {
 	//Print out basic surface info
 	out << "Vector4(" << &vec << ") ";	
 	for(int i=0; i < 4; i++) std::cout << vec._data.d[i] << "\t";
@@ -755,7 +755,7 @@ WPFloat WCVector::DotProduct(const WCVector &vector) {
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCVector &vec) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCVector &vec) {
 	void* addr = (void*)&vec;
 	
 	//Print out basic surface info

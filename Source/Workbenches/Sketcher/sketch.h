@@ -37,11 +37,15 @@
 #include "PartDesign/part_feature.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCH_CLASSNAME						"Sketch"
 #define SKETCH_AXIS_COLOR						1.0f, 0.5f, 0.5f, 0.8f
 #define SKETCH_AXIS_SCALE						1.0
 #define SKETCH_ANALYSIS_TOLERANCE				0.01
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -168,5 +172,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_H__
 

@@ -34,8 +34,12 @@
 #include "RTVisualization/wrtv.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //None
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -67,5 +71,6 @@ struct WSVisualizationPacket {
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__VISUALIZATION_PACKET_H__
 

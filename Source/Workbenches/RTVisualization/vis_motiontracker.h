@@ -36,8 +36,12 @@
 #include "RTVisualization/vis_motiontracker_controller.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define VISMOTIONTRACKER_CLASSNAME				"Tracker"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -96,5 +100,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__VIS_MOTIONTRACKER_H__
 

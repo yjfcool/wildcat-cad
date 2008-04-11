@@ -35,12 +35,16 @@
 #include "Scene/layer.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define CAMERALAYER_DEFAULT_ROTSENS				200
 #define CAMERALAYER_DEFAULT_PANSENS				1
 #define CAMERALAYER_DEFAULT_ZOOMSENS			1.5
 #define CAMERALAYER_ZOOM_MIN					0.05
 #define CAMERALAYER_ZOOM_MAX					100
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -116,5 +120,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__CAMERA_LAYER_H__
 

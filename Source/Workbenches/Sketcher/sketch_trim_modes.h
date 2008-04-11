@@ -36,9 +36,13 @@
 #include "Sketcher/sketch_workbench.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHTRIMMODE_CREATE_NAME				"SketchTrim Create Mode"
 #define SKETCHTRIM_MIN_LENGTH					0.001
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -72,5 +76,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_TRIM_MODES_H__
 

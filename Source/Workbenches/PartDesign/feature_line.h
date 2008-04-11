@@ -9,7 +9,7 @@
 #include "feature_line_action.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define FEATURELINE_CLASSNAME					"Line"
 
 

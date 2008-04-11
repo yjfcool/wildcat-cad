@@ -36,11 +36,11 @@
 
 
 /*** Included Header Files ***/
-#include <string>
+#include "RTVisualization/visualization.h"
 
 
 /*** C++ Class Predefinitions ***/
-class WCVisualization;
+//None
 
 
 /*** Objective-C Class Predefinitions ***/
@@ -52,7 +52,7 @@ class WCVisualization;
 
 @interface WCVisDocument : WCDocument_OSX
 {
-	WCVisualization								*_visualization;									//!<
+	__WILDCAT_NAMESPACE__::WCVisualization		*_visualization;									//!<
 	std::string									*_filePath;											//!<
 }
 
@@ -63,7 +63,7 @@ class WCVisualization;
 - (NSString*)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData;
 
 /*** Member Access Methods ***/
-- (WCVisualization*)visualization;
+- (__WILDCAT_NAMESPACE__::WCVisualization*)visualization;
 
 
 @end

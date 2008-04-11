@@ -35,10 +35,14 @@
 #include "Constraint/sketch_constraint.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define CONSTRAINTMEASURE_ARROW_LENGTH			0.05
 #define CONSTRAINTMEASURE_CROSSLINE_OFFSET		0.8
 #define CMTMP									0.05
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -88,5 +92,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__CONSTRAINT_MEASURE_H__
 

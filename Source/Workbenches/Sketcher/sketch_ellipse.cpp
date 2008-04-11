@@ -349,7 +349,7 @@ WCActionSketchEllipseMinor* WCSketchEllipse::ActionMinor(WCSketchEllipse *ellips
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCSketchEllipse &ellipse) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCSketchEllipse &ellipse) {
 	//Print some basic info
 	out << "SketchEllipse(" << &ellipse << ")\n";
 	//Print out axis, major radius and minor radius info

@@ -46,7 +46,7 @@
 #include "Constraint/constraint_vertical.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHFEATURE_DEFAULT_COLOR				1.0, 1.0, 1.0, 0.8
 #define SKETCHFEATURE_DEFAULT_TEXT_COLOR		1.0, 1.0, 1.0, 1.0
 #define SKETCHFEATURE_CONSTRAINT_COLOR			1.0, 1.0, 0.0, 0.8

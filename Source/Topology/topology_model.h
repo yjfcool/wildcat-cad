@@ -34,7 +34,7 @@
 #include "Topology/wtpkl.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //None
 
 

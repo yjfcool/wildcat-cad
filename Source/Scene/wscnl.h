@@ -35,6 +35,7 @@
 
 //Utility Headers
 #include "Utility/wutil.h"
+#include "Utility/assert_exception.h"
 #include "Utility/adapter.h"
 #include "Utility/bounding_object.h"
 #include "Utility/color.h"
@@ -56,6 +57,10 @@
 //Screen parameters (will need to adjust for res independent OS's)
 #define SCREEN_RESOLUTION_DPI					72.0
 #define SCREEN_PIXEL_WIDTH						0.013888888888888888888888
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /***********************************************~***************************************************/
@@ -155,5 +160,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__WILDCAT_SCENE_LIBRARY_H__
 

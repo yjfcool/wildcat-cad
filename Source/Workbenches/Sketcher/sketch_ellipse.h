@@ -38,8 +38,12 @@
 #include "Sketcher/sketch_ellipse_modes.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHELLIPSE_CLASSNAME					"Ellipse"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -109,5 +113,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_ELLIPSE_H__
 

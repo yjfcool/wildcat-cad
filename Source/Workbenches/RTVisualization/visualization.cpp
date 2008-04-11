@@ -432,7 +432,7 @@ WCActionPartDelete* WCVisualization::ActionDelete(WCPart *part, std::list<WCPart
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCVisualization &vis) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCVisualization &vis) {
 	//Print out some info
 	out << "Visualization(" << &vis << ")\n";
 	//Print the scene

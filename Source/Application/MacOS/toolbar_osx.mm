@@ -61,7 +61,7 @@
 }
 
 
-- (id)initWithBridge:(WCToolbarButton_Bridge*)bridge frame:(NSRect)frame
+- (id)initWithBridge:(__WILDCAT_NAMESPACE__::WCToolbarButton_Bridge*)bridge frame:(NSRect)frame
 {
 	//Do the cocoa thing
 	self = [super initWithFrame:frame];
@@ -72,7 +72,7 @@
 }
 
 
-- (WCToolbarButton_Bridge*)bridge
+- (__WILDCAT_NAMESPACE__::WCToolbarButton_Bridge*)bridge
 {
 	//Return bridge
 	return _bridge;
@@ -248,7 +248,7 @@
 /***********************************************~***************************************************/
 
 
-- (id)initWithBridge:(WCToolbar_Bridge*)bridge title:(NSString*)title position:(NSRect)position
+- (id)initWithBridge:(__WILDCAT_NAMESPACE__::WCToolbar_Bridge*)bridge title:(NSString*)title position:(NSRect)position
 {
 	//Setup inital panelWindow
 	HMBlkPanel *panelWindow = [[HMBlkPanel alloc] initWithContentRect:position 

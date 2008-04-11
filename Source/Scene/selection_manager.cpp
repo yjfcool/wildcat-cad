@@ -439,7 +439,7 @@ void WCSelectionManager::Clear(const bool &notify) {
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, WCSelectionManager &sel) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, WCSelectionManager &sel) {
 	out << "Selection Manager(" << &sel << ")\n";
 	
 	//Show the registered objects

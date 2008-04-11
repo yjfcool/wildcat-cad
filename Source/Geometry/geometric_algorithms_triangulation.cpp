@@ -44,7 +44,7 @@ struct TriangulateVertex {
 /***********************************************~***************************************************/
 
 
-WPFloat TriangulateInternalAngle(TriangulateVertex* vert) {
+WPFloat _TriangulateInternalAngle(TriangulateVertex* vert) {
 	WCVector4 v0 = vert->left->vertex - vert->vertex;
 	WCVector4 v1 = vert->right->vertex - vert->vertex;
 	WCVector4 cross = v1.CrossProduct(v0);
@@ -56,7 +56,7 @@ WPFloat TriangulateInternalAngle(TriangulateVertex* vert) {
 }
 
 
-bool TriangulateIsInside(WCVector4 &ear, WCVector4 &left, WCVector4 &right, WCVector4 &pt) {
+bool _TriangulateIsInside(WCVector4 &ear, WCVector4 &left, WCVector4 &right, WCVector4 &pt) {
 	//Check if on right of ear to left, left to right, right to ear
 	bool earToLeft = IsOnRight2D(ear.I(), ear.J(), left.I(), left.J(), pt.I(), pt.J());
 	bool leftToRight = IsOnRight2D(left.I(), left.J(), right.I(), right.J(), pt.I(), pt.J());
@@ -67,7 +67,7 @@ bool TriangulateIsInside(WCVector4 &ear, WCVector4 &left, WCVector4 &right, WCVe
 }
 
 
-std::list<TriangulateVertex*>::iterator TriangulateFindEar(std::list<TriangulateVertex*> &vertexList) {
+std::list<TriangulateVertex*>::iterator _TriangulateFindEar(std::list<TriangulateVertex*> &vertexList) {
 	std::list<TriangulateVertex*>::iterator outerIter, innerIter;
 	TriangulateVertex* tmpVert;
 	bool noneInside;
@@ -82,7 +82,7 @@ std::list<TriangulateVertex*>::iterator TriangulateFindEar(std::list<Triangulate
 			//Inner loop
 			do {
 				//Test to see if this vertex is inside the triangle formed with outerIter as the ear
-				if (TriangulateIsInside( (*outerIter)->vertex, (*outerIter)->left->vertex, (*outerIter)->right->vertex, tmpVert->vertex ))
+				if (_TriangulateIsInside( (*outerIter)->vertex, (*outerIter)->left->vertex, (*outerIter)->right->vertex, tmpVert->vertex ))
 					noneInside = false;
 				//Otherwise, move to the next vert
 				tmpVert = tmpVert->left;
@@ -104,7 +104,7 @@ std::list<TriangulateVertex*>::iterator TriangulateFindEar(std::list<Triangulate
 /***********************************************~***************************************************/
 
 
-GLint* TriangulatePolygon(const std::list<WCVector4> &pointList) {
+GLint* __WILDCAT_NAMESPACE__::TriangulatePolygon(const std::list<WCVector4> &pointList) {
 	//Make sure there are at least 4 points
 	if (pointList.size() < 4) {
 		//Trivial case
@@ -147,7 +147,7 @@ GLint* TriangulatePolygon(const std::list<WCVector4> &pointList) {
 	//Determine the type of each vertex (and list it)
 	std::list<TriangulateVertex*>::iterator vertIter;
 	for (vertIter = vertexList.begin(); vertIter != vertexList.end(); vertIter++) {
-		(*vertIter)->internalAngle = TriangulateInternalAngle( *vertIter );
+		(*vertIter)->internalAngle = _TriangulateInternalAngle( *vertIter );
 //		std::cout << "Vert(" << *vertIter << "): " << (*vertIter)->id << ", " << (*vertIter)->internalAngle << " :: " << (*vertIter)->vertex << std::endl;
 //		std::cout << "\tLeft: " << (*vertIter)->left << ", Right: " << (*vertIter)->right << std::endl;
 	}
@@ -159,7 +159,7 @@ GLint* TriangulatePolygon(const std::list<WCVector4> &pointList) {
 	
 	do {
 		//Find an ear
-		earIter = TriangulateFindEar(vertexList);
+		earIter = _TriangulateFindEar(vertexList);
 		//Add a triangle
 		triangles[triIndex*3] = (*earIter)->right->id;
 		triangles[triIndex*3+1] = (*earIter)->id;
@@ -170,8 +170,8 @@ GLint* TriangulatePolygon(const std::list<WCVector4> &pointList) {
 		(*earIter)->left->right = (*earIter)->right;
 		(*earIter)->right->left = (*earIter)->left;
 		//Recompute angles for left and right points
-		(*earIter)->left->internalAngle = TriangulateInternalAngle( (*earIter)->left );
-		(*earIter)->right->internalAngle = TriangulateInternalAngle( (*earIter)->right );
+		(*earIter)->left->internalAngle = _TriangulateInternalAngle( (*earIter)->left );
+		(*earIter)->right->internalAngle = _TriangulateInternalAngle( (*earIter)->right );
 	//Keep going until only 3 vertices are left
 	} while (vertexList.size() > 3);
 	//Add the last triangle

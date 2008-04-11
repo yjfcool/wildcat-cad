@@ -264,7 +264,7 @@ WCActionSketchLineMove* WCSketchLine::ActionMove(WCSketchLine *line, const WCVec
 /***********************************************~***************************************************/
 
 	
-std::ostream& operator<<(std::ostream& out, const WCSketchLine &line) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCSketchLine &line) {
 	//Print some basic info
 	out << "SketchLine(" << &line << ") - Infinite:";
 	if (line._isInfinite) out << "True\n";

@@ -265,7 +265,7 @@ WCAction* WCSketchPoint::ActionMove(WCSketchPoint *point, const WCVector4 &pos) 
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCSketchPoint &point) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCSketchPoint &point) {
 	std::cout << "SketchPoint(" << &point << ") - X: " << point._position.I() << ", Y: " << point._position.J();
 	return out;
 }

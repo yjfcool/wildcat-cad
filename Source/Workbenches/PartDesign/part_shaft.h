@@ -38,8 +38,12 @@
 #include "PartDesign/part_shaft_modes.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define PARTSHAFT_CLASSNAME						"Shaft"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -114,5 +118,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__PART_SHAFT_H__
 

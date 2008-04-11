@@ -59,6 +59,10 @@
 #include "Scene/event_controller.h"
 
 
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
 /***********************************************~***************************************************/
 
 
@@ -131,5 +135,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__WILDCAT_GEOMETRIC_CONSTRAINT_LIBRARY_H__
 

@@ -10,7 +10,7 @@
 #include "coordinate_system_action.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define COORDINATESYSTEM_CLASSNAME				"Coordinate System"
 #define COORDINATESYSTEM_COLOR					0.6, 0.6, 0.6, 1.0
 #define COORDINATESYSTEM_WIDTH					1.0

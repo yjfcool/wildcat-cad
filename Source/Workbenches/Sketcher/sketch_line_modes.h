@@ -36,10 +36,14 @@
 #include "Sketcher/sketch_workbench.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHLINEMODE_CREATE_NAME				"SketchLine Create Mode"
 #define SKETCHLINEMODE_EDIT_NAME				"SketchLine Edit Mode"
 #define SKETCHLINE_MIN_LENGTH					0.001
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -106,5 +110,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_LINE_MODES_H__
 

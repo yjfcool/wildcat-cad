@@ -30,11 +30,11 @@
 #define __SCENE_H__
 
 
-/*** Included Headers ***/
+/*** Included Header Files ***/
 #include "Scene/wscnl.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //Default depth values for the Z axis
 #define SCENE_ZMIN_DEFAULT						-1000.0
 #define SCENE_ZMAX_DEFAULT						1000.0
@@ -43,6 +43,10 @@
 //Other parameters
 #define SCENE_MAX_LIGHTSOURCES					8
 #define SCENE_MAX_MOUSEBUTTONS					16
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -175,5 +179,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SCENE_H__
 

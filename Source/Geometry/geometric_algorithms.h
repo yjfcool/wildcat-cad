@@ -34,7 +34,15 @@
 #include "Geometry/wgeol.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
+//None
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
+/*** Class Predefines ***/
 //None
 
 
@@ -121,5 +129,6 @@ GLint* TriangulatePolygon(const std::list<WCVector4> &pointList);
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__GEOMETRIC_ALGORITMS_H__
 

@@ -1636,7 +1636,7 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCNurbsSurface &surface) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCNurbsSurface &surface) {
 	//Print out basic surface info
 	out << "NurbsSurface(" << (void*)&surface << "):\n";
 	out << "\t Verts: " << surface._numVerts << std::endl;

@@ -35,8 +35,12 @@
 #include "Utility/bounding_object.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define VISUALOBJECT_DEFAULT_COLOR				1.0, 1.0, 1.0, 1.0
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -82,5 +86,6 @@ public:
 /***********************************************~****************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__VISUAL_OBJECT_H__
 

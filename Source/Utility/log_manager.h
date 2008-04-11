@@ -38,6 +38,10 @@
 //None
 
 
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
 /*** Class PreDefines ***/
 class WCLogAppender;
 class WCLogger;
@@ -63,7 +67,7 @@ public:
 /***********************************************~***************************************************/
 
 
-void LogCheck(int level, WCLogger* logger, std::string msg, int line, std::string file);
+void _LogCheck(int level, WCLogger* logger, std::string msg, int line, std::string file);
 
 
 /***********************************************~***************************************************/
@@ -71,11 +75,11 @@ void LogCheck(int level, WCLogger* logger, std::string msg, int line, std::strin
 
 //Primary definition of the logging macros (when logging is enabled at compile time)
 #ifdef __WILDCAT_DEBUG_LOGGER__
-#define CLOGGER_DEBUG(logger, msg) { WCStringBuffer os; os << msg; LogCheck(LOGGER_DEBUG, logger, os.str(), __LINE__, __FILE__); }
-#define CLOGGER_INFO(logger, msg)  { WCStringBuffer os; os << msg; LogCheck(LOGGER_INFO, logger, os.str(), __LINE__, __FILE__); }
-#define CLOGGER_WARN(logger, msg)  { WCStringBuffer os; os << msg; LogCheck(LOGGER_WARN, logger, os.str(), __LINE__, __FILE__); }
-#define CLOGGER_ERROR(logger, msg) { WCStringBuffer os; os << msg; LogCheck(LOGGER_ERROR, logger, os.str(), __LINE__, __FILE__); }
-#define CLOGGER_FATAL(logger, msg) { WCStringBuffer os; os << msg; LogCheck(LOGGER_FATAL, logger, os.str(), __LINE__, __FILE__); }
+#define CLOGGER_DEBUG(logger, msg) { WCStringBuffer os; os << msg; __WILDCAT_NAMESPACE__::_LogCheck(LOGGER_DEBUG, logger, os.str(), __LINE__, __FILE__); }
+#define CLOGGER_INFO(logger, msg)  { WCStringBuffer os; os << msg; __WILDCAT_NAMESPACE__::_LogCheck(LOGGER_INFO, logger, os.str(), __LINE__, __FILE__); }
+#define CLOGGER_WARN(logger, msg)  { WCStringBuffer os; os << msg; __WILDCAT_NAMESPACE__::_LogCheck(LOGGER_WARN, logger, os.str(), __LINE__, __FILE__); }
+#define CLOGGER_ERROR(logger, msg) { WCStringBuffer os; os << msg; __WILDCAT_NAMESPACE__::_LogCheck(LOGGER_ERROR, logger, os.str(), __LINE__, __FILE__); }
+#define CLOGGER_FATAL(logger, msg) { WCStringBuffer os; os << msg; __WILDCAT_NAMESPACE__::_LogCheck(LOGGER_FATAL, logger, os.str(), __LINE__, __FILE__); }
 #endif
 
 #ifdef __WILDCAT_LOGGER__
@@ -200,5 +204,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__WUTIL_LOG_MANAGER_H__
 

@@ -109,16 +109,103 @@ void WCVisListener::UDPListen(void) {
 	}
 	//Free the data
 	free(data);
+	//Close the socket
+	int retVal = close(this->_socket);
+	//Make sure close was successful
+	if (retVal < 0) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::UDPListen - Not able to close socket");
 	//Exit the thread
 	pthread_exit(NULL);
 }
 
 
 void WCVisListener::TCPInitialize(void) {
+	//Initialize the socket
+	this->_socket = socket(AF_INET, SOCK_STREAM, 0);
+	//Make sure socket is valid
+	if (this->_socket < 0) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::TCPInitialize - Socket was not successful.");
+		//throw error
+		return;
+	}
+	bzero(&this->_serverAddress, sizeof(this->_serverAddress));
+	//Set up server address information
+	this->_serverAddress.sin_family      = AF_INET;
+	this->_serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
+	this->_serverAddress.sin_port        = htons(this->_port);
+
+	//Bind to the socket
+	int retVal = bind(this->_socket, (sockaddr*)&this->_serverAddress, sizeof(this->_serverAddress));
+	//Make sure the bind was successful
+	if (retVal != 0) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::TCPInitialize - Bind was not successful.");
+		//throw error
+		return;
+	}
+	//Otherwise, set isValid to true
+	this->_isValid = true;
 }
 
 
 void WCVisListener::TCPListen(void) {
+	socklen_t	len;
+	WSVisualizationHeader *header;
+	size_t headerSize = sizeof(WSVisualizationHeader);
+	void *data = malloc(SERV_MAXLINE), *payload;
+	WCVisFeature *feature;
+	int connFD = -1;
+	ssize_t n = -1;
+
+	//Make accept not block
+	int val = fcntl(this->_socket, F_SETFL, 0);
+	fcntl(this->_socket, F_SETFL, val | O_NONBLOCK);
+	//Setup receive timeout for socket
+	struct timeval tv;
+	tv.tv_sec = 1;
+	tv.tv_usec = 0;
+	setsockopt(this->_socket, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+
+	//Continue until no longer valid
+	while (this->_isValid) {
+		//Wait for a connection (allow very little backlog for now)
+		listen(this->_socket, 3);
+		
+		//Accept an inbound connection (spin a lot)
+		while ((connFD == -1) && this->_isValid)
+			connFD = accept(this->_socket, NULL, &len);
+		if (connFD != -1) std::cout << "ConnFD: " << connFD << std::endl;
+		
+		//Close the socket
+		close(this->_socket);
+		
+		//Continue again until no longer valid
+		while ((connFD != -1) && (n != 0) && this->_isValid) {
+			//Try to get some data (remember there is a one second timeout)
+			n = recvfrom(this->_socket, data, SERV_MAXLINE, 0, NULL, &len);
+			std::cout << "Received: " << n << std::endl;
+			//Make sure visualization is valid, has read something, and is running
+			if ((this->_isValid) && (n > 0) && (this->_visualization->State() == WCVisualizationState::Running())) {
+//				//Set data to a header
+//				header = (WSVisualizationHeader*)data;
+//				std::cout << "Received data(ID: " << header->objectID << ", Size: " << header->size << ", Type: " << header->type << ")\n";
+//				//Check that header size and n agree
+//				if (n < header->size) n = header->size;
+//				//Allocate space for remaining data
+//				payload = calloc(1, n);
+//				//Copy message body into data
+//				memcpy(payload, (unsigned char*)data + headerSize, n);
+//				//Send data to vis feature
+//				feature = this->_visualization->FeatureFromID(header->objectID);
+//				if (feature != NULL) feature->OnReceiveData(header->type, payload);
+//
+//				//See about recording the data
+//				if (this->_recorder != NULL) this->_recorder->OnReceiveData(header->type, data);
+			}
+		}
+	}
+	//Free the data
+	free(data);
+	//Exit the thread
+	pthread_exit(NULL);
 }
 
 
@@ -193,10 +280,7 @@ WCVisListener::~WCVisListener() {
 	this->_isValid = false;
 	//Wait for the thread to exit
 	pthread_join(this->_listener, NULL);
-	//Close the socket
-	int retVal = close(this->_socket);
-	//Make sure close was successful
-	if (retVal < 0) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::~WCVisListener - Not able to close socket");
+
 	//Remove from the sketch
 	if (!this->_visualization->RemoveFeature(this, false)) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::~WCVisListener - Problem removing feature from visualization.");	
@@ -246,7 +330,7 @@ WCActionVisListenerModify* WCVisListener::ActionModify(WCVisListener *listener, 
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCVisListener &listener) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCVisListener &listener) {
 	//Print out some info
 	out << "Listener(" << &listener << ")\n";
 

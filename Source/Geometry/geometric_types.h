@@ -34,10 +34,14 @@
 #include "Geometry/wgeol.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define GEOMETRICOBJECT_DEFAULT_LOD			1
 #define GEOMETRICOBJECT_DEFAULT_EPSILON		0.001
 #define GEOMETRICCURVE_THICKNESS			1.0
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -165,5 +169,6 @@ public:
 /***********************************************~****************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__GEOMETRIC_TYPES_H__
 

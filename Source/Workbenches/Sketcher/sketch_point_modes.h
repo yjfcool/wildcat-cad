@@ -36,9 +36,13 @@
 #include "Sketcher/sketch_align_suggestion.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHPOINTMODE_CREATE_NAME					"SketchPoint Create Mode"
 #define SKETCHPOINTMODE_EDIT_NAME					"SketchPoint Edit Mode"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -104,5 +108,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_POINT_MODES_H__
 

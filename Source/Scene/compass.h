@@ -35,10 +35,14 @@
 #include "Scene/overlay.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define COMPASS_LINEWIDTH						0.5
 #define COMPASS_SIZE							0.75
 #define COMPASS_SCALE_FACTOR					0.3
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -74,5 +78,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__COMPASS_H__
 

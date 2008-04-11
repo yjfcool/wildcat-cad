@@ -38,8 +38,12 @@
 #include "PartDesign/part_workbench.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define PART_CLASSNAME							"Part"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -143,6 +147,6 @@ public:
 /***********************************************~***************************************************/
 
 
-
+}	   // End Wildcat Namespace
 #endif //__PART_H__
 

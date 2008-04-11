@@ -38,8 +38,12 @@
 #include "PartDesign/part_pad_modes.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define PARTPAD_CLASSNAME						"Pad"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -105,5 +109,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__PART_PAD_H__
 

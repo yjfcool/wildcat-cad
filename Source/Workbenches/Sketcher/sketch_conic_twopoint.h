@@ -38,8 +38,12 @@
 #include "Sketcher/sketch_conic_modes.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHCONIC_TWOPOINT_CLASSNAME			"Conic"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -106,5 +110,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_CONIC_TWOPOINT_H__
 

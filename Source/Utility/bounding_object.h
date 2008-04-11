@@ -36,15 +36,19 @@
 #include "Utility/matrix.h"
 
 
+/*** Locally Defined Values ***/
+#define BOUNDINGOBJECT_MIN_DIM					0.25
+#define BOUNDINGOBJECT_MIN_DIM2					0.125		// MIN_DIM / 2.0
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
 /*** Class Predefines ***/
 class WCVector4;
 class WCGeometricPoint;
 class WCControlPoint;
-
-
-/*** Local Defines ***/
-#define BOUNDINGOBJECT_MIN_DIM					0.25
-#define BOUNDINGOBJECT_MIN_DIM2					0.125		// MIN_DIM / 2.0
 
 
 /***********************************************~***************************************************/
@@ -156,5 +160,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__BOUNDING_OBJECT_H__
 

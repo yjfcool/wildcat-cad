@@ -35,13 +35,16 @@
 
 
 //Local Defines
-#define OBJECT_NOTIFY_UPDATE			0x01
-#define OBJECT_NOTIFY_DELETE			0x02
-typedef	unsigned int					WCObjectMsg;
+#define OBJECT_NOTIFY_UPDATE					0x01
+#define OBJECT_NOTIFY_DELETE					0x02
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
-//None
+typedef	unsigned int							WCObjectMsg;
 
 
 /***********************************************~***************************************************/
@@ -87,5 +90,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__OBJECT_H__
 

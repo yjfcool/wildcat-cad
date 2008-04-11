@@ -37,10 +37,14 @@
 #include "Sketcher/sketch_arc_type.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHARCMODE_STANDARDCREATE_NAME		"SketchArc Standard Create Mode"
 #define SKETCHARCMODE_THREEPOINTCREATE_NAME		"SketchArc Three-Point Create Mode"
 #define SKETCHARCMODE_EDIT_NAME					"SketchArc Edit Mode"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -148,5 +152,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_ARC_MODES_H__
 

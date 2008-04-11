@@ -35,11 +35,15 @@
 #include "Kernel/workbench.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHWORKBENCH_SUGGEST_TOLERANCE		0.05
 #define SKETCHWORKBENCH_SUGGEST_COLOR			1.0, 0.0, 1.0, 1.0
 #define SKETCHWORKBENCH_SUGGEST_LINE_FACTOR		2
 #define SKETCHWORKBENCH_SUGGEST_LINE_PATTERN	0x5555
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -146,5 +150,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_ALIGN_SUGGESTION_H__
 

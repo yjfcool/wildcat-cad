@@ -295,14 +295,14 @@
 }
 
 
-- (void)document:(WCDocument*)document
+- (void)document:(__WILDCAT_NAMESPACE__::WCDocument*)document
 {
 	//Set the document
 	_document = document;
 }
 
 
-- (WCDocument*)document
+- (__WILDCAT_NAMESPACE__::WCDocument*)document
 {
 	//Return the associated wildcat document
 	return _document;

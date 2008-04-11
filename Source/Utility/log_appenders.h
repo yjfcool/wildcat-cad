@@ -38,6 +38,10 @@
 //None
 
 
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
 /*** Class PreDefines ***/
 //None
 
@@ -92,5 +96,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__WUTIL_LOG_APPENDERS_H__
 

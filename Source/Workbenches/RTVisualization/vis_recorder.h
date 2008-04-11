@@ -36,8 +36,12 @@
 #include "RTVisualization/vis_signal.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define VISRECORDER_CLASSNAME					"Recorder"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -82,5 +86,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__VIS_RECORDER_H__
 

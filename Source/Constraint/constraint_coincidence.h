@@ -37,11 +37,15 @@
 #include "Constraint/constraint_coincidence_controller.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define CONSTRAINTCOINCIDENCE_CLASSNAME			"Coincidence"
 #define CONSTRAINTCOINCIDENCE_POINTPOINT		0
 #define CONSTRAINTCOINCIDENCE_POINTCURVE		1
 #define CONSTRAINTCOINCIDENCE_CURVECURVE		2
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -103,5 +107,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__CONSTRAINT_COINCIDENCE_H__
 

@@ -36,9 +36,13 @@
 #include "Sketcher/sketch_workbench.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHCONIC_TWOPOINT_CREATE_MODENAME	"Sketch ConicTwoPoint Create Mode"
 #define SKETCHCONICMODE_DRAWCP					false
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -92,5 +96,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_CONIC_MODES_H__
 

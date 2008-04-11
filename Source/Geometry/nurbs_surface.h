@@ -35,7 +35,7 @@
 #include "Geometry/geometric_types.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //Size constants
 #define NURBSSURFACE_MAX_LOD					512
 #define NURBSSURFACE_MAX_DEGREE					3
@@ -80,6 +80,10 @@
 #define NURBSSURFACE_PERFLEVEL_LOW				2
 //Other Definitions
 #define NURBSSURFACE_SIZE4_CUTOFF				225
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -198,5 +202,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__NURBS_SURFACE_H__
 

@@ -1762,7 +1762,7 @@ WCNurbsCurve* WCNurbsCurve::Ellipse(WCGeometryContext *context, const WCVector4 
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCNurbsCurve &curve) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCNurbsCurve &curve) {
 	//Print out basic surface info
 	out << "NurbsCurve(" << (void*)&curve << "):\n";
 	out << "\t Context: " << curve._context << std::endl;

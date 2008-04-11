@@ -821,7 +821,7 @@ std::list< std::pair<WCSketchProfile*,bool> > WCSketchProfile::FlattenCategoriza
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCSketchProfile &profile) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCSketchProfile &profile) {
 	out << "Sketch Profile(" << &profile << ")\n";
 	out << "\tLinear: " << profile._isLinear << std::endl;
 	out << "\tClosed: " << profile._isClosed << std::endl;

@@ -36,9 +36,13 @@
 #include "Sketcher/sketch_workbench.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHAXISMODE_CREATE_NAME				"SketchAxis Create Mode"
 #define SKETCHAXISMODE_EDIT_NAME				"SketchAxis Edit Mode"
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -106,5 +110,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_AXIS_MODES_H__
 

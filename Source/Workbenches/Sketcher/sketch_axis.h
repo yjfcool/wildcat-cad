@@ -38,11 +38,15 @@
 #include "Sketcher/sketch_axis_modes.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define SKETCHAXIS_CLASSNAME					"Axis"
 #define SKETCHAXIS_LINE_THICKNESS				3.0
 #define SKETCHAXIS_LINESTIPPLE_FACTOR			1
 #define SKETCHAXIS_LINESTIPPLE_PATTERN			0x0F0F
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
@@ -102,5 +106,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__SKETCH_AXIS_H__
 
