@@ -31,16 +31,10 @@
 
 
 /*** Included Header Files ***/
-#include <string>
-#include <vector>
+#include "Application/Win32/toolbar_bridge.h"
 
 
-/*** C++ Class Predefines ***/
-class WCToolbarButton_Bridge;
-class WCToolbar_Bridge;
-
-
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 #define TOOLBAR_ICON_SMALLSIZE					32
 #define TOOLBAR_ICON_LARGESIZE					64
 #define TOOLBAR_HEADER_HEIGHT					24
@@ -48,19 +42,23 @@ class WCToolbar_Bridge;
 #define TOOLBAR_ICON_PADDING					8
 
 
+/*** Class Predefines ***/
+//None
+
+
 /***********************************************~***************************************************/
 
 
 class WCToolbarButton_Win32 {
 private:
-	WCToolbarButton_Bridge						*_bridge;											//!< Pointer to bridge button
+	__WILDCAT_NAMESPACE__::WCToolbarButton_Bridge	*_bridge;										//!< Pointer to bridge button
 public:
 	//Constructors and Destructors
 	WCToolbarButton_Win32(WCToolbarButton_Bridge* bridge) : _bridge(bridge) { }						//!< Primar constructor
 	~WCToolbarButton_Win32()					{ }													//!< Default destructor
 
 	//Member Access Methods
-	inline WCToolbarButton_Bridge* Bridge(void)	{ return this->_bridge; }							//!< Get associated bridge
+	inline __WILDCAT_NAMESPACE__::WCToolbarButton_Bridge* Bridge(void)	{ return this->_bridge; }	//!< Get associated bridge
 };
 
 
@@ -69,14 +67,14 @@ public:
 
 class WCToolbar_Win32 {
 private:
-	WCToolbar_Bridge							*_bridge;											//!< Pointer to toolbar bridge
+	__WILDCAT_NAMESPACE__::WCToolbar_Bridge		*_bridge;											//!< Pointer to toolbar bridge
 	std::string									_title;												//!< Toolbar title
 	std::vector<WCToolbarButton_Win32*>			_buttons;											//!< Vector of toolbar elements
 	//Hidden Constructors
 	WCToolbar_Win32();																				//!< Deny access to default constructor
 	WCToolbar_Win32(const WCToolbar_Win32&);														//!< Deny access to copy constructor
 public:
-	WCToolbar_Win32(WCToolbar_Bridge *bridge, const std::string &title);							//!< Primary constructor
+	WCToolbar_Win32(__WILDCAT_NAMESPACE__::WCToolbar_Bridge *bridge, const std::string &title);		//!< Primary constructor
 	~WCToolbar_Win32()							{ }													//!< Default destructor
 
 	//Event Methods
@@ -84,7 +82,7 @@ public:
 	void OnCloseButtonPress(void);																	//!< Called when close button is pressed
 
 	//Member Access Methods
-	void AddButton(WCToolbarButton_Bridge* bridge);													//!< Add an button to the toolbar
+	void AddButton(__WILDCAT_NAMESPACE__::WCToolbarButton_Bridge* bridge);							//!< Add an button to the toolbar
 	void IsVisible(const bool &state);																//!< Set the visible state
 };
 

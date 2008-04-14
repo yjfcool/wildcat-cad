@@ -30,16 +30,17 @@
 #define __PART_DOCUMENT_H__
 
 
-/*** Included Headers ***/
+/*** Included Header Files ***/
 #include "Application/Win32/document_view.h"
+#include "PartDesign/part.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //None
 
 
-/*** C++ Class Predefines ***/
-class WCPart;
+/*** Class Predefines ***/
+//None
 
 
 /***********************************************~***************************************************/

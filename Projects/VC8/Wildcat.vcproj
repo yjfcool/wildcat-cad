@@ -1474,6 +1474,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Dialogs"
+				>
+				<File
+					RelativePath="..\..\Source\Application\docTypeSelector.html"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Geometry"

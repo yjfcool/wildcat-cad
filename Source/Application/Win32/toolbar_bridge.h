@@ -30,13 +30,18 @@
 #define __TOOLBAR_BRIDGE_H__
 
 
-/*** Imported Header Files ***/
-//None
-
-
 /*** Included Header Files ***/
 #include "Utility/wutil.h"
 #include "Utility/vector.h"
+
+
+/*** Win32 Class Predefines ***/
+class WCToolbarButton_Win32;
+class WCToolbar_Win32;
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** C++ Class Predefines ***/
@@ -44,11 +49,6 @@ class WCToolbarButton;
 class WCToolbar;
 class WCDocument;
 class WCToolbar_Bridge;
-
-
-/*** Win32 Class Predefines ***/
-class WCToolbarButton_Win32;
-class WCToolbar_Win32;
 
 
 /***********************************************~***************************************************/
@@ -123,5 +123,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   //End Wildcat Namespace
 #endif //__TOOLBAR_BRIDGE_H__
 

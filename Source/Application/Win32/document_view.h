@@ -30,16 +30,17 @@
 #define __DOCUMENT_VIEW_H__
 
 
-/*** Included Headers ***/
+/*** Included Header Files ***/
 #include "Utility/wutil.h"
+#include "Kernel/document.h"
 
 
-/*** Local Defines ***/
+/*** Locally Defined Values ***/
 //None
 
 
-/*** C++ Class Predefines ***/
-class WCDocument;
+/*** Class Predefines ***/
+//None
 
 
 /***********************************************~***************************************************/
@@ -49,14 +50,14 @@ class WCDocumentView : public CWnd {
 protected:
 	HDC											m_hgldc;											//!< GDI Device Context
 	HGLRC										m_hglRC;											//!< Rendering context
-	WCDocument									*_document;											//!< Associated Wildcat document
+	__WILDCAT_NAMESPACE__::WCDocument			*_document;											//!< Associated Wildcat document
 public:
 	//Constructors and Destructors
 	WCDocumentView();																				//!< Default constructor
 	virtual ~WCDocumentView();																		//!< Default destructor
 
 	//Member Access Methods
-	inline WCDocument* Document(void)			{ return this->_document; }							//!< Get the associated document
+	inline __WILDCAT_NAMESPACE__::WCDocument* Document(void) { return this->_document; }			//!< Get the associated document
 
 	//Class Methods
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);													//!< Standard pre-creation method

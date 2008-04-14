@@ -30,7 +30,7 @@
 #define __FONT_MANAGER_H__
 
 
-/*** Included Headers ***/
+/*** Included Header Files ***/
 #include "Utility/wutil.h"
 #include "Utility/log_manager.h"
 #include <ft2build.h>
@@ -44,7 +44,11 @@
 #define FONT_DIRECTORY							"C:\\Windows\\Fonts"
 
 
-/*** C++ Class Predefines ***/
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
+/*** Class Predefines ***/
 //None
 
 
@@ -107,5 +111,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   //End Wildcat Namespace
 #endif //__TOOLBAR_MANAGER_H__
 

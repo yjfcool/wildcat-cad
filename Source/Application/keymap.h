@@ -30,7 +30,7 @@
 #define __KEYMAP_H__
 
 
-/*** Included Headers ***/
+/*** Included Header Files ***/
 #include "Application/wildcat.h"
 
 

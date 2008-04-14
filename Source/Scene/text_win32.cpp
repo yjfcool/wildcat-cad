@@ -127,8 +127,8 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 	if (this->_isUnderlined) {
 		glLineWidth(0.5);
 		glBegin(GL_LINES);
-			glVertex2f(x, y + this->_texOrigin * SCREEN_PIXEL_WIDTH);
-			glVertex2f(x + this->_texWidth * SCREEN_PIXEL_WIDTH, y + this->_texOrigin * SCREEN_PIXEL_WIDTH);
+			glVertex2f(x, y + this->_texOrigin * (GLfloat)SCREEN_PIXEL_WIDTH);
+			glVertex2f(x + this->_texWidth * (GLfloat)SCREEN_PIXEL_WIDTH, y + this->_texOrigin * (GLfloat)SCREEN_PIXEL_WIDTH);
 		glEnd();
 	}
 }
