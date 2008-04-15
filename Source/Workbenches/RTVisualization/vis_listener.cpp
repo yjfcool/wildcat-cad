@@ -86,13 +86,13 @@ void WCVisListener::UDPListen(void) {
 	while (this->_isValid) {
 		//Try to get some data (remember there is a one second timeout)
 		n = recvfrom(this->_socket, data, SERV_MAXLINE, 0, NULL, &len);
-//		std::cout << "Received: " << n << std::endl;
+		std::cout << "Received: " << n << std::endl;
 		//Make sure visualization is valid, has read something, and is running
 		if ((this->_isValid) && (n > 0) && 
 			(this->_visualization->State() == WCVisualizationState::Running())) {
 			//Set data to a header
 			header = (WSVisualizationHeader*)data;
-//			std::cout << "Received data(ID: " << header->objectID << ", Size: " << header->size << ", Type: " << header->type << ")\n";
+			std::cout << "Received data(ID: " << header->objectID << ", Size: " << header->size << ", Type: " << header->type << ")\n";
 			//Check that header size and n agree
 			if (n < header->size) n = header->size;
 			//Allocate space for remaining data
