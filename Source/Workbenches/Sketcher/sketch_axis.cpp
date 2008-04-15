@@ -193,7 +193,7 @@ void WCSketchAxis::Render(const GLuint &defaultProg, const WCColor &color, const
 	if (this->_sketch->Workbench()->IsActive()) glDisable(GL_DEPTH_TEST);
 	//Turn on line stippling
 	glEnable(GL_LINE_STIPPLE);
-	glLineStipple(SKETCHAXIS_LINESTIPPLE_FACTOR, 0x82B2);
+	glLineStipple(SKETCHAXIS_LINESTIPPLE_FACTOR, SKETCHAXIS_LINESTIPPLE_PATTERN);
 	if (color == WCColor::Default()) {
 		//Draw line	
 		if (this->_line != NULL) this->_line->Render(0, this->_color, zoom);

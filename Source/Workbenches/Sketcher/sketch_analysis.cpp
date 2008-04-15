@@ -164,13 +164,17 @@ void WCSketch::AnalyzeProfiles(void) {
 		//Go through every current profile
 		prevList = curveProfilesList.end();
 		for (curveProfilesIter = curveProfilesList.begin(); curveProfilesIter != curveProfilesList.end(); curveProfilesIter++) {
-			//Is the curve coonected to this list of curves
+			//Is the curve connected to this list of curves
 			if (this->IsConnectedToProfile(*curveProfilesIter, *curveIter)) {
+				//If the curve is already associated with a list of curves...
 				if (prevList != curveProfilesList.end()) {
 					//Merge the lists
 					(*prevList).merge(*curveProfilesIter);
 					//Remove current list from master list
-					curveProfilesList.erase(curveProfilesIter);
+					curveProfilesIter = curveProfilesList.erase(curveProfilesIter);
+					//Do a check
+//					if (curveProfilesIter == curveProfilesList.end())
+//						break;
 				}
 				else {
 					//Add the curve into the new list

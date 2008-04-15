@@ -154,6 +154,7 @@ void WCModeSketchAxisCreate::Render(void) {
 	if (!this->_isDrawing) return;
 	//Turn off depth testing
 	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_LINE_SMOOTH);
 	glEnable(GL_LINE_STIPPLE);
 	glLineStipple(SKETCHAXIS_LINESTIPPLE_FACTOR, SKETCHAXIS_LINESTIPPLE_PATTERN);
 	//Draw visualization points and line
@@ -163,6 +164,7 @@ void WCModeSketchAxisCreate::Render(void) {
 	this->_line->Render(0, WCColor::Default(), zoom);
 	//Clean up
 	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_LINE_SMOOTH);
 	glDisable(GL_LINE_STIPPLE);
 }
 

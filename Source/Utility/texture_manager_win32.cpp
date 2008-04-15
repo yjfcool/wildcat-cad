@@ -38,10 +38,23 @@
 /***********************************************~***************************************************/
 
 
+void _TIFFWarning(const char* module, const char* fmt, va_list ap) {
+	//Do nothing here for now
+//	CLOGGER_ERROR(WCLogManager::RootLogger(), "_TIFFWarning caught");
+}
+
+
 void WCTextureManager::LoadTexture(WSTexture *texObj) {
+	//Set the warning handler
+	TIFFSetWarningHandler(_TIFFWarning); 
 	//Create the image from file
 	std::string filename = _ResourceDirectory() + "\\" + texObj->_name + ".tiff";
-	TIFF *tif = TIFFOpen(filename.c_str(), "r");
+	TIFF *tif;
+	try {
+		tif = TIFFOpen(filename.c_str(), "r");
+	} catch (...) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTextureManager::LoadTexture - Caught an exception.");
+	}
 	if (tif == NULL){
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTextureManager::LoadTexture - Not able to load: " << texObj->_name);
 		return;

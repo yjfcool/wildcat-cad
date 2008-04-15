@@ -26,8 +26,12 @@
 ********************************************************************************/
 
 
-//Included Header Files
+/*** Included Header Files ***/
 #include "Application/Win32/font_manager.h"
+
+
+/*** Locally Defined Values ***/
+//None
 
 
 /***********************************************~***************************************************/
@@ -53,19 +57,24 @@ void WCFont::GenerateCharacter(FT_Face &face, const char &character) {
 	GLubyte *data = new GLubyte[4 * slot->bitmap.width * slot->bitmap.rows];
 	//Set color to white and alpha to bitmap value
 	unsigned int bmIndex = 0, dataIndex = 0;
+	unsigned char byte;
 	for(int j=0; j < slot->bitmap.rows; j++) {
 		for(int i=0; i < slot->bitmap.width; i++){
-			data[dataIndex++] = 255;
-			data[dataIndex++] = 255;
-			data[dataIndex++] = 255;
-			data[dataIndex++] = slot->bitmap.buffer[bmIndex++];
+			//Get the byte value
+			byte = slot->bitmap.buffer[bmIndex++];
+			data[dataIndex++] = byte;
+			data[dataIndex++] = byte;
+			data[dataIndex++] = byte;
+			data[dataIndex++] = byte;
 		}
 	}
 
 	//Now we just setup some texture paramaters.
     glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[character]);
-	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	//Load the data into the texture
     glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, slot->bitmap.width, slot->bitmap.rows, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
@@ -128,12 +137,12 @@ void WCFont::StringSize(const std::string &str, GLfloat &width, GLfloat &height,
 		maxBelow = STDMAX(below, maxBelow);
 		//Add the incremental width of this char
 		width += this->_chars[ cStr[i] ].width;
-		CLOGGER_INFO(WCLogManager::RootLogger(), cStr[i] << ": " << this->_chars[ cStr[i] ].height << " - " << above);
+//		CLOGGER_INFO(WCLogManager::RootLogger(), cStr[i] << ": " << this->_chars[ cStr[i] ].height << " - " << above);
 	}
 	//Determine height and bearing
 	height = maxAbove + maxBelow;
 	origin = maxBelow;
-	CLOGGER_INFO(WCLogManager::RootLogger(), str << ": " << height << " - " << origin);
+//	CLOGGER_INFO(WCLogManager::RootLogger(), str << ": " << height << " - " << origin);
 }
 
 
