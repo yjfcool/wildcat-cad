@@ -201,17 +201,23 @@ void WCSketch::AnalyzeProfiles(void) {
 	for (curveProfilesIter = curveProfilesList.begin(); curveProfilesIter != curveProfilesList.end(); curveProfilesIter++) {
 		//See if there is an exact match to existing profiles
 		matched = false;
-		for (profileListIter = this->_profileList.begin(); profileListIter != this->_profileList.end(); profileListIter++) {
+		profileListIter = this->_profileList.begin();
+		while (profileListIter != this->_profileList.end()) {
+//		for (profileListIter = this->_profileList.begin(); profileListIter != this->_profileList.end(); profileListIter++) {
 			//If there is a match....
 			if ((*(*profileListIter)) == (*curveProfilesIter)) {
 //				std::cout << "Found a profile match: " << std::endl;
 				matched = true;
-				//Remove existing profile from main list
-				this->_profileList.erase(profileListIter);
 				//Add matched existing profile for keeping
 				newProfilesList.push_back( *profileListIter );
+				//Remove existing profile from main list
+				this->_profileList.erase(profileListIter);
 				//Jump to the end
 				profileListIter = this->_profileList.end();
+			}
+			//Otherwise, move on to next profileList item
+			else {
+				profileListIter++;
 			}
 		}
 

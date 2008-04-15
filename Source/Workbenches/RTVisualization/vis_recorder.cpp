@@ -125,7 +125,11 @@ void WCVisRecorder::OnReceiveData(const unsigned int &type, void* data) {
 
 	//Create a record
 	WSSignal record;
+#ifdef __APPLE__
 	record.receivedTime = UpTime();
+#elif __WIN32__
+	record.receivedTime = GetTickCount();
+#endif
 	record.descriptor = NULL;
 	record.data = localCopy;
 

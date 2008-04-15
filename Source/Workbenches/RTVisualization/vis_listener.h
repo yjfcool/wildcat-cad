@@ -58,7 +58,11 @@ class WCVisListener : public WCVisFeature {
 protected:
 	WCVisListenerType							_type;												//!< Type of listener
 	bool										_isValid;											//!< Valid flag
+#ifndef __WIN32__
 	pthread_t									_listener;											//!< Listener thread
+#else
+	void*										_listener;
+#endif
 	unsigned int								_port;												//!< Port to listen on
 	int											_socket;											//!< Socket file descriptor
 	struct sockaddr_in							_serverAddress;										//!< Server address structure

@@ -41,6 +41,7 @@
 
 
 void WCVisListener::UDPInitialize(void) {
+#ifndef __WIN32__
 	//Initialize the socket
 	this->_socket = socket(AF_INET, SOCK_DGRAM, 0);
 	//Make sure socket is valid
@@ -65,10 +66,12 @@ void WCVisListener::UDPInitialize(void) {
 	}
 	//Otherwise, set isValid to true
 	this->_isValid = true;
+#endif
 }
 
 
 void WCVisListener::UDPListen(void) {
+#ifndef __WIN32__
 	socklen_t	len;
 	WSVisualizationHeader *header;
 	size_t headerSize = sizeof(WSVisualizationHeader);
@@ -115,10 +118,12 @@ void WCVisListener::UDPListen(void) {
 	if (retVal < 0) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::UDPListen - Not able to close socket");
 	//Exit the thread
 	pthread_exit(NULL);
+#endif
 }
 
 
 void WCVisListener::TCPInitialize(void) {
+#ifndef __WIN32__
 	//Initialize the socket
 	this->_socket = socket(AF_INET, SOCK_STREAM, 0);
 	//Make sure socket is valid
@@ -143,10 +148,12 @@ void WCVisListener::TCPInitialize(void) {
 	}
 	//Otherwise, set isValid to true
 	this->_isValid = true;
+#endif
 }
 
 
 void WCVisListener::TCPListen(void) {
+#ifndef __WIN32__
 	socklen_t	len;
 	WSVisualizationHeader *header;
 	size_t headerSize = sizeof(WSVisualizationHeader);
@@ -206,6 +213,7 @@ void WCVisListener::TCPListen(void) {
 	free(data);
 	//Exit the thread
 	pthread_exit(NULL);
+#endif
 }
 
 
@@ -237,9 +245,10 @@ void WCVisListener::Initialize(void) {
 	//Initialize based on type
 	if (this->_type == WCVisListenerType::UDP()) this->UDPInitialize();
 	else if (this->_type == WCVisListenerType::TCP()) this->TCPInitialize();
-
+#ifndef __WIN32__
 	//Create thread and let it get to listening
 	pthread_create(&this->_listener, NULL, WCVisListener::ThreadEntryPoint, this);
+#endif
 }
 
 
@@ -278,8 +287,10 @@ WCVisListener::WCVisListener(xercesc::DOMElement *element, WCSerialDictionary *d
 WCVisListener::~WCVisListener() {
 	//Shutdown the thread
 	this->_isValid = false;
+#ifndef __WIN32__
 	//Wait for the thread to exit
 	pthread_join(this->_listener, NULL);
+#endif
 
 	//Remove from the sketch
 	if (!this->_visualization->RemoveFeature(this, false)) {

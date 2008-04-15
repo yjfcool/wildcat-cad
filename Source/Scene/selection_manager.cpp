@@ -262,12 +262,12 @@ bool WCSelectionManager::RemoveObject(WCVisualObject *object) {
 	//Make sure object is actually in the map
 	std::map<WCVisualObject*,WCSelectionObject*>::iterator iter = this->_objects.find(object);
 	if (iter != this->_objects.end()) {
-		//Remove the object from the map
-		this->_objects.erase(iter);
 		//Make sure object is not in selected
 		this->_selected.remove((*iter).second);
 		//Make sure object is not in selectedVisuals
 		this->_selectedVisuals.remove(*iter);
+		//Remove the object from the map
+		this->_objects.erase(iter);
 		//Return all good
 		return true;
 	}

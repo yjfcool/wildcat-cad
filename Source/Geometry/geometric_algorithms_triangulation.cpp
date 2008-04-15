@@ -166,12 +166,12 @@ GLint* __WILDCAT_NAMESPACE__::TriangulatePolygon(const std::list<WCVector4> &poi
 		triangles[triIndex*3+2] = (*earIter)->left->id;
 		triIndex++;
 		//Remove the ear (both in list and in linked-list
-		vertexList.erase(earIter);
 		(*earIter)->left->right = (*earIter)->right;
 		(*earIter)->right->left = (*earIter)->left;
 		//Recompute angles for left and right points
 		(*earIter)->left->internalAngle = _TriangulateInternalAngle( (*earIter)->left );
 		(*earIter)->right->internalAngle = _TriangulateInternalAngle( (*earIter)->right );
+		vertexList.erase(earIter);
 	//Keep going until only 3 vertices are left
 	} while (vertexList.size() > 3);
 	//Add the last triangle

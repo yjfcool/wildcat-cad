@@ -112,12 +112,6 @@ BOOL WCDocumentView::SetFormat(HDC hdc) {
 
 
 void WCDocumentView::OnInitGL(void) {
-	//glShadeModel(GL_SMOOTH);
-	//glClearColor(0.0, 0.0, 0.0, 0.5);
-	//glClearDepth(1.0);
-	//glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LEQUAL);
-
 	this->m_hgldc = ::GetDC(this->m_hWnd);
 	//Check the pixel format
 	if (!SetFormat(this->m_hgldc)) {

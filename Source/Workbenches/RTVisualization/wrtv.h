@@ -34,17 +34,26 @@
 
 
 //Networking Included Headers
+#ifdef __APPLE__
 #include <sys/types.h>	/* basic system data types */
 #include <sys/socket.h>	/* basic socket definitions */
 #include <sys/time.h>	/* timeval{} for select() */
 #include <netinet/in.h>	/* sockaddr_in{} and other Internet defns */
 #include <arpa/inet.h>	/* inet(3) functions */
 #include <pthread.h>
+#endif
 
 
 //Kernel Headers
 #include "Kernel/wftrl.h"
 #include "Kernel/selection_mode.h"
+
+
+#ifdef __WIN32__
+#include <winsock.h>
+#include <pthread.h>
+#include <sys/types.h>
+#endif
 
 
 /***********************************************~***************************************************/

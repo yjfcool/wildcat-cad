@@ -264,7 +264,8 @@ void WCVisMotionTracker::Render(const GLuint &defaultProg, const WCColor &color,
 	//Set mesh rotation (just z angle for now)
 	glRotated(this->_rotation.K(), 0.0, 0.0, 1.0);
 	//Set mesh scale
-	glScalef(this->_scale, this->_scale, this->_scale);
+	GLfloat scale = (GLfloat)this->_scale;
+	glScalef(scale, scale, scale);
 	
 	//Unlock the tracker
 	this->Unlock();

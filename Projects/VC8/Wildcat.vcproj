@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="..\..\Dependencies\freetype\include;..\..\Dependencies\freetype\include\freetype2;..\..\Dependencies\libtiff\include;&quot;..\..\Dependencies\xerces-c-src_2_8_0\include&quot;;..\..\Source\Workbenches;..\..\Source"
+				AdditionalIncludeDirectories="..\..\Dependencies\pthreads_win32\include;..\..\Dependencies\freetype\include;..\..\Dependencies\freetype\include\freetype2;..\..\Dependencies\libtiff\include;&quot;..\..\Dependencies\xerces-c-src_2_8_0\include&quot;;..\..\Source\Workbenches;..\..\Source"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;WIN32;__WIN32__;_WINDOWS;XML_LIBRARY"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -65,9 +65,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenGL32.lib GLu32.lib GLaux.lib xerces-c_static_2.lib gdiplus.lib libtiff.lib freetype.lib $(NOINHERIT)"
+				AdditionalDependencies="OpenGL32.lib GLu32.lib GLaux.lib xerces-c_static_2.lib gdiplus.lib libtiff.lib freetype.lib pthreadVCE2.lib $(NOINHERIT)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\Dependencies\freetype\lib;..\..\Dependencies\libtiff\lib;&quot;..\..\Dependencies\xerces-c-src_2_8_0\lib&quot;"
+				AdditionalLibraryDirectories="..\..\Dependencies\pthreads_win32\lib;..\..\Dependencies\freetype\lib;..\..\Dependencies\libtiff\lib;&quot;..\..\Dependencies\xerces-c-src_2_8_0\lib&quot;"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames="LIBCMT"
 				GenerateDebugInformation="true"
@@ -1190,6 +1190,224 @@
 				Name="ToBe Done"
 				>
 			</Filter>
+			<Filter
+				Name="RT Visualization"
+				>
+				<Filter
+					Name="Headers"
+					>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\ground_plane.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\signal_port.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\vis_actions.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\vis_controller.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\vis_feature.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\vis_packet.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\vis_signal.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\vis_workbench.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\visualization.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\wrtv.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Source"
+					>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\ground_plane.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\vis_actions.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\vis_controller.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\vis_feature.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\vis_workbench.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Workbenches\RTVisualization\visualization.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Features"
+					>
+					<Filter
+						Name="Listener"
+						>
+						<Filter
+							Name="Headers"
+							>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_listener.h"
+								>
+								<FileConfiguration
+									Name="Debug|Win32"
+									>
+									<Tool
+										Name="VCCustomBuildTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_listener_actions.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_listener_controller.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_listener_modes.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_listener_types.h"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="Dialogs"
+							>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\newListener.html"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="Source"
+							>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_listener.cpp"
+								>
+								<FileConfiguration
+									Name="Debug|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_listener_actions.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_listener_controller.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_listener_modes.cpp"
+								>
+							</File>
+						</Filter>
+					</Filter>
+					<Filter
+						Name="Motion Tracker"
+						>
+						<Filter
+							Name="Headers"
+							>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_motiontracker.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_motiontracker_controller.h"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="Dialogs"
+							>
+						</Filter>
+						<Filter
+							Name="Source"
+							>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_motiontracker.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_motiontracker_controller.cpp"
+								>
+							</File>
+						</Filter>
+					</Filter>
+					<Filter
+						Name="Recorder"
+						>
+						<Filter
+							Name="Headers"
+							>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_recorder.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_recorder_controller.h"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="Source"
+							>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_recorder.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_recorder_controller.cpp"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="Dialogs"
+							>
+						</Filter>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="Dialogs"
+					>
+				</Filter>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Utility"
@@ -1330,6 +1548,18 @@
 				Name="Headers"
 				>
 				<File
+					RelativePath="..\..\Source\Application\dialog.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\dialog_manager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\dialog_win32.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Source\Application\Win32\document_frame.h"
 					>
 				</File>
@@ -1405,6 +1635,18 @@
 			<Filter
 				Name="Source"
 				>
+				<File
+					RelativePath="..\..\Source\Application\Win32\dialog.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\dialog_manager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\dialog_win32.cpp"
+					>
+				</File>
 				<File
 					RelativePath="..\..\Source\Application\Win32\document_frame.cpp"
 					>
