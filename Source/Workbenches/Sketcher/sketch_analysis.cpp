@@ -163,26 +163,28 @@ void WCSketch::AnalyzeProfiles(void) {
 	for (curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
 		//Go through every current profile
 		prevList = curveProfilesList.end();
-		for (curveProfilesIter = curveProfilesList.begin(); curveProfilesIter != curveProfilesList.end(); curveProfilesIter++) {
+		curveProfilesIter = curveProfilesList.begin();
+		while (curveProfilesIter != curveProfilesList.end()) {
 			//Is the curve connected to this list of curves
 			if (this->IsConnectedToProfile(*curveProfilesIter, *curveIter)) {
 				//If the curve is already associated with a list of curves...
 				if (prevList != curveProfilesList.end()) {
 					//Merge the lists
 					(*prevList).merge(*curveProfilesIter);
-					//Remove current list from master list
+					//Remove current list from master list (this will get next)
 					curveProfilesIter = curveProfilesList.erase(curveProfilesIter);
-					//Do a check
-//					if (curveProfilesIter == curveProfilesList.end())
-//						break;
 				}
 				else {
 					//Add the curve into the new list
 					(*curveProfilesIter).push_back(*curveIter);
 					//Set prevList
 					prevList = curveProfilesIter;
+					//Increment iter
+					curveProfilesIter++;
 				}
 			}
+			//Otherwise, increment curveProfilesIter
+			else curveProfilesIter++;
 		}
 		//If prevList is end - no list found
 		if (prevList == curveProfilesList.end()) {
@@ -207,7 +209,6 @@ void WCSketch::AnalyzeProfiles(void) {
 		matched = false;
 		profileListIter = this->_profileList.begin();
 		while (profileListIter != this->_profileList.end()) {
-//		for (profileListIter = this->_profileList.begin(); profileListIter != this->_profileList.end(); profileListIter++) {
 			//If there is a match....
 			if ((*(*profileListIter)) == (*curveProfilesIter)) {
 //				std::cout << "Found a profile match: " << std::endl;

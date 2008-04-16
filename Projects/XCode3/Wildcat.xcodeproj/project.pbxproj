@@ -154,7 +154,6 @@
 		585F357D0D68B26600673AE6 /* passthrough.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35700D68B26600673AE6 /* passthrough.vsh */; };
 		585F357E0D68B26600673AE6 /* trimsurface_vis.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35710D68B26600673AE6 /* trimsurface_vis.fsh */; };
 		585F35960D68B28800673AE6 /* geometric_algorithms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F357F0D68B28800673AE6 /* geometric_algorithms.cpp */; };
-		585F35970D68B28800673AE6 /* geometric_algorithms_triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F35810D68B28800673AE6 /* geometric_algorithms_triangulation.cpp */; };
 		585F35980D68B28800673AE6 /* geometric_line.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F35820D68B28800673AE6 /* geometric_line.cpp */; };
 		585F35990D68B28800673AE6 /* geometric_point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F35840D68B28800673AE6 /* geometric_point.cpp */; };
 		585F359A0D68B28800673AE6 /* geometric_types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F35860D68B28800673AE6 /* geometric_types.cpp */; };
@@ -301,6 +300,7 @@
 		585F37FD0D68B8D300673AE6 /* part_plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37DE0D68B8D300673AE6 /* part_plane.cpp */; };
 		585F37FE0D68B8D300673AE6 /* part_plane_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37E00D68B8D300673AE6 /* part_plane_actions.cpp */; };
 		585F37FF0D68B8D300673AE6 /* part_plane_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37E20D68B8D300673AE6 /* part_plane_controller.cpp */; };
+		5864E0BC0DB52AB600DB0CD2 /* geometric_algorithms_triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F35810D68B28800673AE6 /* geometric_algorithms_triangulation.cpp */; };
 		586BA53F0DABDE8F00E2DF91 /* dialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 586BA53E0DABDE8F00E2DF91 /* dialog.mm */; };
 		587CB6EA0D89A48D00833178 /* sketch_arc_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */; };
 		588D9C6A0DAFDCEB00BDDE8D /* toolbar.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B90D68B69D00673AE6 /* toolbar.mm */; };
@@ -876,6 +876,9 @@
 		585F37E10D68B8D300673AE6 /* part_plane_actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_plane_actions.h; path = ../../Source/Workbenches/PartDesign/part_plane_actions.h; sourceTree = SOURCE_ROOT; };
 		585F37E20D68B8D300673AE6 /* part_plane_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = part_plane_controller.cpp; path = ../../Source/Workbenches/PartDesign/part_plane_controller.cpp; sourceTree = SOURCE_ROOT; };
 		585F37E30D68B8D300673AE6 /* part_plane_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_plane_controller.h; path = ../../Source/Workbenches/PartDesign/part_plane_controller.h; sourceTree = SOURCE_ROOT; };
+		5864E0890DB50D9D00DB0CD2 /* geometric_algorithms_triangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_algorithms_triangle.cpp; path = ../../Source/Geometry/geometric_algorithms_triangle.cpp; sourceTree = SOURCE_ROOT; };
+		5864E0B80DB50ED700DB0CD2 /* triangle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = triangle.c; path = ../../Source/Geometry/triangle.c; sourceTree = SOURCE_ROOT; };
+		5864E0B90DB50ED700DB0CD2 /* triangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = triangle.h; path = ../../Source/Geometry/triangle.h; sourceTree = SOURCE_ROOT; };
 		586BA3B10DABC40400E2DF91 /* dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialog.h; path = ../../Source/Application/dialog.h; sourceTree = SOURCE_ROOT; };
 		586BA53E0DABDE8F00E2DF91 /* dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = dialog.mm; path = ../../Source/Application/MacOS/dialog.mm; sourceTree = SOURCE_ROOT; };
 		587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_arc_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_arc_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
@@ -1250,6 +1253,7 @@
 		585F346E0D68B07300673AE6 /* Geometry */ = {
 			isa = PBXGroup;
 			children = (
+				5864E0BB0DB50EE400DB0CD2 /* External */,
 				585F35470D68B1F000673AE6 /* Shaders */,
 				585F35460D68B1EA00673AE6 /* Headers */,
 				585F35450D68B1E100673AE6 /* Source */,
@@ -1482,6 +1486,7 @@
 			isa = PBXGroup;
 			children = (
 				585F357F0D68B28800673AE6 /* geometric_algorithms.cpp */,
+				5864E0890DB50D9D00DB0CD2 /* geometric_algorithms_triangle.cpp */,
 				585F35810D68B28800673AE6 /* geometric_algorithms_triangulation.cpp */,
 				585F35820D68B28800673AE6 /* geometric_line.cpp */,
 				585F35840D68B28800673AE6 /* geometric_point.cpp */,
@@ -2899,6 +2904,15 @@
 			name = Headers;
 			sourceTree = "<group>";
 		};
+		5864E0BB0DB50EE400DB0CD2 /* External */ = {
+			isa = PBXGroup;
+			children = (
+				5864E0B90DB50ED700DB0CD2 /* triangle.h */,
+				5864E0B80DB50ED700DB0CD2 /* triangle.c */,
+			);
+			name = External;
+			sourceTree = "<group>";
+		};
 		58DAD6460D69CAF60093679D /* Source */ = {
 			isa = PBXGroup;
 			children = (
@@ -3154,7 +3168,6 @@
 				585F35430D68B15E00673AE6 /* utility_osx.mm in Sources */,
 				585F35440D68B15E00673AE6 /* vector.cpp in Sources */,
 				585F35960D68B28800673AE6 /* geometric_algorithms.cpp in Sources */,
-				585F35970D68B28800673AE6 /* geometric_algorithms_triangulation.cpp in Sources */,
 				585F35980D68B28800673AE6 /* geometric_line.cpp in Sources */,
 				585F35990D68B28800673AE6 /* geometric_point.cpp in Sources */,
 				585F359A0D68B28800673AE6 /* geometric_types.cpp in Sources */,
@@ -3335,6 +3348,7 @@
 				588D9CA20DAFDE8D00BDDE8D /* render_window.mm in Sources */,
 				588D9CA40DAFDE9800BDDE8D /* vis_document.mm in Sources */,
 				588D9CA50DAFDE9800BDDE8D /* part_document.mm in Sources */,
+				5864E0BC0DB52AB600DB0CD2 /* geometric_algorithms_triangulation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
