@@ -34,6 +34,7 @@
 #include "Utility/wutil.h"
 #include "Utility/log_manager.h"
 #include "Utility/log_appenders.h"
+#include <winsock2.h>
 
 
 /***********************************************~***************************************************/
@@ -48,10 +49,17 @@ void InitializeApplication(void) {
 	CLOGGER_INFO(WCLogManager::RootLogger(), "WCWildcatApp::WCWildcatApp - Starting up...");
 	//Initialize xml manager
 	xercesc::XMLPlatformUtils::Initialize();
+
+	//Initialize TCP/IP stack
+	WSADATA wsaData = {0};
+	WORD wVer = MAKEWORD(2,2);
+	WSAStartup( wVer, &wsaData );
 }
 
 
 void ShutdownApplication(void) {
+	//Shutdown winsock
+	WSACleanup();
 	CLOGGER_INFO(WCLogManager::RootLogger(), "WCWildcatApp::~WCWildcatApp - Shutting Down...");
 	//Terminate the managers
 	xercesc::XMLPlatformUtils::Terminate();

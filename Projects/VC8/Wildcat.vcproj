@@ -1187,8 +1187,16 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="ToBe Done"
+				Name="To-Be Done"
 				>
+				<Filter
+					Name="Assembly"
+					>
+				</Filter>
+				<Filter
+					Name="Drafting"
+					>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="RT Visualization"
@@ -1609,6 +1617,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Source\Application\Win32\vis_document.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Source\Application\Win32\wglext.h"
 					>
 				</File>
@@ -1678,6 +1690,10 @@
 				</File>
 				<File
 					RelativePath="..\..\Source\Application\Win32\toolbar_win32.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\Win32\vis_document.cpp"
 					>
 				</File>
 				<File

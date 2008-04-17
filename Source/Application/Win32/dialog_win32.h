@@ -26,41 +26,54 @@
 ********************************************************************************/
 
 
-#ifndef __WILDCAT_REALTIME_VISUALIZATION_LIBRARY_H__
-#define __WILDCAT_REALTIME_VISUALIZATION_LIBRARY_H__
+#ifndef __DIALOG_WIN32_H__
+#define __DIALOG_WIN32_H__
+
+
+/*** Included Header Files ***/
+#include "Application/dialog.h"
+
+
+/*** Locally Defined Values ***/
+//None
+
+
+/*** Class Predefines ***/
+//None
 
 
 /***********************************************~***************************************************/
 
 
-//Networking Included Headers
-#ifdef __APPLE__
-#include <sys/types.h>	/* basic system data types */
-#include <sys/socket.h>	/* basic socket definitions */
-#include <sys/time.h>	/* timeval{} for select() */
-#include <netinet/in.h>	/* sockaddr_in{} and other Internet defns */
-#include <arpa/inet.h>	/* inet(3) functions */
-#include <pthread.h>
-#endif
+class WCDialog_Win32 {
+private:
+	__WILDCAT_NAMESPACE__::WCDialog				*_dialog;											//!< Pointer to dialog
+public:
+	//Constructors and Destructors
+	WCDialog_Win32(WCDialog* dialog);																//!< Primary constructor
+	~WCDialog_Win32();																				//!< Default destructor
 
+	//Member Access Methods
+	inline __WILDCAT_NAMESPACE__::WCDialog* Dialog(void)	{ return this->_dialog; }				//!< Get associated dialog
 
-//Kernel Headers
-#include "Kernel/wftrl.h"
-#include "Kernel/selection_mode.h"
+	//Script Get Object Methods
+	std::string StringFromScript(const std::string &var);											//!< Get string script value
+	WPFloat FloatFromScript(const std::string &var);												//!< Get float script value
+	WPInt IntFromScript(const std::string &var);													//!< Get int script value
+	WPUInt UnsignedIntFromScript(const std::string &var);											//!< Get unsigned int script value
+	bool BoolFromScript(const std::string &var);													//!< Get bool script value
 
-
-#ifdef __WIN32__
-//#include <sys/time.h>	/* timeval{} for select() */
-//#include <netinet/in.h>	/* sockaddr_in{} and other Internet defns */
-//#include <arpa/inet.h>	/* inet(3) functions */
-#include <winsock2.h>
-#include <pthread.h>
-#include <sys/types.h>
-#endif
+	//Script Set Object Methods
+	void StringFromScript(const std::string &var, const std::string &value);						//!< Set string script value
+	void FloatFromScript(const std::string &var, const WPFloat &value);								//!< Set float script value
+	void IntFromScript(const std::string &var, const WPInt &value);									//!< Set int script value
+	void UnsignedIntFromScript(const std::string &var, const WPUInt &value);						//!< Set unsigned int script value
+	void BoolFromScript(const std::string &var, const bool &value);									//!< Set bool script value
+};
 
 
 /***********************************************~***************************************************/
 
 
-#endif //__WILDCAT_REALTIME_VISUALIZATION_LIBRARY_H__
+#endif //__DIALOG_WIN32_H__
 

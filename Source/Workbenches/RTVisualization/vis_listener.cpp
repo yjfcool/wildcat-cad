@@ -41,16 +41,16 @@
 
 
 void WCVisListener::UDPInitialize(void) {
-#ifndef __WIN32__
-	//Initialize the socket
-	this->_socket = socket(AF_INET, SOCK_DGRAM, 0);
+	//Initialize the socket (normal sockets)
+	this->_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	//Make sure socket is valid
 	if (this->_socket < 0) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::UDPInitialize - Socket was not successful.");
 		//throw error
 		return;
 	}
-	bzero(&this->_serverAddress, sizeof(this->_serverAddress));
+	//Zero out the server address
+	memset(&this->_serverAddress, 0, sizeof(this->_serverAddress));
 	//Set up server address information
 	this->_serverAddress.sin_family      = AF_INET;
 	this->_serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -58,6 +58,7 @@ void WCVisListener::UDPInitialize(void) {
 
 	//Bind to the socket
 	int retVal = bind(this->_socket, (sockaddr*)&this->_serverAddress, sizeof(this->_serverAddress));
+
 	//Make sure the bind was successful
 	if (retVal != 0) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::UDPInitialize - Bind was not successful.");
@@ -66,38 +67,40 @@ void WCVisListener::UDPInitialize(void) {
 	}
 	//Otherwise, set isValid to true
 	this->_isValid = true;
-#endif
 }
 
 
 void WCVisListener::UDPListen(void) {
-#ifndef __WIN32__
-	socklen_t	len;
 	WSVisualizationHeader *header;
-	size_t headerSize = sizeof(WSVisualizationHeader);
-	ssize_t n;
+	unsigned int headerSize = sizeof(WSVisualizationHeader);
+	int n;
 	void *data = malloc(SERV_MAXLINE), *payload;
 	WCVisFeature *feature;
-	
+
 	//Setup receive timeout for socket
+#ifndef __WIN32__
 	struct timeval tv;
 	tv.tv_sec = 1;
 	tv.tv_usec = 0;
 	setsockopt(this->_socket, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+#else
+	DWORD tv = 1000;
+	setsockopt(this->_socket, SOL_SOCKET, SO_RCVTIMEO, (char*)&tv, sizeof(tv));
+#endif
 
 	//Continue until no longer valid
 	while (this->_isValid) {
 		//Try to get some data (remember there is a one second timeout)
-		n = recvfrom(this->_socket, data, SERV_MAXLINE, 0, NULL, &len);
-		std::cout << "Received: " << n << std::endl;
+		n = recvfrom(this->_socket, (char*)data, SERV_MAXLINE, 0, NULL, NULL);
+		CLOGGER_DEBUG(WCLogManager::RootLogger(), "Received: " << n);
 		//Make sure visualization is valid, has read something, and is running
 		if ((this->_isValid) && (n > 0) && 
 			(this->_visualization->State() == WCVisualizationState::Running())) {
 			//Set data to a header
 			header = (WSVisualizationHeader*)data;
-			std::cout << "Received data(ID: " << header->objectID << ", Size: " << header->size << ", Type: " << header->type << ")\n";
+			CLOGGER_DEBUG(WCLogManager::RootLogger(), "Received data(ID: " << header->objectID << ", Size: " << header->size << ", Type: " << header->type << ")");
 			//Check that header size and n agree
-			if (n < header->size) n = header->size;
+			if (n < (int)header->size) n = header->size;
 			//Allocate space for remaining data
 			payload = calloc(1, n);
 			//Copy message body into data
@@ -113,12 +116,15 @@ void WCVisListener::UDPListen(void) {
 	//Free the data
 	free(data);
 	//Close the socket
+#ifndef __WIN32__
 	int retVal = close(this->_socket);
+#else
+	int retVal = closesocket(this->_socket);
+#endif
 	//Make sure close was successful
 	if (retVal < 0) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisListener::UDPListen - Not able to close socket");
 	//Exit the thread
 	pthread_exit(NULL);
-#endif
 }
 
 
@@ -245,10 +251,8 @@ void WCVisListener::Initialize(void) {
 	//Initialize based on type
 	if (this->_type == WCVisListenerType::UDP()) this->UDPInitialize();
 	else if (this->_type == WCVisListenerType::TCP()) this->TCPInitialize();
-#ifndef __WIN32__
 	//Create thread and let it get to listening
 	pthread_create(&this->_listener, NULL, WCVisListener::ThreadEntryPoint, this);
-#endif
 }
 
 
@@ -257,7 +261,7 @@ void WCVisListener::Initialize(void) {
 
 
 WCVisListener::WCVisListener(WCVisualization *vis, const std::string &name, const WCVisListenerType &type, const unsigned int &port) :
-	::WCVisFeature(vis, name, 0),  _type(type), _isValid(false), _listener(NULL), _port(port), _socket(0), _recorder(NULL) {
+	::WCVisFeature(vis, name, 0),  _type(type), _isValid(false), _listener(), _port(port), _socket(0), _recorder(NULL) {
 	//Initialize the listener
 	this->Initialize();
 }
@@ -265,7 +269,7 @@ WCVisListener::WCVisListener(WCVisualization *vis, const std::string &name, cons
 
 WCVisListener::WCVisListener(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	::WCVisFeature( WCSerializeableObject::ElementFromName(element,"VisFeature"), dictionary),
-	 _type(WCVisListenerType::UDP()), _isValid(false), _listener(NULL), _port(0), _socket(0), _recorder(NULL) {
+	 _type(WCVisListenerType::UDP()), _isValid(false), _listener(), _port(0), _socket(0), _recorder(NULL) {
 	//Make sure element if not null
 	if (element == NULL) return;
 	//Get GUID and register it
