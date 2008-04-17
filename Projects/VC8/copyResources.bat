@@ -21,4 +21,4 @@ copy ..\..\Dependencies\libtiff\lib\zlib1.dll %1\zlib1.dll
 copy ..\..\Dependencies\libtiff\lib\jpeg62.dll %1\jpeg62.dll
 copy ..\..\Dependencies\libtiff\lib\libtiff3.dll %1\libtiff3.dll
 copy ..\..\Dependencies\freetype\lib\freetype6.dll %1\freetype6.dll
-copy ..\..\Dependencies\pthreads_win32\lib\pthreadVCE2.dll %1\pthreadVCE2.dll
+copy ..\..\Dependencies\pthreads\lib\pthreadVC2.dll %1\pthreadVC2.dll

@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="..\..\Dependencies\pthreads_win32\include;..\..\Dependencies\freetype\include;..\..\Dependencies\freetype\include\freetype2;..\..\Dependencies\libtiff\include;&quot;..\..\Dependencies\xerces-c-src_2_8_0\include&quot;;..\..\Source\Workbenches;..\..\Source"
+				AdditionalIncludeDirectories="..\..\Dependencies\pthreads\include;..\..\Dependencies\freetype\include;..\..\Dependencies\freetype\include\freetype2;..\..\Dependencies\libtiff\include;&quot;..\..\Dependencies\xerces-c-src_2_8_0\include&quot;;..\..\Source\Workbenches;..\..\Source"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;WIN32;__WIN32__;_WINDOWS;XML_LIBRARY"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -65,9 +65,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenGL32.lib GLu32.lib GLaux.lib xerces-c_static_2.lib gdiplus.lib libtiff.lib freetype.lib pthreadVCE2.lib $(NOINHERIT)"
+				AdditionalDependencies="OpenGL32.lib GLu32.lib GLaux.lib xerces-c_static_2.lib gdiplus.lib libtiff.lib freetype.lib pthreadVC2.lib $(NOINHERIT)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\Dependencies\pthreads_win32\lib;..\..\Dependencies\freetype\lib;..\..\Dependencies\libtiff\lib;&quot;..\..\Dependencies\xerces-c-src_2_8_0\lib&quot;"
+				AdditionalLibraryDirectories="..\..\Dependencies\pthreads\lib;..\..\Dependencies\freetype\lib;..\..\Dependencies\libtiff\lib;&quot;..\..\Dependencies\xerces-c-src_2_8_0\lib&quot;"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames="LIBCMT"
 				GenerateDebugInformation="true"
@@ -1316,13 +1316,6 @@
 							<File
 								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_listener.cpp"
 								>
-								<FileConfiguration
-									Name="Debug|Win32"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_listener_actions.cpp"

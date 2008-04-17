@@ -31,7 +31,7 @@
 
 
 /*** Locally Defined Values ***/
-//None
+//#define __FONTSUSEMONO__
 
 
 /***********************************************~***************************************************/
@@ -47,7 +47,11 @@ void WCFont::GenerateCharacter(FT_Face &face, const char &character) {
 	//Get pointer to face slot
 	FT_GlyphSlot slot = face->glyph;
 	//Render the glyph to a bitmap
+#ifdef __FONTSUSEMONO__
+	FT_Render_Glyph(face->glyph, FT_RENDER_MODE_MONO);
+#else
 	FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
+#endif
 
 	//Set the width, height, and vertical bearing of the character
 	this->_chars[character].width = (GLfloat)slot->bitmap.width;
@@ -57,15 +61,30 @@ void WCFont::GenerateCharacter(FT_Face &face, const char &character) {
 	GLubyte *data = new GLubyte[4 * slot->bitmap.width * slot->bitmap.rows];
 	//Set color to white and alpha to bitmap value
 	unsigned int bmIndex = 0, dataIndex = 0;
+#ifdef __FONTSUSEMONO__
+	unsigned int byteIndex, bitOffset;
+#endif
 	unsigned char byte;
 	for(int j=0; j < slot->bitmap.rows; j++) {
+#ifdef __FONTSUSEMONO__
+		//Set bmIndex
+		bmIndex = j * 16;
+#endif
 		for(int i=0; i < slot->bitmap.width; i++){
 			//Get the byte value
+#ifdef __FONTSUSEMONO__
+			byteIndex = bmIndex / 8;
+			bitOffset = bmIndex % 8;
+			byte = slot->bitmap.buffer[byteIndex];
+			byte = (byte & (0x80 >> bitOffset)) ? 255 : 0;
+			bmIndex++;
+#else
 			byte = slot->bitmap.buffer[bmIndex++];
-			data[dataIndex++] = byte;
-			data[dataIndex++] = byte;
-			data[dataIndex++] = byte;
-			data[dataIndex++] = byte;
+#endif
+			data[dataIndex++] = 255;		// Set R value
+			data[dataIndex++] = 255;		// Set G value
+			data[dataIndex++] = 255;		// Set B value
+			data[dataIndex++] = byte;		// Set A value
 		}
 	}
 

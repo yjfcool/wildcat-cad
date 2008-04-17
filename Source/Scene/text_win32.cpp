@@ -125,10 +125,11 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 
 	//See about underlined
 	if (this->_isUnderlined) {
+		yPos = y + this->_texOrigin * (GLfloat)SCREEN_PIXEL_WIDTH - (GLfloat)SCREEN_PIXEL_WIDTH;
 		glLineWidth(0.5);
 		glBegin(GL_LINES);
-			glVertex2f(x, y + this->_texOrigin * (GLfloat)SCREEN_PIXEL_WIDTH);
-			glVertex2f(x + this->_texWidth * (GLfloat)SCREEN_PIXEL_WIDTH, y + this->_texOrigin * (GLfloat)SCREEN_PIXEL_WIDTH);
+			glVertex2f(x, yPos);
+			glVertex2f(x + this->_texWidth * (GLfloat)SCREEN_PIXEL_WIDTH, yPos);
 		glEnd();
 	}
 }
@@ -137,8 +138,91 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 void WCText::DrawAtPoint(const WCVector4 &pt, const WCVector4 &uUnit, const WCVector4 &vUnit) {
 	//Generate texture if needed
 	if (this->_isDirty) this->GenerateTexture();
+
+/*** DEBUG ***/
 	//If there is a texture, draw with it
-	if (this->_texture != 0) {
+//	if (this->_texture != 0) {
+//	return;
+/*** DEBUG ***/
+
+	//Make sure we have a font
+	if (this->_font == NULL) return;
+	GLuint *textures = this->_font->Textures();
+	WSFontCharSize *sizes = this->_font->Sizes(); 
+
+	//Enable GL parameters
+	glEnable(GL_TEXTURE_RECTANGLE_ARB);	
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	//Turn on the color
+	this->_color.Enable();
+
+	//Setup some data
+	GLfloat vertData[12];
+	GLfloat texData[8];
+	GLfloat cumWidth = 0.0, width, height, droop;
+	WCVector4 ll, ul, ur, lr, hVec, vVec;
+	//Get the c-string
+	const char* cStr = this->_text.c_str();
+	unsigned int length = this->_text.length();
+	//Loop through all chars
+	for (unsigned int i=0; i < length; i++) {
+		//Get char width and height
+		width = sizes[ cStr[i] ].width;
+		height = sizes[ cStr[i] ].height;
+		droop = height - sizes[ cStr[i] ].bearing;
+		//Determine tex data
+		texData[0] = 0.0;
+		texData[1] = height;
+		texData[2] = 0.0;
+		texData[3] = 0.0;
+		texData[4] = width;
+		texData[5] = 0.0;
+		texData[6] = width;
+		texData[7] = height;
+
+		//Determine lower left corner of the character
+		ll = pt + (uUnit * cumWidth);
+		//Change to screen sizes
+		width *= (GLfloat)SCREEN_PIXEL_WIDTH;
+		height *= (GLfloat)SCREEN_PIXEL_WIDTH;
+		//Get h and v vectors
+		hVec = uUnit * width;
+		vVec = vUnit * height;
+		ul = ll + vVec;
+		ur = ul + hVec;
+		lr = ll + hVec;
+		//Determine vert data
+		vertData[0] = (GLfloat)ll.I();		// Lower-left corner
+		vertData[1] = (GLfloat)ll.J();
+		vertData[2] = (GLfloat)ll.K();
+		vertData[3] = (GLfloat)ul.I();		// Upper-left corner
+		vertData[4] = (GLfloat)ul.J();
+		vertData[5] = (GLfloat)ul.K();
+		vertData[6] = (GLfloat)ur.I();		// Upper-right corner
+		vertData[7] = (GLfloat)ur.J();
+		vertData[8] = (GLfloat)ur.K();
+		vertData[9] = (GLfloat)lr.I();		// Lower-right corner
+		vertData[10] = (GLfloat)lr.J();
+		vertData[11] = (GLfloat)lr.K();
+
+		//Set texture and pointers
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textures[ cStr[i] ]);
+		glVertexPointer(3, GL_FLOAT, 0, vertData);
+		glTexCoordPointer(2, GL_FLOAT, 0, texData);
+		//Draw textured quad
+		glDrawArrays(GL_QUADS, 0, 4);
+		//Increment cumWidth with this character's width
+		cumWidth += width;
+	}
+
+	//Make sure that vertex and normal arrays are disabled
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
+	//Clean up
+	glDisable(GL_TEXTURE_RECTANGLE_ARB);
+}
+/*
 		//Determine size of texture
 		GLfloat width = (GLfloat)(this->_texWidth * SCREEN_PIXEL_WIDTH);
 		GLfloat height = (GLfloat)(this->_texHeight * SCREEN_PIXEL_WIDTH);
@@ -195,7 +279,7 @@ void WCText::DrawAtPoint(const WCVector4 &pt, const WCVector4 &uUnit, const WCVe
 		glDisable(GL_TEXTURE_RECTANGLE_ARB);
 	}
 }
-
+*/
 
 /***********************************************~***************************************************/
 
