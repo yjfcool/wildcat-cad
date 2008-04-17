@@ -192,8 +192,8 @@ void WCConstraintVertical::OnSelection(const bool fromManager, std::list<WCVisua
 
 void WCConstraintVertical::OnDeselection(const bool fromManager) {
 	//Setup the icon texture
-	this->_texture = this->_document->Scene()->TextureManager()->TextureFromName("verticalSelected32");
-	//Mark this as selected
+	this->_texture = this->_document->Scene()->TextureManager()->TextureFromName("vertical32");
+	//Mark this as not selected
 	this->_isSelected = false;
 }
 
