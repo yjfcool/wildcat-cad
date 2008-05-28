@@ -1,0 +1,13 @@
+#summary Instructions on how to download and compile the application
+#labels Phase-Implementation
+
+= Getting the Source Code =
+
+If you decided you want to build the application yourself, then you will first need to download the source code.  All of the source is kept in a SVN repository.  If you just want to anonymously check out the code then do the following:
+
+svn checkout http://wildcat-cad.googlecode.com/svn
+
+If you are a project member and will be modifying the code then you need to authenticate your checkout.  Use the following command:
+
+svn checkout https://wildcat-cad.googlecode.com/svn
+
