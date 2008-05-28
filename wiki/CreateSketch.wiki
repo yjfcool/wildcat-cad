@@ -1,0 +1,16 @@
+#summary Creating a Basic 2D Sketch
+#labels Phase-Support
+
+= Creating a 2D Sketch =
+
+In this tutorial you will be guided through creating a simple 2D sketch.  Sketches are fundamental to creating 3D solid models in Wildcat.  Nearly all 3D geometry starts with sketches.  Before you can create a sketch you must have a *Plane* on which to draw the sketch.
+
+
+= Steps =
+
+  # Start Wildcat CAD
+  # If you are on OS X, select *Part Doc* - For Windows this is the default
+  # Select one of the three existing planes (XY plane, YZ plane, ZX plane)
+  # Either press the 's' key or click the Sketch icon from the toolbar
+  # The viewpoint will orient itself to the coordinate system of the sketch
+  # To exit back to 3D press 'q' - you should see *Sketch.1* listed in the specification tree
