@@ -5,9 +5,15 @@
 
 If you decided you want to build the application yourself, then you will first need to download the source code.  All of the source is kept in a SVN repository.  If you just want to anonymously check out the code then do the following:
 
-svn checkout http://wildcat-cad.googlecode.com/svn
+svn checkout http://wildcat-cad.googlecode.com/svn/ wildcat-cad-read-only
 
-If you are a project member and will be modifying the code then you need to authenticate your checkout.  Use the following command:
+If you are a project member and will be modifying the code then you need to authenticate your checkout.  Use the following command with your username instead of XXXX:
 
-svn checkout https://wildcat-cad.googlecode.com/svn
+svn checkout https://wildcat-cad.googlecode.com/svn/ wildcat-cad --username XXXX
 
+These instructions differ slightly from those listed on the Source page.  That page adds _trunk_ after /svn/.  I am currently getting errors when I use this command, but just /svn/ works just fine.  I will keep my eye on this issue and update the wiki as needed.
+
+
+= Compiling on Mac OS X =
+
+The current source code should work fine on 10.4+ of Mac OS X.  I have not tested it on Tiger, but I don't think that anything is Leopard dependent.  There are a couple of extra steps to work around an issue with XCode.
