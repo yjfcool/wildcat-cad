@@ -6,6 +6,6 @@ On this page will be a list of Wildcat user tutorials.  These tutorials will hel
 
 = Sketcher Tutorials =
 
-  * Creating a Sketch
-  * Using Sketch Points
-  * Using Sketch Lines
+  * [CreateSketch Creating a Sketch]
+  * [UsingSketchPoints Using Sketch Points]
+  * [UsingSketchLines Using Sketch Lines]
