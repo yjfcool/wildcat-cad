@@ -67,6 +67,12 @@ void WCPartDocument::OnPaint()  {
 }
 
 
+void WCPartDocument::OnDraw(CDC* pDC) {
+	//Call to super on display
+	this->OnDisplay();
+}
+
+
 int WCPartDocument::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	//Call to super OnCreate
 	this->OnInitGL();

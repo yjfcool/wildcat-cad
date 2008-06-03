@@ -46,8 +46,28 @@ std::string _ResourceDirectory(void) {
 
 
 std::string _ApplicationDirectory(void) {
+	//Get the command line
+	LPTSTR cmdLine = GetCommandLineW();
+	//Convert it into Argv style
+	LPWSTR *szArglist;
+	int nArgs;
+	szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
+	//Make sure there is at least one string
+	if (nArgs == 0) {
+		MessageBox(NULL, L"Not able to figure out where this app is.", L"Bad Application Directory", MB_OK);
+		exit(0);
+	}
+	//Need to strip off last 12 characters to remove the "\Wildcat.exe"
+    size_t origsize = wcslen(szArglist[0]) - 11;
+    const size_t newsize = 100;
+    size_t convertedChars = 0;
+    char nstring[newsize];
+	//Convert from wchar* to char*
+    wcstombs_s(&convertedChars, nstring, origsize, szArglist[0], _TRUNCATE);
+	//Convert from char* to std::string
+	std::string directory(nstring);
 	//Directory where this application resides
-	return "C:\\Documents and Settings\\ghemingway\\My Documents\\Wildcat\\Build\\Win32";
+	return directory;
 }
 
 std::string _FontDirectory(void) {

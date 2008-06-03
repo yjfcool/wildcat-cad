@@ -86,7 +86,11 @@ WCFileAppender::WCFileAppender(const std::string &fileName, const bool &append) 
 		this->_stream.open(fileName.c_str(), FILEAPPENDER_NEWFLAGS);
 	//Make sure the stream is open for writing
 	if (!this->_stream) {
+#ifdef __WIN32__
+		int msgboxID = MessageBox(NULL, (LPCWSTR)L"Not able to create log file", (LPCWSTR)L"This is not good.", MB_ICONWARNING | MB_OK);
+#else
 		std::cerr << "WCFileAppender::WCFileAppender - Error: Not able to open file: " << fileName << " for output.\n";
+#endif
 		return;
 	}
 }

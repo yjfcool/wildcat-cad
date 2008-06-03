@@ -45,8 +45,8 @@ END_MESSAGE_MAP()
 
 WCDocumentFrame::WCDocumentFrame() : m_wndView(NULL) {
 	//Try creating a part document
-//	m_wndView = new WCPartDocument();
-	m_wndView = new WCVisDocument();
+	m_wndView = new WCPartDocument();
+//	m_wndView = new WCVisDocument();
 }
 
 

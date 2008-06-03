@@ -28,6 +28,7 @@
 
 /*** Included Header Files ***/
 #include "Utility/adapter.h"
+#include "Utility/log_manager.h"
 
 
 //Initialize static variables
@@ -416,12 +417,24 @@ char* adapterExtensions[ADAPTER_EXTENSION_COUNT] = {
 /*** Debug ***/
 	}
 		
-	//Get Limits
-	glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT, &(WCAdapter::_maxGeometryOutputVertices));
+	/*** Get Limits ***/
+
+	//Maximum geometry output vertices - requires GeometryShader4
+	if (WCAdapter::_extensions[321]) glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT, &(WCAdapter::_maxGeometryOutputVertices));
+	else WCAdapter::_maxGeometryOutputVertices = 0;
+
+	//Maximum 2D texture size
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &(WCAdapter::_max2DTextureSize));
-		
+
+	/*** End Limits ***/
+
 	//Mark the adapter as initialized
 	WCAdapter::_isInitialized = true;
+	//Check for GL errors
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCAdapter::Initialize - GL Error: " << err);
+	}
  }
  
  

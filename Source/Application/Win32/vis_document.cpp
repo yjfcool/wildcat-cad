@@ -67,6 +67,12 @@ void WCVisDocument::OnPaint()  {
 }
 
 
+void WCVisDocument::OnDraw(CDC* pDC) {
+	//Call to super on display
+	this->OnDisplay();
+}
+
+
 int WCVisDocument::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	//Call to super OnCreate
 	this->OnInitGL();

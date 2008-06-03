@@ -86,7 +86,7 @@ BOOL WCDocumentView::SetFormat(HDC hdc) {
 		0,									// Shift bit ignored
 		8,									// No accum buffer
 		0, 0, 0, 0,							// Accum bits ignored
-		64,									// 64-bit depth buffer
+		32,									// 32-bit depth buffer
 		8,									// Stencil buffer
 		8,									// Auxiliary buffer
 		PFD_MAIN_PLANE,						// Main layer
@@ -129,7 +129,7 @@ void WCDocumentView::OnInitGL(void) {
 
 void WCDocumentView::OnDisplay(void) {
 	//Device context for painting
-	CPaintDC dc(this);
+//	CPaintDC dc(this);
 
 	//Make sure we have context
 	BOOL retVal = wglMakeCurrent(this->m_hgldc, this->m_hglRC);

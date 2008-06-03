@@ -46,7 +46,7 @@
 /***********************************************~***************************************************/
 
 
-class WCDocumentView : public CWnd {
+class WCDocumentView : public CView {
 protected:
 	HDC											m_hgldc;											//!< GDI Device Context
 	HGLRC										m_hglRC;											//!< Rendering context

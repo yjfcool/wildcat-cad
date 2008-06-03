@@ -68,6 +68,7 @@ protected:
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);											//!< Windows message function
 	afx_msg void OnSizing(UINT nSide, LPRECT lpRect);												//!< Windows message function
 	DECLARE_MESSAGE_MAP()																			//!< Windows message function
+	virtual void OnDraw(CDC* pDC);																	//!< Windows message function
 public:
 	//Constructors and Destructors
 	WCPartDocument();																				//!< Default constructor

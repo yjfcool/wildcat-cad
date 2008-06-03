@@ -28,6 +28,7 @@
 
 /*** Included Header Files ***/
 #include "Utility/shader_manager.h"
+#include "Utility/adapter.h"
 #include "Utility/serializeable_object.h"
 #include "Utility/log_manager.h"
 
@@ -118,6 +119,7 @@ WSShader* WCShaderManager::ParseShader(xercesc::DOMElement *element, const std::
 	//Create shader object
 	WSShader *obj = new WSShader();
 	obj->_name = name;
+
 	//Create full path name
 #ifdef __WIN32__
 	//Backslash for windows
@@ -128,9 +130,30 @@ WSShader* WCShaderManager::ParseShader(xercesc::DOMElement *element, const std::
 #endif
 	if (type == "GL_VERTEX_SHADER") obj->_type = GL_VERTEX_SHADER;
 	else if (type == "GL_FRAGMENT_SHADER") obj->_type = GL_FRAGMENT_SHADER;
-	else if (type == "GL_GEOMETRY_SHADER_EXT") obj->_type = GL_GEOMETRY_SHADER_EXT;
+	else if (type == "GL_GEOMETRY_SHADER_EXT") {
+		//Set the type
+		obj->_type = GL_GEOMETRY_SHADER_EXT;
+		//Make sure card can handle geometry shader
+		if (!WCAdapter::HasGLEXTGeometryShader4()) {
+			//If not...
+			CLOGGER_INFO(WCLogManager::RootLogger(), "WCShaderManager::ParseShader - " << name << " requires geometry shader, which is not supported."); 
+			//Set id to zero and return
+			obj->_id = 0;
+			return obj;
+		}
+	}
+	//Dont know this shader type
+	else {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::ParseShader - Unknown shader type " << type);
+		delete obj;
+		return NULL;
+	}
 	//Compile the program
 	obj->_id = CompileGLSLShaderFromFile(obj->_type, obj->_filename.c_str());
+	//Check for errors thus far
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::ParseShader - Error with " << name << ": " << err);
 	//Validate obj
 	if (obj->_id == 0) { 
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::ParseShader - " << name << "(" << type << ": " << filename << ") did not compile."); 
@@ -171,9 +194,15 @@ WSProgram* WCShaderManager::ParseProgram(xercesc::DOMElement *element, const boo
 		xercesc::XMLString::release(&tmpChars);
 		//Look up in map
 		iter = this->_shaderMap.find(tmpStr);
-		//Is a valid shader found
+		//Is a shader found at all
 		if (iter == this->_shaderMap.end()) { 
 			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::ParseProgram - " << tmpStr << " not found."); 
+			delete program;
+			return NULL;
+		}
+		//Is the shader valid
+		if ((*iter).second->_id == 0) {
+			CLOGGER_INFO(WCLogManager::RootLogger(), "WCShaderManager::ParseProgram - " << tmpStr << " requires excluding this program.");
 			delete program;
 			return NULL;
 		}
@@ -363,11 +392,13 @@ void WCShaderManager::ParseManifest(const std::string &manifest, const std::stri
 
 WCShaderManager::WCShaderManager(const std::string &manifest, const std::string &directory, const bool &verbose) : 
 	_programMap(), _shaderMap() {
+	//Make sure the adapter has been initialized
+	WCAdapter::Initialize();
 	//Parse the passed manifest
 	this->ParseManifest(manifest, directory, verbose);
 	//Check for errors
 	if (glGetError() != GL_NO_ERROR) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::WCShaderManager - Unspecified Errors.");
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::WCShaderManager - Unspecified Errors: in constructor");
 }
 
 
