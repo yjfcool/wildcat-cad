@@ -70,7 +70,7 @@ public:
 	//Reference Dependency Methods
 	virtual WPUInt Retain(WCObject &obj);															//!< Reference counting increment
 	virtual WPUInt Release(WCObject &obj);															//!< Reference counting decrement
-	virtual inline WPUInt RefCount(void) const	{ return this->_refSet.size(); }					//!< Return the reference count
+	virtual inline WPUInt RefCount(void) const	{ return (WPUInt)this->_refSet.size(); }			//!< Return the reference count
 	virtual inline std::list<WCObject*> RefSet(void) { return this->_refSet; }						//!< Return the reference set
 	
 	//Notification Methods

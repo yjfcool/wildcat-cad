@@ -124,8 +124,8 @@ public:
 	void PushObjects(void);																			//!< Push the list of selected items
 	void PopObjects(void);																			//!< Pop the list of selected items
 	void Clear(const bool &notify=true);															//!< Clear the list of selected items
-	inline WPUInt Count(void) const				{ return this->_selected.size(); }					//!< Get number of selected items
-	inline WPUInt CountVisuals(void) const		{ return this->_selectedVisuals.size(); }			//!< Get number of selected visual items
+	inline WPUInt Count(void) const				{ return (WPUInt)this->_selected.size(); }			//!< Get number of selected items
+	inline WPUInt CountVisuals(void) const		{ return (WPUInt)this->_selectedVisuals.size(); }	//!< Get number of selected visual items
 	std::list<WCSelectionObject*> Selected(void){ return this->_selected; }							//!< Get the list of selected items
 	std::list< std::pair<WCVisualObject*,WCSelectionObject*> > SelectedVisuals(void) { 				//!< Get the list of selected visual items
 												return this->_selectedVisuals; }

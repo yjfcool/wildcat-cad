@@ -49,7 +49,7 @@
 class WCVisDocument : public WCDocumentView {
 protected:
 	WCVisualization								*_visualization;									//!< Associated Wildcat visualization
-	UINT										_timer;												//!< Timer for idle loop
+	UINT_PTR									_timer;												//!< Timer for idle loop
 	//Windows Message Methods
 	afx_msg void OnPaint();																			//!< Windows message function
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);											//!< Windows message function

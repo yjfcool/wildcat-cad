@@ -349,7 +349,7 @@ WPFloat WCNurbs::EstimateLengthU(const std::vector<WCVector4> &controlPoints, co
 WPFloat WCNurbs::EstimateLengthV(const std::vector<WCVector4> &controlPoints, const WPUInt &numCPV) {
 	//Initialize length variable
 	WPFloat length = 0.0;
-	WPUInt numCPU = controlPoints.size() / numCPV;
+	WPUInt numCPU = (WPUInt)controlPoints.size() / numCPV;
 	//Approximate length using control points along v edge with u index = 0
 	for (WPUInt i=0; i<numCPV-1; i++) {
 		//Get vector from one control point to the next

@@ -1532,10 +1532,10 @@ WCNurbsSurface* WCNurbsSurface::RevolveCurve(WCGeometryContext *context, WCGeome
 			std::vector<WCVector4> tmpVec = curveCP;
 			curveCP.clear();
 			//Reverse tmpVec
-			for (int i=tmpVec.size()-1; i>=0; i--) curveCP.push_back( tmpVec.at(i) );
+			for (int i=(int)tmpVec.size()-1; i>=0; i--) curveCP.push_back( tmpVec.at(i) );
 		}
 	}
-	WPUInt numCPV = curveCP.size();
+	WPUInt numCPV = (WPUInt)curveCP.size();
 
 	//Holding arrays for sines and cosines
 	WPFloat theta = 0.0;

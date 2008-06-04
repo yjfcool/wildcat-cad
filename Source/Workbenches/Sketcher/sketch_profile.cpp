@@ -51,7 +51,7 @@ bool WCSketchProfile::DetermineIsLinear(const std::list<WCGeometricCurve*> &list
 	WPUInt count;
 	
 	//While toBeProcessed has elements, try to add them onto the front or back of the list
-	count = toBeProcessed.size();
+	count = (WPUInt)toBeProcessed.size();
 	while (toBeProcessed.size() > 0) {
 		//Get element to be processed
 		curve = toBeProcessed.front();
@@ -70,14 +70,14 @@ bool WCSketchProfile::DetermineIsLinear(const std::list<WCGeometricCurve*> &list
 			//Add to front of curveList with orientation backwards
 			this->_curveList.push_front( std::make_pair(curve, false) );
 			//Reset the count
-			count = toBeProcessed.size();
+			count = (WPUInt)toBeProcessed.size();
 		}
 		//Matched back of curve to front of list
 		else if (front.Distance(ptBack) < SKETCH_ANALYSIS_TOLERANCE) {
 			//Add to front of curveList with orientation forwards
 			this->_curveList.push_front( std::make_pair(curve, true) );		
 			//Reset the count
-			count = toBeProcessed.size();
+			count = (WPUInt)toBeProcessed.size();
 		}
 		
 		//Check back matches
@@ -90,14 +90,14 @@ bool WCSketchProfile::DetermineIsLinear(const std::list<WCGeometricCurve*> &list
 				//Add to back of curveList with orientation forwards
 				this->_curveList.push_back( std::make_pair(curve, true) );
 				//Reset the count
-				count = toBeProcessed.size();
+				count = (WPUInt)toBeProcessed.size();
 			}
 			//Matched back of curve to back of list
 			else if (back.Distance(ptBack) < SKETCH_ANALYSIS_TOLERANCE) {
 				//Add to back of curveList with orientation backwards
 				this->_curveList.push_back( std::make_pair(curve, false) );		
 				//Reset the count
-				count = toBeProcessed.size();
+				count = (WPUInt)toBeProcessed.size();
 			}
 			
 			//No match found
@@ -360,7 +360,7 @@ WPUInt WCSketchProfile::IsInside(const WCVector4 &point) {
 		//Try the intersection
 		hits = line->Intersect((*iter).first, SKETCH_PROFILE_DEFAULT_TOLERANCE);
 		//Add hits to count
-		count += hits.size();
+		count += (WPUInt)hits.size();
 	}
 	//Delete the line
 	delete line;
@@ -491,7 +491,7 @@ std::list<WCVector4> WCSketchProfile::BoundaryList(const bool &detailed) {
 					//Process curve backwards
 					else {
 						//Go through all control points (make sure to skip the first)
-						for(int i=controlPoints.size()-2; i>=0; i--) {
+						for(int i=(int)controlPoints.size()-2; i>=0; i--) {
 							//Copy the vector base
 							point = controlPoints.at(i);
 							//Set the weight to 1.0
@@ -520,7 +520,7 @@ GLuint WCSketchProfile::Triangulate(GLuint &vertexBuffer, GLuint &indexBuffer) {
 	std::list<WCVector4> boundaryList = this->BoundaryList(true);
 	std::list<WCVector4>::iterator boundaryIter;
 	//Define some arrays and variables
-	int numVerts = boundaryList.size();
+	int numVerts = (int)boundaryList.size();
 	WCVector4 tmpVec;
 	std::list<WCVector4> vertList;
 	int vertIndex = 0;

@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\..\Build\Win32"
-			IntermediateDirectory="..\..\Build\Win32"
+			IntermediateDirectory="..\..\Build\Win32\Debug"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -71,6 +71,7 @@
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames="LIBCMT"
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				ImportLibrary=""
 				TargetMachine="1"
@@ -104,9 +105,10 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="..\..\Build\Win32"
+			IntermediateDirectory="..\..\Build\Win32\Release"
 			ConfigurationType="1"
+			UseOfMFC="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -127,8 +129,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XML_LIBRARY"
+				AdditionalIncludeDirectories="..\..\Dependencies\pthreads\include;..\..\Dependencies\freetype\include;..\..\Dependencies\freetype\include\freetype2;..\..\Dependencies\libtiff\include;&quot;..\..\Dependencies\xerces-c-src_2_8_0\include&quot;;..\..\Source\Workbenches;..\..\Source"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;WIN32;__WIN32__;_WINDOWS;XML_LIBRARY"
 				RuntimeLibrary="2"
+				EnableEnhancedInstructionSet="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -145,11 +149,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="OpenGL32.lib GLu32.lib GLaux.lib xerces-c_static_2.lib gdiplus.lib libtiff.lib freetype.lib pthreadVC2.lib $(NOINHERIT)"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\..\Dependencies\pthreads\lib;..\..\Dependencies\freetype\lib;..\..\Dependencies\libtiff\lib;&quot;..\..\Dependencies\xerces-c-src_2_8_0\lib&quot;"
+				IgnoreDefaultLibraryNames="LIBCMT"
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
+				OptimizeReferences="0"
+				EnableCOMDATFolding="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -332,6 +340,14 @@
 											Name="VCCLCompilerTool"
 										/>
 									</FileConfiguration>
+									<FileConfiguration
+										Name="Release|Win32"
+										ExcludedFromBuild="true"
+										>
+										<Tool
+											Name="VCCLCompilerTool"
+										/>
+									</FileConfiguration>
 								</File>
 								<File
 									RelativePath="..\..\Source\Workbenches\PartDesign\coordinate_system_action.cpp"
@@ -344,12 +360,28 @@
 											Name="VCCLCompilerTool"
 										/>
 									</FileConfiguration>
+									<FileConfiguration
+										Name="Release|Win32"
+										ExcludedFromBuild="true"
+										>
+										<Tool
+											Name="VCCLCompilerTool"
+										/>
+									</FileConfiguration>
 								</File>
 								<File
 									RelativePath="..\..\Source\Workbenches\PartDesign\coordinate_system_controller.cpp"
 									>
 									<FileConfiguration
 										Name="Debug|Win32"
+										ExcludedFromBuild="true"
+										>
+										<Tool
+											Name="VCCLCompilerTool"
+										/>
+									</FileConfiguration>
+									<FileConfiguration
+										Name="Release|Win32"
 										ExcludedFromBuild="true"
 										>
 										<Tool
@@ -392,6 +424,14 @@
 											Name="VCCLCompilerTool"
 										/>
 									</FileConfiguration>
+									<FileConfiguration
+										Name="Release|Win32"
+										ExcludedFromBuild="true"
+										>
+										<Tool
+											Name="VCCLCompilerTool"
+										/>
+									</FileConfiguration>
 								</File>
 								<File
 									RelativePath="..\..\Source\Workbenches\PartDesign\feature_line_action.cpp"
@@ -404,12 +444,28 @@
 											Name="VCCLCompilerTool"
 										/>
 									</FileConfiguration>
+									<FileConfiguration
+										Name="Release|Win32"
+										ExcludedFromBuild="true"
+										>
+										<Tool
+											Name="VCCLCompilerTool"
+										/>
+									</FileConfiguration>
 								</File>
 								<File
 									RelativePath="..\..\Source\Workbenches\PartDesign\feature_line_controller.cpp"
 									>
 									<FileConfiguration
 										Name="Debug|Win32"
+										ExcludedFromBuild="true"
+										>
+										<Tool
+											Name="VCCLCompilerTool"
+										/>
+									</FileConfiguration>
+									<FileConfiguration
+										Name="Release|Win32"
 										ExcludedFromBuild="true"
 										>
 										<Tool
@@ -452,6 +508,14 @@
 											Name="VCCLCompilerTool"
 										/>
 									</FileConfiguration>
+									<FileConfiguration
+										Name="Release|Win32"
+										ExcludedFromBuild="true"
+										>
+										<Tool
+											Name="VCCLCompilerTool"
+										/>
+									</FileConfiguration>
 								</File>
 								<File
 									RelativePath="..\..\Source\Workbenches\PartDesign\feature_point_action.cpp"
@@ -464,12 +528,28 @@
 											Name="VCCLCompilerTool"
 										/>
 									</FileConfiguration>
+									<FileConfiguration
+										Name="Release|Win32"
+										ExcludedFromBuild="true"
+										>
+										<Tool
+											Name="VCCLCompilerTool"
+										/>
+									</FileConfiguration>
 								</File>
 								<File
 									RelativePath="..\..\Source\Workbenches\PartDesign\feature_point_controller.cpp"
 									>
 									<FileConfiguration
 										Name="Debug|Win32"
+										ExcludedFromBuild="true"
+										>
+										<Tool
+											Name="VCCLCompilerTool"
+										/>
+									</FileConfiguration>
+									<FileConfiguration
+										Name="Release|Win32"
 										ExcludedFromBuild="true"
 										>
 										<Tool
@@ -2231,12 +2311,28 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\Source\Topology\face_use.cpp"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -2255,12 +2351,28 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\Source\Topology\shell_use.cpp"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -2279,6 +2391,14 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\Source\Topology\topology_region.cpp"
@@ -2291,12 +2411,28 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\Source\Topology\vertex_use.cpp"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool

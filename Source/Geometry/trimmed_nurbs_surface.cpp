@@ -105,7 +105,7 @@ std::list<WCVector4> TrimProfileBoundaryList(std::list<std::pair<WCGeometricCurv
 					//Process curve backwards
 					else {
 						//Go through all control points (make sure to skip the first)
-						for(int i=controlPoints.size()-2; i>=0; i--) {
+						for(int i=(int)controlPoints.size()-2; i>=0; i--) {
 							//Copy the vector base
 							point = controlPoints.at(i);
 							//Set the weight to 1.0
@@ -223,7 +223,7 @@ void WCTrimmedNurbsSurface::GenerateTrimList(void) {
 	for (profileIter = this->_profileList.begin(); profileIter != this->_profileList.end(); profileIter++) {
 		//Generate complete boundary list
 		boundaryList = this->BoundaryList( (*profileIter).first );
-		numVerts = boundaryList.size();
+		numVerts = (GLint)boundaryList.size();
 //		std::cout << "NumVerts: " << numVerts << std::endl;
 		//Allocate space for vertices
 		vertData = new GLfloat[numVerts * 3];

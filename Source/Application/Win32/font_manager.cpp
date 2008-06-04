@@ -141,7 +141,7 @@ WCFont::~WCFont() {
 void WCFont::StringSize(const std::string &str, GLfloat &width, GLfloat &height, GLfloat &origin) {
 	//Get the c-string
 	const char* cStr = str.c_str();
-	unsigned int length = str.length();
+	unsigned int length = (unsigned int)str.length();
 	//Reset width and bearing
 	GLfloat maxAbove=0, maxBelow=0;
 	GLfloat above, below;

@@ -162,7 +162,7 @@ WPUInt WCSelectionManager::ProcessRectangleSelect(std::vector<std::pair<WCVisual
 		for (iter = selectees.begin(); iter != selectees.end(); iter++) (*iter).first->OnSelection(true, (*iter).second);
 	}
 	//Return the number of selected items
-	return this->_selected.size();
+	return (WPUInt)this->_selected.size();
 }
 
 
@@ -362,7 +362,7 @@ WPUInt WCSelectionManager::Select(const WPUInt &xMin, const WPUInt &xMax, const 
 	//Delete pixel data
 	delete pixels;
 	//Return the number of selected items
-	return this->_selected.size();
+	return (WPUInt)this->_selected.size();
 }
 
 

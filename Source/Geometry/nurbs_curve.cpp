@@ -504,7 +504,7 @@ void WCNurbsCurve::GenerateCurveOne(void) {
 
 WCNurbsCurve::WCNurbsCurve(WCGeometryContext *context, const WPUInt &degree, const std::vector<WCVector4> &controlPoints, 
 	const WCNurbsMode &mode, const std::vector<WPFloat> &knotPoints) : ::WCGeometricCurve(), _context(context),
-	_degree(degree), _mode(mode), _cp(controlPoints.size()), _kp(0), _controlPoints(controlPoints), _knotPoints(NULL), _buffer(0) {
+	_degree(degree), _mode(mode), _cp((WPUInt)controlPoints.size()), _kp(0), _controlPoints(controlPoints), _knotPoints(NULL), _buffer(0) {
 	
 	//Make sure cpCollection is non-null
 	if (this->_cp == 0) { CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::WCNurbsCurve - Empty control points vector."); return;	}

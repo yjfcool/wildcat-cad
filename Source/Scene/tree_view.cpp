@@ -91,7 +91,7 @@ void WCTreeElement::IsSelected(const bool state) {
 WPUInt WCTreeElement::CountVisibleChildren(void) {
 	//if closed return 0
 	if (!this->_isOpen) return 0;
-	WPUInt count = this->_childList.size();
+	WPUInt count = (WPUInt)this->_childList.size();
 	//Go through each child asking for number of visible children
 	std::list<WCTreeElement*>::iterator iter;
 	for (iter = this->_childList.begin(); iter != this->_childList.end(); iter++) {
@@ -761,7 +761,7 @@ bool WCTreeView::UnregisterElement(WCTreeElement *element) {
 		(*iter).second->Remove(element);
 	}
 	//Add the element into the map
-	int count = this->_elementMap.erase( element );
+	int count = (int)this->_elementMap.erase(element);
 	//If there are none, no worries
 	if (count == 0)	return false;
 	//Release the element

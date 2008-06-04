@@ -115,7 +115,7 @@ public:
 	//Sketch-Part Interaction Methods
 	void PublishGeometry(void);																		//!< Put sketch geometry into the part
 	void UnpublishGeometry(void);																	//!< Remove geometry from the part
-	inline WPUInt ProfileCount(void)			{ return this->_profileList.size(); }				//!< Get the number of profiles
+	inline WPUInt ProfileCount(void)			{ return (WPUInt)this->_profileList.size(); }		//!< Get the number of profiles
 	inline std::list<WCSketchProfile*> Profiles(void) const { return this->_profileList; }			//!< Get the list of profiles
 	void GenerateTopolgy(void);																		//!< Generate topology model from geometry
 	

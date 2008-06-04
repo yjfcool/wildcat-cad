@@ -63,7 +63,7 @@ WCObject::~WCObject() {
 WPUInt WCObject::Retain(WCObject &obj) {
 	//See if the object is already in the list
 	for (std::list<WCObject*>::iterator iter = this->_refSet.begin(); iter != this->_refSet.end(); iter++) {
-		if (&obj == *iter) return this->_refSet.size();
+		if (&obj == *iter) return (WPUInt)this->_refSet.size();
 	}
 /*** DEBUG ***/
 	//Check secret debug flag
@@ -73,7 +73,7 @@ WPUInt WCObject::Retain(WCObject &obj) {
 	//Put the object into the list
 	this->_refSet.push_back(&obj);
 	//Now just return the reference count
-	return this->_refSet.size();
+	return (WPUInt)this->_refSet.size();
 }
 
 
@@ -86,7 +86,7 @@ WPUInt WCObject::Release(WCObject &obj) {
 	//Otherwise, try to remove the obj from the refSet
 	this->_refSet.remove(&obj);
 	//Return the number of references
-	return this->_refSet.size();
+	return (WPUInt)this->_refSet.size();
 }
 	
 

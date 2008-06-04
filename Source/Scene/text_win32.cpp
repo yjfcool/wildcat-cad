@@ -78,7 +78,7 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 	GLfloat texData[8];
 	//Get the c-string
 	const char* cStr = this->_text.c_str();
-	unsigned int length = this->_text.length();
+	unsigned int length = (unsigned int)this->_text.length();
 	//Loop through all chars
 	for (unsigned int i=0; i < length; i++) {
 		//Get char width and height
@@ -164,7 +164,7 @@ void WCText::DrawAtPoint(const WCVector4 &pt, const WCVector4 &uUnit, const WCVe
 	WCVector4 ll, ul, ur, lr, hVec, vVec;
 	//Get the c-string
 	const char* cStr = this->_text.c_str();
-	unsigned int length = this->_text.length();
+	unsigned int length = (unsigned int)this->_text.length();
 	//Loop through all chars
 	for (unsigned int i=0; i < length; i++) {
 		//Get char width and height
