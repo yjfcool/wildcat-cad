@@ -241,9 +241,7 @@ void WCGeometricPoint::Render(const GLuint &defaultProg, const WCColor &color, c
 
 
 bool WCGeometricPoint::Intersect(WCGeometricPoint &point, const WPFloat &tolerance) {
-	WCVector4 dist = this->Data() - point.Data();
-	if (dist.Magnitude() <= tolerance) return true;
-	else return false;
+	return this->_data.Distance(point._data) <= tolerance;
 }
 
 

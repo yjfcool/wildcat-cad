@@ -35,7 +35,6 @@
 		585F314C0D68AFF600673AE6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 585F314A0D68AFF600673AE6 /* OpenGL.framework */; };
 		585F319E0D68B01B00673AE6 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 585F319D0D68B01B00673AE6 /* CoreFoundation.framework */; };
 		585F31EB0D68B04100673AE6 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 585F31EA0D68B04100673AE6 /* WebKit.framework */; };
-		585F346A0D68B05D00673AE6 /* libxerces-c.28.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 585F34690D68B05D00673AE6 /* libxerces-c.28.0.dylib */; };
 		585F34C80D68B0EA00673AE6 /* angleConstraint32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585F34780D68B0EA00673AE6 /* angleConstraint32.tiff */; };
 		585F34C90D68B0EA00673AE6 /* autoConstraint32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585F34790D68B0EA00673AE6 /* autoConstraint32.tiff */; };
 		585F34CA0D68B0EA00673AE6 /* axisLine32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585F347A0D68B0EA00673AE6 /* axisLine32.tiff */; };
@@ -314,7 +313,13 @@
 		588D9CA50DAFDE9800BDDE8D /* part_document.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B60D68B69D00673AE6 /* part_document.mm */; };
 		589AC2190D73404F001725D0 /* constraint_coincidence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361C0D68B4B700673AE6 /* constraint_coincidence.cpp */; };
 		589AC2330D734343001725D0 /* constraint_coincidence_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361E0D68B4B700673AE6 /* constraint_coincidence_actions.cpp */; };
+		58AD01F20DF98A3000ED713F /* geometric_intersection_point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58AD01F10DF98A3000ED713F /* geometric_intersection_point.cpp */; };
+		58AD02200DF997B700ED713F /* geometric_intersection_line.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58AD021F0DF997B700ED713F /* geometric_intersection_line.cpp */; };
+		58AD02800DF9C5CE00ED713F /* geometric_intersection_curve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58AD027F0DF9C5CE00ED713F /* geometric_intersection_curve.cpp */; };
+		58AD02820DF9C5ED00ED713F /* geometric_intersection_surface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58AD02810DF9C5ED00ED713F /* geometric_intersection_surface.cpp */; };
+		58AD02840DF9C60B00ED713F /* geometric_intersection_trimsurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58AD02830DF9C60B00ED713F /* geometric_intersection_trimsurface.cpp */; };
 		58B27F780D785FC4008951D9 /* sketch_circle_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */; };
+		58B3A4090DF4988500A08C0C /* libxerces-c.28.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B3A4080DF4988500A08C0C /* libxerces-c.28.0.dylib */; };
 		58C5DF3A0DAE700A00003673 /* vis_listener_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58F5E51B0DABF65600DC39A2 /* vis_listener_actions.cpp */; };
 		58C5E7400DAD250D00089549 /* newListener.html in Resources */ = {isa = PBXBuildFile; fileRef = 58F5E5160DABF54200DC39A2 /* newListener.html */; };
 		58DAD6420D69C7610093679D /* constraint_measure_radius.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD6410D69C7610093679D /* constraint_measure_radius.cpp */; };
@@ -336,6 +341,19 @@
 		58F5E5380DABF7CA00DC39A2 /* vis_listener_modes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58F5E5370DABF7CA00DC39A2 /* vis_listener_modes.cpp */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		58B3A3F50DF494A200A08C0C /* Copy Dependencies */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Copy Dependencies";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -388,8 +406,6 @@
 		585F314A0D68AFF600673AE6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		585F319D0D68B01B00673AE6 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		585F31EA0D68B04100673AE6 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
-		585F34690D68B05D00673AE6 /* libxerces-c.28.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libxerces-c.28.0.dylib"; path = "../../Dependencies/xerces-c-src_2_8_0/lib/libxerces-c.28.0.dylib"; sourceTree = SOURCE_ROOT; };
-		585F346B0D68B05D00673AE6 /* Wildcat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wildcat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		585F34780D68B0EA00673AE6 /* angleConstraint32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = angleConstraint32.tiff; path = ../../Source/Resources/angleConstraint32.tiff; sourceTree = SOURCE_ROOT; };
 		585F34790D68B0EA00673AE6 /* autoConstraint32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = autoConstraint32.tiff; path = ../../Source/Resources/autoConstraint32.tiff; sourceTree = SOURCE_ROOT; };
 		585F347A0D68B0EA00673AE6 /* axisLine32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = axisLine32.tiff; path = ../../Source/Resources/axisLine32.tiff; sourceTree = SOURCE_ROOT; };
@@ -876,14 +892,20 @@
 		585F37E10D68B8D300673AE6 /* part_plane_actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_plane_actions.h; path = ../../Source/Workbenches/PartDesign/part_plane_actions.h; sourceTree = SOURCE_ROOT; };
 		585F37E20D68B8D300673AE6 /* part_plane_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = part_plane_controller.cpp; path = ../../Source/Workbenches/PartDesign/part_plane_controller.cpp; sourceTree = SOURCE_ROOT; };
 		585F37E30D68B8D300673AE6 /* part_plane_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_plane_controller.h; path = ../../Source/Workbenches/PartDesign/part_plane_controller.h; sourceTree = SOURCE_ROOT; };
-		5864E0890DB50D9D00DB0CD2 /* geometric_algorithms_triangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_algorithms_triangle.cpp; path = ../../Source/Geometry/geometric_algorithms_triangle.cpp; sourceTree = SOURCE_ROOT; };
 		5864E0B80DB50ED700DB0CD2 /* triangle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = triangle.c; path = ../../Source/Geometry/triangle.c; sourceTree = SOURCE_ROOT; };
 		5864E0B90DB50ED700DB0CD2 /* triangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = triangle.h; path = ../../Source/Geometry/triangle.h; sourceTree = SOURCE_ROOT; };
 		586BA3B10DABC40400E2DF91 /* dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialog.h; path = ../../Source/Application/dialog.h; sourceTree = SOURCE_ROOT; };
 		586BA53E0DABDE8F00E2DF91 /* dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = dialog.mm; path = ../../Source/Application/MacOS/dialog.mm; sourceTree = SOURCE_ROOT; };
 		587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_arc_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_arc_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		588D973F0DAFA99800BDDE8D /* assert_exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = assert_exception.h; path = ../../Source/Utility/assert_exception.h; sourceTree = SOURCE_ROOT; };
+		58AD01DA0DF986E500ED713F /* geometric_intersection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geometric_intersection.h; path = ../../Source/Geometry/geometric_intersection.h; sourceTree = SOURCE_ROOT; };
+		58AD01F10DF98A3000ED713F /* geometric_intersection_point.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_intersection_point.cpp; path = ../../Source/Geometry/geometric_intersection_point.cpp; sourceTree = SOURCE_ROOT; };
+		58AD021F0DF997B700ED713F /* geometric_intersection_line.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_intersection_line.cpp; path = ../../Source/Geometry/geometric_intersection_line.cpp; sourceTree = SOURCE_ROOT; };
+		58AD027F0DF9C5CE00ED713F /* geometric_intersection_curve.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_intersection_curve.cpp; path = ../../Source/Geometry/geometric_intersection_curve.cpp; sourceTree = SOURCE_ROOT; };
+		58AD02810DF9C5ED00ED713F /* geometric_intersection_surface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_intersection_surface.cpp; path = ../../Source/Geometry/geometric_intersection_surface.cpp; sourceTree = SOURCE_ROOT; };
+		58AD02830DF9C60B00ED713F /* geometric_intersection_trimsurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_intersection_trimsurface.cpp; path = ../../Source/Geometry/geometric_intersection_trimsurface.cpp; sourceTree = SOURCE_ROOT; };
 		58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_circle_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_circle_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
+		58B3A4080DF4988500A08C0C /* libxerces-c.28.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libxerces-c.28.0.dylib"; path = "../../Dependencies/xerces-c-src_2_8_0/lib/libxerces-c.28.0.dylib"; sourceTree = SOURCE_ROOT; };
 		58C5DE8D0DAE6E5900003673 /* vis_listener_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_types.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_types.h; sourceTree = SOURCE_ROOT; };
 		58DAD6400D69C7610093679D /* constraint_measure_radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = constraint_measure_radius.h; path = ../../Source/Constraint/constraint_measure_radius.h; sourceTree = SOURCE_ROOT; };
 		58DAD6410D69C7610093679D /* constraint_measure_radius.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = constraint_measure_radius.cpp; path = ../../Source/Constraint/constraint_measure_radius.cpp; sourceTree = SOURCE_ROOT; };
@@ -907,6 +929,7 @@
 		58F5E51B0DABF65600DC39A2 /* vis_listener_actions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener_actions.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener_actions.cpp; sourceTree = SOURCE_ROOT; };
 		58F5E5360DABF7CA00DC39A2 /* vis_listener_modes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_modes.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_modes.h; sourceTree = SOURCE_ROOT; };
 		58F5E5370DABF7CA00DC39A2 /* vis_listener_modes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener_modes.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener_modes.cpp; sourceTree = SOURCE_ROOT; };
+		58F6C2570DEF099800410534 /* Wildcat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wildcat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -919,7 +942,7 @@
 				585F314C0D68AFF600673AE6 /* OpenGL.framework in Frameworks */,
 				585F319E0D68B01B00673AE6 /* CoreFoundation.framework in Frameworks */,
 				585F31EB0D68B04100673AE6 /* WebKit.framework in Frameworks */,
-				585F346A0D68B05D00673AE6 /* libxerces-c.28.0.dylib in Frameworks */,
+				58B3A4090DF4988500A08C0C /* libxerces-c.28.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -943,7 +966,7 @@
 		1058C7A2FEA54F0111CA2CBB /* Included Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				585F34690D68B05D00673AE6 /* libxerces-c.28.0.dylib */,
+				58B3A4080DF4988500A08C0C /* libxerces-c.28.0.dylib */,
 			);
 			name = "Included Frameworks";
 			sourceTree = "<group>";
@@ -951,7 +974,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				585F346B0D68B05D00673AE6 /* Wildcat.app */,
+				58F6C2570DEF099800410534 /* Wildcat.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1486,8 +1509,12 @@
 			isa = PBXGroup;
 			children = (
 				585F357F0D68B28800673AE6 /* geometric_algorithms.cpp */,
-				5864E0890DB50D9D00DB0CD2 /* geometric_algorithms_triangle.cpp */,
 				585F35810D68B28800673AE6 /* geometric_algorithms_triangulation.cpp */,
+				58AD01F10DF98A3000ED713F /* geometric_intersection_point.cpp */,
+				58AD021F0DF997B700ED713F /* geometric_intersection_line.cpp */,
+				58AD027F0DF9C5CE00ED713F /* geometric_intersection_curve.cpp */,
+				58AD02810DF9C5ED00ED713F /* geometric_intersection_surface.cpp */,
+				58AD02830DF9C60B00ED713F /* geometric_intersection_trimsurface.cpp */,
 				585F35820D68B28800673AE6 /* geometric_line.cpp */,
 				585F35840D68B28800673AE6 /* geometric_point.cpp */,
 				585F35860D68B28800673AE6 /* geometric_types.cpp */,
@@ -1506,6 +1533,7 @@
 			children = (
 				585F35950D68B28800673AE6 /* wgeol.h */,
 				585F35800D68B28800673AE6 /* geometric_algorithms.h */,
+				58AD01DA0DF986E500ED713F /* geometric_intersection.h */,
 				585F35830D68B28800673AE6 /* geometric_line.h */,
 				585F35850D68B28800673AE6 /* geometric_point.h */,
 				585F35870D68B28800673AE6 /* geometric_types.h */,
@@ -2984,6 +3012,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
+				58B3A3F50DF494A200A08C0C /* Copy Dependencies */,
 			);
 			buildRules = (
 			);
@@ -2992,7 +3021,7 @@
 			name = Wildcat;
 			productInstallPath = "$(HOME)/Applications";
 			productName = Wildcat;
-			productReference = 585F346B0D68B05D00673AE6 /* Wildcat.app */;
+			productReference = 58F6C2570DEF099800410534 /* Wildcat.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -3349,6 +3378,11 @@
 				588D9CA40DAFDE9800BDDE8D /* vis_document.mm in Sources */,
 				588D9CA50DAFDE9800BDDE8D /* part_document.mm in Sources */,
 				5864E0BC0DB52AB600DB0CD2 /* geometric_algorithms_triangulation.cpp in Sources */,
+				58AD01F20DF98A3000ED713F /* geometric_intersection_point.cpp in Sources */,
+				58AD02200DF997B700ED713F /* geometric_intersection_line.cpp in Sources */,
+				58AD02800DF9C5CE00ED713F /* geometric_intersection_curve.cpp in Sources */,
+				58AD02820DF9C5ED00ED713F /* geometric_intersection_surface.cpp in Sources */,
+				58AD02840DF9C60B00ED713F /* geometric_intersection_trimsurface.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3402,6 +3436,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -3429,11 +3467,21 @@
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0\"",
+				);
 				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Wildcat_Prefix.pch;
-				INFOPLIST_FILE = Info.plist;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../Source/Workbenches",
+					"$(SRCROOT)/../../Source",
+					"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0/include",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/../../Source/Application/MacOS/Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3447,6 +3495,7 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH)";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
@@ -3457,10 +3506,7 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
