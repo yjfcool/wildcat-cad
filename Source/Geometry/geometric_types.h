@@ -35,7 +35,6 @@
 
 
 /*** Locally Defined Values ***/
-#define GEOMETRICOBJECT_DEFAULT_LOD			1
 #define GEOMETRICOBJECT_DEFAULT_EPSILON		0.001
 #define GEOMETRICCURVE_THICKNESS			1.0
 
@@ -54,21 +53,17 @@ class WCGeometricPoint;
 
 class WCGeometricObject : virtual public WCSerializeableObject, virtual public WCVisualObject {
 protected:
-	WPUInt										_lod;												//!< Level of detail
 	bool										_isConstruction;									//!< Is this a construction element
-
+private:
+	//Hidden Constructors
+	WCGeometricObject& operator=(const WCGeometricObject &object);									//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCGeometricObject() : ::WCSerializeableObject(), ::WCVisualObject(),							//!< Default constructor
-												_lod(GEOMETRICOBJECT_DEFAULT_LOD), _isConstruction(false) { }
+	WCGeometricObject() : ::WCSerializeableObject(), ::WCVisualObject(), _isConstruction(false) { }	//!< Default constructor
 	WCGeometricObject(xercesc::DOMElement *element, WCSerialDictionary *dictionary);				//!< Persistance constructor
 	virtual ~WCGeometricObject()				{ }													//!< Default destructor
 	
 	//Member Access Methods
-	virtual inline WPUInt LevelOfDetail(void) const	{ return this->_lod; }							//!< Get the Level-Of-Detail value
-	virtual inline WPUInt LevelOfDetail(const WPUInt &lod){ this->_lod = lod;						//!< Set the Level-Of-Detail value
-												this->_isVisualDirty = true;
-												return this->_lod; }			
 	inline bool IsConstruction(void) const		{ return this->_isConstruction; }					//!< Get construction element state
 	inline void IsConstruction(const bool &state)	{ this->_isConstruction = state; }				//!< Set construction element state
 
@@ -78,7 +73,7 @@ public:
 	virtual void ApplyTranslation(const WCVector4 &translation)=0;									//!< Apply a linear translation to object
 
 	//Serialization Method
-	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object	
+	virtual xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);//!< Serialize the object	
 };
 
 
@@ -87,17 +82,17 @@ public:
 
 class WCGeometricCurve : virtual public WCGeometricObject {
 public:
-	//Public Static Values
 	static WPFloat								DefaultThickness;									//!< Static default curve thickness
-
 protected:
 	bool										_isClosed;											//!< Curve closure flag
 	bool										_isSelfIntersecting;								//!< Curve self-intersection flag
 	WPFloat										_thickness;											//!< Curve thicknes
-	
+private:
+	//Hidden Constructors
+	WCGeometricCurve& operator=(const WCGeometricCurve &curve);										//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCGeometricCurve() : ::WCVisualObject(), _isClosed(false), _isSelfIntersecting(false),			//!< Default constructor
+	WCGeometricCurve() : ::WCGeometricObject(), _isClosed(false), _isSelfIntersecting(false),		//!< Default constructor
 												_thickness(WCGeometricCurve::DefaultThickness) { }
 	WCGeometricCurve(const WCGeometricCurve &curve) : ::WCVisualObject(curve),						//!< Copy constructor
 												_isClosed(curve._isClosed),
@@ -112,19 +107,17 @@ public:
 	virtual WPFloat Thickness(void) const		{ return this->_thickness; }						//!< Get the line thickness
 	virtual void Thickness(const WPFloat &thick){ this->_thickness = thick; }						//!< Set the line thickness
 	
-	//Required Intersection Methods
+	//Required Member Function
 	virtual std::list<WPFloat> Intersect(WCGeometricPoint *point, const WPFloat &tol)=0;			//!< Check for intersection with point
 	virtual std::list<WPIntersectRec> Intersect(WCGeometricCurve *curve, const WPFloat &tol)=0;		//!< Check for intersection with curve
-	
-	//Required Member Overloads
 	virtual WPFloat Length(const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;				//!< Calculate the length of the curve
 	virtual WCVector4 Evaluate(const WPFloat &u)=0;													//!< Evaluate curve for a parametric value
 	virtual WCVector4 Derivative(const WPFloat &u, const WPUInt &der)=0;							//!< Evaluate derivative at specific point
 	virtual WCRay Tangent(const WPFloat &u)=0;														//!< Get the tangent to the curve at U
-	virtual WCVector4 PointInversion(const WCVector4 &point, const WPFloat &u=0.0)=0;				//!< Get closest point on curve from point
+	virtual std::pair<WCVector4,WPFloat> PointInversion(const WCVector4 &point)=0;					//!< Get closest point on curve from point
 
 	//Serialization Method
-	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
+	virtual xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);//!< Serialize the object
 };
 
 
@@ -135,10 +128,12 @@ class WCGeometricSurface : virtual public WCGeometricObject {
 protected:
 	bool										_isClosedU, _isClosedV;								//!< Curve closure flags
 	bool										_isSelfIntersecting;								//!< Curve self-intersection flag
-	
+private:
+	//Hidden Constructors
+	WCGeometricSurface& operator=(const WCGeometricSurface &surface);								//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCGeometricSurface() : ::WCVisualObject(), _isClosedU(false), _isClosedV(false), 				//!< Default constructor
+	WCGeometricSurface() : ::WCGeometricObject(), _isClosedU(false), _isClosedV(false), 			//!< Default constructor
 												_isSelfIntersecting(false) { }						//!< Copy constructor
 	WCGeometricSurface(const WCGeometricSurface &surface) : ::WCVisualObject(surface),
 												_isClosedU(surface._isClosedU),
@@ -162,7 +157,7 @@ public:
 	virtual WCVector4 Evaluate(const WPFloat &u, const WPFloat &v)=0;								//!< Evaluate the suface at parametric values
 
 	//Serialization Method
-	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
+	virtual xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);//!< Serialize the object
 };
 
 

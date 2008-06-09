@@ -91,7 +91,7 @@ public:
 
 	//General Access Methods
 	inline void Status(const std::string &text)	{ this->_statusText = text;							//!< Set the document status text
-												this->_isVisualDirty = true; }
+												this->IsVisualDirty(true); }
 	inline std::string Status(void) const		{ return this->_statusText; }						//!< Get the document status text
 	inline std::string Filename(void)			{ return this->_filename; }							//!< Get the document filename
 

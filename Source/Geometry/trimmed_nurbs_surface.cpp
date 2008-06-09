@@ -469,8 +469,6 @@ WCTrimmedNurbsSurface::WCTrimmedNurbsSurface(WCGeometryContext *context, const s
 	this->GenerateTrimList();
 	//Set up trim texture object
 	glGenTextures(1, &(this->_trimTexture));
-	//Mark as dirty
-	this->_isVisualDirty = true;
 }
 
 WCTrimmedNurbsSurface::~WCTrimmedNurbsSurface() {
@@ -487,7 +485,7 @@ void WCTrimmedNurbsSurface::TextureSize(const WPUInt &size) {
 	this->_texWidth = size;
 	this->_texHeight = (WPUInt)ceil(size * aspectRatio);
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
 }
 
 
@@ -495,7 +493,7 @@ void WCTrimmedNurbsSurface::Render(const GLuint &defaultProg, const WCColor &col
 	//Check to see if the surface is visible
 	if (!this->_isVisible) return;
 	//Check to see if surface or texture needs to be generated
-	if (this->_isVisualDirty) {
+	if (this->IsVisualDirty()) {
 		//Generate the surface - switch on performance level
 		switch(this->_context->SurfacePerformanceLevel()) {
 			case TRIMSURFACE_PERFLEVEL_HIGH:	
@@ -515,7 +513,7 @@ void WCTrimmedNurbsSurface::Render(const GLuint &defaultProg, const WCColor &col
 		//Update the bounding box
 		this->_bounds->Set(this->_buffers[NURBSSURFACE_VERTEX_BUFFER], this->_numVerts);
 		//Mark as clean
-		this->_isVisualDirty = false;
+		this->IsVisualDirty(false);
 	}
 	//Set the rendering program
 	if (this->_renderProg != 0) {
@@ -581,7 +579,8 @@ void WCTrimmedNurbsSurface::Render(const GLuint &defaultProg, const WCColor &col
 
 void WCTrimmedNurbsSurface::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 	//Mark the surface as dirty
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
+	this->IsSerialDirty(true);
 	//Update any parents about dirtyness
 	this->SendBroadcastNotice(OBJECT_NOTIFY_UPDATE);
 }

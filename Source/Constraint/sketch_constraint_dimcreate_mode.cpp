@@ -311,7 +311,7 @@ void WCModeSketchConstraintDimensionalCreate::OnMouseDown(const WCMouseButton &b
 					WCVector4 firstPt = lineA->Base()->Evaluate(0.5);
 					//Determine second point (in 3D space project click onto lineB)
 					WCVector4 secondPt = this->_workbench->Sketch()->ReferencePlane()->TransformMatrix() * this->_position;
-					secondPt = lineB->Base()->PointInversion(secondPt, dummyA);
+					secondPt = lineB->Base()->PointInversion(secondPt).first;
 
 					//Get the angle (for some reason Angle returns in degrees)
 					WPFloat angle = Angle(firstPt, center, secondPt) / 180.0 * M_PI;
@@ -441,9 +441,10 @@ void WCModeSketchConstraintDimensionalCreate::OnMouseDown(const WCMouseButton &b
 				WCMeasureType type = WCMeasureType::Absolute();
 				//Set pt0
 				pt0 = p0->Base()->Data();
-				WPFloat u;
 				//Find where clicked
-				pt1 = curve->PointInversion(position, u);
+				std::pair<WCVector4,WPFloat> piResult = curve->PointInversion(position);
+				pt1 = piResult.first;
+				WPFloat u = piResult.second;
 
 				//Begin case (first 10% of curve)
 				if (u < 0.1) {
@@ -462,7 +463,10 @@ void WCModeSketchConstraintDimensionalCreate::OnMouseDown(const WCMouseButton &b
 				//Closest case (middle 80% of curve)
 				else {
 					//Project onto the line
-					pt1 = curve->PointInversion(pt0, u);
+					piResult = curve->PointInversion(pt0);
+					pt1 = piResult.first;
+					u = piResult.second;
+
 					//Set position
 					this->_posB = WCMeasurePosition::Closest();
 				}

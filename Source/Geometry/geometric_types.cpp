@@ -38,7 +38,7 @@ WPFloat WCGeometricCurve::DefaultThickness = GEOMETRICCURVE_THICKNESS;
 
 
 WCGeometricObject::WCGeometricObject(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
-	::WCSerializeableObject(), ::WCVisualObject(), _lod(0), _isConstruction(false) {
+	::WCSerializeableObject(), ::WCVisualObject(), _isConstruction(false) {
 	//Make sure element if not null
 	if (element == NULL) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometricObject::WCGeometricObject - NULL Element passed.");
@@ -49,8 +49,6 @@ WCGeometricObject::WCGeometricObject(xercesc::DOMElement *element, WCSerialDicti
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
 	dictionary->InsertGUID(guid, this);
 
-	//Get the lod
-	this->_lod = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "lod");
 	//Get the construction flag
 	this->_isConstruction = WCSerializeableObject::GetBoolAttrib(element, "construction");
 	//Get the visible flag
@@ -72,8 +70,6 @@ xercesc::DOMElement* WCGeometricObject::Serialize(xercesc::DOMDocument *document
 	//Add GUID attribute
 	WCSerializeableObject::AddStringAttrib(element, "guid", guid);
 
-	//Set lod attribute
-	WCSerializeableObject::AddFloatAttrib(element, "lod", this->_lod);
 	//Set construction attribute
 	WCSerializeableObject::AddBoolAttrib(element, "construction", this->_isConstruction);
 	//Set visible attribute

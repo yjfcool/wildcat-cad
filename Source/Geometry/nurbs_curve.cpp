@@ -36,12 +36,18 @@
 #include "Geometry/ray.h"
 
 
-/*** Local macros ***/
-#define ABS(a)	 (a>0?a:-a)
-
-
 /*** Extern Variables ***/
 extern WPFloat* __bezier_coef[8];
+
+/*** Locally Defined Values ***/
+//Accuracy Constants
+#define NURBSCURVE_INVERSION_MAX_ITERATIONS		12
+#define NURBSCURVE_EPSILON_ONE					0.0001
+#define NURBSCURVE_EPSILON_TWO					0.0001
+#define NURBSCURVE_EQUALITY_EPSILON				0.001
+#define NURBSCURVE_RENDER_ACCURACY				0.20
+#define NURBSCURVE_RENDER_LOWER					0.85
+#define NURBSCURVE_RENDER_UPPER					1.55
 
 
 /***********************************************~***************************************************/
@@ -79,7 +85,6 @@ void WCNurbsCurve::GenerateKnotPointsVBO(void) {
 void WCNurbsCurve::GenerateKnotPointsTexture(void) {
 	//Create temporary array for data
 	GLfloat *data = new GLfloat[4 * this->_kp];
-//	GLfloat data[4 * this->_kp];
 	//Copy knot points into array (cast WPFloat to GLfloat)
 	for (WPUInt i=0; i<this->_kp; i++) data[i*4] = (GLfloat)this->_knotPoints[i];
 	//Set up some parameters
@@ -89,7 +94,8 @@ void WCNurbsCurve::GenerateKnotPointsTexture(void) {
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_context->CurveKPTex());	
 	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, this->_kp, 1, GL_RGBA, GL_FLOAT, data);
 	//Delete array and check for errors
-	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsCurve::GenerateKnotPointsTexture Error - Texture Setup.\n";
+	if (glGetError() != GL_NO_ERROR) 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateKnotPointsTexture Error - Texture Setup.");
 	delete data;
 }
 
@@ -135,7 +141,6 @@ void WCNurbsCurve::GenerateControlPointsVBO(void) {
 void WCNurbsCurve::GenerateControlPointsTexture(void) {
 	//Create temporary array for data
 	GLfloat *data = new GLfloat[this->_cp * 4];
-//	GLfloat data[this->_cp * 4];
 	//Copy control points into array
 	WCVector4 controlPoint;
 	for (WPUInt i=0; i<this->_cp; i++) {
@@ -152,7 +157,8 @@ void WCNurbsCurve::GenerateControlPointsTexture(void) {
 	glActiveTexture(GL_TEXTURE1);	
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_context->CurveCPTex());	
 	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, this->_cp, 1, GL_RGBA, GL_FLOAT, data);
-	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsCurve::GenerateControlPointsTexture Error - Texture Setup.\n";
+	if (glGetError() != GL_NO_ERROR) 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateControlPointsTexture Error - Texture Setup.");
 	//Delete data array
 	delete data;
 }
@@ -202,10 +208,8 @@ void WCNurbsCurve::LoadKnotPoints(const std::vector<WPFloat> &knotPoints) {
 }
 
 
-void WCNurbsCurve::GenerateCurveHigh(void) {
-	//Check for special generation cases, otherwise set the program
-	if (this->_degree == 1) return this->GenerateCurveOne();
-			
+GLfloat* WCNurbsCurve::GenerateCurveHigh(const WPUInt &lod, const bool &server, GLuint &buffer) {
+
 	/*** Setup programs and bindable uniforms ***/		
 
 	//Now generate the control points VBO
@@ -231,20 +235,20 @@ void WCNurbsCurve::GenerateCurveHigh(void) {
 
 	/*** Setup Output Buffer ***/
 	
-	glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);	
-	glBufferData(GL_ARRAY_BUFFER, (this->_lod+1)*NURBSCURVE_FLOATS_PER_VERTEX*sizeof(GLfloat), 0, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer);
+	glBufferData(GL_ARRAY_BUFFER, lod * NURBSCURVE_FLOATS_PER_VERTEX * sizeof(GLfloat), 0, GL_STATIC_DRAW);
 	//Bind the buffer for transform feedback	
-	glBindBufferBaseEXT(GL_TRANSFORM_FEEDBACK_BUFFER_EXT, 0, this->_buffer);	
+	glBindBufferBaseEXT(GL_TRANSFORM_FEEDBACK_BUFFER_EXT, 0, buffer);	
 //	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsCurve::GenerateCurveHigh Error - Output buffer setup.\n";
 
 	/*** Prepare the Input Buffer ***/
 	
 	WPFloat u = this->_knotPoints[0];
 	WPFloat range = this->_knotPoints[this->_kp-1] - this->_knotPoints[0];
-	WPFloat du = range / ((GLfloat)(this->_lod-1));
-	int numBatches = (int)ceil( (float)this->_lod / (float)this->_context->CurveVerticesPerBatch() );
+	WPFloat du = range / ((GLfloat)(lod-1));
+	int numBatches = (int)ceil( (float)lod / (float)this->_context->CurveVerticesPerBatch() );
 	//Create a temporary array (LOD vertices)
-	GLfloat *data = new GLfloat[numBatches * 4];
+	GLfloat *data = new GLfloat[numBatches * NURBSCURVE_FLOATS_PER_VERTEX];
 	for (int i=0; i<numBatches; i++) {
 		//Load array with value for each batch
 		data[i*4] =   (GLfloat)u;								//Set first position to u
@@ -260,7 +264,7 @@ void WCNurbsCurve::GenerateCurveHigh(void) {
 	//Set up transform feedback	buffer
 	glBindBuffer(GL_ARRAY_BUFFER, inputBuffer);
 	//Allocate space for the batch data and load data value array
-	glBufferData(GL_ARRAY_BUFFER, numBatches*4*sizeof(GLfloat), data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, numBatches * NURBSCURVE_FLOATS_PER_VERTEX * sizeof(GLfloat), data, GL_STATIC_DRAW);
 //	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsCurve::GenerateCurveHigh Error - Input buffer setup.\n";
 	//Delete data array
 	delete data;
@@ -297,39 +301,23 @@ void WCNurbsCurve::GenerateCurveHigh(void) {
 	GLfloat *data2 = (GLfloat*)glMapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER_EXT, GL_READ_ONLY);
 	for (int i=0; i<this->_lod+1; i++) printf("\t%d: %f %f %f %f\n", i, data2[i*4], data2[i*4+1], data2[i*4+2], data2[i*4+3]);
 	glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER_EXT);	
-/*** Debug ***/	
+/*** Debug ***/
+	return NULL;
 }
 
 
-void WCNurbsCurve::GenerateCurveMedium(void) {
-	//Check for special generation cases, otherwise set the program
-	if (this->_degree == 1) return this->GenerateCurveOne();
-	if (this->_lod > (WPUInt)this->_context->CurveMaxTextureSize()) {
-		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - LOD exceeds hardware Maximum Texture Size.");
-		return this->GenerateCurveLow();
-	}
-	
+GLfloat* WCNurbsCurve::GenerateCurveMedium(const WPUInt &lod, const bool &server, GLuint &buffer) {
 	/*** Setup programs and texture locations ***/		
-
 	//Default and custom case
 	switch (this->_degree) {
 		case 2: case 3:
-			//Degree 2 & 3 Bezier
-//			if (this->_mode == WCNurbsMode::Bezier()) {
-//				glUseProgram(WCNurbsCurve::_bezier23);
-//				glUseProgram(WCNurbsCurve::_default23);
-//				glUniform4i(WCNurbsCurve::_locations[NURBSCURVE_LOC_PARAMS_BEZIER23], this->_degree, this->_cp, this->_kp, this->_lod+1);					
-//			}
-//			//Degree 2 & 3 Default and Custom
-//			else {
-				glUseProgram(this->_context->CurveDefault23Program());
-				glUniform4i(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS_DEFAULT23], this->_degree, this->_cp, this->_kp, this->_lod+1);
-//			}
+			glUseProgram(this->_context->CurveDefault23Program());
+			glUniform4i(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS_DEFAULT23], this->_degree, this->_cp, this->_kp, lod);
 			break;
 		default:
 			//Degree > 3 Default, Custom, and Bezier
 			glUseProgram(this->_context->CurveDefaultProgram());
-			glUniform4i(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS_DEFAULT], this->_degree, this->_cp, this->_kp, this->_lod+1);
+			glUniform4i(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS_DEFAULT], this->_degree, this->_cp, this->_kp, lod);
 			break;
 	}
 	//Now generate the control points texture
@@ -344,18 +332,19 @@ void WCNurbsCurve::GenerateCurveMedium(void) {
 	GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 	//Check the status of the framebuffer object
 	if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) { 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Framebuffer is not complete."); return; }
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Framebuffer is not complete.");
+		return NULL;
+	}
 	
 	/*** Setup input texture ***/
 	
-	//Allocate space for the texture (w * h * RGBA)
-	GLfloat *data = new GLfloat[this->_lod * 4];
-//	GLfloat data[this->_lod * 4];
+	//Allocate space for the input texture (w * h * RGBA)
+	GLfloat *data = new GLfloat[lod * NURBSCURVE_FLOATS_PER_VERTEX];
 	WPFloat u = this->_knotPoints[0];
 	WPFloat range = this->_knotPoints[this->_kp-1] - this->_knotPoints[0];
-	WPFloat du = range / ((GLfloat)(this->_lod-1));	
+	WPFloat du = range / ((GLfloat)(lod-1));	
 	//Initialize data in the array
-	for (WPUInt i=0; i<this->_lod; i++) {
+	for (WPUInt i=0; i<lod; i++) {
 		data[i*4] =   (GLfloat)u;						//Set first position to u
 		data[i*4+1] = (GLfloat)du;						//Set second position to du
 		data[i*4+2] = (GLfloat)this->_knotPoints[this->_kp-1];	//Set third position to uMax
@@ -364,10 +353,10 @@ void WCNurbsCurve::GenerateCurveMedium(void) {
 		u = STDMIN(u+du, this->_knotPoints[this->_kp-1]);
 	}
 	//Setup and copy the data into the texture
-//	for (int i=0; i<this->_lod; i++) printf("%d: %f %f %f %f\n", i, data[i*4], data[i*4+1], data[i*4+2], data[i*4+3]);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_context->CurveInTex());
-	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, this->_lod, 1, GL_RGBA, GL_FLOAT, data);
+	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, lod, 1, GL_RGBA, GL_FLOAT, data);
+	//Check for errors
 	if (glGetError() != GL_NO_ERROR) 
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Setup Input Texture.");
 	//Delete data array
@@ -381,7 +370,7 @@ void WCNurbsCurve::GenerateCurveMedium(void) {
 	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
 	//Set the viewport
-	glViewport(0, 0, this->_context->CurveMaxTextureSize(), 1);
+	glViewport(0, 0, lod, 1);
 	//Draw into the framebuffer
 	glBegin(GL_QUADS);
 		glVertex3f(-1.0, -1.0, 0.0);
@@ -389,23 +378,36 @@ void WCNurbsCurve::GenerateCurveMedium(void) {
 		glVertex3f(1.0, 1.0, 0.0);	
 		glVertex3f(1.0, -1.0, 0.0);
 	glEnd();
-
 	//Restore the viewport setting
 	glPopAttrib();
 	//Re-enable some settings
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	//Check for errors
-	if (glGetError() != GL_NO_ERROR)CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Render.");
+	if (glGetError() != GL_NO_ERROR)
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Render.");
 
 	/*** Save output texture into vertex VBO using simple memory read ***/
 
-	GLfloat *vertData = new GLfloat[this->_context->CurveMaxTextureSize() * 4];
-//	GLfloat vertData[this->_context->CurveMaxTextureSize() * 4];
-	glReadPixels(0, 0, this->_context->CurveMaxTextureSize(), 1, GL_RGBA, GL_FLOAT, vertData);
-	glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);
-	glBufferData(GL_ARRAY_BUFFER, this->_context->CurveMaxTextureSize() * 4 * sizeof(GLfloat), vertData, GL_STATIC_DRAW);
-	delete vertData;
+	GLfloat *vertData = new GLfloat[lod * NURBSCURVE_FLOATS_PER_VERTEX];
+	glReadPixels(0, 0, lod, 1, GL_RGBA, GL_FLOAT, vertData);
+	//See if server or client
+	if (server) {
+		glGenBuffers(1, &buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, buffer);
+		glBufferData(GL_ARRAY_BUFFER, lod * NURBSCURVE_FLOATS_PER_VERTEX * sizeof(GLfloat), vertData, GL_STATIC_DRAW);
+		delete vertData;
+		vertData = NULL;
+		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Cleanup.");
+/*** Debug ***
+		 std::cout << "Medium Generation Vertices: " << lod << std::endl;	
+		 GLfloat *data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+		 for (int i=0; i<lod; i++) printf("\t%d: %f %f %f %f\n", i, data2[i*4], data2[i*4+1], data2[i*4+2], data2[i*4+3]);
+		 glUnmapBuffer(GL_ARRAY_BUFFER);	
+ /*** Debug ***/
+		//Clean up and check for errors
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
 
 	/*** Save output texture into vertex VBO using a PBO ***
 
@@ -421,30 +423,21 @@ void WCNurbsCurve::GenerateCurveMedium(void) {
 		
 	//Clean up the framebuffer object and cp/kp textures
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);	
-/*** Debug ***
-	std::cout << "Medium Generation Vertices: " << this->_lod+1 << std::endl;	
-	glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);	
-	GLfloat *data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-	for (int i=0; i<this->_lod; i++) printf("\t%d: %f %f %f %f\n", i, data2[i*4], data2[i*4+1], data2[i*4+2], data2[i*4+3]);
-	glUnmapBuffer(GL_ARRAY_BUFFER);	
-/*** Debug ***/
-	//Clean up and check for errors
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Cleanup.");
+	//Return client buffer
+	return vertData;
 }
 	
 
-void WCNurbsCurve::GenerateCurveLow(void) {
-	//Check for special generation cases, otherwise set the program
-	if (this->_degree == 1) return this->GenerateCurveOne();
+GLfloat* WCNurbsCurve::GenerateCurveLow(const WPUInt &lod, const bool &server, GLuint &buffer) {
 	//Setup some variables
 	WPFloat u = this->_knotPoints[0];
 	WPFloat range = this->_knotPoints[this->_kp-1] - this->_knotPoints[0];
-	WPFloat du = range / ((GLfloat)(this->_lod-1));
+	WPFloat du = range / ((GLfloat)(lod-1));
 	WCVector4 pt;
-	//Create a temporary array (LOD+1 vertices)
-	GLfloat *data = new GLfloat[(this->_lod+1)*NURBSCURVE_FLOATS_PER_VERTEX];
-	for (WPUInt i=0; i<this->_lod; i++) {
+	GLuint size = lod * NURBSCURVE_FLOATS_PER_VERTEX;
+	//Create a temporary array (LOD vertices)
+	GLfloat *data = new GLfloat[size];
+	for (WPUInt i=0; i<lod; i++) {
 		pt = this->Evaluate(u);
 		data[i*4] =   (GLfloat)pt.I();
 		data[i*4+1] = (GLfloat)pt.J();
@@ -453,26 +446,36 @@ void WCNurbsCurve::GenerateCurveLow(void) {
 		//Increment u (up to kp-1)
 		u = STDMIN(u+du, this->_knotPoints[this->_kp-1]);				
 	}
-	//Allocate space for the output vertex data
-	glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);	
-	glBufferData(GL_ARRAY_BUFFER, this->_lod * NURBSCURVE_FLOATS_PER_VERTEX * sizeof(GLfloat), data, GL_STATIC_DRAW);
-	delete data;
+	//If server side
+	if (server) {
+		//Gen buffer if needed
+		if (!buffer) glGenBuffers(1, &buffer);
+		//Bind to buffer and copy data in
+		glBindBuffer(GL_ARRAY_BUFFER, buffer);	
+		glBufferData(GL_ARRAY_BUFFER, size * sizeof(GLfloat), data, GL_STATIC_DRAW);
+		delete data;
+		data = NULL;
 /*** Debug ***
-	std::cout << "Generate Low Verts: " << this->_lod+1 << std::endl;	
-	GLfloat *data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-	for (int i=0; i<this->_lod; i++) printf("\t%d: %f %f %f %f\n", i, data2[i*4], data2[i*4+1], data2[i*4+2], data2[i*4+3]);
-	glUnmapBuffer(GL_ARRAY_BUFFER);	
+		std::cout << "Generate Low Verts: " << lod << std::endl;	
+		GLfloat *data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+		for (int i=0; i<lod; i++) printf("\t%d: %f %f %f %f\n", i, data2[i*4], data2[i*4+1], data2[i*4+2], data2[i*4+3]);
+		glUnmapBuffer(GL_ARRAY_BUFFER);	
 /*** Debug ***/
-	//Clean up and check for errors
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveLow - GL error at Cleanup.");	
+		//Clean up and check for errors
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//Check for errors
+		if (glGetError() != GL_NO_ERROR)
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveLow - GL error at Cleanup.");	
+	}
+	//Return client buffer
+	return data;
 }
 
 
-void WCNurbsCurve::GenerateCurveOne(void) {
+GLfloat* WCNurbsCurve::GenerateCurveOne(const bool &server, GLuint &buffer) {
 	//Determine the needed size of the buffer
-	GLuint size = this->_cp * 4 * sizeof(GLfloat);
-	GLfloat *data = new GLfloat[size / sizeof(GLfloat)];		
+	GLuint size = this->_cp * NURBSCURVE_FLOATS_PER_VERTEX;
+	GLfloat *data = new GLfloat[size];		
 	//Convert all control points to GLfloat arrays
 	WCVector4 controlPoint;
 	for (WPUInt i=0; i<this->_cp; i++) {
@@ -483,19 +486,21 @@ void WCNurbsCurve::GenerateCurveOne(void) {
 		data[i*4+2] = (GLfloat)controlPoint.K();
 		data[i*4+3] = 1.0;	
 	}
-	//Bind to buffer and copy data in
-	glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);
-	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-	delete data;
-/*** Debug ***
-	std::cout << "Degree One Curve Vertices: " << this->_lod << std::endl;	
-	GLfloat *data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-	for (int i=0; i<this->_lod; i++) printf("\t%d: %f %f %f %f\n", i, data2[i*4], data2[i*4+1], data2[i*4+2], data2[i*4+3]);
-	glUnmapBuffer(GL_ARRAY_BUFFER);	
-/*** Debug ***/
-	//Clean up and check for errors
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveOne - GL error at Cleanup.");
+	//Check to see if server or client
+	if (server) {
+		//Gen buffer if needed
+		if (!buffer) glGenBuffers(1, &buffer);
+		//Bind to buffer and copy data in
+		glBindBuffer(GL_ARRAY_BUFFER, buffer);
+		glBufferData(GL_ARRAY_BUFFER, size * sizeof(GLfloat), data, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		delete data;
+		data = NULL;
+		//Clean up and check for errors
+		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveOne - GL error at Cleanup.");
+	}
+	//Return client buffer (should be set to NULL if server)
+	return data;
 }
 
 
@@ -504,8 +509,8 @@ void WCNurbsCurve::GenerateCurveOne(void) {
 
 WCNurbsCurve::WCNurbsCurve(WCGeometryContext *context, const WPUInt &degree, const std::vector<WCVector4> &controlPoints, 
 	const WCNurbsMode &mode, const std::vector<WPFloat> &knotPoints) : ::WCGeometricCurve(), _context(context),
-	_degree(degree), _mode(mode), _cp((WPUInt)controlPoints.size()), _kp(0), _controlPoints(controlPoints), _knotPoints(NULL), _buffer(0) {
-	
+	_degree(degree), _mode(mode), _cp((WPUInt)controlPoints.size()), _kp(0), _controlPoints(controlPoints), _knotPoints(NULL),
+	_length(0.0), _lod(0), _buffer(0), _altBuffer(NULL) {
 	//Make sure cpCollection is non-null
 	if (this->_cp == 0) { CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::WCNurbsCurve - Empty control points vector."); return;	}
 	//Check to make sure there are at least 2 control points
@@ -522,55 +527,29 @@ WCNurbsCurve::WCNurbsCurve(WCGeometryContext *context, const WPUInt &degree, con
 		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsCurve::WCNurbsCurve - Degree must be less than the number of control points.");
 		this->_degree = this->_cp - 1;	
 	}
-	//Check to make sure at least lod = cp
-	this->_lod = this->_cp;
+
 	//Define the number of knot points
 	this->_kp = this->_degree + this->_cp + 1;
 	//Perform some addtional checks if mode is custom
-	if (this->_mode == WCNurbsMode::Custom()) {
-		//See if the vector is null
-		if (knotPoints.size() == 0) { CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::WCNurbsCurve - Invalid knot points collection."); return; }
-		//Make sure the collection is the right size
-		if (knotPoints.size() != this->_kp) {
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::WCNurbsCurve - Invalid knot points collection size."); return; }
+	if ((this->_mode == WCNurbsMode::Custom()) && (knotPoints.size() != this->_kp)) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::WCNurbsCurve - Invalid knot points collection size:" << knotPoints.size()); 
+		this->_mode = WCNurbsMode::Default();
 	}
-
-	//Set up buffers
-	glGenBuffers(1, &(this->_buffer));
-	//Do some more setup only if degree is 1
-	if (this->_degree == 1) {
-		//Copy the control points into a vbo
-		this->GenerateCurveOne();
-	//Otherwise, load the knot points
-	} else {			
-		//Find the rough length of the curve and the number of needed segments
-		WPFloat length = WCNurbs::EstimateLength(this->_controlPoints);
-		this->_lod = (WPUInt)(length / NURBSCURVE_GENERATE_ACCURACY) + 1;	
-		//Use knot mode to setup knot array
-		this->LoadKnotPoints(knotPoints);
-	}		
+	//Load the knot points
+	if (this->_degree != 1) this->LoadKnotPoints(knotPoints);
+	//Find the rough length of the curve and the number of needed segments
+	this->_length = WCNurbs::EstimateLength(this->_controlPoints);
 	//Establish oriented bounding box
-	this->_bounds = new WCAlignedBoundingBox(this->_controlPoints);
+	this->_bounds = new WCAlignedBoundingBox(this->_controlPoints);		
 }
 
 
 WCNurbsCurve::WCNurbsCurve(const WCNurbsCurve &curve) :
-	::WCGeometricCurve(curve), _context(curve._context), _degree(curve._degree), _mode(curve._mode), _cp(curve._cp), _kp(curve._kp), 
-	_controlPoints(curve._controlPoints), _knotPoints(NULL), _buffer(0) {
-
-	//Check to make sure at least lod = cp-1
-	this->_lod = curve._lod;	
-	//Set up buffers
-	glGenBuffers(1, &(this->_buffer));
-	//Do some more setup only if degree is 1
-	if (this->_degree == 1) {
-		//Copy the control points into a vbo
-		this->GenerateCurveOne();
-	//Otherwise, load the knot points
-	} else {			
-		//Find the rough length of the curve and the number of needed segments
-		WPFloat length = WCNurbs::EstimateLength(this->_controlPoints);
-		this->_lod = (WPUInt)(length / NURBSCURVE_GENERATE_ACCURACY) + 1;
+	::WCGeometricCurve(curve), _context(curve._context), _degree(curve._degree), _mode(curve._mode),
+	_cp(curve._cp), _kp(curve._kp), _controlPoints(curve._controlPoints), _knotPoints(NULL),
+	_length(curve._length), _lod(0), _buffer(0), _altBuffer(NULL) {
+	//Do some more setup only if degree is not 1
+	if (this->_degree != 1) {
 		//Set up the knot vector
 		if (this->_mode != WCNurbsMode::Custom())	
 			this->LoadKnotPoints();
@@ -587,7 +566,8 @@ WCNurbsCurve::WCNurbsCurve(const WCNurbsCurve &curve) :
 
 WCNurbsCurve::WCNurbsCurve(xercesc::DOMElement *element, WCSerialDictionary *dictionary) : 
 	::WCGeometricCurve( WCSerializeableObject::ElementFromName(element,"GeometricCurve"), dictionary ),
-	_context(NULL), _degree(), _mode(WCNurbsMode::Default()), _cp(), _kp(), _controlPoints(), _knotPoints(), _buffer() {
+	_context(NULL), _degree(), _mode(WCNurbsMode::Default()), _cp(), _kp(), _controlPoints(), _knotPoints(),
+	_length(0.0), _lod(0), _buffer(0), _altBuffer(NULL) {
 	//Make sure element if not null
 	if (element == NULL) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::WCNurbsCurve - NULL Element passed.");
@@ -602,13 +582,12 @@ WCNurbsCurve::WCNurbsCurve(xercesc::DOMElement *element, WCSerialDictionary *dic
 	this->_context = (WCGeometryContext*)WCSerializeableObject::GetGUIDAttrib(element, "context", dictionary); 
 	//Get degree
 	this->_degree = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "degree");
+	//Setup NURBS mode
+	this->_mode.FromElement(WCSerializeableObject::ElementFromName(element,"Mode"));
 	//Get number of control points
 	this->_cp = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "numCP");
 	//Get number of knot points
 	this->_kp = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "numKP");
-
-	//Setup NURBS mode
-	this->_mode.FromElement(WCSerializeableObject::ElementFromName(element,"Mode"));
 
 	//Find all nodes called ControlPoints
 	XMLCh *xmlString = xercesc::XMLString::transcode("ControlPoint");
@@ -656,34 +635,24 @@ WCNurbsCurve::WCNurbsCurve(xercesc::DOMElement *element, WCSerialDictionary *dic
 		this->_knotPoints[index] = kp;
 	}
 
-	//Set up buffers
-	glGenBuffers(1, &(this->_buffer));
-	//Do some more setup only if degree is 1
-	if (this->_degree == 1) {
-		//Copy the control points into a vbo
-		this->GenerateCurveOne();
-	//Otherwise, estimate length and get lod
-	} else {			
-		//Find the rough length of the curve and the number of needed segments
-		WPFloat length = WCNurbs::EstimateLength(this->_controlPoints);
-		this->_lod = (WPUInt)(length / NURBSCURVE_GENERATE_ACCURACY) + 1;	
-	}	
+	//Find the rough length of the curve and the number of needed segments
+	this->_length = WCNurbs::EstimateLength(this->_controlPoints);
 	//Establish aligned bounding box
 	this->_bounds = new WCAlignedBoundingBox(this->_controlPoints);
-	//Mark as dirty
-	this->_isVisualDirty = true;
 }
 
 
 WCNurbsCurve::~WCNurbsCurve() {
-	//Delete the three buffers
-	glDeleteBuffers(1, &(this->_buffer));
+	//See if need to Delete the buffers
+	if (this->_buffer) glDeleteBuffers(1, &(this->_buffer));
+	if (this->_altBuffer) delete this->_altBuffer;
 	//Delete the knot point array
-	if (this->_knotPoints != NULL) delete this->_knotPoints;
+	if (this->_knotPoints) delete this->_knotPoints;
 }
 
 
 GLuint WCNurbsCurve::VertexBuffer(void) {
+/*
 	//See if dirty
 	if (this->_isVisualDirty) {
 		switch(this->_context->CurvePerformanceLevel()) {
@@ -695,6 +664,7 @@ GLuint WCNurbsCurve::VertexBuffer(void) {
 		//Mark as clean
 		this->_isVisualDirty = false;		
 	}
+*/
 	//Return the buffer
 	return this->_buffer;
 }
@@ -709,7 +679,8 @@ void WCNurbsCurve::ControlPoints(const std::vector<WCVector4> &controlPoints) {
 	//Update control points
 	this->_controlPoints = controlPoints;
 	//Mark the object as dirty
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
+	this->IsSerialDirty(true);
 }
 
 
@@ -724,7 +695,8 @@ void WCNurbsCurve::KnotPoints(const std::vector<WPFloat> &knotPoints) {
 	//Update knot points
 	this->_knotPoints = WCNurbs::LoadCustomKnotPoints(knotPoints);
 	//Mark the object as dirty
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
+	this->IsSerialDirty(true);
 }
 
 
@@ -752,52 +724,18 @@ WPUInt WCNurbsCurve::Degree(const WPUInt &degree) {
 	this->_kp = this->_degree + this->_cp + 1;
 	//Do some more setup only if degree is not 1
 	if (this->_degree != 1) {			
-		//Find the rough length of the curve and the number of needed segments
-		WPFloat length = WCNurbs::EstimateLength(this->_controlPoints);
-		this->_lod = (WPUInt)(length / NURBSCURVE_GENERATE_ACCURACY) + 1;	
 		//Use knot mode to setup knot array
 		this->LoadKnotPoints();
 	}
 	//Mark the object as dirty
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
+	this->IsSerialDirty(true);
 	//Return the degree value
 	return this->_degree;
 }
 
 
-WPUInt WCNurbsCurve::LevelOfDetail(const WPUInt &lod) {
-	WPUInt levelOfDetail = lod;
-	//Only adjust LOD for degree > 1
-	if (this->_degree == 1) return this->_lod;
-	//Check to make sure LOD is valid
-	if (levelOfDetail < this->_cp) {
-		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsCurve::LevelOfDetail - LOD(" << lod << ") must be at least #CP.");
-		levelOfDetail = this->_cp;	
-	 }
-	 if (levelOfDetail > NURBSCURVE_MAX_LOD) {
-		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsCurve::LevelOfDetail - LOD(" << lod << ") out of bounds.");
-		levelOfDetail = NURBSCURVE_MAX_LOD;
-	}
-	//Set the new lod
-	this->_lod = levelOfDetail;	
-	//Mark the object as dirty
-	this->_isVisualDirty = true;
-	//Return the level of detail
-	return this->_lod;
-}
-
-
 WCVisualObject* WCNurbsCurve::HitTest(const WCRay &ray, const WPFloat &tolerance) {
-//	int i;
-	//Only do hit check on cp if they are visible
-//	if (this->_drawCP) {
-		//Clear selection for all points
-//		for (i=0; i<this->_cpCollection.Size(); i++) this->_cpCollection.At(i)->IsSelected(false);
-		//Check all control points
-//		for (i=0; i<this->_cpCollection.Size(); i++) {
-//			if (this->_cpCollection.At(i)->HitTest(ray, tolerance)) return this->_cpCollection.At(i);
-//		}
-//	}
 	return NULL;
 }
 
@@ -807,7 +745,8 @@ void WCNurbsCurve::ApplyTransform(const WCMatrix4 &transform) {
 	for (WPUInt i=0; i<this->_cp; i++)
 		this->_controlPoints.at(i) = transform * this->_controlPoints.at(i);
 	//Make sure curve is regenerated
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
+	this->IsSerialDirty(true);
 }
 
 
@@ -816,24 +755,32 @@ void WCNurbsCurve::ApplyTranslation(const WCVector4 &translation) {
 	for (WPUInt i=0; i<this->_cp; i++)
 		this->_controlPoints.at(i) = this->_controlPoints.at(i) + translation;
 	//Make sure curve is regenerated
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
+	this->IsSerialDirty(true);
 }
 
 
 void WCNurbsCurve::Render(const GLuint &defaultProg, const WCColor &color, const WPFloat &zoom) {
 	//Do nothing if not visible
 	if (!this->_isVisible) return;
-	//Check to see if curve needs to be generated
-	if (this->_isVisualDirty) {
-		switch(this->_context->CurvePerformanceLevel()) {
-			//Switch on performance level
-			case NURBSCURVE_PERFLEVEL_HIGH:		this->GenerateCurveHigh();		break;
-			case NURBSCURVE_PERFLEVEL_MEDIUM:	this->GenerateCurveMedium();	break;
-			case NURBSCURVE_PERFLEVEL_LOW:		this->GenerateCurveLow();		break;
-		}
-		//Mark as clean
-		this->_isVisualDirty = false;	
+
+	//Determine best LOD
+	WPUInt lod = STDMAX((WPFloat)this->_cp, this->_length * sqrt(zoom) / NURBSCURVE_RENDER_ACCURACY);
+	WPFloat factor = (WPFloat)this->_lod / (WPFloat)lod;
+	//See if need to regenerate
+	if ((factor < NURBSCURVE_RENDER_LOWER) || (factor > NURBSCURVE_RENDER_UPPER))  {
+		//Set the new lod
+		this->_lod = lod;
+		//Mark as dirty
+		this->IsVisualDirty(true);
 	}
+	//Check to see if curve needs to be generated
+	if (this->IsVisualDirty()) {
+		this->_buffer = this->GenerateServerBuffer(this->_lod);
+		//Mark as clean
+		this->IsVisualDirty(false);
+	}
+
 	//Set the rendering program
 	if (this->_renderProg != 0) glUseProgram(this->_renderProg);
 	else glUseProgram(defaultProg);
@@ -865,19 +812,17 @@ void WCNurbsCurve::Render(const GLuint &defaultProg, const WCColor &color, const
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 	//Report them errors
-	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::Render - Unspecified GL error at cleanup.");
+	if (glGetError() != GL_NO_ERROR) 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::Render - Unspecified GL error at cleanup.");
 }
 
 
 void WCNurbsCurve::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 	//Something has changed in the control points - mark as dirty
-	this->_isVisualDirty = true;
-	//Check on degree of curve
-	if (this->_degree != 1) {
-		//Update LOD estimate incase length changed
-		WPFloat length = WCNurbs::EstimateLength(this->_controlPoints);
-		this->_lod = (WPUInt)(length / NURBSCURVE_GENERATE_ACCURACY) + 1;
-	}
+	this->IsVisualDirty(true);
+	this->IsSerialDirty(true);
+	//Update Length estimate in case length changed
+	this->_length = WCNurbs::EstimateLength(this->_controlPoints);
 	//Make sure all dependent objects know about it
 	this->SendBroadcastNotice(OBJECT_NOTIFY_UPDATE);
 }
@@ -1094,16 +1039,16 @@ WPFloat WCNurbsCurve::Length(const WPFloat &tolerance) {
 		return length;
 	}
 	//Check to see if curve needs to be generated
-	if (this->_isVisualDirty) {
+	if (this->IsVisualDirty()) {
 		//Generate the curve - only if degree is not 1
 		switch(this->_context->CurvePerformanceLevel()) {
 			//Switch on performance level
-			case NURBSCURVE_PERFLEVEL_HIGH:		this->GenerateCurveHigh();		break;
-			case NURBSCURVE_PERFLEVEL_MEDIUM:	this->GenerateCurveMedium();	break;
-			case NURBSCURVE_PERFLEVEL_LOW:		this->GenerateCurveLow();		break;						
+//			case NURBSCURVE_PERFLEVEL_HIGH:		this->GenerateCurveHigh();		break;
+//			case NURBSCURVE_PERFLEVEL_MEDIUM:	this->GenerateCurveMedium();	break;
+//			case NURBSCURVE_PERFLEVEL_LOW:		this->GenerateCurveLow();		break;						
 		}
 		//Mark as clean
-		this->_isVisualDirty = false;		
+		this->IsVisualDirty(false);
 	}
 	//Bind and map the vertex array
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);
@@ -1286,8 +1231,8 @@ WCRay WCNurbsCurve::Tangent(const WPFloat &u) {
 }
 
 
-WCVector4 WCNurbsCurve::PointInversion(const WCVector4 &point, const WPFloat &u) {
-	WPFloat localU = u;
+std::pair<WCVector4,WPFloat> WCNurbsCurve::PointInversion(const WCVector4 &point) {
+	WPFloat u;
 	//Get base vector for point
 	WCVector4 refPoint = point;
 	refPoint.K(0.0);
@@ -1317,24 +1262,24 @@ WCVector4 WCNurbsCurve::PointInversion(const WCVector4 &point, const WPFloat &u)
 				//Save the index
 				index = i;
 				//Save the t
-				localU = t;
+				u = t;
 			}
 		}
 		//Check to make sure some reasonable index was found
-		if (index == -1) return WCVector4();
+		if (index == -1) return std::make_pair(WCVector4(), -1.0);
 		//Now find the point on the line segment and return it
-		WCVector4 p = this->_controlPoints.at(index) + (this->_controlPoints.at(index+1) - this->_controlPoints.at(index)) * localU;
-		return p;
+		WCVector4 p = this->_controlPoints.at(index) + (this->_controlPoints.at(index+1) - this->_controlPoints.at(index)) * u;
+		return std::make_pair(p, u);
 	}
 
 	//Check to see if curve needs to be generated
-	if (this->_isVisualDirty) switch (this->_context->CurvePerformanceLevel()) {
+	if (this->IsVisualDirty()) switch (this->_context->CurvePerformanceLevel()) {
 		//Switch on performance level
-		case NURBSCURVE_PERFLEVEL_HIGH:		this->GenerateCurveHigh(); break;
-		case NURBSCURVE_PERFLEVEL_MEDIUM:	this->GenerateCurveMedium(); break;
-		case NURBSCURVE_PERFLEVEL_LOW:		this->GenerateCurveLow(); break;				
+//		case NURBSCURVE_PERFLEVEL_HIGH:		this->GenerateCurveHigh(); break;
+//		case NURBSCURVE_PERFLEVEL_MEDIUM:	this->GenerateCurveMedium(); break;
+//		case NURBSCURVE_PERFLEVEL_LOW:		this->GenerateCurveLow(); break;				
 		//Mark as clean
-		this->_isVisualDirty = false;		
+			this->IsVisualDirty(true);
 	}
 	//Otherwise use tessellated vertices
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);
@@ -1356,7 +1301,7 @@ WCVector4 WCNurbsCurve::PointInversion(const WCVector4 &point, const WPFloat &u)
 	//Make sure to unmap the buffer
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	//Calculate the u value for the initial minimum point
-	localU = index * this->_knotPoints[this->_kp-1] / (this->_lod+1);
+	u = index * this->_knotPoints[this->_kp-1] / (this->_lod+1);
 	
 	//Initialize metrics
 	WPFloat *basisValues;
@@ -1376,8 +1321,8 @@ WCVector4 WCNurbsCurve::PointInversion(const WCVector4 &point, const WPFloat &u)
 		cDer.Set(0.0, 0.0, 0.0, 0.0);
 		c2Der.Set(0.0, 0.0, 0.0, 0.0);
 		//Find the span and basis values up to second derivative
-		index = WCNurbs::FindSpan(this->_cp, this->_degree, localU, this->_knotPoints);
-		basisValues = WCNurbs::BasisValues(index, localU, this->_degree, this->_knotPoints, 2);
+		index = WCNurbs::FindSpan(this->_cp, this->_degree, u, this->_knotPoints);
+		basisValues = WCNurbs::BasisValues(index, u, this->_degree, this->_knotPoints, 2);
 		//Calculate C, C', and C''
 		for (i=0; i<=this->_degree; i++) {
 			pt = this->_controlPoints.at(index-this->_degree+i);
@@ -1409,17 +1354,17 @@ WCVector4 WCNurbsCurve::PointInversion(const WCVector4 &point, const WPFloat &u)
 		dist = vDist.Magnitude();
 
 		/*** Check for condition 1 ***/
-		if (dist < NURBSCURVE_EPSILON_ONE) return c;
+		if (dist < NURBSCURVE_EPSILON_ONE) return std::make_pair(c,u);
 		
 		//Do some interim calculations
 		top = cDer.DotProduct(vDist);
 		bottom = cDer.Magnitude();
 		/*** Check condition 2 ***/
-		if (( ABS(top) / (bottom*dist) ) <= NURBSCURVE_EPSILON_TWO) return c;
+		if (( STDFABS(top) / (bottom*dist) ) <= NURBSCURVE_EPSILON_TWO) return std::make_pair(c, u);
 		
 		//Calculate next u
 		bottom = c2Der.DotProduct(vDist) + (bottom * bottom);
-		uNx = localU - (top / bottom);
+		uNx = u - (top / bottom);
 		//Adjust u by rule (3) if necessary (closed and open curves)
 		if (this->_isClosed) {
 			if (uNx < this->_knotPoints[index]) uNx = this->_knotPoints[index+1] - this->_knotPoints[index] + uNx;
@@ -1431,16 +1376,72 @@ WCVector4 WCNurbsCurve::PointInversion(const WCVector4 &point, const WPFloat &u)
 		}
 		
 		/*** Check rule (4) for halting ***/
-		top = (cDer * (uNx - localU)).Magnitude();
-		if (top <= NURBSCURVE_EPSILON_ONE) return c;
+		top = (cDer * (uNx - u)).Magnitude();
+		if (top <= NURBSCURVE_EPSILON_ONE) return std::make_pair(c, u);
 
 		//Swap the u value to the next u value
-		localU = uNx;
+		u = uNx;
 		//Increment max loop counter
 		j++;
 	}
 	//Return the point on the curve
-	return c;		
+	return std::make_pair(c, u);		
+}
+
+
+GLfloat* WCNurbsCurve::GenerateClientBuffer(WPUInt &lod) {
+	//Make sure LOD >= 2
+	if (lod < 2) lod = 2;
+
+	//Check for special generation cases - degree 1 curves
+	if (this->_degree == 1) {
+		GLuint dummy;
+		return this->GenerateCurveOne(true, dummy);
+	}
+
+	//Generate buffer
+	GLfloat *buffer = NULL;
+	//Return buffer
+	return buffer;
+}
+
+
+GLuint WCNurbsCurve::GenerateServerBuffer(WPUInt &lod) {
+	GLuint buffer = 0;
+	//Make sure LOD >= 2
+	if (lod < 2) lod = 2;
+
+	//Check for special generation cases - degree 1 curves
+	if (this->_degree == 1) {
+		//Generate the buffer of data
+		this->GenerateCurveOne(true, buffer);
+		//Set LOD to numCP
+		lod = this->_cp;
+	}
+
+	//Low generation only on LOD > MaxTextureSize || PerfLevel == Low
+	else if ((lod > (WPUInt)this->_context->CurveMaxTextureSize()) ||
+		(this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_LOW)) {
+		//Generate the buffer of data using low method
+		this->GenerateCurveLow(lod, true, buffer);
+	}
+
+	//Medium generation only if PerfLevel == Med
+	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_MEDIUM) {
+		//Generate the buffer of data using medium method
+		this->GenerateCurveMedium(lod, true, buffer);
+	}
+	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_HIGH) {
+		//Generate the buffer of data using high method
+		this->GenerateCurveHigh(lod, true, buffer);
+	}
+	//Error path
+	else {
+		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateServerBuffer - Unknown generation path.");
+		//throw error
+	}
+	//Return the buffer
+	return buffer;
 }
 
 
@@ -1498,14 +1499,16 @@ void WCNurbsCurve::InsertKnot(const WPFloat &u, const WPUInt &multiplicity) {
 	//Do some more setup only if degree is 1
 	if (this->_degree == 1) {
 		//Copy the control points into a vbo
-		this->GenerateCurveOne();
+//		this->GenerateCurveOne();
 	//Otherwise, load the knot points
 	} else {			
 		//Find the rough length of the curve and the number of needed segments
-		WPFloat length = WCNurbs::EstimateLength(this->_controlPoints);
-		this->_lod = (WPUInt)(length / NURBSCURVE_GENERATE_ACCURACY) + 1;	
-	}	
-	this->_isVisualDirty = true;
+//		WPFloat length = WCNurbs::EstimateLength(this->_controlPoints);
+//		this->_lod = (WPUInt)(length / NURBSCURVE_GENERATE_ACCURACY) + 1;	
+	}
+	//Mark as dirty
+	this->IsVisualDirty(true);
+	this->IsSerialDirty(true);
 
 	//Delete the arrays
 	delete UQ;
@@ -1550,11 +1553,9 @@ WCNurbsCurve& WCNurbsCurve::operator=(const WCNurbsCurve &curve) {
 	this->_cp = curve._cp;
 	this->_kp = curve._kp;
 	this->_lod = curve._lod;
-	//Copy the control points into a vbo
-	if (this->_degree == 1)
-		this->GenerateCurveOne();
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
+	this->IsSerialDirty(true);
 	//Return this object
 	return *this;
 }

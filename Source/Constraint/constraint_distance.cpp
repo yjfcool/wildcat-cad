@@ -89,11 +89,10 @@ void WCConstraintDistance::PointCurve(void) {
 	WCVector4 pos0 = pt->Data();
 	//Determine pos1 based on positionB
 	WCVector4 pos1;
-	WPFloat dummy;
 	if (this->_posB == WCMeasurePosition::Begin()) pos1 = curve->Evaluate(0.0);
 	else if (this->_posB == WCMeasurePosition::End()) pos1 = curve->Evaluate(1.0);
 	//Project pt onto curve
-	else pos1 = curve->PointInversion(pos0, dummy);
+	else pos1 = curve->PointInversion(pos0).first;
 
 	//Determine distance based on type (absolute case)
 	if (this->_measureType == WCMeasureType::Absolute()) {

@@ -38,8 +38,6 @@ WCGeometricPoint::WCGeometricPoint(const WPFloat &x, const WPFloat &y, const WPF
 	::WCGeometricObject(), _data(x, y, z, w), _size(POINT_POINTSIZE) {
 	//Establish aligned bounding box
 	this->_bounds = new WCAlignedBoundingBox(&this->_data, 1);
-	//Mark as dirty
-	this->_isVisualDirty = true;
 }
 
 
@@ -47,8 +45,6 @@ WCGeometricPoint::WCGeometricPoint(const WCVector4 &vec) :
 	::WCGeometricObject(), _data(vec), _size(POINT_POINTSIZE) {
 	//Establish aligned bounding box
 	this->_bounds = new WCAlignedBoundingBox(&this->_data, 1);
-	//Mark as dirty
-	this->_isVisualDirty = true;
 }
 
 
@@ -56,8 +52,6 @@ WCGeometricPoint::WCGeometricPoint(const WCGeometricPoint &point) :
 	::WCGeometricObject(), _data(point._data), _size(POINT_POINTSIZE) {
 	//Establish aligned bounding box
 	this->_bounds = new WCAlignedBoundingBox(&this->_data, 1);
-	//Mark as dirty
-	this->_isVisualDirty = true;
 }
 
 
@@ -65,8 +59,6 @@ WCGeometricPoint::WCGeometricPoint(const WPUInt &size, const WPFloat *data) :
 	::WCGeometricObject(), _data(size, data), _size(POINT_POINTSIZE) {
 	//Establish aligned bounding box
 	this->_bounds = new WCAlignedBoundingBox(&this->_data, 1);
-	//Mark as dirty
-	this->_isVisualDirty = true;
 }
 
 
@@ -88,8 +80,6 @@ WCGeometricPoint::WCGeometricPoint(xercesc::DOMElement *element, WCSerialDiction
 	this->_data.FromElement( WCSerializeableObject::ElementFromName(element,"Base") );
 	//Establish aligned bounding box
 	this->_bounds = new WCAlignedBoundingBox(&this->_data, 1);
-	//Mark as dirty
-	this->_isVisualDirty = true;
 }
 
 
@@ -102,7 +92,7 @@ void WCGeometricPoint::Set(const WPFloat &x, const WPFloat &y, const WPFloat &z,
 	//Update variable
 	this->_data.Set(x, y, z, w);
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsSerialDirty(true);
 	//Update the bounding box
 	this->_bounds->Set(&this->_data, 1);
 	//Make sure all dependent objects know about it
@@ -114,7 +104,7 @@ void WCGeometricPoint::Set(const WCVector4 &vector) {
 	//Update variable
 	this->_data = vector;
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsSerialDirty(true);
 	//Update the bounding box
 	this->_bounds->Set(&this->_data, 1);
 	//Make sure all dependent objects know about it
@@ -126,7 +116,7 @@ void WCGeometricPoint::X(const WPFloat &x) {
 	//Update variable
 	this->_data.I(x);
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsSerialDirty(true);
 	//Update the bounding box
 	this->_bounds->Set(&this->_data, 1);
 	//Make sure all dependent objects know about it
@@ -138,7 +128,7 @@ void WCGeometricPoint::Y(const WPFloat &y) {
 	//Update variable
 	this->_data.J(y);
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsSerialDirty(true);
 	//Update the bounding box
 	this->_bounds->Set(&this->_data, 1);
 	//Make sure all dependent objects know about it
@@ -150,7 +140,7 @@ void WCGeometricPoint::Z(const WPFloat &z) {
 	//Update variable
 	this->_data.K(z);
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsSerialDirty(true);
 	//Update the bounding box
 	this->_bounds->Set(&this->_data, 1);
 	//Make sure all dependent objects know about it
@@ -162,7 +152,7 @@ void WCGeometricPoint::W(const WPFloat &w) {
 	//Update variable
 	this->_data.L(w);
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsSerialDirty(true);
 	//Update the bounding box
 	this->_bounds->Set(&this->_data, 1);
 	//Make sure all dependent objects know about it

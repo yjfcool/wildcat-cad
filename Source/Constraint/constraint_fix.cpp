@@ -92,7 +92,7 @@ void WCConstraintFix::GenerateBuffer(void) {
 							 this->_texture->_width, 0.0 };
 	memcpy(this->_texData, texCoords, 8 * sizeof(GLfloat));
 	//Mark as clean
-//	this->_isVisualDirty = false;
+	this->IsVisualDirty(false);
 }
 
 
@@ -228,7 +228,7 @@ void WCConstraintFix::Render(const GLuint &defaultProg, const WCColor &color, co
 	//Do a visibility check
 	if (!this->_isVisible) return;
 	//Regenerate the measure if necessary
-	if (this->_isVisualDirty) this->GenerateBuffer();
+	if (this->IsVisualDirty()) this->GenerateBuffer();
 
 	//Enable state
 	glDisable(GL_DEPTH_TEST);

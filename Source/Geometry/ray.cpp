@@ -59,7 +59,7 @@ void WCRay::Base(const WCVector4 &base) {
 	//Copy in the base
 	this->_base = base;
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsSerialDirty(true);
 }
 
 
@@ -68,7 +68,7 @@ void WCRay::Direction(const WCVector4 &direction) {
 	this->_direction = direction;
 	this->_direction.Normalize();
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsSerialDirty(true);
 }
 
 
@@ -78,10 +78,14 @@ void WCRay::ApplyTransform(const WCMatrix4 &transform) {
 	//Adjust the direction and renormalize
 	this->_direction = transform * this->_direction;
 	this->_direction.Normalize();
+	//Mark as dirty
+	this->IsSerialDirty(true);
 }
 
 
 void WCRay::ApplyTranslation(const WCVector4 &tvector) {
+	//Mark as dirty
+	this->IsSerialDirty(true);
 }
 
 

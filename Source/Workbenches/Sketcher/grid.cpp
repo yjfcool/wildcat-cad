@@ -250,11 +250,11 @@ void WCGrid::Render(const GLuint &defaultProg, const WCColor &color, const WPFlo
 	//Check visibility
 	if (!this->_isVisible) return;
 	//Check dirty flag
-	if (this->_isVisualDirty) {
+	if (this->IsVisualDirty()) {
 		//Generate VBO
 		this->GenerateBuffers();
 		//Mark as clean
-		this->_isVisualDirty = false;
+		this->IsVisualDirty(false);
 	}
 	
 	//Set the color
@@ -298,7 +298,7 @@ bool WCGrid::Snap(WPFloat &x, WPFloat &y) {
 
 void WCGrid::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 	//Mark this as dirty
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
 }
 
 

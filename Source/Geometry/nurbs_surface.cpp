@@ -871,7 +871,7 @@ WCNurbsSurface::~WCNurbsSurface() {
 
 GLuint WCNurbsSurface::VertexBuffer(void) {
 	//Check to see if surface needs to be generated
-	if (this->_isVisualDirty) {
+	if (this->IsVisualDirty()) {
 		//Generate the curve - switch on performance level
 		switch(this->_context->SurfacePerformanceLevel()) {
 			case NURBSSURFACE_PERFLEVEL_HIGH:	this->GenerateSurfaceHigh(); break;
@@ -881,7 +881,7 @@ GLuint WCNurbsSurface::VertexBuffer(void) {
 		//Generate the index for the curve
 		this->GenerateIndex();
 		//Mark as clean
-		this->_isVisualDirty = false;
+		this->IsVisualDirty(false);
 	}
 	//Return the buffer
 	return this->_buffers[NURBSSURFACE_VERTEX_BUFFER];
@@ -924,7 +924,8 @@ void WCNurbsSurface::Degree(const WPUInt &degreeU, const WPUInt &degreeV) {
 	std::cout << "Degrees: " << this->_degreeU << " " << this->_degreeV << std::endl;
 /*** Debug ***/
 	//Mark the object as dirty
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
+	this->IsSerialDirty(true);
 }
 
 
@@ -951,7 +952,8 @@ void WCNurbsSurface::LevelOfDetail(const WPUInt &lodU, const WPUInt &lodV) {
 //	std::cout << "LOD: " << this->_lodU << " " << this->_lodV << std::endl;	
 /*** Debug ***/
 	//Mark the object as dirty
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
+	this->IsSerialDirty(true);
 }
 
 
@@ -995,7 +997,7 @@ void WCNurbsSurface::Render(const GLuint &defaultProg, const WCColor &color, con
 	//Make sure surface is visible
 	if (!this->_isVisible) return;
 	//Check to see if surface needs to be generated
-	if (this->_isVisualDirty) {
+	if (this->IsVisualDirty()) {
 		//Generate the curve - switch on performance level
 		switch(this->_context->SurfacePerformanceLevel()) {
 			case NURBSSURFACE_PERFLEVEL_HIGH:	this->GenerateSurfaceHigh(); break;
@@ -1005,7 +1007,7 @@ void WCNurbsSurface::Render(const GLuint &defaultProg, const WCColor &color, con
 		//Generate the index for the curve
 		this->GenerateIndex();
 		//Mark as clean
-		this->_isVisualDirty = false;
+		this->IsVisualDirty(true);
 	}
 	//Set the rendering program
 	if (this->_renderProg != 0) {
@@ -1059,7 +1061,8 @@ void WCNurbsSurface::Render(const GLuint &defaultProg, const WCColor &color, con
 
 void WCNurbsSurface::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 	//Mark the surface as dirty
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
+	this->IsSerialDirty(true);
 	//Estimate LOD values
 	WPFloat length = WCNurbs::EstimateLengthU(this->_controlPoints, this->_cpU);
 	this->_lodU = (WPUInt)(length / NURBSSURFACE_GENERATE_ACCURACY) + 1;
@@ -1136,7 +1139,7 @@ WCVector4 WCNurbsSurface::PointInversion(const WCVector4 &point) {
 		return WCVector4();
 	}
 	//Check to see if surface needs to be generated
-	if (this->_isVisualDirty) {
+	if (this->IsVisualDirty()) {
 		//Generate the curve - switch on performance level
 		switch(this->_context->SurfacePerformanceLevel()) {
 			case NURBSSURFACE_PERFLEVEL_HIGH: this->GenerateSurfaceHigh(); break;
@@ -1146,7 +1149,7 @@ WCVector4 WCNurbsSurface::PointInversion(const WCVector4 &point) {
 		//Generate the index for the curve
 		this->GenerateIndex();		
 		//Mark as clean
-		this->_isVisualDirty = false;		
+		this->IsVisualDirty(true);
 	}
 	//Get base vector for point
 	WCVector4 refPoint = point;
@@ -1160,7 +1163,7 @@ WCVector4 WCNurbsSurface::PointInversion(const WCVector4 &point) {
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffers[NURBSSURFACE_VERTEX_BUFFER]);
 	GLfloat *data = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
 	//Loop through all points and find closest
-	for (i=0; i<(this->_lod+1)*(this->_lod+1); i++) {
+	for (i=0; i<(this->_lodU+1)*(this->_lodV+1); i++) {
 		//Create a point from the data set
 		j = i * NURBSSURFACE_FLOATS_PER_VERTEX;
 		curvePoint.Set(data[j], data[j+1], data[j+2], data[j+3]);
@@ -1177,8 +1180,8 @@ WCVector4 WCNurbsSurface::PointInversion(const WCVector4 &point) {
 	//Make sure to unmap the buffer
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	//Calculate the u,v value for the initial minimum point
-	u = (index % (this->_lod+1)) * this->_knotPointsU[this->_kpU-1] / (this->_lod+1);
-	v = (index / (this->_lod+1)) * this->_knotPointsV[this->_kpV-1] / (this->_lod+1);
+	u = (index % (this->_lodU+1)) * this->_knotPointsU[this->_kpU-1] / (this->_lodU+1);
+	v = (index / (this->_lodV+1)) * this->_knotPointsV[this->_kpV-1] / (this->_lodV+1);
 
 	//Initialize metrics
 	WPFloat *bvU, *bvV;

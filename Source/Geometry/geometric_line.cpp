@@ -42,8 +42,6 @@ WCGeometricLine::WCGeometricLine(const WCVector4 &p0, const WCVector4 &p1) : ::W
 	//Establish aligned bounding box
 	WCVector4 pts[2] = {this->_p0, this->_p1};
 	this->_bounds = new WCAlignedBoundingBox(pts, 2);
-	//Mark as dirty
-	this->_isVisualDirty = true;
 }
 
 
@@ -52,8 +50,6 @@ WCGeometricLine::WCGeometricLine(const WCGeometricLine &line) : ::WCGeometricCur
 	//Establish aligned bounding box
 	WCVector4 pts[2] = {this->_p0, this->_p1};
 	this->_bounds = new WCAlignedBoundingBox(pts, 2);
-	//Mark as dirty
-	this->_isVisualDirty = true;
 }
 
 
@@ -80,8 +76,6 @@ WCGeometricLine::WCGeometricLine(xercesc::DOMElement *element, WCSerialDictionar
 	//Establish aligned bounding box
 	WCVector4 pts[2] = {this->_p0, this->_p1};
 	this->_bounds = new WCAlignedBoundingBox(pts, 2);
-	//Mark as dirty
-	this->_isVisualDirty = true;
 }
 
 
@@ -284,22 +278,22 @@ WCRay WCGeometricLine::Tangent(const WPFloat &u) {
 }
 
 
-WCVector4 WCGeometricLine::PointInversion(const WCVector4 &point, const WPFloat &u) {
-	WPFloat localU = u;
+std::pair<WCVector4,WPFloat> WCGeometricLine::PointInversion(const WCVector4 &point) {
+	WPFloat u;
 	//Get direction vector
 	WCVector4 direction = this->_p1 - this->_p0;
 	direction.Normalize(true);
 	//Get point vector
 	WCVector4 pointVector = point - this->_p0;
-	localU = direction.DotProduct(pointVector);
+	u = direction.DotProduct(pointVector);
 	//Divide u by the magnitude of p0 - pt
-	localU /= this->_p1.Distance(this->_p0);
+	u /= this->_p1.Distance(this->_p0);
 	//Check end conditions
-	if (localU < 0.0) return this->_p0;
-	if (localU > 1.0) return this->_p1;
+	if (u < 0.0) return std::make_pair(this->_p0, u);
+	if (u > 1.0) return std::make_pair(this->_p1, u);
 	//Get the point on the line
-	WCVector4 pt = this->_p0 * (1.0 - localU) + this->_p1 * localU;
-	return pt;
+	WCVector4 pt = this->_p0 * (1.0 - u) + this->_p1 * u;
+	return std::make_pair(pt, u);
 }
 
 
@@ -314,7 +308,7 @@ void WCGeometricLine::ApplyTransform(const WCMatrix4 &transform) {
 	//Apply transform to p1
 	this->_p1 = transform * this->_p1;
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsSerialDirty(true);
 	//Send message 
 	this->SendBroadcastNotice(OBJECT_NOTIFY_UPDATE);
 }
@@ -326,7 +320,7 @@ void WCGeometricLine::ApplyTranslation(const WCVector4 &translation) {
 	//Apply translation to p1
 	this->_p1 += translation;
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsSerialDirty(true);
 	//Send message 
 	this->SendBroadcastNotice(OBJECT_NOTIFY_UPDATE);
 }
@@ -335,8 +329,6 @@ void WCGeometricLine::ApplyTranslation(const WCVector4 &translation) {
 void WCGeometricLine::Render(const GLuint &defaultProg, const WCColor &color, const WPFloat &zoom) {
 	//Make sure is visible
 	if (!this->_isVisible) return;
-	//Mark as clean
-	this->_isVisualDirty = false;
 	//Set the rendering program
 	if (this->_renderProg != 0) glUseProgram(this->_renderProg);
 	else glUseProgram(defaultProg);

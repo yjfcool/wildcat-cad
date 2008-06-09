@@ -305,7 +305,9 @@ public:
 			//See if matches object - if not evaluate for match
 			if ((*curveIter).first != object) {
 				//Inverse project pos onto curve
-				loc = (*curveIter).first->PointInversion(pos, u);
+				std::pair<WCVector4,WPFloat> piResult = (*curveIter).first->PointInversion(pos);
+				loc = piResult.first;
+				u = piResult.second;
 				//Determine distance to point
 				dist = loc.Distance(pos);
 				//If close enough, project to closest point on line

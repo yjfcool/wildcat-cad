@@ -59,8 +59,8 @@ void WCGeometryContext::StartCurve(void) {
 /*** Debug ***/	
 	//Force Performance Level
 //	this->_ncPerfLevel = NURBSCURVE_PERFLEVEL_HIGH;
-//	this->_ncPerfLevel = NURBSCURVE_PERFLEVEL_MEDIUM;
-	this->_ncPerfLevel = NURBSCURVE_PERFLEVEL_LOW;
+	this->_ncPerfLevel = NURBSCURVE_PERFLEVEL_MEDIUM;
+//	this->_ncPerfLevel = NURBSCURVE_PERFLEVEL_LOW;
 /*** Debug ***/
 	//Compile Shaders
 	switch(this->_ncPerfLevel) {

@@ -80,7 +80,7 @@ void WCConstraintVertical::GenerateBuffer(void) {
 	memcpy(this->_texData, texCoords, 8 * sizeof(GLfloat));
 	
 	//Mark as clean
-	this->_isVisualDirty = false;
+	this->IsVisualDirty(false);
 }
 
 
@@ -113,7 +113,7 @@ void WCConstraintVertical::Initialize(void) {
 	//Inject constraints into sketch planner
 	this->InjectConstraints(this->_sketch->ConstraintPlanner());
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
 }
 
 
@@ -173,7 +173,7 @@ void WCConstraintVertical::InjectConstraints(WCConstraintPlanner *planner) {
 
 void WCConstraintVertical::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
 }
 
 
@@ -202,7 +202,7 @@ void WCConstraintVertical::Render(const GLuint &defaultProg, const WCColor &colo
 	//Do a visibility check
 	if (!this->_isVisible) return;
 	//Regenerate the measure if necessary
-	if (this->_isVisualDirty) this->GenerateBuffer();	
+	if (this->IsVisualDirty()) this->GenerateBuffer();	
 
 	//Enable state
 	glDisable(GL_DEPTH_TEST);

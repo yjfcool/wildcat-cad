@@ -51,8 +51,9 @@ namespace __WILDCAT_NAMESPACE__ {
 
 
 class WCVisualObject : virtual public WCObject {
-protected:
+private:
 	bool										_isVisualDirty;										//!< Dirty flag
+protected:
 	bool										_isVisible;											//!< Visible flag
 	WCAlignedBoundingBox						*_bounds;											//!< Bounding box
 	GLuint										_renderProg;										//!< Program for rendering the object
@@ -66,20 +67,20 @@ public:
 	virtual ~WCVisualObject()					{ if (this->_bounds != NULL) delete this->_bounds; }//!< Default destructor
 		
 	//Member Access Functions
-	inline void IsVisualDirty(const bool &status){ this->_isVisualDirty = status; }					//!< Set the dirty flag
-	inline bool IsVisualDirty(void) const		{ return this->_isVisualDirty; }					//!< Get the dirty flag
+	virtual inline void IsVisualDirty(const bool &status){ this->_isVisualDirty = status; }			//!< Set the dirty flag
+	virtual inline bool IsVisualDirty(void) const		{ return this->_isVisualDirty; }			//!< Get the dirty flag
 	virtual inline void IsVisible(const bool &status)	{ this->_isVisible = status; }				//!< Set the visible flag
-	virtual inline bool IsVisible(void) const	{ return this->_isVisible; }						//!< Get the visible flag
+	virtual inline bool IsVisible(void) const			{ return this->_isVisible; }				//!< Get the visible flag
 	virtual inline WCAlignedBoundingBox BoundingBox(void)	{										//!< Get the current bounding box
-												if (this->_bounds == NULL) return WCAlignedBoundingBox();
-												return *this->_bounds; }
-	virtual inline void RenderProgram(const GLuint &prog) { this->_renderProg = prog; }				//!< Set the rendering prog
-	virtual inline GLuint RenderProgram(void) const	{ return this->_renderProg; }					//!< Get the rendering prog
-	virtual inline void Color(const WCColor &color) { this->_color = color; }						//!< Set the object color
-	virtual inline WCColor Color(void) const	{ return this->_color; }							//!< Get the object color
+														if (this->_bounds == NULL) return WCAlignedBoundingBox();
+														return *this->_bounds; }
+	virtual inline void RenderProgram(const GLuint &prog){ this->_renderProg = prog; }				//!< Set the rendering prog
+	virtual inline GLuint RenderProgram(void) const		{ return this->_renderProg; }				//!< Get the rendering prog
+	virtual inline void Color(const WCColor &color)		{ this->_color = color; }					//!< Set the object color
+	virtual inline WCColor Color(void) const			{ return this->_color; }					//!< Get the object color
 	
 	//Required Member Overloads
-	virtual void Render(const GLuint &defaultProg, const WCColor &color, const WPFloat &zoom)=0;		//!< Render the object
+	virtual void Render(const GLuint &defaultProg, const WCColor &color, const WPFloat &zoom)=0;	//!< Render the object
 };
 
 

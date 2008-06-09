@@ -85,7 +85,7 @@ public:
 	WCVector4 Evaluate(const WPFloat &u);															//!< Evaluate curve for a parametric value
 	WCVector4 Derivative(const WPFloat &u, const WPUInt &der);										//!< Evaluate derivative at a specific point
 	WCRay Tangent(const WPFloat &u);																//!< Get tangent to the curve at U
-	WCVector4 PointInversion(const WCVector4 &point, const WPFloat &u=0.0);							//!< Get closest point on curve
+	std::pair<WCVector4,WPFloat> PointInversion(const WCVector4 &point);							//!< Get closest point on curve
 
 	//Required Inherited Methods
 	WCVisualObject* HitTest(const WCRay &ray, const WPFloat &tolerance);							//!< Hit test on the object

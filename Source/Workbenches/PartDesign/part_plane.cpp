@@ -165,7 +165,7 @@ WCPartPlane::~WCPartPlane() {
 void WCPartPlane::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 //	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPartPlane::ReceiveNotice - Not yet implemented.");
 	//Mark as dirty
-	this->_isVisualDirty = true;
+	this->IsVisualDirty(true);
 }
 
 
@@ -203,11 +203,11 @@ void WCPartPlane::Render(const GLuint &defaultProg, const WCColor &color, const 
 	//Make sure to check if is visible
 	if (!this->_isVisible) return;
 	//Check if dirty
-	if (this->_isVisualDirty) {
+	if (this->IsVisualDirty()) {
 		this->GenerateVBO();
 		this->GenerateMatrices();
 		//Mark as clean
-		this->_isVisualDirty = false;
+		this->IsVisualDirty(false);
 	}
 	else glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);
 

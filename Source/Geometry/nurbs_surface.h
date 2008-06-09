@@ -95,7 +95,6 @@ class WCGeometryContext;
 
 class WCNurbsSurface : public WCGeometricSurface {
 protected:
-	//Basic data
 	WCGeometryContext							*_context;											//!< Geometry context
 	WPUInt										_lodU, _lodV, _numVerts;							//!< Values for LOD calculations
 	WPUInt										_degreeU, _degreeV;									//!< Degree in U and V directions
@@ -105,7 +104,7 @@ protected:
 	WPUInt										_kpU, _kpV;											//!< Number of knot points in U and V directions
 	WPFloat										*_knotPointsU, *_knotPointsV;						//!< Arrays of knot point values
 	GLuint										_buffers[4];										//!< Data buffers for vertex, normal, index, and texcoords
-	
+	GLfloat										*_altBuffers[4];									//!< Data buffers - CPU side
 protected:
 	//Private Functions
 	void ValidateClosure(void);																		//!< Check the closure of the surface
