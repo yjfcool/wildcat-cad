@@ -10,7 +10,7 @@ Each workbench fully encapsulates its own tools, user-interface elements, docume
 Listed below are the initial set of workbenches that will be incorporated into Wildcat (those that have an implementation have links to their documentation):
 
   * Part Design
-  * Sketcher
+  * [Sketcher Sketcher]
   * Real-Time Visualization
   * Assembly
   * Drafting
