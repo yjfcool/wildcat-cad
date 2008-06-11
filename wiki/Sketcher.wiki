@@ -1,3 +1,6 @@
+#summary Description of current key commands while in Sketcher Workbench
+#labels Phase-Support
+
 Sketcher
 
 = Introduction =
