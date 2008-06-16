@@ -249,8 +249,12 @@ WSProgram* WCShaderManager::ParseProgram(xercesc::DOMElement *element, const boo
 		//Set up the transform feedback for the program
 		glTransformFeedbackVaryingsEXT(program->_id, varyingCount, varyings, type);
 		//Delete all of the varyings
-		for (int j=0; j<varyingCount; j++) delete varyings[j];
-		delete varyings;
+		for (int j=0; j<varyingCount; j++) {
+			//Do null value check
+			if (varyings[j]) delete varyings[j];
+		}
+		//Delete the array
+		if (varyings) delete varyings;
 	}
 
 	//Process geometry shader params (if present)

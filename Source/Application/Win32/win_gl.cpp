@@ -31,9 +31,9 @@
 
 
 /*** Library Support ***/
-#pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
-#pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
-#pragma comment( lib, "glaux.lib" )								// Search For GLaux.lib While Linking
+#pragma comment( lib, "opengl32.lib" )			// Search For OpenGL32.lib While Linking
+#pragma comment( lib, "glu32.lib" )				// Search For GLu32.lib While Linking
+//#pragma comment( lib, "glaux.lib" )			// Search For GLaux.lib While Linking
 
 
 /*** Locally Defined Values ***/
