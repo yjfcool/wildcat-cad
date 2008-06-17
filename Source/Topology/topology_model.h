@@ -38,9 +38,12 @@
 //None
 
 
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
 /*** Class Predefines ***/
-class WCDocument;
-class WCTopologyRegion;
+class WSTopologyShell;
 
 
 /***********************************************~***************************************************/
@@ -48,28 +51,27 @@ class WCTopologyRegion;
 
 class WCTopologyModel : public WCSerializeableObject {
 private:
-	WCDocument									*_document;											//!< Parent document object
-	std::list<WCTopologyRegion*>				_regionList;										//!< List of child Regions of this model
+	std::list<WSTopologyShell*>					_shellList;											//!< List of child Shells in this model
 private:
-	WCTopologyModel();																				//!< Deny access to the default constructor
-	WCTopologyModel(const WCTopologyModel&);														//!< Deny access to copy constructor
+	//Hidden Constructors
 	WCTopologyModel& operator=(const WCTopologyModel&);												//!< Deny access to equals operator
 public:
-	WCTopologyModel(WCDocument *doc);																//!< Primary constructor
+	WCTopologyModel() : ::WCSerializeableObject(), _shellList() { }									//!< Default constructor
+	WCTopologyModel(const WCTopologyModel&);														//!< Copy constructor
+	WCTopologyModel(xercesc::DOMElement *element, WCSerialDictionary *dictionary);					//!< Persistance constructor
 	~WCTopologyModel();																				//!< Default destructor
 
 	//General Access Methods
-	std::list<WCTopologyRegion*> Regions(void)	{ return this->_regionList; }						//!< Get the list of Regions
+	void AddShell(WSTopologyShell* shell);															//!< Add a shell to the model
 	
 	//Boolean Methods
+	WCTopologyModel* Slice(const WCMatrix4 &plane, const bool &retainBottom);						//!< Slice the model using the plane
 	WCTopologyModel* Intersect(WCTopologyModel *model);												//!< Intersect two topology models
 	WCTopologyModel* Union(WCTopologyModel *model);													//!< Union two topology models
 	WCTopologyModel* Subtract(WCTopologyModel *model);												//!< Subtract one model from another
 
 	//Required Virtual Methods
-	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document);									//!< Serialize the object
-	static WCTopologyModel* Deserialize(xercesc::DOMElement* obj);									//!< Deserialize the object
-	bool Validate(xercesc::DOMElement* obj);														//!< Check to see if obj is valid
+	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
 
 	/*** Non-Member Functions ***/
 	friend std::ostream& operator<<(std::ostream& out, const WCTopologyModel &model);				//!< Overloaded output operator
@@ -79,5 +81,6 @@ public:
 /***********************************************~***************************************************/
 
 
+}	   // End Wildcat Namespace
 #endif //__TOPOLOGY_MODEL_H__
 

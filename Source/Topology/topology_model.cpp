@@ -28,45 +28,25 @@
 
 /*** Included Header Files ***/
 #include "Topology/topology_model.h"
+#include "Topology/topology_types.h"
 
 
 /***********************************************~***************************************************/
 
 
-WCTopologyModel::WCTopologyModel(WCDocument *doc) : ::WCSerializeableObject(), _document(doc) {
-}
-
-
 WCTopologyModel::~WCTopologyModel() {
+	//Delete all children
+	//...
 }
 
 
-WCTopologyModel* WCTopologyModel::Intersect(WCTopologyModel *model) { 
-	return NULL;
+void WCTopologyModel::AddShell(WSTopologyShell* shell) {
+	//Just add it into the list for now
+	this->_shellList.push_back(shell);
 }
 
 
-WCTopologyModel* WCTopologyModel::Union(WCTopologyModel *model) { 
-	return NULL;
-}
-
-
-WCTopologyModel* WCTopologyModel::Subtract(WCTopologyModel *model) { 
-	return NULL;
-}
-
-
-xercesc::DOMElement* WCTopologyModel::Serialize(xercesc::DOMDocument *document) {
-	return NULL;
-}
-
-
-WCTopologyModel* WCTopologyModel::Deserialize(xercesc::DOMElement* obj) {
-	return NULL;
-}
-
-
-bool WCTopologyModel::Validate(xercesc::DOMElement* obj) {
+xercesc::DOMElement* WCTopologyModel::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict) {
 	return NULL;
 }
 
@@ -75,6 +55,7 @@ bool WCTopologyModel::Validate(xercesc::DOMElement* obj) {
 
 
 std::ostream& operator<<(std::ostream& out, const WCTopologyModel &model) {
+	out << "Topology Model (" << &model << ")\n";
 	return out;
 }
 
