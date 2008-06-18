@@ -32,8 +32,10 @@
 
 
 //Initialize static variables
-bool *WCAdapter::_extensions = NULL;
 bool WCAdapter::_isInitialized = false;
+float WCAdapter::_version = 0.0;
+bool *WCAdapter::_extensions = NULL;
+
 
 //Initialize static limits
 GLint WCAdapter::_maxGeometryOutputVertices = 0;
@@ -400,21 +402,27 @@ char* adapterExtensions[ADAPTER_EXTENSION_COUNT] = {
  void WCAdapter::Initialize(void) {
 	//Don't need multiple initializations
 	if (WCAdapter::_isInitialized) return;
-// 	std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
-//	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-	
+
+	//Set OpenGL version
+	char* version = (char*)glGetString(GL_VERSION);
+	//Get version
+	switch (version[0]) {
+		//Must be versions 1.3, 1.4, or 1.5
+		case '1': if (version[2] == '5') WCAdapter::_version = 1.5;
+			else if (version[2] == '4') WCAdapter::_version = 1.4;
+			else WCAdapter::_version = 1.3;
+			break;
+		case '2': if (version[2] == '1') WCAdapter::_version = 2.1;
+			else WCAdapter::_version = 2.0;
+			break;
+	}
+	 
 	//Get the list of supported extensions
 	char* extensions = (char*)glGetString(GL_EXTENSIONS);
-//	std::cout << "Extensions: " << extensions << std::endl;
 	//Allocate space for the extension array
 	WCAdapter::_extensions = new bool[ADAPTER_EXTENSION_COUNT];
 	for (int i=0; i<ADAPTER_EXTENSION_COUNT; i++) {
 		WCAdapter::_extensions[i] = (strstr(extensions, adapterExtensions[i]) != NULL);
-/*** Debug ***
-		if (i > 340) {
-			std::cout << i << ": " << adapterExtensions[i] << " -- " << WCAdapter::_extensions[i] << std::endl;
-		}
-/*** Debug ***/
 	}
 		
 	/*** Get Limits ***/

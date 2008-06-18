@@ -28,6 +28,8 @@
 
 /*** Included Header Files ***/
 #include "Geometry/geometric_algorithms.h"
+#include "Geometry/geometric_line.h"
+#include "Geometry/nurbs_curve.h"
 
 
 /***********************************************~***************************************************/
@@ -528,6 +530,105 @@ std::list<WCVector4> __WILDCAT_NAMESPACE__::MinimumBoundingRectangle(const std::
 	}
 	//Rectangle found, return the value
 	return minList;
+}
+
+
+/*** Boundary List Algorithm ***
+ * This algorithm builds a list of boundary points (in WCVector4 format) for the list of curves.  The list must be clockwise oriented.
+ *	The only tricky part of this algorithm is that the end point of one curve is the same as the starting point of the next curve.  So,
+ *	in order to not have duplicate points the last point (remember to keep curve direction in mind) is ignored.
+ ***/
+std::list<WCVector4> __WILDCAT_NAMESPACE__::BuildBoundaryList(std::list<std::pair<WCGeometricCurve*,bool> > &curveList,
+	const bool &detailed, const WPFloat &tolerance) {
+	std::list<WCVector4> pointList;
+	WCGeometricLine *line;
+	WCNurbsCurve *nurb;
+	std::vector<WCVector4> controlPoints;
+	WCVector4 point;
+	
+	//Go through each curve and get boundary points
+	std::list< std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
+	for(curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
+		//Try to cast to a line
+		line = dynamic_cast<WCGeometricLine*>((*curveIter).first);
+		//If it is a line, process as such
+		if (line != NULL) {
+			//Process forwards line (only get end of line)
+			if ((*curveIter).second) pointList.push_back( line->End() );
+			//Process backwards line
+			else pointList.push_back( line->Begin() );
+		}
+		//Try to cast to a nurbs curve
+		else {
+			nurb = dynamic_cast<WCNurbsCurve*>((*curveIter).first);
+			//Make sure it is a nurbs curve
+			if (nurb != NULL) {
+				//If detailed, get all evaluated points
+				if (detailed) {
+					//Need to determine best LOD
+					WPUInt lod = (WPUInt)(nurb->Length(tolerance) / tolerance);
+					GLfloat* data = nurb->GenerateClientBuffer(lod, true);
+					//Process forwards
+					if ((*curveIter).second) {
+						for (WPUInt i=1; i<lod; i++) {
+							//Get point data
+							point.Set(data[i*4], data[i*4+1], data[i*4+2], 1.0);
+							//Put point into list
+							pointList.push_back(point);
+						}
+					}
+					//Process backwards
+					else {
+						for (int i=lod-2; i>=0; i--) {
+							//Get point data
+							point.Set(data[i*4], data[i*4+1], data[i*4+2], 1.0);
+							//Put point into list
+							pointList.push_back(point);
+						}
+					}
+					//Clean up the data from the curve
+					nurb->ReleaseBuffer(data);
+				}
+				//Gather just the control points
+				else {
+					//Get the list of control points
+					controlPoints = nurb->ControlPoints();
+					//Process curve forwards
+					if ((*curveIter).second) {
+						//Go through all control points (make sure to skip the first)
+						for(WPUInt i=1; i<controlPoints.size(); i++) {
+							//Copy the vector base
+							point = controlPoints.at(i);
+							//Set the weight to 1.0
+							point.L(1.0);
+							//Add point to point line
+							pointList.push_back(point);
+						}
+					}
+					//Process curve backwards
+					else {
+						//Go through all control points (make sure to skip the first)
+						for(int i=(int)controlPoints.size()-2; i>=0; i--) {
+							//Copy the vector base
+							point = controlPoints.at(i);
+							//Set the weight to 1.0
+							point.L(1.0);
+							//Add point to point line
+							pointList.push_back(point);
+						}				
+					}
+				}
+			}
+			//Error case (unknown curve type)
+			else {
+				CLOGGER_ERROR(WCLogManager::RootLogger(), "GeometricAlgorithms::BuildBoundaryList - Unknown curve type.");
+				//throw error
+				return std::list<WCVector4>();
+			}
+		}
+	}
+	//Return the complete list
+	return pointList;
 }
 
 

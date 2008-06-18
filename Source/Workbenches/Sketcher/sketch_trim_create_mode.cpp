@@ -74,31 +74,26 @@ void WCModeSketchTrimCreate::OnMouseMove(const WPFloat &x, const WPFloat &y) {
 	WCGeometricCurve *curve =  dynamic_cast<WCGeometricCurve*>(selObj.first);
 	//Make sure we have a curve
 	if (curve != NULL) {
-		std::list<WPFloat> hitList;
-		std::list<WPFloat>::iterator hitIter;
+		std::list<WCIntersectionResult> hitList, tmpList;
+		std::list<WCIntersectionResult>::iterator hitIter;
 		
 		//Loop through all points and try to intersect
-		std::list<WPFloat> tmpFloatList;
 		std::map<WCGeometricPoint*,WCEventController*> pointMap = this->_workbench->Sketch()->PointMap();
 		std::map<WCGeometricPoint*,WCEventController*>::iterator pointIter;
 		for(pointIter = pointMap.begin(); pointIter != pointMap.end(); pointIter++) {
-			tmpFloatList = curve->Intersect( (*pointIter).first, 0.0001 );
-//			std::cout << "Point TmpList Size: " << tmpFloatList.size() << std::endl;
-			hitList.splice(hitList.begin(), tmpFloatList);
+			tmpList = GeometricIntersection((WCNurbsCurve*)curve, (*pointIter).first, 0.0001);
+			hitList.splice(hitList.begin(), tmpList);
 		}
 
 		//Loop through all lines and try to intersect
-		std::list<WPIntersectRec> tmpList;
-		std::list<WPIntersectRec>::iterator tmpListIter;
 		std::map<WCGeometricLine*,WCEventController*> lineMap = this->_workbench->Sketch()->LineMap();
 		std::map<WCGeometricLine*,WCEventController*>::iterator lineIter;
 		for(lineIter = lineMap.begin(); lineIter != lineMap.end(); lineIter++) {
 			//Make sure not to do self-intersection
 			if ( (*lineIter).first != curve ) {
-				tmpList = curve->Intersect( (*lineIter).first, 0.0001 );
-//				std::cout << "Line TmpList Size: " << tmpList.size() << std::endl;
+				tmpList = GeometricIntersection((WCNurbsCurve*)curve, (*lineIter).first, 0.0001);
 				//Add hit points into hitList
-				for (tmpListIter = tmpList.begin(); tmpListIter != tmpList.end(); tmpListIter++) hitList.push_back( (*tmpListIter).second.first );
+				hitList.splice(hitList.begin(), tmpList);
 			}
 		}
 		
@@ -108,20 +103,15 @@ void WCModeSketchTrimCreate::OnMouseMove(const WPFloat &x, const WPFloat &y) {
 		for(curveIter = curveMap.begin(); curveIter != curveMap.end(); curveIter++) {
 			//Make sure not to do self-intersection
 			if ( (*curveIter).first != curve ) {
-				tmpList = curve->Intersect( (*curveIter).first, 0.0001 );
-//				std::cout << "Curve TmpList Size: " << tmpList.size() << std::endl;
+				tmpList = GeometricIntersection((WCNurbsCurve*)curve, (*curveIter).first, 0.0001);
 				//Add hit points into hitList
-				for (tmpListIter = tmpList.begin(); tmpListIter != tmpList.end(); tmpListIter++) hitList.push_back( (*tmpListIter).second.first );
+				hitList.splice(hitList.begin(), tmpList);
 			}
 		}
-		//Get parametric location closest to mouse
-		
-		
-		
 		//Sort the list and
-		hitList.sort();
+//		hitList.sort();
 		for (hitIter = hitList.begin(); hitIter != hitList.end(); hitIter++) {
-			std::cout << "Hit: " << *hitIter << std::endl;
+			std::cout << "Hit: " << (*hitIter).leftParam << std::endl;
 		}
 	
 	}

@@ -62,7 +62,7 @@ private:
 	WCSketchAxis								*_axis;												//!< Rotation axis
 	WCRay										*_ray;												//!< Rotation ray
 	bool										_profilesOnRight;									//!< Which side of axis profiles are on
-	std::list<std::pair<WCSketchProfile*,bool> >_profiles;											//!< Associated sketch
+	std::list<WCSketchProfile*>					_profiles;											//!< Associated sketch
 	std::list<WCVector4>						_convexHull;										//!< Convex hull for the profiles
 	WPFloat										_cwAngle, _ccwAngle;								//!< Revolution angles
 	std::list<WCNurbsSurface*>					_surfaces;											//!< List of revolution surfaces

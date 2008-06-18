@@ -33,6 +33,7 @@
 /*** Included Header Files ***/
 #include "Geometry/wgeol.h"
 #include "Geometry/geometric_types.h"
+#include "Geometry/nurbs.h"
 
 
 /*** Locally Defined Values ***/
@@ -53,6 +54,7 @@
 #define NURBSCURVE_LOC_PARAMS_DEFAULT			6
 #define NURBSCURVE_LOC_PARAMS_DEFAULT23			7
 #define NURBSCURVE_LOC_PARAMS_BEZIER23			8
+//Accuracy Constants
 #define NURBSCURVE_LENGTH_ACCURACY				0.001
 //Performance Levels
 #define NURBSCURVE_PERFLEVEL_HIGH				0
@@ -83,7 +85,7 @@ protected:
 	WPFloat										_length;											//!< Length of the curve
 	WPUInt										_lod;												//!< Vertex buffer level of detail
 	GLuint										_buffer;											//!< Vertex buffer - GPU side
-	WPFloat										*_altBuffer;										//!< Vertex buffer - CPU side
+	GLfloat										*_altBuffer;										//!< Vertex buffer - CPU side
 private:
 	//Private Methods
 	void GenerateKnotPointsVBO(void);																//!< Generate the knot points VBO	
@@ -91,13 +93,11 @@ private:
 	void GenerateControlPointsVBO(void);															//!< Generate the control points VBO
 	void GenerateControlPointsTexture(void);														//!< Generate the knot points texture
 	void LoadKnotPoints(const std::vector<WPFloat> &knotPoints=std::vector<WPFloat>());				//!< Create all knot point structures
-	
 	//Curve Generation Methods
 	GLfloat* GenerateCurveHigh(const WPUInt &lod, const bool &server, GLuint &buffer);				//!< Generate GL using High perf level
 	GLfloat* GenerateCurveMedium(const WPUInt &lod, const bool &server, GLuint &buffer);			//!< Generate GL using Medium perf level
 	GLfloat* GenerateCurveLow(const WPUInt &lod, const bool &server, GLuint &buffer);				//!< Generate GL using Low perf level		
 	GLfloat* GenerateCurveOne(const bool &server, GLuint &buffer);									//!< For 1st degree curves
-	
 	//Hidden Constructors
 	WCNurbsCurve();																					//!< Deny access to default constructor
 public:
@@ -110,10 +110,6 @@ public:
 	~WCNurbsCurve();																				//!< Default destructor
 	
 	//General Access Functions
-/*** DEBUG ***/
-	GLuint VertexBuffer(void);																		//!< Return ID for vertex buffer
-	WPUInt LevelOfDetail(void)					{ return this->_lod; }								//!< Return LOD for vertex buffer
-/*** DEBUG ***/
 	inline std::vector<WCVector4> ControlPoints(void)	{ return this->_controlPoints; }			//!< Get the control points vector
 	void ControlPoints(const std::vector<WCVector4> &controlPoints);								//!< Set the control points vector
 	inline WPUInt NumberControlPoints(void) const{ return this->_cp; }								//!< Get the number of control points
@@ -121,13 +117,12 @@ public:
 	void KnotPoints(const std::vector<WPFloat> &knotPoints);										//!< Set the knot points vector
 	inline WPUInt NumberKnotPoints(void) const	{ return this->_kp; }								//!< Get the number of knot points
 	inline WCNurbsMode Mode(void) const			{ return this->_mode; }								//!< Get the knot mode	
-	WPUInt Degree(const WPUInt &degree);															//!< Set the degree of the curve
 	inline WPUInt Degree(void)	const			{ return this->_degree; }							//!< Get the degree of the curve		
+	WPUInt Degree(const WPUInt &degree);															//!< Set the degree of the curve
 	
 	//Inherited Member Functions
-	virtual std::list<WPFloat> Intersect(WCGeometricPoint *point, const WPFloat &tol);				//!< Check for intersection with point
-	virtual std::list<WPIntersectRec> Intersect(WCGeometricCurve *curve, const WPFloat &tol);		//!< Check for intersection with curve
 	WPFloat Length(const WPFloat &tolerance=NURBSCURVE_LENGTH_ACCURACY);							//!< Calculate the length of the curve
+	inline WPFloat EstimateLength(void)			{ return WCNurbs::EstimateLength(this->_controlPoints); } //!< Estimate the length of the curve
 	WCVector4 Evaluate(const WPFloat &u);															//!< Evaluate a specific point on the curve
 	WCVisualObject* HitTest(const WCRay &ray, const WPFloat &tolerance);							//!< Hit test with a ray
 	void ApplyTransform(const WCMatrix4 &transform);												//!< Apply a transform to the curve
@@ -135,15 +130,14 @@ public:
 	void Render(const GLuint &defaultProg, const WCColor &color, const WPFloat &zoom);				//!< Render the object
 	void ReceiveNotice(WCObjectMsg msg, WCObject *sender);											//!< Receive messages from other objects
 
-	GLfloat* GenerateClientBuffer(WPUInt &lod);														//!< Generate up to LOD vert - put in RAM
-	GLuint GenerateServerBuffer(WPUInt &lod);														//!< Generate up to LOD vert - put in VRAM
-
 	//Original Member Functions
+	GLfloat* GenerateClientBuffer(WPUInt &lod, const bool &managed);								//!< Generate up to LOD vert - put in RAM
+	void ReleaseBuffer(GLfloat* buffer);															//!< Manage the release of buffer resources
+	void GenerateServerBuffer(WPUInt &lod, GLuint &buffer, const bool &managed);					//!< Generate up to LOD vert - put in VRAM
+	void ReleaseBuffer(GLuint &buffer);																//!< Manage the release of buffer resources
 	WCVector4 Derivative(const WPFloat &u, const WPUInt &der);										//!< Evaluate the derivative at a specific point
 	WCRay Tangent(const WPFloat &u);																//!< Get the tangent to the curve at U
 	std::pair<WCVector4,WPFloat> PointInversion(const WCVector4 &point);							//!< Get the closest point on the curve from the given point
-	
-	//Knot Insertion and Degree Elevation - Does Not Alter Curve Shape
 	void InsertKnot(const WPFloat &u, const WPUInt &multiplicity=1);								//!< Insert a knot at parametric value u
 	void RefineKnot(void);																			//!< Refine the curve with multiple knot insertions
 	void RemoveKnot(void);																			//!< Remove knots from the curve

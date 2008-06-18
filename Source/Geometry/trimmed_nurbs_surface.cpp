@@ -30,103 +30,10 @@
 #include "Geometry/trimmed_nurbs_surface.h"
 #include "Geometry/geometry_context.h"
 #include "Geometry/nurbs_curve.h"
+#include "Geometry/nurbs.h"
 #include "Geometry/geometric_line.h"
 #include "Geometry/geometric_algorithms.h"
-
-
-/***********************************************~***************************************************/
-
-
-std::list<WCVector4> TrimProfileBoundaryList(std::list<std::pair<WCGeometricCurve*,bool> > &curveList, const bool detailed) {
-	std::list<WCVector4> pointList;
-	WCGeometricLine *line;
-	WCNurbsCurve *nurb;
-	std::vector<WCVector4> controlPoints;
-	WCVector4 point;
-	
-	//Go through each curve and get boundary points
-	std::list<std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
-	for(curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
-		//Try to cast to a line
-		line = dynamic_cast<WCGeometricLine*>((*curveIter).first);
-		//If it is a line, process as such
-		if (line != NULL) {
-			//Process forwards line (only get end of line)
-			if ((*curveIter).second) pointList.push_back( line->End() );
-			//Process backwards line
-			else pointList.push_back( line->Begin() );
-		}
-		//Try to cast to a nurbs curve
-		else {
-			nurb = dynamic_cast<WCNurbsCurve*>((*curveIter).first);
-			//Make sure it is a nurbs curve
-			if (nurb != NULL) {
-				//If detailed, get all evaluated points
-				if (detailed) {
-					glBindBuffer(GL_ARRAY_BUFFER, nurb->VertexBuffer());
-					GLfloat* data = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-					//Process forwards
-					if ((*curveIter).second) {
-						for (WPUInt i=1; i<nurb->LevelOfDetail(); i++) {
-							//Get point data
-							point.Set(data[i*4], data[i*4+1], data[i*4+2], 1.0);
-							//Put point into list
-							pointList.push_back(point);
-						}
-					}
-					//Process backwards
-					else {
-						for (WPUInt i=nurb->LevelOfDetail()-2; i>=0; i--) {
-							//Get point data
-							point.Set(data[i*4], data[i*4+1], data[i*4+2], 1.0);
-							//Put point into list
-							pointList.push_back(point);
-						}
-					}
-					glUnmapBuffer(GL_ARRAY_BUFFER);
-					glBindBuffer(GL_ARRAY_BUFFER, 0);
-				}
-				//Gather just the control points
-				else {
-					//Get the list of control points
-					controlPoints = nurb->ControlPoints();
-					//Process curve forwards
-					if ((*curveIter).second) {
-						//Go through all control points (make sure to skip the first)
-						for(unsigned int i=1; i<controlPoints.size(); i++) {
-							//Copy the vector base
-							point = controlPoints.at(i);
-							//Set the weight to 1.0
-							point.L(1.0);
-							//Add point to point line
-							pointList.push_back(point);
-						}
-					}
-					//Process curve backwards
-					else {
-						//Go through all control points (make sure to skip the first)
-						for(int i=(int)controlPoints.size()-2; i>=0; i--) {
-							//Copy the vector base
-							point = controlPoints.at(i);
-							//Set the weight to 1.0
-							point.L(1.0);
-							//Add point to point line
-							pointList.push_back(point);
-						}				
-					}
-				}
-			}
-			//Error case (unknown curve type)
-			else {
-				CLOGGER_ERROR(WCLogManager::RootLogger(), "TrimProfileBoundaryList - Unknown curve type.");
-				//throw error
-				return std::list<WCVector4>();
-			}
-		}
-	}
-	//Return the complete list
-	return pointList;
-}
+#include "Geometry/ray.h"
 
 
 /***********************************************~***************************************************/
@@ -140,66 +47,6 @@ void WCTrimmedNurbsSurface::ClearTriangulations(void) {
 		glDeleteBuffers(1, &((*triIter).indexBuffer));
 	}
 	this->_triList.clear();
-}
-
-std::list<WCVector4> WCTrimmedNurbsSurface::BoundaryList(std::list<std::pair<WCGeometricCurve*,bool> > curveList) {
-	std::list<WCVector4> pointList;
-	WCGeometricLine *line;
-	WCNurbsCurve *nurb;
-	std::vector<WCVector4> controlPoints;
-	WCVector4 point;
-	
-	//Go through each curve and get boundary points
-	std::list< std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
-	for(curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
-		//Try to cast to a line
-		line = dynamic_cast<WCGeometricLine*>((*curveIter).first);
-		//If it is a line, process as such
-		if (line != NULL) {
-			//Process forwards line (only get end of line)
-			if ((*curveIter).second) pointList.push_back( line->End() );
-			//Process backwards line
-			else pointList.push_back( line->Begin() );
-		}
-		//Try to cast to a nurbs curve
-		else {
-			nurb = dynamic_cast<WCNurbsCurve*>((*curveIter).first);
-			//Make sure it is a nurbs curve
-			if (nurb != NULL) {
-				glBindBuffer(GL_ARRAY_BUFFER, nurb->VertexBuffer());
-				GLfloat* data = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-//				std::cout << "Buffer Data: " << data << std::endl;
-				//Process forwards
-				if ((*curveIter).second) {
-					for (WPUInt i=1; i<nurb->LevelOfDetail(); i++) {
-						//Get point data
-						point.Set(data[i*4], data[i*4+1], data[i*4+2], 1.0);
-						//Put point into list
-						pointList.push_back(point);
-					}
-				}
-				//Process backwards
-				else {
-					for (int i=nurb->LevelOfDetail()-2; i>=0; i--) {
-						//Get point data
-						point.Set(data[i*4], data[i*4+1], data[i*4+2], 1.0);
-						//Put point into list
-						pointList.push_back(point);
-					}
-				}
-				glUnmapBuffer(GL_ARRAY_BUFFER);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-			}
-			//Error case (unknown curve type)
-			else {
-				CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::BoundaryList - Unknown curve type.");
-				//throw error
-				return std::list<WCVector4>();
-			}
-		}
-	}
-	//Return the complete list
-	return pointList;
 }
 
 
@@ -222,7 +69,7 @@ void WCTrimmedNurbsSurface::GenerateTrimList(void) {
 	//Go through each profile
 	for (profileIter = this->_profileList.begin(); profileIter != this->_profileList.end(); profileIter++) {
 		//Generate complete boundary list
-		boundaryList = this->BoundaryList( (*profileIter).first );
+		boundaryList = BuildBoundaryList( *profileIter, true );
 		numVerts = (GLint)boundaryList.size();
 //		std::cout << "NumVerts: " << numVerts << std::endl;
 		//Allocate space for vertices
@@ -272,7 +119,7 @@ void WCTrimmedNurbsSurface::GenerateTrimList(void) {
 		triangulation.numTriangles = numVerts - 2;
 		triangulation.vertexBuffer = vertexBuffer;
 		triangulation.indexBuffer = indexBuffer;
-		triangulation.outside = (*profileIter).second;
+		triangulation.outside = (*profileIter) == this->_profileList.front();
 		//Add to triList
 		this->_triList.push_back(triangulation);
 		//Clear the vertList
@@ -440,8 +287,7 @@ WCTrimmedNurbsSurface::WCTrimmedNurbsSurface(WCGeometryContext *context, const s
 	const std::vector<WCVector4> &controlPoints, const WCNurbsMode &modeU, const WCNurbsMode &modeV,
 	const std::vector<WPFloat> &kpU, const std::vector<WPFloat> &kpV) : 
 	:: WCNurbsSurface(context, degreeU, degreeV, cpU, cpV, controlPoints, modeU, modeV, kpU, kpV), _context(context),
-	_triList(), _profileList(profileList),
-	_trimMatrix(), _trimTexture(0),  _texWidth(TRIMSURFACE_DEFAULT_TEX_WIDTH), _texHeight(TRIMSURFACE_DEFAULT_TEX_HEIGHT) {
+	_triList(), _profileList(profileList), _trimMatrix(), _trimTexture(0),  _texWidth(0), _texHeight(0) {
 
 	//Determine orientation matrix and aspect ratio
 	WCVector4 base = this->_controlPoints.at(0);
@@ -455,20 +301,12 @@ WCTrimmedNurbsSurface::WCTrimmedNurbsSurface(WCGeometryContext *context, const s
 	xAxis.Normalize(true);
 	yAxis.Normalize(true);
 	zAxis.Normalize(true);
+	//Determine the trim matrix and inverse trim matrix
 	this->_invTrimMatrix = WCMatrix4(xAxis.I(), yAxis.I(), zAxis.I(), base.I(),
 								  xAxis.J(), yAxis.J(), zAxis.J(), base.J(),
 								  xAxis.K(), yAxis.K(), zAxis.K(), base.K(),
 								  0.0, 0.0, 0.0, 1.0);
 	this->_trimMatrix = this->_invTrimMatrix.Inverse();
-//	std::cout << "TrimMatrix: " << this->_trimMatrix;
-//	std::cout << "Inverse TrimMatrix: " << this->_invTrimMatrix;
-//	std::cout << "Width: " << this->_width << std::endl;
-//	std::cout << "Height: " << this->_height << std::endl;
-
-	//Generate trimList
-	this->GenerateTrimList();
-	//Set up trim texture object
-	glGenTextures(1, &(this->_trimTexture));
 }
 
 WCTrimmedNurbsSurface::~WCTrimmedNurbsSurface() {
@@ -479,13 +317,39 @@ WCTrimmedNurbsSurface::~WCTrimmedNurbsSurface() {
 }
 
 
-void WCTrimmedNurbsSurface::TextureSize(const WPUInt &size) {
-	//Determine new size (preserve aspect ratio)
-	WPFloat aspectRatio = (WPFloat)this->_texHeight / (WPFloat)this->_texWidth;
-	this->_texWidth = size;
-	this->_texHeight = (WPUInt)ceil(size * aspectRatio);
-	//Mark as dirty
-	this->IsVisualDirty(true);
+WPFloat WCTrimmedNurbsSurface::Area(const WPFloat &tolerance) {
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::Area - Not yet implemented.");
+	return 0.0;
+}
+
+
+WCVector4 WCTrimmedNurbsSurface::Evaluate(const WPFloat &u, const WPFloat &v) {
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::Evaluate - Not yet implemented.");
+	return WCVector4();
+}
+
+
+WCVector4 WCTrimmedNurbsSurface::Derivative(const WPFloat &u, const WPUInt &uDer, const WPFloat &v, const WPUInt &vDer) {
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::Derivative - Not yet implemented.");
+	return WCVector4();
+}
+
+
+WCRay WCTrimmedNurbsSurface::Tangent(const WPFloat &u, const WPFloat &v) {
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::Tangent - Not yet implemented.");
+	return WCRay(WCVector4(), WCVector4());
+}
+
+
+std::pair<WCVector4,WCVector4> WCTrimmedNurbsSurface::PointInversion(const WCVector4 &point) {
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::PointInversion - Not yet implemented.");
+	return std::make_pair(WCVector4(), WCVector4());
+}
+
+
+WCVisualObject* WCTrimmedNurbsSurface::HitTest(const WCRay &ray, const WPFloat &tolerance) {
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::HitTest - Not yet implemented.");
+	return NULL;
 }
 
 
@@ -494,24 +358,28 @@ void WCTrimmedNurbsSurface::Render(const GLuint &defaultProg, const WCColor &col
 	if (!this->_isVisible) return;
 	//Check to see if surface or texture needs to be generated
 	if (this->IsVisualDirty()) {
+		//Generate trimList
+//		this->GenerateTrimList();
+		//Set up trim texture object
+//		glGenTextures(1, &(this->_trimTexture));
 		//Generate the surface - switch on performance level
 		switch(this->_context->SurfacePerformanceLevel()) {
-			case TRIMSURFACE_PERFLEVEL_HIGH:	
-				this->GenerateSurfaceHigh();
+//			case TRIMSURFACE_PERFLEVEL_HIGH:	
+//				this->GenerateSurfaceHigh();
 				break;
-			case TRIMSURFACE_PERFLEVEL_MEDIUM:	
-				this->GenerateSurfaceMedium(); 
+//			case TRIMSURFACE_PERFLEVEL_MEDIUM:	
+//				this->GenerateSurfaceMedium(); 
 				break;
-			case TRIMSURFACE_PERFLEVEL_LOW:		
-				this->GenerateSurfaceLow(); 
+//			case TRIMSURFACE_PERFLEVEL_LOW:		
+//				this->GenerateSurfaceLow(); 
 				break;
 		}
 		//Generate the trim texture
 		this->GenerateTexture();		
 		//Generate the index for the curve
-		this->GenerateIndex();
+//		this->GenerateIndex();
 		//Update the bounding box
-		this->_bounds->Set(this->_buffers[NURBSSURFACE_VERTEX_BUFFER], this->_numVerts);
+//		this->_bounds->Set(this->_buffers[NURBSSURFACE_VERTEX_BUFFER], this->_numVerts);
 		//Mark as clean
 		this->IsVisualDirty(false);
 	}
@@ -584,6 +452,18 @@ void WCTrimmedNurbsSurface::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 	//Update any parents about dirtyness
 	this->SendBroadcastNotice(OBJECT_NOTIFY_UPDATE);
 }
+
+
+std::vector<GLfloat*> WCTrimmedNurbsSurface::GenerateClientBuffers(WPUInt &lodU, WPUInt &lodV) {
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::GenerateClientBuffers - Not yet implemented.");
+	return std::vector<GLfloat*>();
+}
+
+
+void WCTrimmedNurbsSurface::GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vector<GLuint> &buffers) {
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::GenerateServerBuffers - Not yet implemented.");
+}
+
 
 
 xercesc::DOMElement* WCTrimmedNurbsSurface::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {

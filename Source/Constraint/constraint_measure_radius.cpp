@@ -129,7 +129,7 @@ void WCConstraintMeasureRadius::SlewOffsets(const WPFloat &xSlew, const WPFloat 
 	WCVector4 position = p1 + (direction * 1000000.0);
 	WCGeometricLine *line = new WCGeometricLine(this->_center, position);
 	//Intersect line with curve
-	std::list<WPIntersectRec> hitList = this->_curve->Intersect(line, 0.0001);
+	std::list<WCIntersectionResult> hitList = GeometricIntersection((WCNurbsCurve*)this->_curve, line, 0.0001);
 	//If there is no intersection
 	if (hitList.empty()) {
 		WCVector4 begin = this->_curve->Evaluate(0.0);
@@ -151,8 +151,19 @@ void WCConstraintMeasureRadius::SlewOffsets(const WPFloat &xSlew, const WPFloat 
 	}
 	//Get the hit results
 	else {
-		this->_labelOffset = hitList.front().second.first;
-		position = hitList.front().first;
+		//Make sure it is a point intersection
+		if (hitList.front().type != IntersectPoint) {
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCConstraintMeasureRadius::SlewOffsets - Invalid intersection type: " << hitList.front().type);
+		}
+		else {
+			//Otherwise, get the first parameter
+			this->_labelOffset = hitList.front().leftParam.I();
+			//Get the point object
+			WCGeometricPoint *point = (WCGeometricPoint*)hitList.front().object;
+			position = point->Data();
+		}
+		//Clean up the intersection list
+		IntersectionListDisposal(hitList);
 	}
 	//Distance from position to intersection with curve (sign on if within curve or not)
 	this->_offset = p1.Distance(position);

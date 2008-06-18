@@ -53,7 +53,7 @@ namespace __WILDCAT_NAMESPACE__ {
 
 
 //Type definitions
-typedef std::pair<WCVector4, std::pair<WPFloat,WPFloat> >	WPIntersectRec;
+#define GEOMETRY_DEFAULT_TOLERANCE				0.001
 
 
 //Global Variables

@@ -115,12 +115,12 @@ void WCModePartShaftCreate::ProcessProfiles(const std::list<WCSketchProfile*> &p
 
 	//Build list of boundary points for exterior profiles
 	std::list<WCVector4> inputList, tmpList;
-	std::list< std::pair<WCSketchProfile*,bool> >::iterator profileIter;
+	std::list<WCSketchProfile*>::iterator profileIter;
 	for (profileIter = this->_profiles.begin(); profileIter != this->_profiles.end(); profileIter++) {
 		//Only use exterior profiles
-		if ((*profileIter).second) {
-			//Get list of boundary points
-			tmpList = (*profileIter).first->BoundaryList();
+		if ((*profileIter) == this->_profiles.front()) {
+			//Get list of boundary points (using control points is fine)
+			tmpList = (*profileIter)->BoundaryList(false);
 			//Merge all lists together
 			inputList.splice(inputList.begin(), tmpList);
 		}
@@ -207,9 +207,6 @@ void WCModePartShaftCreate::GenerateSurfaces(void) {
 	for (surfIter = this->_surfaces.begin(); surfIter != this->_surfaces.end(); surfIter++) {
 		(*surfIter)->Color( WCPartFeature::ConstructionColor );
 		(*surfIter)->RenderProgram( this->_workbench->Part()->Scene()->ShaderManager()->ProgramFromName("scn_basiclight"));
-//		(*surfIter)->Layer(this->_workbench->Layer());
-		//Try doubling the LOD
-		(*surfIter)->LevelOfDetail( (*surfIter)->LevelOfDetailU() * 3, (*surfIter)->LevelOfDetailV() * 3 );
 	}
 }
 

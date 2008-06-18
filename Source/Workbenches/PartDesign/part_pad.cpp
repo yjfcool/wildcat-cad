@@ -41,41 +41,45 @@
 
 void WCPartPad::GeneratePoints(void) {
 	//Check to make sure there is a depth
-	if (this->_posDepth - this->_negDepth < 0.01) return;
+	if (this->_firstOffset - this->_secondOffset < 0.01) return;
 }
 
 
 void WCPartPad::GenerateCurves(void) {
 	//Check to make sure there is a depth
-	if (this->_posDepth - this->_negDepth < 0.01) return;
+	if (this->_firstOffset - this->_secondOffset < 0.01) return;
 
 	//Create a line from each curve end-point in each profile
 	WCGeometricLine* line;
 	WCVector4 pt, lower, upper;
-	std::list< std::pair<WCSketchProfile*,bool> >::iterator profileIter;
+	std::list<WCSketchProfile*>::iterator profilesIter;
+	std::list<std::list<WCSketchProfile*> >::iterator listIter;
 	std::list< std::pair<WCGeometricCurve*,bool> > curveList;
 	std::list< std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
 	//Loop through all profiles and extrude all surfaces
-	for (profileIter = this->_profiles.begin(); profileIter != this->_profiles.end(); profileIter++) {
-		//Get the list of curves
-		curveList = (*profileIter).first->CurveList();
-		//Make sure curveList is > 1
-		if (curveList.size() > 1) {
-			//Iterate through all curves in list
-			for (curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
-				//See if curve is forward
-				if ((*curveIter).second) pt = (*curveIter).first->Evaluate(1.0);
-				//...Or backwards
-				else pt = (*curveIter).first->Evaluate(0.0);
-				//Create a line using the point
-				lower = pt + this->_direction * this->_negDepth;
-				upper = pt + this->_direction * this->_posDepth;
-				line = new WCGeometricLine(lower, upper);
-				//Set the properties for the line
-				line->Color( WCPartFeature::DefaultCurveColor );
-				line->Thickness( PARTFEATURE_LINE_THICKNESS );
-				//Add the line to the list of all lines
-				this->_lines.push_back(line);			
+	for (listIter = this->_profiles.begin(); listIter != this->_profiles.end(); listIter++) {
+		//Go through the sub-list
+		for (profilesIter = (*listIter).begin(); profilesIter != (*listIter).end(); profilesIter++) {
+			//Get the list of curves
+			curveList = (*profilesIter)->CurveList();
+			//Make sure curveList is > 1
+			if (curveList.size() > 1) {
+				//Iterate through all curves in list
+				for (curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
+					//See if curve is forward
+					if ((*curveIter).second) pt = (*curveIter).first->Evaluate(1.0);
+					//...Or backwards
+					else pt = (*curveIter).first->Evaluate(0.0);
+					//Create a line using the point
+					lower = pt + this->_direction * this->_secondOffset;
+					upper = pt + this->_direction * this->_firstOffset;
+					line = new WCGeometricLine(lower, upper);
+					//Set the properties for the line
+					line->Color( WCPartFeature::DefaultCurveColor );
+					line->Thickness( PARTFEATURE_LINE_THICKNESS );
+					//Add the line to the list of all lines
+					this->_lines.push_back(line);			
+				}
 			}
 		}
 	}
@@ -84,55 +88,71 @@ void WCPartPad::GenerateCurves(void) {
 
 void WCPartPad::GenerateSurfaces(void) {
 	//Check to make sure there is a depth
-	if (this->_posDepth - this->_negDepth < 0.01) return;
+	if (this->_firstOffset - this->_secondOffset < 0.01) return;
 	
 	//Create a surface from each curve in each profile
+	bool exterior;
 	WCGeometricCurve* curve;
 	WCNurbsSurface* surface;
-	std::list< std::pair<WCSketchProfile*,bool> >::iterator profileIter;
+	std::list<WCSketchProfile*>::iterator profilesIter;
+	std::list<std::list<WCSketchProfile*> >::iterator listIter;
 	std::list< std::pair<WCGeometricCurve*,bool> > curveList;
 	std::list< std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
 	//Loop through all profiles and extrude all surfaces
-	for (profileIter = this->_profiles.begin(); profileIter != this->_profiles.end(); profileIter++) {
-		//Get the list of curves
-		curveList = (*profileIter).first->CurveList();
-		//Iterate through all curves in list
-		for (curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
-			curve = (*curveIter).first;
-			if ( (*profileIter).second )
-				surface = WCNurbsSurface::ExtrudeCurve(this->_document->Scene()->GeometryContext(), curve, this->_direction,
-					this->_posDepth, this->_negDepth, !(*curveIter).second);
-			else
-				surface = WCNurbsSurface::ExtrudeCurve(this->_document->Scene()->GeometryContext(), curve, this->_direction,
-					this->_posDepth, this->_negDepth, (*curveIter).second);
-			surface->Color( WCPartFeature::DefaultSurfaceColor );
-			surface->RenderProgram(WCPartFeature::DefaultSurfaceRenderer);
-			this->_surfaces.push_back(surface);
+	for (listIter = this->_profiles.begin(); listIter != this->_profiles.end(); listIter++) {
+		//Mark as exterior
+		exterior = true;
+		//Go through the sub-list
+		for (profilesIter = (*listIter).begin(); profilesIter != (*listIter).end(); profilesIter++) {
+			//Get the list of curves
+			curveList = (*profilesIter)->CurveList();
+			//Iterate through all curves in list
+			for (curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
+				curve = (*curveIter).first;
+				//First profile is exterior, extrude
+				if (exterior) {
+					surface = WCNurbsSurface::ExtrudeCurve(this->_document->Scene()->GeometryContext(), curve, this->_direction,
+						this->_firstOffset, this->_secondOffset, !(*curveIter).second);
+				}
+				//Interior profiles...
+				else {
+					//Extrude each curve into a surface
+					surface = WCNurbsSurface::ExtrudeCurve(this->_document->Scene()->GeometryContext(), curve, this->_direction,
+						this->_firstOffset, this->_secondOffset, (*curveIter).second);
+				}
+				//Set color and render program
+				surface->Color( WCPartFeature::DefaultSurfaceColor );
+				surface->RenderProgram(WCPartFeature::DefaultSurfaceRenderer);
+				//Add surface into surfaces list
+				this->_surfaces.push_back(surface);
+			}
+			//Mark as interior
+			exterior = false;
 		}
 	}
 }
 
 
 void WCPartPad::GenerateTopBottom(void) {
-	std::list< std::pair<WCSketchProfile*,bool> >::iterator profileIter;
-	std::list< std::pair<WCGeometricCurve*,bool> > curveList;
-	std::list< std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
-	WCGeometricCurve* curve;
-	std::list< std::pair<WCGeometricCurve*,bool> > topList, bottomList;
-	std::list<std::pair<std::list<std::pair<WCGeometricCurve*,bool> >,bool> > topProfiles, bottomProfiles;
-	WCGeometricLine *line, *newLine;
-	WCVector4 lineStart, lineEnd, tmpPt1, tmpPt2;
-	WCNurbsCurve *nurbs, *newNurbs;
-	std::vector<WCVector4> controlPoints, topVec, bottomVec;
-	std::vector<WCVector4>::iterator cpIter;
+//	std::list<WCSketchProfile*>::iterator profileIter;
+//	std::list< std::pair<WCGeometricCurve*,bool> > curveList;
+//	std::list< std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
+//	WCGeometricCurve* curve;
+//	std::list< std::pair<WCGeometricCurve*,bool> > topList, bottomList;
+//	std::list<std::list<std::pair<WCGeometricCurve*,bool> > > topProfiles, bottomProfiles;
+//	WCGeometricLine *line, *newLine;
+//	WCVector4 lineStart, lineEnd, tmpPt1, tmpPt2;
+//	WCNurbsCurve *nurbs, *newNurbs;
+//	std::vector<WCVector4> controlPoints, topVec, bottomVec;
+//	std::vector<WCVector4>::iterator cpIter;
 
 		
-	/*** Create Top and Bottom CurveLists ***/
+	/*** Create Top and Bottom CurveLists ***
 	
 	//Loop through all profiles and duplicate for top and bottom
 	for (profileIter = this->_profiles.begin(); profileIter != this->_profiles.end(); profileIter++) {
 		//Get the list of curves
-		curveList = (*profileIter).first->CurveList();
+		curveList = (*profileIter)->CurveList();
 		//Iterate through all curves in list
 		for (curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
 			curve = (*curveIter).first;
@@ -144,10 +164,10 @@ void WCPartPad::GenerateTopBottom(void) {
 				lineStart = line->Begin();
 				lineEnd = line->End();
 				//Make sure pos depth is large enough
-				if (this->_posDepth > 0.01) {
+				if (this->_firstOffset > 0.01) {
 					//Create line for top (remember to project up to the new upper plane)
-					tmpPt1 = lineStart + this->_direction * this->_posDepth;
-					tmpPt2 = lineEnd + this->_direction * this->_posDepth;
+					tmpPt1 = lineStart + this->_direction * this->_firstOffset;
+					tmpPt2 = lineEnd + this->_direction * this->_secondOffset;
 					newLine = new WCGeometricLine(tmpPt1, tmpPt2);
 					newLine->Color( WCPartFeature::DefaultCurveColor );
 					newLine->Thickness(PARTFEATURE_LINE_THICKNESS);
@@ -158,10 +178,10 @@ void WCPartPad::GenerateTopBottom(void) {
 				else topList.push_back( *curveIter );
 
 				//Make sure neg depth is large enough
-				if (this->_negDepth < 0.01) {
+				if (this->_secondOffset < 0.01) {
 					//Create line for bottom (remember to project up to the new lower plane)
-					tmpPt1 = lineStart + this->_direction * this->_negDepth;
-					tmpPt2 = lineEnd + this->_direction * this->_negDepth;
+					tmpPt1 = lineStart + this->_direction * this->_secondOffset;
+					tmpPt2 = lineEnd + this->_direction * this->_secondOffset;
 					newLine = new WCGeometricLine(tmpPt1, tmpPt2);
 					newLine->Color( WCPartFeature::DefaultCurveColor );
 					newLine->Thickness(PARTFEATURE_LINE_THICKNESS);
@@ -178,10 +198,10 @@ void WCPartPad::GenerateTopBottom(void) {
 				//Make sure this is a nurbs curve
 				if (nurbs != NULL) {
 					//Make sure pos depth is large enough
-					if (this->_posDepth > 0.01) {
+					if (this->_firstOffset > 0.01) {
 						//Create new top curve - and translate up
 						newNurbs = new WCNurbsCurve( *nurbs );
-						newNurbs->ApplyTranslation( this->_direction * this->_posDepth );
+						newNurbs->ApplyTranslation( this->_direction * this->_firstOffset );
 						newNurbs->Color( WCPartFeature::DefaultCurveColor );
 						//Add nurbs to topList and curve list
 						topList.push_back( std::make_pair(newNurbs, (*curveIter).second) );
@@ -190,10 +210,10 @@ void WCPartPad::GenerateTopBottom(void) {
 					else topList.push_back( *curveIter );
 					
 					//Make sure neg depth is large enough
-					if (this->_negDepth < 0.01) {
+					if (this->_secondOffset < 0.01) {
 						//Create new bottom curve - and translate down
 						newNurbs = new WCNurbsCurve( *nurbs );
-						newNurbs->ApplyTranslation( this->_direction * this->_negDepth );
+						newNurbs->ApplyTranslation( this->_direction * this->_secondOffset );
 						newNurbs->Color( WCPartFeature::DefaultCurveColor );
 						//Add nurbs to bottomList and curve list
 						bottomList.push_back( std::make_pair(newNurbs, (*curveIter).second) );
@@ -217,8 +237,8 @@ void WCPartPad::GenerateTopBottom(void) {
 		bottomList = curveList;
 		
 		//Add lists to topProfiles and bottomProfiles
-		topProfiles.push_back( std::make_pair( topList, (*profileIter).second ) );
-		bottomProfiles.push_back( std::make_pair( bottomList, (*profileIter).second) );
+		topProfiles.push_back( topList );
+		bottomProfiles.push_back( bottomList );
 		//Clear top and bottom list
 		topList.clear();
 		bottomList.clear();
@@ -227,14 +247,14 @@ void WCPartPad::GenerateTopBottom(void) {
 	//Build list of boundary points for exterior profiles
 	std::list<WCVector4> inputList, tmpList;
 	for (profileIter = this->_profiles.begin(); profileIter != this->_profiles.end(); profileIter++) {
-		if ((*profileIter).second) {
-			tmpList = (*profileIter).first->BoundaryList();
+		if ((*profileIter) == this->_profiles.front()) {
+			tmpList = (*profileIter)->BoundaryList(false);
 			inputList.splice(inputList.begin(), tmpList);
 		}
 	}
 	GLuint prog = this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight_trim");
 	//Find minimum bounding rectangle for bounding points
-	WCPartPlane *refPlane = this->_profiles.front().first->Sketch()->ReferencePlane();
+	WCPartPlane *refPlane = this->_profiles.front().front()->Sketch()->ReferencePlane();
 	std::list<WCVector4> baseCorners = MinimumBoundingRectangle(inputList, refPlane->InverseTransformMatrix(), refPlane->TransformMatrix());
 	WCVector4 corners[4];
 	corners[0] = baseCorners.front(); baseCorners.pop_front();		// Lower-left
@@ -242,50 +262,50 @@ void WCPartPad::GenerateTopBottom(void) {
 	corners[2] = baseCorners.front(); baseCorners.pop_front();		// Upper-right
 	corners[3] = baseCorners.front(); baseCorners.pop_front();		// Lower-right
 
-	/*** Top Trim Surface ***/
+	/*** Top Trim Surface ***
 	
 	//Now use the base corners to define the top trim surface
 	controlPoints.clear();
 	//First point (uses lower-left in base)
-	tmpPt1 = corners[0] + this->_direction * this->_posDepth;
+	tmpPt1 = corners[0] + this->_direction * this->_firstOffset;
 	controlPoints.push_back(tmpPt1);
 	//Second point (uses lower-right in base)
-	tmpPt1 = corners[3] + this->_direction * this->_posDepth;
+	tmpPt1 = corners[3] + this->_direction * this->_firstOffset;
 	controlPoints.push_back(tmpPt1);
 	//Third point (uses upper-left in base)
-	tmpPt1 = corners[1] + this->_direction * this->_posDepth;
+	tmpPt1 = corners[1] + this->_direction * this->_firstOffset;
 	controlPoints.push_back(tmpPt1);
 	//Fourth point (uses upper-right in base)
-	tmpPt1 = corners[2] + this->_direction * this->_posDepth;
+	tmpPt1 = corners[2] + this->_direction * this->_firstOffset;
 	controlPoints.push_back(tmpPt1);
 	//Create the top surface
 	WCTrimmedNurbsSurface *top = new WCTrimmedNurbsSurface(this->_document->Scene()->GeometryContext(), 
 		topProfiles, 1, 1, 2, 2, controlPoints, WCNurbsMode::Default(), WCNurbsMode::Default());
-	top->TextureSize(1024);
+//	top->TextureSize(1024);
 	top->Color( WCPartFeature::DefaultSurfaceColor );
 	top->RenderProgram(prog);
 	this->_surfaces.push_back(top);
 
-	/*** Bottom Trim Surface ***/
+	/*** Bottom Trim Surface ***
 
 	//Now use the base corners to define the bottom trim surface
 	controlPoints.clear();
 	//First point (uses upper-left in base)
-	tmpPt1 = corners[1] + this->_direction * this->_negDepth;
+	tmpPt1 = corners[1] + this->_direction * this->_secondOffset;
 	controlPoints.push_back(tmpPt1);
 	//Second point (uses upper-right in base)
-	tmpPt1 = corners[2] + this->_direction * this->_negDepth;
+	tmpPt1 = corners[2] + this->_direction * this->_secondOffset;
 	controlPoints.push_back(tmpPt1);
 	//Third point (uses lower-left in base)
-	tmpPt1 = corners[0] + this->_direction * this->_negDepth;
+	tmpPt1 = corners[0] + this->_direction * this->_secondOffset;
 	controlPoints.push_back(tmpPt1);
 	//Fourth point (uses lower-right in base)
-	tmpPt1 = corners[3] + this->_direction * this->_negDepth;
+	tmpPt1 = corners[3] + this->_direction * this->_secondOffset;
 	controlPoints.push_back(tmpPt1);
 	//Create the bottom surface
 	WCTrimmedNurbsSurface *bottom = new WCTrimmedNurbsSurface(this->_document->Scene()->GeometryContext(), 
 		bottomProfiles, 1, 1, 2, 2, controlPoints, WCNurbsMode::Default(), WCNurbsMode::Default());
-	bottom->TextureSize(1024);
+//	bottom->TextureSize(1024);
 	bottom->Color( WCPartFeature::DefaultSurfaceColor );
 	bottom->RenderProgram(prog);
 	this->_surfaces.push_back(bottom);
@@ -306,10 +326,15 @@ void WCPartPad::Initialize(void) {
 	//Create tree element
 	WSTexture* padIcon = this->_document->Scene()->TextureManager()->TextureFromName("pad32");
 	this->_treeElement = new WCTreeElement(this->_document->TreeView(), this->_name, this->_controller, padIcon);
+
 	//Add profiles as children
-	std::list< std::pair<WCSketchProfile*,bool> >::iterator profIter;
-	for (profIter = this->_profiles.begin(); profIter != this->_profiles.end(); profIter++) {
-		this->_treeElement->AddLastChild( (*profIter).first->TreeElement() );
+	std::list<WCSketchProfile*>::iterator listIter;
+	std::list<std::list<WCSketchProfile*> >::iterator profListIter;
+	for (profListIter = this->_profiles.begin(); profListIter != this->_profiles.end(); profListIter++) {
+		//Go through the sub-list
+		for (listIter = (*profListIter).begin(); listIter != (*profListIter).end(); listIter++) {
+			this->_treeElement->AddLastChild( (*listIter)->TreeElement() );
+		}
 	}
 	this->_treeElement->IsOpen(false);
 	//Add tree view element
@@ -327,7 +352,6 @@ void WCPartPad::Initialize(void) {
 	//Add all curves into the part	
 	std::list<WCNurbsCurve*>::iterator curveIter;
 	for (curveIter = this->_curves.begin(); curveIter != this->_curves.end(); curveIter++)
-		
 		this->_part->AddCurve( *curveIter, this->_controller);
 	//Add all surfaces into the part
 	std::list<WCNurbsSurface*>::iterator surfIter;
@@ -339,10 +363,18 @@ void WCPartPad::Initialize(void) {
 /***********************************************~***************************************************/
 
 
-WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, const std::list< std::pair<WCSketchProfile*,bool> > &profiles, 
-	const WCVector4 &direction, const WPFloat &posDepth, const WPFloat &negDepth) : 
-	::WCPartFeature(body, name), _profiles(profiles), _direction(direction), _posDepth(posDepth), _negDepth(negDepth),
-	_points(), _lines(), _curves(), _surfaces() {
+WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, std::list<std::list<WCSketchProfile*> > &profiles, 
+	const bool &reverseDir, const WCPartPadType &firstType, const WCPartPadType &secondType, const WPFloat &firstOffset, const WPFloat &secondOffset) : 
+	::WCPartFeature(body, name), _profiles(profiles), _isReversed(reverseDir), _firstType(firstType), _secondType(secondType),
+	_firstOffset(firstOffset), _secondOffset(secondOffset), _points(), _lines(), _curves(), _surfaces() {
+	//Determine direction
+	WCPartPlane *refPlane = this->_profiles.front().front()->Sketch()->ReferencePlane();
+	//Determine direction vector
+	WCVector4 dir(0.0, 0.0, 1.0, 0.0);
+	dir = refPlane->TransformMatrix() * dir;
+	dir.Normalize(true);
+	this->_direction = dir;
+
 	//Generate the points, curves, and surfaces
 	this->GeneratePoints();
 	this->GenerateCurves();
@@ -357,7 +389,8 @@ WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, const std::list<
 
 WCPartPad::WCPartPad(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	::WCPartFeature( WCSerializeableObject::ElementFromName(element,"PartFeature"), dictionary),
-	_profiles(), _direction(), _posDepth(0.0), _negDepth(0.0), _points(), _lines(), _curves(), _surfaces() {
+	_profiles(), _isReversed(false), _firstType(WCPartPadType::Dimension()), _secondType(WCPartPadType::Dimension()),
+	_firstOffset(0.0), _secondOffset(0.0), _points(), _lines(), _curves(), _surfaces() {
 	//Restore the pad here
 	//...
 }
@@ -466,10 +499,11 @@ WCDrawingMode* WCPartPad::ModeCreate(WCPartWorkbench *wb) {
 }
 
 
-WCActionPartPadCreate* WCPartPad::ActionCreate(WCPartBody *body, const std::string &padName, 
-	const std::list< std::pair<WCSketchProfile*,bool> > &profiles, const WCVector4 &direction, const WPFloat &posDepth, const WPFloat &negDepth) {
+WCActionPartPadCreate* WCPartPad::ActionCreate(WCPartBody *body, const std::string &padName,
+	std::list<std::list<WCSketchProfile*> > &profiles, const bool &reversed, const WCPartPadType &firstType, 
+	const WCPartPadType &secondType, const WPFloat &firstOffset, const WPFloat &secondOffset) {
 	//Create a new pad create action
-	return new WCActionPartPadCreate(body, padName, profiles, direction, posDepth, negDepth);
+	return new WCActionPartPadCreate(body, padName, profiles, reversed, firstType, secondType, firstOffset, secondOffset);
 }
 
 

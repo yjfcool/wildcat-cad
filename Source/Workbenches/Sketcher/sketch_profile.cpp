@@ -166,26 +166,46 @@ bool WCSketchProfile::DetermineIsClosed(void) {
 
 bool WCSketchProfile::DetermineIsSelfIntersecting(void) {
 	std::list< std::pair<WCGeometricCurve*,bool> >::iterator firstIter, secondIter;
-	std::list<WPIntersectRec> hitList;
-	WCGeometricCurve *first, *second;
+	std::list<WCIntersectionResult> hitList;
+	WCGeometricLine *firstLine, *secondLine;
+	WCNurbsCurve *firstCurve, *secondCurve;
+	int flags = INTERSECT_GEN_NONE | INTERSECT_CULL_BOUNDARY;
 	//Outer loop
 	for(firstIter = this->_curveList.begin(); firstIter != this->_curveList.end(); firstIter++) {
-		//Set the first curve
-		first = (*firstIter).first;
+		//Set type of first curve
+		firstLine = dynamic_cast<WCGeometricLine*>((*firstIter).first);;
+		if (!firstLine) firstCurve = dynamic_cast<WCNurbsCurve*>((*firstIter).first);
 		//Inner loop
 		secondIter = firstIter;
 		for (secondIter++; secondIter != this->_curveList.end(); secondIter++) {
-			second = (*secondIter).first;
-			//Intersect first and second
-			hitList = first->Intersect( second, SKETCH_PROFILE_DEFAULT_TOLERANCE );
+			//Set type of second curve
+			secondLine = dynamic_cast<WCGeometricLine*>((*secondIter).first);
+			if (!secondLine) secondCurve = dynamic_cast<WCNurbsCurve*>((*secondIter).first);
+			//Intersect first and second based on type
+			if (firstLine && secondLine)		hitList = GeometricIntersection(firstLine, secondLine, SKETCH_PROFILE_DEFAULT_TOLERANCE, flags);
+			else if (firstLine && !secondLine)	hitList = GeometricIntersection(secondCurve, firstLine, SKETCH_PROFILE_DEFAULT_TOLERANCE, flags);
+			else if (!firstLine && secondLine)	hitList = GeometricIntersection(firstCurve, secondLine, SKETCH_PROFILE_DEFAULT_TOLERANCE, flags);
+			else								hitList = GeometricIntersection(firstCurve, secondCurve, SKETCH_PROFILE_DEFAULT_TOLERANCE, flags);
 			//If there are any intersections, return true
-			if (hitList.size() != 0) return true;
+//			if (hitList.size() != 0) return true;
 		}
 	}
+	//No intersections means that is not self-intersecting
 	return false;
 }
 
 
+/*** Force Clockwise Algorithm
+ *	I went through many interations of this algorithm on how to determine that the profile is has a CW winding.
+ *	Here is the approach:
+ *		1) Find the midpoint tangent of the first curve
+ *		2) Project the tangent onto the reference plane, save as norm
+ *		3) Based on curve direction, adjust #2 to get the normal to the tangent (normal should point into the interior of profile)
+ *		4) Project the normal back into regular space
+ *		5) Create a point just off of the curve in the direction of the normal
+ *		6) Check to see if point is inside profile or not (this shoots a ray from point to some far distant place and intersects all curves)
+ *		7) If IsInside count is even, then profile is CW, otherwise profile is CCW
+***/
 void WCSketchProfile::ForceClockwise(void) {
 	bool ccw = false;
 	//Check on size 1 special case
@@ -194,22 +214,16 @@ void WCSketchProfile::ForceClockwise(void) {
 	else {
 		//Find point and tangent at curve mid-point
 		WCRay tangent = this->_curveList.front().first->Tangent(0.5);
-//		std::cout << "Base: " << tangent.Base() << std::endl;
-//		std::cout << "Direction: " << tangent.Direction() << std::endl;
 		//Project tangent onto reference plane
 		WCVector4 norm = this->_sketch->ReferencePlane()->InverseTransformMatrix() * tangent.Direction();
 		//Get norm to tangent (take orientation into account)
 		if (this->_curveList.front().second) norm.Set(-norm.J(), norm.I(), 0.0, 0.0);
 		else norm.Set(norm.J(), -norm.I(), 0.0, 0.0);
-//		std::cout << "Norm: " << norm << std::endl;
 		//Project back into regular space
 		norm = this->_sketch->ReferencePlane()->TransformMatrix() * norm;
-//		std::cout << "Norm: " << norm << std::endl;
 		//Create reference point just off of point using norm
 		WCVector4 refPoint = tangent.Base() + norm * 0.01;
-//		std::cout << "RefPoint: " << refPoint << std::endl;
 		WPUInt hitCount = this->IsInside(refPoint);
-//		std::cout << "Hit Count: " << hitCount << std::endl;
 		//Determine if ccw
 		ccw = ((hitCount % 2) != 0);
 	}
@@ -301,19 +315,33 @@ WPInt WCSketchProfile::IsOnRight(const WCSketchAxis *axis) {
 	WCGeometricLine *line = new WCGeometricLine(p1, p2);
 	//Determine slope of axis
 	WPFloat lineSlope = (axis->End().J() - axis->Begin().J()) / (axis->End().I() - axis->Begin().I());
+
 	//Try intersecting that line with all curves in the profile
-	std::list<WPIntersectRec> hits;
+	WCGeometricLine* tmpLine;
+	WCNurbsCurve* tmpCurve;
+	std::list<WCIntersectionResult> hits;
 	std::list< std::pair<WCGeometricCurve*,bool> >::iterator iter;
-	WCGeometricLine *testLine;
 	WPFloat testLineSlope;
 	for (iter = this->_curveList.begin(); iter != this->_curveList.end(); iter++) {
-		//Try the intersection
-		hits = line->Intersect((*iter).first, SKETCH_PROFILE_DEFAULT_TOLERANCE);
+		//Figure out what type of curve
+		tmpLine = dynamic_cast<WCGeometricLine*> ((*iter).first);
+		//If it is a line
+		if (tmpLine) {
+			//Try the intersection
+			hits = GeometricIntersection(line, tmpLine, SKETCH_PROFILE_DEFAULT_TOLERANCE, INTERSECT_GEN_NONE);
+		}
+		//Must be a curve
+		else {
+			//Make it a curve
+			tmpCurve = dynamic_cast<WCNurbsCurve*> ((*iter).first);
+			//Try the intersection
+			hits = GeometricIntersection(tmpCurve, line, SKETCH_PROFILE_DEFAULT_TOLERANCE, INTERSECT_GEN_NONE);
+		}
+
 		//Check to see if any hits, if so return 0.0
 		if (hits.size() != 0) {
 			//Check to see if is a line
-			testLine = dynamic_cast<WCGeometricLine*>( (*iter).first );
-			if (testLine != NULL) {
+			if (tmpLine) {
 				//Determine slope of test line
 				testLineSlope = 0;
 				//See if slopes are the same				
@@ -346,45 +374,82 @@ WPInt WCSketchProfile::IsOnRight(const WCSketchAxis *axis) {
 }
 
 
-/*** Caller should check to make sure profile is closed ***/
+/*** IsInside Algorithm ***
+ * This algorithm determines if the passed point is inside or outside of the primary profile.  The caller is responsible
+ *	for checking to make sure profile is closed.  Here are the details of the algorithm:
+ *		1) A line is created from the passed point to a point very far away (assumed to always be outside of the profile)
+ *		2) The line is intersected with all of the curves of the profile
+ *		3) The number of intersections is returned.  Even is outside, odd is inside.
+***/
 WPUInt WCSketchProfile::IsInside(const WCVector4 &point) {
 	//Form a geometric line from way far away to the point
-	WCVector4 p2(100000000.0, 81282734.0, 0.0, 1.0);
+	WCVector4 p2(100000.0, 8128.0, 0.0, 1.0);
 	p2 = this->_sketch->ReferencePlane()->TransformMatrix() * p2;
 	WCGeometricLine *line = new WCGeometricLine(point, p2);
+	WCGeometricLine *iterLine;
+	WCNurbsCurve* iterCurve;
+	unsigned int flags = INTERSECT_GEN_NONE;
 	//Try intersecting that line with all curves in the profile
-	WPUInt count = 0;
-	std::list<WPIntersectRec> hits;
+	WPFloat count = 0.0;
+	std::list<WCIntersectionResult> hits;
+	std::list<WCIntersectionResult>::iterator hitsIter;
 	std::list< std::pair<WCGeometricCurve*,bool> >::iterator iter;
 	for (iter = this->_curveList.begin(); iter != this->_curveList.end(); iter++) {
+		//Determine type of curve
+		iterLine = dynamic_cast<WCGeometricLine*>((*iter).first);
+		if (!iterLine) iterCurve = dynamic_cast<WCNurbsCurve*>((*iter).first);
 		//Try the intersection
-		hits = line->Intersect((*iter).first, SKETCH_PROFILE_DEFAULT_TOLERANCE);
-		//Add hits to count
-		count += (WPUInt)hits.size();
+		if (iterLine) hits = GeometricIntersection(line, iterLine, SKETCH_PROFILE_DEFAULT_TOLERANCE, flags);
+		else hits = GeometricIntersection(iterCurve, line, SKETCH_PROFILE_DEFAULT_TOLERANCE, flags);
+		//Adjust hits count
+		for (hitsIter = hits.begin(); hitsIter != hits.end(); hitsIter++) {
+			//Adjust for boundary hit
+			if ((iterLine && (*hitsIter).rightBoundary) || ((!iterLine && (*hitsIter).leftBoundary)) ) count += 0.5;
+			//Half for a boundary hit, whole for a non-boundary hit
+			else count++;
+		}
 	}
 	//Delete the line
 	delete line;
 	//Return the count
-	return count;
+	return (WPUInt)count;
 }
 
 
+/*** Categorize Algorithm ***
+ * This algorithm tries to determine the relationship between two profiles.  They can be intersecting or distinct.  Even if
+ *	they do not intersect two profiles can be distinct or one profile can also be either inside or outside of the other.  All
+ *	return values are the status of the passed profile as is relates to the primary profile.
+ *	Here is the algorithm:
+ *		1) Intersect all curves from profile A with all curves from profile B
+ *		2) Any intersection results in a return type of Intersect
+ *		3) If no intersections then check to see if any point from profile B is inside A, likewise a point from A is in B
+ *		4) Returns from these tests are used to categorize as distinct, inside, or outside
+***/
 WCProfileType WCSketchProfile::Categorize(WCSketchProfile *profile) {
-	std::list<WPIntersectRec> hits;
-	
+	std::list<WCIntersectionResult> hits;
+	WCGeometricLine *firstLine, *secondLine;
+	WCNurbsCurve *firstCurve, *secondCurve;
+
 	//Intersect all curves of profile with this
 	std::list< std::pair<WCGeometricCurve*,bool> >::iterator firstIter, secondIter;
 	//Outer loop through this curve list
 	for (firstIter = this->_curveList.begin(); firstIter != this->_curveList.end(); firstIter++) {
+		//Figure out what type of curve
+		firstLine = dynamic_cast<WCGeometricLine*> ((*firstIter).first);
+		if (!firstLine) firstCurve = dynamic_cast<WCNurbsCurve*> ((*firstIter).first);
 		//Inner loop through profile curve list
 		for (secondIter = profile->_curveList.begin(); secondIter != profile->_curveList.end(); secondIter++) {
-			//Itersect the two
-			hits = (*firstIter).first->Intersect((*secondIter).first, 0.00001);
+			//Figure out type of second curve
+			secondLine = dynamic_cast<WCGeometricLine*> ((*secondIter).first);
+			if (!secondLine) secondCurve = dynamic_cast<WCNurbsCurve*> ((*secondIter).first);
+			//Itersect the two based on type
+			if (firstLine && secondLine)		hits = GeometricIntersection(firstLine, secondLine, 0.00001, INTERSECT_GEN_NONE);
+			else if (firstLine && !secondLine)	hits = GeometricIntersection(secondCurve, firstLine, 0.00001, INTERSECT_GEN_NONE);
+			else if (!firstLine && secondLine)	hits = GeometricIntersection(firstCurve, secondLine, 0.00001, INTERSECT_GEN_NONE);
+			else								hits = GeometricIntersection(firstCurve, secondCurve, 0.00001, INTERSECT_GEN_NONE);
 			//If there are hits, then there is some intersection
-			if (hits.size() > 0) {
-//				std::cout << "Categorization: Intersect\n";
-				return WCProfileType::Intersect();
-			}
+			if (hits.size() > 0) return WCProfileType::Intersect();
 		}
 	}
 	
@@ -393,128 +458,22 @@ WCProfileType WCSketchProfile::Categorize(WCSketchProfile *profile) {
 	WCVector4 pt1 = this->_curveList.front().first->Evaluate(0.0);
 	WPUInt BinA = this->IsInside(pt0);
 	WPUInt AinB = profile->IsInside(pt1);
-//	std::cout << "BinA: " << BinA << ", AinB: " << AinB << std::endl;
 	bool p0Even = (BinA % 2) == 0;
 	bool p1Even = (AinB % 2) == 0;
+
 	//If both are even, A and B are distinct
-	if (p0Even && p1Even) {
-//		std::cout << "Categorization: Distinct\n";
-		return WCProfileType::Distinct();
-	}
-	//B outside A
-	else if (p0Even) {
-//		std::cout << "Categorization: Outside\n";
-		return WCProfileType::Outside();		
-	}
-	//B inside A
-	else {
-//		std::cout << "Categorization: Inside\n";
-		return WCProfileType::Inside();		
-	}
-	//Should not reach here
-	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSketchProfile::Categorize - Fell off the end.");
-	return WCProfileType::Intersect();
+	if (p0Even && p1Even) return WCProfileType::Distinct();		// A abd B are distinct
+	else if (p0Even) return WCProfileType::Outside();			// B is outside A
+	return WCProfileType::Inside();								// B is inside A
 }
 
 
-std::list<WCVector4> WCSketchProfile::BoundaryList(const bool &detailed) {
-	std::list<WCVector4> pointList;
-	WCGeometricLine *line;
-	WCNurbsCurve *nurb;
-	std::vector<WCVector4> controlPoints;
-	WCVector4 point;
-	
-	//Go through each curve and get boundary points
-	std::list< std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
-	for(curveIter = this->_curveList.begin(); curveIter != this->_curveList.end(); curveIter++) {
-		//Try to cast to a line
-		line = dynamic_cast<WCGeometricLine*>((*curveIter).first);
-		//If it is a line, process as such
-		if (line != NULL) {
-			//Process forwards line (only get end of line)
-			if ((*curveIter).second) {
-				pointList.push_back( line->End() );
-//				std::cout << "Point: " << line->End() << std::endl;
-			}
-			//Process backwards line
-			else {
-				pointList.push_back( line->Begin() );
-//				std::cout << "Point: " << line->Begin() << std::endl;
-			}
-		}
-		//Try to cast to a nurbs curve
-		else {
-			nurb = dynamic_cast<WCNurbsCurve*>((*curveIter).first);
-			//Make sure it is a nurbs curve
-			if (nurb != NULL) {
-				//If detailed, get all evaluated points
-				if (detailed) {
-					glBindBuffer(GL_ARRAY_BUFFER, nurb->VertexBuffer());
-					GLfloat* data = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-					//Process forwards
-					if ((*curveIter).second) {
-						for (WPUInt i=1; i<nurb->LevelOfDetail(); i++) {
-							//Get point data
-							point.Set(data[i*4], data[i*4+1], data[i*4+2], 1.0);
-							//Put point into list
-							pointList.push_back(point);
-						}
-					}
-					//Process backwards
-					else {
-						for (int i=nurb->LevelOfDetail()-2; i>=0; i--) {
-							//Get point data
-							point.Set(data[i*4], data[i*4+1], data[i*4+2], 1.0);
-							//Put point into list
-							pointList.push_back(point);
-						}
-					}
-					glUnmapBuffer(GL_ARRAY_BUFFER);
-					glBindBuffer(GL_ARRAY_BUFFER, 0);
-				}
-				//Gather just the control points
-				else {
-					//Get the list of control points
-					controlPoints = nurb->ControlPoints();
-					//Process curve forwards
-					if ((*curveIter).second) {
-						//Go through all control points (make sure to skip the first)
-						for(WPUInt i=1; i<controlPoints.size(); i++) {
-							//Copy the vector base
-							point = controlPoints.at(i);
-							//Set the weight to 1.0
-							point.L(1.0);
-							//Add point to point line
-							pointList.push_back(point);
-						}
-					}
-					//Process curve backwards
-					else {
-						//Go through all control points (make sure to skip the first)
-						for(int i=(int)controlPoints.size()-2; i>=0; i--) {
-							//Copy the vector base
-							point = controlPoints.at(i);
-							//Set the weight to 1.0
-							point.L(1.0);
-							//Add point to point line
-							pointList.push_back(point);
-						}				
-					}
-				}
-			}
-			//Error case (unknown curve type)
-			else {
-				CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSketchProfile::BoundaryList - Unknown curve type.");
-				//throw error
-				return std::list<WCVector4>();
-			}
-		}
-	}
-	//Return the complete list
-	return pointList;
-}
-
-
+/*** Triangulate Algorithm ***
+ * This fundamental algorithm generates a vertex buffer and index buffer that triangulate the closed linear profile.
+ *	First a detailed boundary list of the profile is generated.  This list is processed by the TriangulatePolygon routine.  See
+ *	the details of this routine for more information.  It simply returns the index data which is then loaded into a buffer.
+ *	The boundary point data is also loaded into a buffer.
+***/
 GLuint WCSketchProfile::Triangulate(GLuint &vertexBuffer, GLuint &indexBuffer) {
 	//Put all vertices into a list
 	std::list<WCVector4> boundaryList = this->BoundaryList(true);
@@ -666,57 +625,39 @@ xercesc::DOMElement* WCSketchProfile::Serialize(xercesc::DOMDocument *document, 
 
 /***********************************************~***************************************************/
 
-/*
-std::list< std::pair<WCSketchProfile*,bool> > RecursiveFlatten(WCProfileTreeNode *node, bool outside) {
-	std::list< std::pair<WCSketchProfile*,bool> > outputList, tmpList;
-	std::list< std::pair<WCSketchProfile*,bool> >::iterator tmpListIter;
-	//Add node to list
-	outputList.push_back( std::make_pair(node->profile, outside) );
-	//Add all children lists and return
-	std::list<WCProfileTreeNode*>::const_iterator childIter;
-	for (childIter = node->children.begin(); childIter != node->children.end(); childIter++) {
-		//Get the child's list
-		tmpList = RecursiveFlatten( *childIter, !outside );
-		//Merge it with this level's list
-		outputList.splice(outputList.end(), tmpList, tmpList.begin(), tmpList.end());
-	}
-	//Return the list
-	return outputList;
-}
-*/
 
-std::list< std::pair<WCSketchProfile*,bool> > RecursiveFlatten(WCProfileTreeNode *node, bool outside) {
-	std::list< std::pair<WCSketchProfile*,bool> > outputList, tmpList;
-	std::list< std::pair<WCSketchProfile*,bool> >::iterator tmpListIter;
+std::list<std::list<WCSketchProfile*> > _RecursiveFlatten(WCProfileTreeNode *node, bool outside) {
+	std::list<WCSketchProfile*> tmpList;
+	std::list<std::list<WCSketchProfile*> > outputList, tmpListList;
 	std::list<WCProfileTreeNode*>::const_iterator childIter;
 
 	//If an outside profile
 	if (outside) {
 		//Add node to list
-		outputList.push_back( std::make_pair(node->profile, outside) );
+		tmpList.push_back( node->profile);
 		//Add all children first if node is an outside node
 		for (childIter = node->children.begin(); childIter != node->children.end(); childIter++) {
 			//Add children to list
-			outputList.push_back( std::make_pair( (*childIter)->profile, !outside) );
+			tmpList.push_back( (*childIter)->profile );
 		}
+		//Add this list to the output list
+		outputList.push_back(tmpList);
 	}
 	//Recursively process children
 	for (childIter = node->children.begin(); childIter != node->children.end(); childIter++) {
 		//Get the child's list
-		tmpList = RecursiveFlatten( *childIter, !outside );
+		tmpListList = _RecursiveFlatten( *childIter, !outside );
 		//Merge it with this level's list
-		outputList.splice(outputList.end(), tmpList, tmpList.begin(), tmpList.end());
+		outputList.splice(outputList.end(), tmpListList);
 	}
 	//Return the list
 	return outputList;
 }
 
 
-WCProfileType RecursiveTreeAddition(WCProfileTreeNode *node, WCProfileTreeNode *newNode) {
+WCProfileType _RecursiveTreeAddition(WCProfileTreeNode *node, WCProfileTreeNode *newNode) {
 	//Check the profile vs. this node
 	WCProfileType type = node->profile->Categorize(newNode->profile);
-	//Return immediately if intersection
-	if (type == WCProfileType::Intersect()) return type;
 	//If B is outside of A, move A into B
 	if (type == WCProfileType::Outside()) {
 		newNode->children.push_back(node);
@@ -727,7 +668,7 @@ WCProfileType RecursiveTreeAddition(WCProfileTreeNode *node, WCProfileTreeNode *
 		std::list<WCProfileTreeNode*> insideChildren, outsideChildren;
 		//Iterate through all children
 		for (childrenIter = node->children.begin(); childrenIter != node->children.end(); childrenIter++) {
-			type = RecursiveTreeAddition(*childrenIter, newNode);
+			type = _RecursiveTreeAddition(*childrenIter, newNode);
 			//Return immediately if intersect
 			if (type == WCProfileType::Intersect()) return type;
 			//Otherwise, catalog all children
@@ -742,13 +683,14 @@ WCProfileType RecursiveTreeAddition(WCProfileTreeNode *node, WCProfileTreeNode *
 		if (insideChildren.size() == 0) {
 			node->children.push_back(newNode);
 		}
-		return WCProfileType::Inside();
+		//Set the return type
+		type = WCProfileType::Inside();
 	}
 	return type;
 }
 
 
-void AddProfileToTree(std::list<WCProfileTreeNode*> &rootList, WCProfileTreeNode *newNode) {
+void _AddProfileToTree(std::list<WCProfileTreeNode*> &rootList, WCProfileTreeNode *newNode) {
 	std::list<WCProfileTreeNode*>::iterator listIter;
 	std::list<WCProfileTreeNode*> insideChildren, outsideChildren;
 	WCProfileType type = WCProfileType::Distinct();
@@ -756,7 +698,7 @@ void AddProfileToTree(std::list<WCProfileTreeNode*> &rootList, WCProfileTreeNode
 	//Check profile against all root nodes
 	for (listIter = rootList.begin(); listIter != rootList.end(); listIter++) {
 		//Categorize vs. the root nodes
-		type = RecursiveTreeAddition( *listIter, newNode);
+		type = _RecursiveTreeAddition( *listIter, newNode);
 		//Make sure no intersection
 		if (type == WCProfileType::Intersect()) {
 			delete newNode;
@@ -777,6 +719,16 @@ void AddProfileToTree(std::list<WCProfileTreeNode*> &rootList, WCProfileTreeNode
 }
 
 
+void _RecursiveNodePrint(WCProfileTreeNode* node, int depth) {
+	//Print the profile name
+	for (int i=0; i<depth; i++) std::cout << "\t";
+	std::cout << node->profile->GetName() << std::endl;
+	std::list<WCProfileTreeNode*>::iterator childIter;
+	for (childIter = node->children.begin(); childIter != node->children.end(); childIter++)
+		_RecursiveNodePrint(*childIter, depth+1);
+}
+
+
 std::list<WCProfileTreeNode*> WCSketchProfile::CategorizeIntoTree(const std::list<WCSketchProfile*> &profiles) {
 	//Check for no profiles case
 	if (profiles.size() == 0) return std::list<WCProfileTreeNode*>();
@@ -786,33 +738,48 @@ std::list<WCProfileTreeNode*> WCSketchProfile::CategorizeIntoTree(const std::lis
 	WCProfileTreeNode *firstNode, *node;
 	firstNode = new WCProfileTreeNode();
 	firstNode->profile = *profileIter;
+//	std::cout << *(firstNode->profile);
 	rootList.push_back(firstNode);
 
 	//Process all of the profiles
 	for (profileIter++; profileIter != profiles.end(); profileIter++) {
 		node = new WCProfileTreeNode();
 		node->profile = *profileIter;
-		AddProfileToTree(rootList, node);
+//		std::cout << *(node->profile);
+		_AddProfileToTree(rootList, node);
 	}
+/*** DEBUG ***
+	std::list<WCProfileTreeNode*>::iterator rlIter;
+	for (rlIter = rootList.begin(); rlIter != rootList.end(); rlIter++) {
+		_RecursiveNodePrint(*rlIter, 0);
+	}
+/*** DEBUG ***/
 	//Return rootList
 	return rootList;
 }
 
 
-std::list< std::pair<WCSketchProfile*,bool> > WCSketchProfile::FlattenCategorizationTree(std::list<WCProfileTreeNode*> &rootList) {
-	std::list< std::pair<WCSketchProfile*,bool> > outputList, tmpList;
+std::list<std::list<WCSketchProfile*> > WCSketchProfile::FlattenCategorizationTree(std::list<WCProfileTreeNode*> &rootList) {
+	std::list<std::list<WCSketchProfile*> > outputList, tmpList;
 	std::list<WCProfileTreeNode*>::const_iterator rootListIter;
 	//Merge each root node list with outputList
 	for(rootListIter = rootList.begin(); rootListIter != rootList.end(); rootListIter++) {
 		//Get list from root node down
-		tmpList = RecursiveFlatten(*rootListIter, true);
-		//Merge lists
-		outputList.splice(outputList.end(), tmpList, tmpList.begin(), tmpList.end());
+		tmpList = _RecursiveFlatten(*rootListIter, true);
+		//Add list into master list
+		outputList.splice(outputList.end(), tmpList);
 	}
-/*** DEBUG ***/
-	std::list< std::pair<WCSketchProfile*,bool> >::iterator outIter;
-	for (outIter = outputList.begin(); outIter != outputList.end(); outIter++)
-		std::cout << (*outIter).first->GetName() << ", " << (*outIter).second << std::endl;
+/*** DEBUG ***
+	std::list<WCSketchProfile*> innerList;
+	std::list<WCSketchProfile*>::iterator innerIter;
+	std::list<std::list<WCSketchProfile*> >::iterator outerIter;
+	for (outerIter = outputList.begin(); outerIter != outputList.end(); outerIter++) {
+		innerList = *outerIter;
+		std::cout << "****";
+		for (innerIter = innerList.begin(); innerIter != innerList.end(); innerIter++) {
+			std::cout << (*innerIter)->GetName() << std::endl;
+		}
+	}
 /*** DEBUG ***/
 	return outputList;
 }

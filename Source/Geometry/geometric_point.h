@@ -58,8 +58,8 @@ class WCGeometricPoint : public WCGeometricObject {
 protected:
 	WPFloat										_size;												//!< Size of the point
 	WCVector4									_data;												//!< Data vector for the point
-	
-	//Access Denied
+private:
+	//Hidden Constructors
 	WCGeometricPoint();																				//!< Deny access to default constructor
 public:
 	//Constructors and Destructors

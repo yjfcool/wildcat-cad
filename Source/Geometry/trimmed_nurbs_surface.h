@@ -37,12 +37,8 @@
 
 /*** Locally Defined Values ***/
 #define TRIMSURFACE_TEX_LOCATION				0
-#define TRIMSURFACE_DEFAULT_TEX_WIDTH			256
-#define TRIMSURFACE_DEFAULT_TEX_HEIGHT			256
-//Performance Levels
-#define TRIMSURFACE_PERFLEVEL_HIGH				0
-#define TRIMSURFACE_PERFLEVEL_MEDIUM			1
-#define TRIMSURFACE_PERFLEVEL_LOW				2
+#define TRIMSURFACE_MAX_TEX_WIDTH				1024
+#define TRIMSURFACE_MAX_TEX_HEIGHT				1024
 
 
 /*** Namespace Declaration ***/
@@ -64,8 +60,7 @@ struct WCTrimTriangulation {
 };
 
 
-typedef std::pair<std::list<std::pair<WCGeometricCurve*,bool> >,bool> WCTrimProfile;
-std::list<WCVector4> TrimProfileBoundaryList(std::list<std::pair<WCGeometricCurve*,bool> > &curveList, const bool detailed);
+typedef std::list<std::pair<WCGeometricCurve*,bool> > WCTrimProfile;
 
 
 /***********************************************~***************************************************/
@@ -84,14 +79,10 @@ protected:
 private:
 	//Private Methods
 	void ClearTriangulations(void);																	//!< Clear all triangulations (GL buffers)
-	std::list<WCVector4> BoundaryList(std::list<std::pair<WCGeometricCurve*,bool> > curveList);		//!< Get boundary points for a profile
 	void GenerateTrimList(void);																	//!< Generate trim list
 	void GenerateTexture(void);																		//!< Generate texture for display
-	
-	//Access Denied
+	//Hidden Constructors
 	WCTrimmedNurbsSurface();																		//!< Deny access to default constructor
-	WCTrimmedNurbsSurface(const WCTrimmedNurbsSurface &surf);										//!< For now deny access to copy constructor
-	WCTrimmedNurbsSurface& operator=(const WCTrimmedNurbsSurface &surf);							//!< For now deny access to equals operator
 public:
 	//Constructors and Destructors
 	WCTrimmedNurbsSurface(WCGeometryContext *context, const std::list<WCTrimProfile> &profileList,	//!< Primary constructor
@@ -99,21 +90,28 @@ public:
 					const WPUInt &cpU, const WPUInt &cpV, const std::vector<WCVector4> &controlPoints,
 					const WCNurbsMode &modeU, const WCNurbsMode &modeV,
 					const std::vector<WPFloat> &kpU=std::vector<WPFloat>(), const std::vector<WPFloat> &kpV=std::vector<WPFloat>());
+	WCTrimmedNurbsSurface(const WCTrimmedNurbsSurface &surf);										//!< Copy constructor
 	WCTrimmedNurbsSurface(xercesc::DOMElement *element, WCSerialDictionary *dictionary);			//!< Persistance constructor
-	~WCTrimmedNurbsSurface();																		//!< Default destructor
-	
-	//Member Access Functions
-	inline GLuint TrimTexture(void) const		{ return this->_trimTexture; }						//!< Get the ID for the texture
-	inline WPUInt TextureSize(void) const		{ return this->_texWidth; }							//!< Get the texture size
-	void TextureSize(const WPUInt &size);															//!< Set the texture size
+	virtual ~WCTrimmedNurbsSurface();																//!< Default destructor
 	
 	//Inherited Member Functions
-	bool Intersect(const WCGeometricPoint &point)		{ return false; }							//!< Check for intersection with point
-	bool Intersect(const WCGeometricCurve &curve)		{ return false; }							//!< Check for intersection with curve	
-	bool Intersect(const WCGeometricSurface &surface)	{ return false; }							//!< Check for intersection with surface		
-	WPFloat Area(void)							{ return 1.0; }										//!< Return the area of the surface
-	void Render(const GLuint &defaultProg, const WCColor &color, const WPFloat &zoom);				//!< Render the object
-	void ReceiveNotice(WCObjectMsg msg, WCObject *sender);											//!< Receive messages from other objects
+	virtual WPFloat Area(const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON);					//!< Return the area of the surface
+	virtual WCVector4 Evaluate(const WPFloat &u, const WPFloat &v);									//!< Evaluate a specific point on the surface
+	virtual WCVector4 Derivative(const WPFloat &u, const WPUInt &uDer,								//!< Get the surface derivative
+								 const WPFloat &v, const WPUInt &vDer);
+	virtual WCRay Tangent(const WPFloat &u, const WPFloat &v);										//!< Get a tangential ray from the surface at u,v
+	virtual std::pair<WCVector4,WCVector4> PointInversion(const WCVector4 &point);					//!< Project from point to closest location on surface
+	virtual WCVisualObject* HitTest(const WCRay &ray, const WPFloat &tolerance);					//!< Hit test with a ray	
+	virtual void Render(const GLuint &defaultProg, const WCColor &color, const WPFloat &zoom);		//!< Render the object
+	virtual void ReceiveNotice(WCObjectMsg msg, WCObject *sender);									//!< Receive messages from other objects
+
+	//Original Member Functions
+	virtual std::vector<GLfloat*> GenerateClientBuffers(WPUInt &lodU, WPUInt &lodV);				//!< Generate uo to LOD (vert, tex, norm, index) - put in RAM
+	virtual void GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vector<GLuint> &buffers);	//!< Generate uo to LOD (vert, tex, norm, index) - put in VRAM
+
+	//Operator Overloads
+	WCTrimmedNurbsSurface& operator=(const WCTrimmedNurbsSurface &surface);							//!< Equals operator
+	bool operator==(const WCTrimmedNurbsSurface &surface);											//!< Equality operator	
 
 	//Serialization and Object Methods
 	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object

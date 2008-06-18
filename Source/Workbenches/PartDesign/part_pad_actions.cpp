@@ -36,17 +36,20 @@
 /***********************************************~***************************************************/
 
 
-WCActionPartPadCreate::WCActionPartPadCreate(WCPartBody *body, const std::string &padName, 
-	const std::list< std::pair<WCSketchProfile*,bool> > &profiles, 
-	const WCVector4 &direction,	const WPFloat &posDepth, const WPFloat &negDepth) : ::WCAction("Create Pad", body), _body(body),
-	_padName(padName), _profiles(profiles), _direction(direction), _posDepth(posDepth), _negDepth(negDepth), _pad(NULL) {
+WCActionPartPadCreate::WCActionPartPadCreate(WCPartBody *body, const std::string &padName,
+	const std::list<std::list<WCSketchProfile*> > &profiles, const bool &reversed,
+	const WCPartPadType &firstType, const WCPartPadType &secondType,
+	const WPFloat &firstOffset, const WPFloat &secondOffset) : ::WCAction("Create Pad", body), _body(body), _padName(padName),
+	_profiles(profiles), _isReversed(reversed), _firstType(firstType), _secondType(secondType),
+	_firstOffset(firstOffset), _secondOffset(secondOffset), _pad(NULL) {
 	//Nothing else for now
 }
 
 
 WCFeature* WCActionPartPadCreate::Execute(void) {
 	//Create the pad
-	WCPartPad *pad = new WCPartPad(this->_body, this->_padName, this->_profiles, this->_direction, this->_posDepth, this->_negDepth);
+	WCPartPad *pad = new WCPartPad(this->_body, this->_padName, this->_profiles, this->_isReversed, this->_firstType, this->_secondType,
+								   this->_firstOffset, this->_secondOffset);
 	//Make sure pad is not null
 	if (pad == NULL) 
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCActionPadCreate::Execute - Pad could not be created.");

@@ -26,55 +26,54 @@
 ********************************************************************************/
 
 
-#ifndef __TOPOLOGY_USE_H__
-#define __TOPOLOGY_USE_H__
+#ifndef __WTPKL_VERTEX_USE_H__
+#define __WTPKL_VERTEX_USE_H__
 
 
-/*** Included Wildcat Header Files ***/
-#include "Topology/stpkl.h"
+/*** Included Header Files ***/
+#include "wtpkl.h"
+#include "shell_use.h"
+#include "loop_use.h"
+#include "edge_use.h"
 
 
 /*** Locally Defined Values ***/
 //None
 
 
-/*** Class Predefines ***/
-//None
+/*** Class Order ***/
+//---CVertexUse
 
 
-/***********************************************~***************************************************/
+/*****************************************************************************/
 
 
-class WCTopologyUse : public WCSerializeableObject {
+class CVertexUse : public CTopologyUse<CPoint*, CEdgeUse*, CVertexUse*> {
+private:
+	//Use inherited _parent as holder for _edgeUse parent pointer
+	CShellUse						*_shellUse;								//!< Upward pointer to a ShellUse
+	CLoopUse						*_loopUse;								//!< Upward pointer to a LoopUse
+private:
+	CVertexUse();															//!< Deny access to the default constructor
+	CVertexUse(const CVertexUse&);											//!< Deny access to the copy constructor
+	CVertexUse& operator=(const CVertexUse&);								//!< Deny access to the equals operator
+	CEdgeUse* GetParent(void);												//!< Deny access to the inherited GetParent function (must use type)
 public:
-//	CTopologyUse(G pair, P parent, T use) : _pair(pair), _parent(parent), _next(use), _previous(use) { }
-	virtual ~WCTopologyUse()					{ }													//!< Default destructor
+	CVertexUse(CPoint* pair, CShellUse* parent);							//!< ShellUse parent constructor
+	CVertexUse(CPoint* pair, CLoopUse* parent);								//!< LoopUse parent constructor
+	CVertexUse(CPoint* pair, CEdgeUse* parent);								//!< EdgeUse parent constructor 
+	~CVertexUse();															//!< Default destructor
 	
-	//Required Virtual Methods
-	virtual void* Geometry(void)=0;																	//!<
-	virtual void* Parent(void)=0;
-	virtual void* Pair(void)=0;
-
-//	  GetPair(void)				{ return this->_pair; }
-//	P GetParent(void)			{ return this->_parent; }
-//	T GetNext(void)				{ return this->_next; }
-//	T GetPrevious(void)			{ return this->_previous; }
-//	void Insert(T use)			{ use->_previous = this->_previous;				//Insert this Use before the passed Use
-//								  use->_next = (T)this;
-//								  this->_previous->_next = use;
-//								  this->_previous = use; }
-//	void Remove(void)			{ if (this->_next != NULL)						//Remove the use from the list
-//									this->_next->_previous = this->_previous;
-//								  if (this->_previous != NULL)
-//									this->_previous->_next = this->_next;
-//								  this->_next = (T)this;
-//								  this->_previous = (T)this; }
-//	void Print(int indent=0)	{ }
+	CShellUse* GetShellUse(void)	{ return this->_shellUse; }				//!< Get the parent ShellUse
+	CLoopUse* GetLoopUse(void)		{ return this->_loopUse; }				//!< Get the parent LoopUse
+	CEdgeUse* GetEdgeUse(void)		{ return this->_parent; }				//!< Get the parent EdgeUse
+	
+	void Print(int indent=0);												//!< Print the contents of the VertexUse
 };
 
 
-/***********************************************~***************************************************/
+/*****************************************************************************/
 
 
-#endif //__TOPOLOGY_USE_H__
+#endif //__WTPKL_VERTEX_USE_H__
 

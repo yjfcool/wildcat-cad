@@ -38,7 +38,7 @@
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsSurface *left,
-	WCGeometricPoint *right, const WPFloat &tol, const int &flags) {
+	WCGeometricPoint *right, const WPFloat &tol, const unsigned int &flags) {
 	//See if point is within surface bounding box
 	//...
 	
@@ -52,7 +52,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 }
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsSurface *left,
-	WCGeometricLine *right, const WPFloat &tol, const int &flags) {
+	WCGeometricLine *right, const WPFloat &tol, const unsigned int &flags) {
 	//See if line intersects surface bounding box
 	//...
 	
@@ -67,7 +67,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsSurface *left,
-	WCNurbsCurve *right, const WPFloat &tol, const int &flags) {
+	WCNurbsCurve *right, const WPFloat &tol, const unsigned int &flags) {
 	//See if curve bounding box intersects surface bounding box
 	//...
 	
@@ -85,7 +85,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsSurface *left,
-	WCNurbsSurface *right, const WPFloat &tol, const int &flags) {
+	WCNurbsSurface *right, const WPFloat &tol, const unsigned int &flags) {
 	//See if left bounding box intersects right bounding box
 	//...
 	
@@ -100,7 +100,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsSurface *left,
-	WCTrimmedNurbsSurface *right, const WPFloat &tol, const int &flags) {
+	WCTrimmedNurbsSurface *right, const WPFloat &tol, const unsigned int &flags) {
 	//Get intersection list
 	std::list<WCIntersectionResult> results = GeometricIntersection(right, left, tol, flags);
 	//Return the reversed the list

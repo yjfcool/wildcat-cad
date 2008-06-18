@@ -33,6 +33,7 @@
 /*** Included Header Files ***/
 #include "Kernel/wftrl.h"
 #include "Kernel/action.h"
+#include "PartDesign/part_pad_types.h"
 
 
 /*** Locally Defined Values ***/
@@ -56,16 +57,18 @@ class WCActionPartPadCreate : public WCAction {
 private:
 	WCPartBody									*_body;												//!< Associated body
 	std::string									_padName;											//!< Name of new pad
-	std::list< std::pair<WCSketchProfile*,bool> >_profiles;											//!< Associated profiles
-	WCVector4									_direction;											//!< Extrusion direction
-	WPFloat										_posDepth, _negDepth;								//!< Extrusion distance
+	std::list<std::list<WCSketchProfile*> >		_profiles;											//!< Associated profiles
+	bool										_isReversed;										//!< Direction is reveresed
+	WCPartPadType								_firstType, _secondType;							//!< Types of pad
+	WPFloat										_firstOffset, _secondOffset;						//!< Extrusion distance
 	WCPartPad									*_pad;												//!< Post-creation pad
 	//Hidden Constructors
 	WCActionPartPadCreate();																		//!< Deny access to default constructor
 	WCActionPartPadCreate(const WCActionPartPadCreate& action);										//!< Deny access to copy constructor
 	WCActionPartPadCreate(WCPartBody *body, const std::string &padName,								//!< Primary constructor
-												const std::list< std::pair<WCSketchProfile*,bool> > &profiles,
-												const WCVector4 &direction, const WPFloat &posDepth, const WPFloat &negDepth);
+												const std::list<std::list<WCSketchProfile*> > &profiles, const bool &reversed,
+												const WCPartPadType &firstType, const WCPartPadType &secondType,
+												const WPFloat &firstOffset, const WPFloat &secondOffset);
 	//Friend Declarations
 	friend class WCPartPad;																			//!< Make WCPartPad a friend
 public:

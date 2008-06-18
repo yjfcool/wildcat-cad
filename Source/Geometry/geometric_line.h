@@ -79,8 +79,10 @@ public:
 	void Color(const WCColor &color);																//!< Set the object color
 	
 	//Required Geometric Methods
+/*** DEBUG ***
 	virtual std::list<WPFloat> Intersect(WCGeometricPoint *point, const WPFloat &tol);				//!< Check point intersection
 	virtual std::list<WPIntersectRec> Intersect(WCGeometricCurve *curve, const WPFloat &tol);		//!< Check for intersection with curve
+/*** DEBUG ***/
 	WPFloat Length(const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON);						//!< Calculate the length of the curve
 	WCVector4 Evaluate(const WPFloat &u);															//!< Evaluate curve for a parametric value
 	WCVector4 Derivative(const WPFloat &u, const WPUInt &der);										//!< Evaluate derivative at a specific point

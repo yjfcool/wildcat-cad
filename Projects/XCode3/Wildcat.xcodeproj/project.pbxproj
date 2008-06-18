@@ -23,6 +23,11 @@
 		5849B6410DA2921C0031E7CC /* vis_motiontracker_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B6400DA2921C0031E7CC /* vis_motiontracker_controller.cpp */; };
 		5849B7220DA29B500031E7CC /* ground_plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5849B7210DA29B500031E7CC /* ground_plane.cpp */; };
 		584C6CE70D9BE5D400FF721F /* fixedSelected32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 584C6CE60D9BE5D400FF721F /* fixedSelected32.tiff */; };
+		5850276B0E08107300BF2CBB /* topology_model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F35EB0D68B3C700673AE6 /* topology_model.cpp */; };
+		585027840E08270700BF2CBB /* topology_slice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585027830E08270700BF2CBB /* topology_slice.cpp */; };
+		585027860E08273100BF2CBB /* topology_intersect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585027850E08273100BF2CBB /* topology_intersect.cpp */; };
+		585027880E08274100BF2CBB /* topology_union.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585027870E08274100BF2CBB /* topology_union.cpp */; };
+		5850278A0E08274F00BF2CBB /* topology_subtract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585027890E08274F00BF2CBB /* topology_subtract.cpp */; };
 		585258050D7F173A00A0C6C8 /* centeredParallelogram32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585257FD0D7F173A00A0C6C8 /* centeredParallelogram32.tiff */; };
 		585258060D7F173A00A0C6C8 /* centeredRect32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585257FE0D7F173A00A0C6C8 /* centeredRect32.tiff */; };
 		585258070D7F173A00A0C6C8 /* hexagon32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585257FF0D7F173A00A0C6C8 /* hexagon32.tiff */; };
@@ -362,6 +367,7 @@
 		5806B9FB0DA3C0A800D9989D /* vis_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener.h; path = ../../Source/Workbenches/RTVisualization/vis_listener.h; sourceTree = SOURCE_ROOT; };
 		5806B9FC0DA3C0A800D9989D /* vis_listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener.cpp; sourceTree = SOURCE_ROOT; };
 		580873CB0D9A7C3600038336 /* wildcat.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = wildcat.icns; path = ../../Source/Application/MacOS/wildcat.icns; sourceTree = SOURCE_ROOT; };
+		58212ED10E098D150012DE71 /* part_pad_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_pad_types.h; path = ../../Source/Workbenches/PartDesign/part_pad_types.h; sourceTree = SOURCE_ROOT; };
 		583FEAC60DAA69D100CCE245 /* document_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = document_controller.h; path = ../../Source/Application/MacOS/document_controller.h; sourceTree = SOURCE_ROOT; };
 		583FEAC70DAA69D100CCE245 /* document_controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = document_controller.mm; path = ../../Source/Application/MacOS/document_controller.mm; sourceTree = SOURCE_ROOT; };
 		5845428A0DA53F49005BC943 /* vis_listener_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_controller.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_controller.h; sourceTree = SOURCE_ROOT; };
@@ -394,6 +400,11 @@
 		5849B8140DA2B55F0031E7CC /* vis_packet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_packet.h; path = ../../Source/Workbenches/RTVisualization/vis_packet.h; sourceTree = SOURCE_ROOT; };
 		5849B8150DA2B5980031E7CC /* wrtv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wrtv.h; path = ../../Source/Workbenches/RTVisualization/wrtv.h; sourceTree = SOURCE_ROOT; };
 		584C6CE60D9BE5D400FF721F /* fixedSelected32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = fixedSelected32.tiff; path = ../../Source/Resources/fixedSelected32.tiff; sourceTree = SOURCE_ROOT; };
+		585027710E08153500BF2CBB /* topology_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = topology_types.h; path = ../../Source/Topology/topology_types.h; sourceTree = SOURCE_ROOT; };
+		585027830E08270700BF2CBB /* topology_slice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = topology_slice.cpp; path = ../../Source/Topology/topology_slice.cpp; sourceTree = SOURCE_ROOT; };
+		585027850E08273100BF2CBB /* topology_intersect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = topology_intersect.cpp; path = ../../Source/Topology/topology_intersect.cpp; sourceTree = SOURCE_ROOT; };
+		585027870E08274100BF2CBB /* topology_union.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = topology_union.cpp; path = ../../Source/Topology/topology_union.cpp; sourceTree = SOURCE_ROOT; };
+		585027890E08274F00BF2CBB /* topology_subtract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = topology_subtract.cpp; path = ../../Source/Topology/topology_subtract.cpp; sourceTree = SOURCE_ROOT; };
 		585257FD0D7F173A00A0C6C8 /* centeredParallelogram32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = centeredParallelogram32.tiff; path = ../../Source/Resources/centeredParallelogram32.tiff; sourceTree = SOURCE_ROOT; };
 		585257FE0D7F173A00A0C6C8 /* centeredRect32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = centeredRect32.tiff; path = ../../Source/Resources/centeredRect32.tiff; sourceTree = SOURCE_ROOT; };
 		585257FF0D7F173A00A0C6C8 /* hexagon32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = hexagon32.tiff; path = ../../Source/Resources/hexagon32.tiff; sourceTree = SOURCE_ROOT; };
@@ -604,21 +615,8 @@
 		585F35C90D68B31100673AE6 /* visual_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = visual_layer.h; path = ../../Source/Scene/visual_layer.h; sourceTree = SOURCE_ROOT; };
 		585F35CA0D68B31100673AE6 /* widget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = widget.h; path = ../../Source/Scene/widget.h; sourceTree = SOURCE_ROOT; };
 		585F35CB0D68B31100673AE6 /* wscnl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wscnl.h; path = ../../Source/Scene/wscnl.h; sourceTree = SOURCE_ROOT; };
-		585F35E20D68B3C700673AE6 /* edge_use.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = edge_use.cpp; path = ../../Source/Topology/edge_use.cpp; sourceTree = SOURCE_ROOT; };
-		585F35E30D68B3C700673AE6 /* edge_use.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = edge_use.h; path = ../../Source/Topology/edge_use.h; sourceTree = SOURCE_ROOT; };
-		585F35E40D68B3C700673AE6 /* face_use.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = face_use.cpp; path = ../../Source/Topology/face_use.cpp; sourceTree = SOURCE_ROOT; };
-		585F35E50D68B3C700673AE6 /* face_use.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = face_use.h; path = ../../Source/Topology/face_use.h; sourceTree = SOURCE_ROOT; };
-		585F35E60D68B3C700673AE6 /* loop_use.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = loop_use.cpp; path = ../../Source/Topology/loop_use.cpp; sourceTree = SOURCE_ROOT; };
-		585F35E70D68B3C700673AE6 /* loop_use.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = loop_use.h; path = ../../Source/Topology/loop_use.h; sourceTree = SOURCE_ROOT; };
-		585F35E80D68B3C700673AE6 /* shell_use.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shell_use.cpp; path = ../../Source/Topology/shell_use.cpp; sourceTree = SOURCE_ROOT; };
-		585F35E90D68B3C700673AE6 /* shell_use.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shell_use.h; path = ../../Source/Topology/shell_use.h; sourceTree = SOURCE_ROOT; };
-		585F35EA0D68B3C700673AE6 /* topology.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = topology.h; path = ../../Source/Topology/topology.h; sourceTree = SOURCE_ROOT; };
 		585F35EB0D68B3C700673AE6 /* topology_model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = topology_model.cpp; path = ../../Source/Topology/topology_model.cpp; sourceTree = SOURCE_ROOT; };
 		585F35EC0D68B3C700673AE6 /* topology_model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = topology_model.h; path = ../../Source/Topology/topology_model.h; sourceTree = SOURCE_ROOT; };
-		585F35ED0D68B3C700673AE6 /* topology_region.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = topology_region.cpp; path = ../../Source/Topology/topology_region.cpp; sourceTree = SOURCE_ROOT; };
-		585F35EE0D68B3C700673AE6 /* topology_region.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = topology_region.h; path = ../../Source/Topology/topology_region.h; sourceTree = SOURCE_ROOT; };
-		585F35EF0D68B3C700673AE6 /* vertex_use.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vertex_use.cpp; path = ../../Source/Topology/vertex_use.cpp; sourceTree = SOURCE_ROOT; };
-		585F35F00D68B3C700673AE6 /* vertex_use.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vertex_use.h; path = ../../Source/Topology/vertex_use.h; sourceTree = SOURCE_ROOT; };
 		585F35F10D68B3C700673AE6 /* wtpkl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wtpkl.h; path = ../../Source/Topology/wtpkl.h; sourceTree = SOURCE_ROOT; };
 		585F36100D68B4B700673AE6 /* bipartite_flow_network.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bipartite_flow_network.cpp; path = ../../Source/Constraint/bipartite_flow_network.cpp; sourceTree = SOURCE_ROOT; };
 		585F36110D68B4B700673AE6 /* bipartite_flow_network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bipartite_flow_network.h; path = ../../Source/Constraint/bipartite_flow_network.h; sourceTree = SOURCE_ROOT; };
@@ -1678,13 +1676,11 @@
 		585F35E00D68B3B200673AE6 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				585F35E20D68B3C700673AE6 /* edge_use.cpp */,
-				585F35E40D68B3C700673AE6 /* face_use.cpp */,
-				585F35E60D68B3C700673AE6 /* loop_use.cpp */,
-				585F35E80D68B3C700673AE6 /* shell_use.cpp */,
 				585F35EB0D68B3C700673AE6 /* topology_model.cpp */,
-				585F35ED0D68B3C700673AE6 /* topology_region.cpp */,
-				585F35EF0D68B3C700673AE6 /* vertex_use.cpp */,
+				585027830E08270700BF2CBB /* topology_slice.cpp */,
+				585027850E08273100BF2CBB /* topology_intersect.cpp */,
+				585027870E08274100BF2CBB /* topology_union.cpp */,
+				585027890E08274F00BF2CBB /* topology_subtract.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -1693,14 +1689,8 @@
 			isa = PBXGroup;
 			children = (
 				585F35F10D68B3C700673AE6 /* wtpkl.h */,
-				585F35E30D68B3C700673AE6 /* edge_use.h */,
-				585F35E50D68B3C700673AE6 /* face_use.h */,
-				585F35E70D68B3C700673AE6 /* loop_use.h */,
-				585F35E90D68B3C700673AE6 /* shell_use.h */,
-				585F35EA0D68B3C700673AE6 /* topology.h */,
 				585F35EC0D68B3C700673AE6 /* topology_model.h */,
-				585F35EE0D68B3C700673AE6 /* topology_region.h */,
-				585F35F00D68B3C700673AE6 /* vertex_use.h */,
+				585027710E08153500BF2CBB /* topology_types.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -2908,6 +2898,7 @@
 				585F37CF0D68B8D300673AE6 /* part_pad_actions.h */,
 				585F37D10D68B8D300673AE6 /* part_pad_controller.h */,
 				585F37D30D68B8D300673AE6 /* part_pad_modes.h */,
+				58212ED10E098D150012DE71 /* part_pad_types.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -3383,6 +3374,11 @@
 				58AD02800DF9C5CE00ED713F /* geometric_intersection_curve.cpp in Sources */,
 				58AD02820DF9C5ED00ED713F /* geometric_intersection_surface.cpp in Sources */,
 				58AD02840DF9C60B00ED713F /* geometric_intersection_trimsurface.cpp in Sources */,
+				5850276B0E08107300BF2CBB /* topology_model.cpp in Sources */,
+				585027840E08270700BF2CBB /* topology_slice.cpp in Sources */,
+				585027860E08273100BF2CBB /* topology_intersect.cpp in Sources */,
+				585027880E08274100BF2CBB /* topology_union.cpp in Sources */,
+				5850278A0E08274F00BF2CBB /* topology_subtract.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -36,6 +36,7 @@
 #include "PartDesign/part_pad_actions.h"
 #include "PartDesign/part_pad_controller.h"
 #include "PartDesign/part_pad_modes.h"
+#include "PartDesign/part_pad_types.h"
 
 
 /*** Locally Defined Values ***/
@@ -56,9 +57,11 @@ class WCSketchProfile;
 
 class WCPartPad : public WCPartFeature {
 protected:
-	std::list<std::pair<WCSketchProfile*,bool> >_profiles;											//!< List of included profiles
+	std::list<std::list<WCSketchProfile*> >		_profiles;											//!< List of lists of profiles <<ext,int>,<ext,int,int>,...)
+	bool										_isReversed;										//!< Direction is reversed aligned with direction vector
+	WCPartPadType								_firstType, _secondType;							//!< Types of pad
+	WPFloat										_firstOffset, _secondOffset;						//!< Extrusion distances
 	WCVector4									_direction;											//!< Extrusion direction
-	WPFloat										_posDepth, _negDepth;								//!< Extrusion distance
 	std::list<WCGeometricPoint*>				_points;											//!< List of associated points
 	std::list<WCGeometricLine*>					_lines;												//!< List of extrusion lines
 	std::list<WCNurbsCurve*>					_curves;											//!< List of extrusion curves
@@ -72,34 +75,38 @@ private:
 	void Initialize(void);																			//!< Initialization method
 	//Hidden Constructors
 	WCPartPad();																					//!< Deny access to default constructor
-	WCPartPad(const WCPartPad& pad);																//!< Deny access to copy constructor
 	WCPartPad& operator=(const WCPartPad &pad);														//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCPartPad(WCPartBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,//!< Primary constructor
-												const WCVector4 &direction, const WPFloat &posDepth, const WPFloat &negDepth);
+	WCPartPad(WCPartBody *body, const std::string &name, std::list<std::list<WCSketchProfile*> > &profiles,//!< Primary constructor
+												const bool &reverseDir,	const WCPartPadType &firstType, const WCPartPadType &secondType,
+												const WPFloat &firstOffset=0.0, const WPFloat &secondOffset=0.0);
+	WCPartPad(const WCPartPad& pad);																//!< Deny access to copy constructor	
 	WCPartPad(xercesc::DOMElement *element, WCSerialDictionary *dictionary);						//!< Persistance constructor
-	virtual ~WCPartPad();																			//!< Default destructor
+	~WCPartPad();																					//!< Default destructor
 	
 	//Member Access Methods
-	inline std::list<std::pair<WCSketchProfile*,bool> > Profiles(void) const { return this->_profiles; }//!< Get the associated sketch profiles
-	inline WCVector4 Direction(void) const		{ return this->_direction; }						//!< Get the extrusion direction
-	inline WPFloat PositiveDepth(void) const	{ return this->_posDepth; }							//!< Get the positive extrusion distance
-	inline WPFloat NegativeDepth(void) const	{ return this->_negDepth; }							//!< Get the negative extrusion distance
+	inline std::list<std::list<WCSketchProfile*> > Profiles(void) const { return this->_profiles; }	//!< Get the associated sketch profiles
+	inline bool IsReversed(void) const			{ return this->_isReversed; }						//!< Get if direction is reversed
+	inline WCPartPadType FirstType(void) const	{ return this->_firstType; }						//!< Get the first pad type
+	inline WCPartPadType SecondType(void) const	{ return this->_secondType; }						//!< Get the second pad type
+	inline WPFloat FirstOffset(void) const		{ return this->_firstOffset; }						//!< Get the positive extrusion distance
+	inline WPFloat SecondOffset(void) const		{ return this->_secondOffset; }						//!< Get the negative extrusion distance
 	
 	//Required Inherited Methods
 	virtual std::string RootName(void) const	{ return PARTPAD_CLASSNAME; }						//!< Get the class name
-	void ReceiveNotice(WCObjectMsg msg, WCObject *sender);											//!< Receive notice from point or curve
-	bool Regenerate(void);																			//!< Validate and rebuild
-	void OnSelection(const bool fromManager, std::list<WCVisualObject*> objects);					//!< Called on selection
-	void OnDeselection(const bool fromManager);														//!< Called on deselection
+	virtual void ReceiveNotice(WCObjectMsg msg, WCObject *sender);									//!< Receive notice from point or curve
+	virtual bool Regenerate(void);																	//!< Validate and rebuild
+	virtual void OnSelection(const bool fromManager, std::list<WCVisualObject*> objects);			//!< Called on selection
+	virtual void OnDeselection(const bool fromManager);												//!< Called on deselection
 	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
 
 	/*** Actions ***/
 	static WCDrawingMode* ModeCreate(WCPartWorkbench *wb);											//!< Return create mode controller
 	static WCActionPartPadCreate* ActionCreate(WCPartBody *body, const std::string &padName,		//!< Primary creation action
-												const std::list<std::pair<WCSketchProfile*,bool> > &profiles,
-												const WCVector4 &direction, const WPFloat &posDepth, const WPFloat &negDepth);
+											   std::list<std::list<WCSketchProfile*> > &profiles, const bool &reversed,
+											   const WCPartPadType &firstType, const WCPartPadType &secondType,
+											   const WPFloat &firstOffset=0.0, const WPFloat &secondOffset=0.0);
 	
 	/*** Friend Functions ***/
 	friend std::ostream& operator<<(std::ostream& out, const WCPartPad &pad);						//!< Overloaded output operator		

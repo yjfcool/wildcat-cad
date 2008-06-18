@@ -26,47 +26,42 @@
 ********************************************************************************/
 
 
+#ifndef __TOPOLOGY_SHELL_H__
+#define __TOPOLOGY_SHELL_H__
+
+
 /*** Included Header Files ***/
-#include "PartDesign/part_shaft_actions.h"
-#include "PartDesign/part_shaft.h"
-#include "PartDesign/part_body.h"
-#include "Kernel/document.h"
+#include "Topology/wtpkl.h"
+
+
+
+/*** Locally Defined Values ***/
+//None
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
+/*** Class Order ***/
+class WCTopologyModel;
+struct WCFaceUse;
 
 
 /***********************************************~***************************************************/
 
 
-WCActionPartShaftCreate::WCActionPartShaftCreate(WCPartBody *body, const std::string &shaftName, const std::list<WCSketchProfile*> &profiles,
-	WCSketchAxis *axis,	const bool &profilesOnRight, const WPFloat &cwAngle, const WPFloat &ccwAngle) : ::WCAction("Create Shaft", body), _body(body),
-	_shaftName(shaftName), _profiles(profiles), _axis(axis), _profilesOnRight(profilesOnRight),
-	_cwAngle(cwAngle), _ccwAngle(ccwAngle), _shaft(NULL) {
-	//Nothing else for now
-}
-
-
-WCFeature* WCActionPartShaftCreate::Execute(void) {
-	//Create the shaft
-	WCPartShaft *shaft = new WCPartShaft(this->_body, this->_shaftName, this->_profiles, this->_axis, this->_profilesOnRight, 
-		this->_cwAngle, this->_ccwAngle);
-	//Make sure shaft is not null
-	if (shaft == NULL) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCActionPartShaftCreate::Execute - Shaft could not be created.");
-	//Set the pointer and return
-	this->_shaft = shaft;
-	return this->_shaft;
-}
-
-
-xercesc::DOMElement* WCActionPartShaftCreate::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
-	//Create primary element for this object
-	xercesc::DOMElement*  actionElement = document->createElement(xercesc::XMLString::transcode("ActionPartShaftCreate"));
-	//Add the creator attribute
-	actionElement->setAttribute(xercesc::XMLString::transcode("Creator"), xercesc::XMLString::transcode("12345"));
-	//Add the object name attribute
-	actionElement->setAttribute(xercesc::XMLString::transcode("shaftName"), xercesc::XMLString::transcode(this->_shaftName.c_str()));
-	return actionElement;
-}
+struct WSTopologyShell {
+	WCTopologyModel					*model;									//!< Parent topology model
+	WPUInt							type;									//!< Type of shell
+	WSFaceUse						*faceUses;								//!< Pointer to list of face uses (solid model)
+	WSEdgeUse						*edgeUses;								//!< Pointer to list of edge uses (wireframe model)
+};
 
 
 /***********************************************~***************************************************/
+
+
+}	   // End Wildcat Namespace
+#endif //__TOPOLOGY_SHELL_H__
 

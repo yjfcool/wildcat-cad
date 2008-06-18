@@ -96,7 +96,23 @@
 	//Make renderView OpenGL context active
 	NSOpenGLContext *context = [[_renderWindow renderView] openGLContext];
 	[context makeCurrentContext];
-	//That's all...
+
+	//Check OpenGL extensions
+	WCAdapter::Initialize();
+	bool pass = true;
+	if (!WCAdapter::HasGL20())						{ CLOGGER_ERROR(WCLogManager::RootLogger(), "OpenGL 2.0 not supported"); pass = false; }
+	if (!WCAdapter::HasGLARBFragmentShader())		{ CLOGGER_ERROR(WCLogManager::RootLogger(), "ARB_Fragment_Shader not supported"); pass = false; }
+	if (!WCAdapter::HasGLARBShadingLanguage100())	{ CLOGGER_ERROR(WCLogManager::RootLogger(), "ARB_Shading_Language_100 not supported"); pass = false; }
+	if (!WCAdapter::HasGLARBTextureRectangle())		{ CLOGGER_ERROR(WCLogManager::RootLogger(), "ARB_Texture_Rectangle not supported"); pass = false; }
+	if (!WCAdapter::HasGLEXTFramebufferObject())	{ CLOGGER_ERROR(WCLogManager::RootLogger(), "EXT_Frame_Buffer_Object not supported"); pass = false; }
+	//See if passed
+	if (!pass) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "InitApplication Error - Your graphics card does not support needed extensions");
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "Version: " << glGetString(GL_VERSION));
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "Renderer: " << glGetString(GL_RENDERER));
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "Extensions: " << glGetString(GL_EXTENSIONS));
+		exit(0);
+	}
 }
 
 

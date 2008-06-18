@@ -87,7 +87,10 @@ WCGeometricLine::~WCGeometricLine() {
 void WCGeometricLine::Begin(const WCVector4 &begin) {
 	//Update p0 (if needed)
 	if (this->_p0 != begin) {
+		//Set the value
 		this->_p0 = begin;
+		//Mark as dirty
+		this->IsSerialDirty(true);
 		//Send message 
 		this->SendBroadcastNotice(OBJECT_NOTIFY_UPDATE);
 	}
@@ -97,7 +100,10 @@ void WCGeometricLine::Begin(const WCVector4 &begin) {
 void WCGeometricLine::End(const WCVector4 &end) {
 	//Update p1 (if needed)
 	if (this->_p1 != end) {
+		//Set the value
 		this->_p1 = end;
+		//Mark as dirty
+		this->IsSerialDirty(true);
 		//Send message 
 		this->SendBroadcastNotice(OBJECT_NOTIFY_UPDATE);
 	}
@@ -111,6 +117,8 @@ void WCGeometricLine::Set(const WCVector4 &begin, const WCVector4 &end) {
 		this->_p0 = begin;
 		//Update p1
 		this->_p1 = end;
+		//Mark as dirty
+		this->IsSerialDirty(true);
 		//Send message 
 		this->SendBroadcastNotice(OBJECT_NOTIFY_UPDATE);
 	}
@@ -120,11 +128,14 @@ void WCGeometricLine::Set(const WCVector4 &begin, const WCVector4 &end) {
 void WCGeometricLine::Color(const WCColor &color) {
 	//Set the color
 	this->_color = color;
+	//Mark as dirty
+	this->IsSerialDirty(true);
 	//Make sure all dependent objects know about it
 	this->SendBroadcastNotice(OBJECT_NOTIFY_UPDATE);
 }
 
 
+/*
 std::list<WPFloat> WCGeometricLine::Intersect(WCGeometricPoint *point, const WPFloat &tol) {
 	//Get direction vector
 	WCVector4 direction = this->_p1 - this->_p0;
@@ -228,6 +239,7 @@ std::list<WPIntersectRec> WCGeometricLine::Intersect(WCGeometricCurve *curve, co
 		return hitList;
 	}
 }
+*/
 
 	
 WPFloat WCGeometricLine::Length(const WPFloat &tolerance) {
@@ -354,7 +366,8 @@ void WCGeometricLine::Render(const GLuint &defaultProg, const WCColor &color, co
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisable(GL_LINE_SMOOTH);
 	//Check for errors
-//	if (glGetError() != GL_NO_ERROR) std::cout << "WCGeometricLine::Render Error - Unspecified error.\n";
+	if (glGetError() != GL_NO_ERROR)
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometricLine::Render Error - Unspecified error.");
 }
 
 

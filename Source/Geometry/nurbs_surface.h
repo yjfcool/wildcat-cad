@@ -64,16 +64,11 @@
 #define NURBSSURFACE_LOC_PARAMSV_BEZIER23		14
 //Buffer Constants
 #define NURBSSURFACE_VERTEX_BUFFER				0
-#define NURBSSURFACE_INDEX_BUFFER				1
-#define NURBSSURFACE_NORMAL_BUFFER				2
-#define NURBSSURFACE_TEXCOORD_BUFFER			3
+#define NURBSSURFACE_NORMAL_BUFFER				1
+#define NURBSSURFACE_TEXCOORD_BUFFER			2
+#define NURBSSURFACE_INDEX_BUFFER				3
 //Accuracy Constants
-#define NURBSSURFACE_INVERSION_MAX_ITERATIONS	12
-#define NURBSSURFACE_EPSILON_ONE				0.0001
-#define NURBSSURFACE_EPSILON_TWO				0.0001
-#define NURBSSURFACE_EQUALITY_EPSILON			0.001
 #define NURBSSURFACE_AREA_ACCURACY				0.001
-#define NURBSSURFACE_GENERATE_ACCURACY			0.15
 //Performance Levels
 #define NURBSSURFACE_PERFLEVEL_HIGH				0
 #define NURBSSURFACE_PERFLEVEL_MEDIUM			1
@@ -96,17 +91,18 @@ class WCGeometryContext;
 class WCNurbsSurface : public WCGeometricSurface {
 protected:
 	WCGeometryContext							*_context;											//!< Geometry context
-	WPUInt										_lodU, _lodV, _numVerts;							//!< Values for LOD calculations
 	WPUInt										_degreeU, _degreeV;									//!< Degree in U and V directions
 	WCNurbsMode									_modeU, _modeV;										//!< NURBS knot mode for U and V directions
 	WPUInt										_cpU, _cpV;											//!< Number of control points in U and V directions
 	std::vector<WCVector4>						_controlPoints;										//!< Vector of vectors for control points
 	WPUInt										_kpU, _kpV;											//!< Number of knot points in U and V directions
 	WPFloat										*_knotPointsU, *_knotPointsV;						//!< Arrays of knot point values
-	GLuint										_buffers[4];										//!< Data buffers for vertex, normal, index, and texcoords
-	GLfloat										*_altBuffers[4];									//!< Data buffers - CPU side
-protected:
-	//Private Functions
+	WPFloat										_lengthU, _lengthV;									//!< Estimated length along u and v axis
+	WPUInt										_lodU, _lodV;										//!< Values for LOD calculations
+	std::vector<GLuint>							_buffers;											//!< Data buffers - GPU for vertex, normal, index, and texcoords
+	std::vector<GLfloat*>						_altBuffers;										//!< Data buffers - CPU for vertex, normal, index, and texcoords
+private:
+	//Private Methods
 	void ValidateClosure(void);																		//!< Check the closure of the surface
 	void ValidateSelfIntersection(void);															//!< Check the self-intersection of the surface	
 	void GenerateKnotPointsVBOs(void);																//!< Generate the knot points VBO
@@ -115,64 +111,61 @@ protected:
 	void GenerateControlPointsTexture(void);														//!< Generate the knot points texture	
 	void LoadKnotPoints(const std::vector<WPFloat> &uKP=std::vector<WPFloat>(),						//!< Create all knot point structures
 												const std::vector<WPFloat> &vKP=std::vector<WPFloat>());
-				
-	//Visualization Functions
-	void GenerateSurfaceHigh(void);																	//!< Generate GL using High perf level
-	void GenerateSurfaceMedium(void);																//!< Generate GL using Medium perf level
-	void GenerateSurfaceLow(void);																	//!< Generate GL using Low perf level		
-	void GenerateSurfaceOne(void);																	//!< Generate GL for 1st degree surfaces
-	void GenerateSurfaceSize4(void);																//!< Generate GL for surf w/ 4 cp
-	void GenerateIndex(void);																		//!< Generate GL array index data
-	
-private:	
-	//Access Denied
+	//Surface Generation Methods
+	std::vector<GLfloat*> GenerateSurfaceHigh(const WPUInt &lodU, const WPUInt &lodV,				//!< Generate GL using High perf level
+												const bool &server, std::vector<GLuint> &buffers);
+	std::vector<GLfloat*> GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV,				//!< Generate GL using Medium perf level
+												const bool &server, std::vector<GLuint> &buffers);
+	std::vector<GLfloat*> GenerateSurfaceLow(const WPUInt &lodU, const WPUInt &lodV,				//!< Generate GL using Low perf level
+												const bool &server, std::vector<GLuint> &buffers);
+	std::vector<GLfloat*> GenerateSurfaceSize4(const WPUInt &lodU, const WPUInt &lodV,				//!< Generate GL for surf w/ 4 cp
+												const bool &server, std::vector<GLuint> &buffers);
+	GLuint* GenerateIndex(const WPUInt &lodU, const WPUInt &lodV, const bool &server, GLuint &buffer);	//!< Generate GL array index data
+	//Hidden Constructors
 	WCNurbsSurface();																				//!< Deny access to default constructor
-	WPUInt LevelOfDetail(const WPUInt lod) { return 0; }											//!< Deny access - not well inherited
-	WPUInt LevelOfDetail(void) { return 0; }														//!< Deny access - not well inherited
 public:
 	//Constructors and Destructors
 	WCNurbsSurface(WCGeometryContext *context, const WPUInt &degreeU, const WPUInt &degreeV,		//!< Primary constructor
 					const WPUInt &cpU, const WPUInt &cpV, const std::vector<WCVector4> &controlPoints,
 					const WCNurbsMode &modeU, const WCNurbsMode &modeV,
 					const std::vector<WPFloat> &knotPointsU=std::vector<WPFloat>(), const std::vector<WPFloat> &knotPointsV=std::vector<WPFloat>());
-	WCNurbsSurface(const WCNurbsSurface &surf);														//!< Copy constructor
+	WCNurbsSurface(const WCNurbsSurface &surface);													//!< Copy constructor
 	WCNurbsSurface(xercesc::DOMElement *element, WCSerialDictionary *dictionary);					//!< Persistance constructor
-	~WCNurbsSurface();																				//!< Default destructor
+	virtual ~WCNurbsSurface();																		//!< Default destructor
 	
 	//General Access Functions
-	GLuint VertexBuffer(void);																		//!< Return ID for vertex buffer
-	inline WPUInt NumberControlPointsU(void) const{ return this->_cpU; }							//!< Get the number of control points
-	inline WPUInt NumberControlPointsV(void) const{ return this->_cpV; }							//!< Get the number of control points	
-	inline std::vector<WCVector4> ControlPoints(void) { return this->_controlPoints; }				//!< Return a copy of the cp collection
-	inline WPUInt NumberKnotPointsU(void) const	{ return this->_kpU; }								//!< Get the number of knot points for U
-	inline WPUInt NumberKnotPointsV(void) const	{ return this->_kpV; }								//!< Get the number of knot points for V
-	inline WCNurbsMode ModeU(void) const		{ return this->_modeU; }							//!< Get the knot mode for U
-	inline WCNurbsMode ModeV(void) const		{ return this->_modeV; }							//!< Get the knot mode for V
+	inline std::vector<WCVector4> ControlPoints(void){ return this->_controlPoints; }				//!< Get the control points
+	void ControlPoints(const std::vector<WCVector4> &controlPoints);								//!< Set the control points
+	inline WPUInt NumberControlPointsU(void) const	{ return this->_cpU; }							//!< Get the number of control points
+	inline WPUInt NumberControlPointsV(void) const	{ return this->_cpV; }							//!< Get the number of control points	
+	inline WPFloat* KnotPointsU(void)				{ return this->_knotPointsU; }					//!< Get the U knot points
+	inline WPFloat* KnotPointsV(void)				{ return this->_knotPointsV; }					//!< Get the V knot points
+	void KnotPointsU(const std::vector<WPFloat> &knotPointsU);										//!< Set the U knot points
+	void KnotPointsV(const std::vector<WPFloat> &knotPointsV);										//!< Set the V knot points
+	inline WPUInt NumberKnotPointsU(void) const		{ return this->_kpU; }							//!< Get the number of knot points for U
+	inline WPUInt NumberKnotPointsV(void) const		{ return this->_kpV; }							//!< Get the number of knot points for V
+	inline WCNurbsMode ModeU(void) const			{ return this->_modeU; }						//!< Get the knot mode for U
+	inline WCNurbsMode ModeV(void) const			{ return this->_modeV; }						//!< Get the knot mode for V
 	void Degree(const WPUInt &degreeU, const WPUInt &degreeV);										//!< Set the U and V degrees
-	WPUInt DegreeU(void) const					{ return this->_degreeU; }							//!< Get the U degree of the curve	
-	WPUInt DegreeV(void) const 					{ return this->_degreeV; }							//!< Get the V degree of the curve	
-	void LevelOfDetail(const WPUInt &lodU, const WPUInt &lodV);										//!< Set the Level-Of-Detail value
-	WPUInt LevelOfDetailU(void) const			{ return this->_lodU; }								//!< Get the Level-Of-Detail value	
-	WPUInt LevelOfDetailV(void) const			{ return this->_lodV; }								//!< Get the Level-Of-Detail value		
+	inline WPUInt DegreeU(void) const				{ return this->_degreeU; }						//!< Get the U degree of the curve	
+	inline WPUInt DegreeV(void) const				{ return this->_degreeV; }						//!< Get the V degree of the curve	
 	
 	//Inherited Member Functions
-	bool Intersect(const WCGeometricPoint &point, const WPFloat &tolerance=NURBSSURFACE_EQUALITY_EPSILON);	//!< Check for intersection with point
-	bool Intersect(const WCGeometricCurve &curve, const WPFloat &tolerance=NURBSSURFACE_EQUALITY_EPSILON);	//!< Check for intersection with curve	
-	bool Intersect(const WCGeometricSurface &surface, const WPFloat &tolerance=NURBSSURFACE_EQUALITY_EPSILON);//!< Check for intersection with surface		
-	WPFloat Area(void);																				//!< Return the area of the surface
-	WCVector4 Evaluate(const WPFloat &u, const WPFloat &v);											//!< Evaluate a specific point on the surface
-	WCVisualObject* HitTest(const WCRay &ray, const WPFloat &tolerance);							//!< Hit test with a ray	
-	void ApplyTransform(const WCMatrix4 &transform);												//!< Apply a transform to the surface
-	void ApplyTranslation(const WCVector4 &translation);											//!< Apply a linear translation to the object
-	void Render(const GLuint &defaultProg, const WCColor &color, const WPFloat &zoom);				//!< Render the object
-	void ReceiveNotice(WCObjectMsg msg, WCObject *sender);											//!< Receive messages from other objects
+	virtual WPFloat Area(const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON);					//!< Return the area of the surface
+	virtual WCVector4 Evaluate(const WPFloat &u, const WPFloat &v);									//!< Evaluate a specific point on the surface
+	virtual WCVector4 Derivative(const WPFloat &u, const WPUInt &uDer,								//!< Get the surface derivative
+												const WPFloat &v, const WPUInt &vDer);
+	virtual WCRay Tangent(const WPFloat &u, const WPFloat &v);										//!< Get a tangential ray from the surface at u,v
+	virtual std::pair<WCVector4,WCVector4> PointInversion(const WCVector4 &point);					//!< Project from point to closest location on surface
+	virtual WCVisualObject* HitTest(const WCRay &ray, const WPFloat &tolerance);					//!< Hit test with a ray	
+	virtual void ApplyTransform(const WCMatrix4 &transform);										//!< Apply a transform to the surface
+	virtual void ApplyTranslation(const WCVector4 &translation);									//!< Apply a linear translation to the object
+	virtual void Render(const GLuint &defaultProg, const WCColor &color, const WPFloat &zoom);		//!< Render the object
+	virtual void ReceiveNotice(WCObjectMsg msg, WCObject *sender);									//!< Receive messages from other objects
 
 	//Original Member Functions
-	WCVector4 Derivative(const WPFloat &u, const WPUInt &uDer, const WPFloat &v, const WPUInt &vDer);//!< Get the ith, jth derivative of the surface at a u,v
-	WCRay Tangent(const WPFloat &u, const WPFloat &v);												//!< Get a tangential ray from the surface at u,v
-	WCVector4 PointInversion(const WCVector4 &point);												//!< Project from point to closest location on surface
-	
-	//Knot Insertion and Degree Elevation - Does not Alter Surface Shape
+	virtual std::vector<GLfloat*> GenerateClientBuffers(WPUInt &lodU, WPUInt &lodV);				//!< Generate uo to LOD (vert, tex, norm, index) - put in RAM
+	virtual void GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vector<GLuint> &buffers);	//!< Generate uo to LOD (vert, tex, norm, index) - put in VRAM
 	void InsertKnotU(const WPFloat &u, const WPUInt &multiplicity=1);								//!< Insert a knot a parametric value u
 	void InsertKnotV(const WPFloat &v, const WPUInt &multiplicity=1);								//!< Insert a knot a parametric value v	
 	void RefineKnot(void);																			//!< Refine the curve with multiple knot insertions
@@ -185,7 +178,7 @@ public:
 	bool operator==(const WCNurbsSurface &surface);													//!< Equality operator
 	
 	//Serialization and Object Methods
-	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
+	virtual xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);//!< Serialize the object
 
 	/*** Static Creation Methods ***/
 	static WCNurbsSurface* ExtrudeCurve(WCGeometryContext *context, WCGeometricCurve* curve,		//!< Extrude a geometric curve into a surface

@@ -57,7 +57,7 @@ class WCSketchAxis;
 
 class WCPartShaft : public WCPartFeature {
 protected:
-	std::list<std::pair<WCSketchProfile*,bool> >_profiles;											//!< List of included profiles
+	std::list<WCSketchProfile*>					_profiles;											//!< Ordered profile list (ext, int, int, ...)
 	WCSketchAxis								*_axis;												//!< Revolution axis
 	bool										_profilesOnRight;									//!< Are the profiles on the right side
 	WPFloat										_cwAngle, _ccwAngle;								//!< Revolution angles
@@ -79,14 +79,14 @@ private:
 	WCPartShaft& operator=(const WCPartShaft &shaft);												//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCPartShaft(WCPartBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,//!< Primary constructor
+	WCPartShaft(WCPartBody *body, const std::string &name, const std::list<WCSketchProfile*> &profiles,//!< Primary constructor
 												WCSketchAxis *axis, const bool profilesOnRight,
 												const WPFloat &cwAngle, const WPFloat &ccwAngle);
 	WCPartShaft(xercesc::DOMElement *element, WCSerialDictionary *dictionary);						//!< Persistance constructor
 	virtual ~WCPartShaft();																			//!< Default destructor
 	
 	//Member Access Methods
-	inline std::list<std::pair<WCSketchProfile*,bool> > Profiles(void) const { return this->_profiles; }//!< Get the associated sketch profiles
+	inline std::list<WCSketchProfile*> Profiles(void) const { return this->_profiles; }				//!< Get the associated sketch profiles
 	inline WCSketchAxis* Axis(void) const		{ return this->_axis; }								//!< Get the revolution axis
 	inline WPFloat ClockwiseAngle(void) const	{ return this->_cwAngle; }							//!< Get the clockwise revolution angle
 	inline WPFloat CounterClockwiseAngle(void) const{ return this->_ccwAngle; }						//!< Get the ccw revolution angle
@@ -101,12 +101,12 @@ public:
 
 	/*** Static Processing Methods ***/
 	static bool QualifyProfiles(const std::list<WCSketchProfile*> &inputProfiles,					//!< Qualify a list of profiles for inclusion
-												std::list<std::pair<WCSketchProfile*,bool> > &outputProfiles, const WCSketchAxis *axis);
+												std::list<WCSketchProfile*> &outputProfiles, const WCSketchAxis *axis);
 
 	/*** Actions ***/
 	static WCDrawingMode* ModeCreate(WCPartWorkbench *wb);											//!< Return create mode controller
 	static WCActionPartShaftCreate* ActionCreate(WCPartBody *body, const std::string &shaftName,	//!< Primary creation action
-												const std::list<std::pair<WCSketchProfile*,bool> > &profiles,
+												const std::list<WCSketchProfile*> &profiles,
 												WCSketchAxis *axis, const bool profilesOnRight,
 												const WPFloat &cwAngle, const WPFloat &ccwAngle);
 	

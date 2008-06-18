@@ -34,34 +34,79 @@
 /***********************************************~***************************************************/
 
 
+void __WILDCAT_NAMESPACE__::IntersectionListDisposal(std::list<WCIntersectionResult> &results) {
+	//Loop through the list and delete any objects
+	//Reverse left and right if there are results
+	if (!results.empty()) {
+		std::list<WCIntersectionResult>::iterator iter(results.begin());
+		//Iterate through the list
+		for (; iter != results.end(); iter++) {
+			//Delete any objects that are present
+			if ((*iter).object != NULL) delete (*iter).object;
+		}
+		//Clear the list
+		results.clear();
+	}
+}
+
+
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCIntersectionResult &result) {
+	//There is a hit
+	out << "Hit Type = ";
+	//What type of hit?
+	switch (result.type) {
+		case IntersectPoint: out << "Point"; break;
+		case IntersectLine: out << "Line"; break;
+		case IntersectCurve: out << "Curve"; break;
+		case IntersectSurface: out << "Surface"; break;
+		case IntersectTrimSurface: out << "TrimSurface"; break;
+	}
+	//Print boundary info
+	out << " -- LB: " << result.leftBoundary;
+	out << ", RB: " << result.rightBoundary;
+	//Print parametric info
+	out << " -- LP: " << result.leftParam.I();
+	out << ", RP: " << result.rightParam.I();
+	out << ": @";
+	return out;
+}
+
+
+/***********************************************~***************************************************/
+
+
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCGeometricPoint *left,
-	WCGeometricPoint *right, const WPFloat &tol, const int &flags) {
+	WCGeometricPoint *right, const WPFloat &tol, const unsigned int &flags) {
+	std::list<WCIntersectionResult> results;
+	//Check if intersecting with self
+	if (left == right) return results;
 	//Check distance between points
 	if(left->Data().Distance(right->Data()) <= tol) {
-		WCIntersectionResult result;
-		result.type = IntersectPoint;
-		result.leftBoundary = true;
-		result.rightBoundary = true;
-		result.leftParam = left->Data();
-		result.rightParam = right->Data();
+		WCIntersectionResult hit;
+		hit.type = IntersectPoint;
+		hit.leftBoundary = true;
+		hit.rightBoundary = true;
+		hit.leftParam = left->Data();
+		hit.rightParam = right->Data();
 		//See if genObj
 		if (flags & INTERSECT_GEN_POINTS) {
 			//Create new point
 			WCGeometricPoint *newPoint = new WCGeometricPoint(*left);
 			//Add to result struct
-			result.object = newPoint;
+			hit.object = newPoint;
 		}
-		else result.object = NULL;
+		else hit.object = NULL;
 		//Return the intersection
-		return std::list<WCIntersectionResult>(1, result);
+		std::cout << hit << *left << std::endl;
+		results.push_back(hit);
 	}
-	//Return empty list
-	else return std::list<WCIntersectionResult>();
+	//Return the list
+	return results;
 }
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCGeometricPoint *left,
-	WCGeometricLine *right,  const WPFloat &tol, const int &flags) {
+	WCGeometricLine *right,  const WPFloat &tol, const unsigned int &flags) {
 	//Get intersection list
 	std::list<WCIntersectionResult> results = GeometricIntersection(right, left, tol, flags);
 	//Return the reversed the list
@@ -70,7 +115,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCG
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCGeometricPoint *left,
-	WCNurbsCurve *right, const WPFloat &tol, const int &flags) {
+	WCNurbsCurve *right, const WPFloat &tol, const unsigned int &flags) {
 	//Get intersection list
 	std::list<WCIntersectionResult> results = GeometricIntersection(right, left, tol, flags);
 	//Return the reversed the list
@@ -79,7 +124,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCG
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCGeometricPoint *left,
-	WCNurbsSurface *right, const WPFloat &tol, const int &flags) {
+	WCNurbsSurface *right, const WPFloat &tol, const unsigned int &flags) {
 	//Get intersection list
 	std::list<WCIntersectionResult> results = GeometricIntersection(right, left, tol, flags);
 	//Return the reversed the list
@@ -88,7 +133,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCG
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCGeometricPoint *left,
-	WCTrimmedNurbsSurface *right, const WPFloat &tol, const int &flags) {
+	WCTrimmedNurbsSurface *right, const WPFloat &tol, const unsigned int &flags) {
 	//Get intersection list
 	std::list<WCIntersectionResult> results = GeometricIntersection(right, left, tol, flags);
 	//Return the reversed the list

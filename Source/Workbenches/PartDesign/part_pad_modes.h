@@ -60,7 +60,7 @@ private:
 	WCVector4									_mark;												//!< Mouse location
 	WCMatrix4									_plane;												//!< Profile plane
 	WCVector4									_direction;											//!< Extrusion direction
-	std::list<std::pair<WCSketchProfile*,bool> >_profiles;											//!< Associated sketch
+	std::list<std::list<WCSketchProfile*> >		_profiles;											//!< Associated list of lists of sketch profiles
 	WCVector4									_corners[4];										//!< Bounding box corners
 	WPFloat										_posDepth, _negDepth;								//!< Location of suggestion
 	std::list<WCNurbsSurface*>					_surfaces;											//!< List of extrusion surfaces

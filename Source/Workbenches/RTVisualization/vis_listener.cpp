@@ -161,10 +161,11 @@ void WCVisListener::TCPInitialize(void) {
 void WCVisListener::TCPListen(void) {
 #ifndef __WIN32__
 	socklen_t	len;
-	WSVisualizationHeader *header;
-	size_t headerSize = sizeof(WSVisualizationHeader);
-	void *data = malloc(SERV_MAXLINE), *payload;
-	WCVisFeature *feature;
+//	WSVisualizationHeader *header;
+//	size_t headerSize = sizeof(WSVisualizationHeader);
+	void *data = malloc(SERV_MAXLINE);
+//	void *payload;
+//	WCVisFeature *feature;
 	int connFD = -1;
 	ssize_t n = -1;
 

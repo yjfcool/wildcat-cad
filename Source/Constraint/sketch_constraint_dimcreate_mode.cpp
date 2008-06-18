@@ -161,12 +161,12 @@ void WCModeSketchConstraintDimensionalCreate::OnMouseDown(const WCMouseButton &b
 			WCGeometricPoint *point = new WCGeometricPoint(position);
 			//Project position onto curve to get label offset
 			this->_offset = 0.0;
-			std::list<WPFloat> hitList = arc->Base()->Intersect(point, 0.01);
+			std::list<WCIntersectionResult> hitList = GeometricIntersection(arc->Base(), point, 0.01);
 			if (hitList.empty()) {
 				CLOGGER_ERROR(WCLogManager::RootLogger(), "WCModeSketchConstraintDimensionalCreate::OnMouseDown - No arc hits returned");
 				return;
 			}
-			this->_labelOffset = hitList.front();
+			this->_labelOffset = hitList.front().leftParam.I();
 			delete point;
 			//Calcuate radius of arc
 			WPFloat radius = arc->Radius();
@@ -199,12 +199,12 @@ void WCModeSketchConstraintDimensionalCreate::OnMouseDown(const WCMouseButton &b
 			WCGeometricPoint *point = new WCGeometricPoint(position);
 			//Project position onto curve to get label offset
 			this->_offset = 0.0;
-			std::list<WPFloat> hitList = circle->Base()->Intersect(point, 0.01);
+			std::list<WCIntersectionResult> hitList = GeometricIntersection(circle->Base(), point, 0.01);
 			if (hitList.empty()) {
 				CLOGGER_ERROR(WCLogManager::RootLogger(), "WCModeSketchConstraintDimensionalCreate::OnMouseDown - No circle hits returned");
 				return;
 			}
-			this->_labelOffset = hitList.front();
+			this->_labelOffset = hitList.front().leftParam.I();
 			delete point;
 			//Calcuate radius of arc
 			WPFloat radius = circle->Radius();

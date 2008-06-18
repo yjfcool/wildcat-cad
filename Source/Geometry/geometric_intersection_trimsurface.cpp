@@ -39,7 +39,7 @@
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCTrimmedNurbsSurface *left,
-	WCGeometricPoint *right, const WPFloat &tol, const int &flags) {
+	WCGeometricPoint *right, const WPFloat &tol, const unsigned int &flags) {
 	//See if point is within surface bounding box
 	//...
 	
@@ -54,7 +54,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCT
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCTrimmedNurbsSurface *left,
-	WCGeometricLine *right, const WPFloat &tol, const int &flags) {
+	WCGeometricLine *right, const WPFloat &tol, const unsigned int &flags) {
 	//See if line intersects surface bounding box
 	//...
 	
@@ -69,7 +69,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCT
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCTrimmedNurbsSurface *left,
-	WCNurbsCurve *right, const WPFloat &tol, const int &flags) {
+	WCNurbsCurve *right, const WPFloat &tol, const unsigned int &flags) {
 	//See if curve bounding box intersects surface bounding box
 	//...
 	
@@ -87,7 +87,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCT
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCTrimmedNurbsSurface *left,
-	WCNurbsSurface *right, const WPFloat &tol, const int &flags) {
+	WCNurbsSurface *right, const WPFloat &tol, const unsigned int &flags) {
 	//See if left bounding box intersects right bounding box
 	//...
 	
@@ -102,7 +102,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCT
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCTrimmedNurbsSurface *left,
-	WCTrimmedNurbsSurface *right, const WPFloat &tol, const int &flags) {
+	WCTrimmedNurbsSurface *right, const WPFloat &tol, const unsigned int &flags) {
 	//See if left bounding box intersects right bounding box
 	//...
 	

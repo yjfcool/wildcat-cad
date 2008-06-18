@@ -54,8 +54,8 @@ namespace __WILDCAT_NAMESPACE__ {
 class WCAdapter {
 private:
 	static bool									_isInitialized;										//!< Initialization flag
+	static float								_version;											//!< Version of OpenGL
 	static bool									*_extensions;										//!< Array of extension flags
-	
 	//Card limits
 	static GLint								_maxGeometryOutputVertices;							//!< Maximum number of verts a geometry shader can output
 	static GLint								_max2DTextureSize;									//!< Maximum size of one dimension of a 2D texture	
@@ -67,9 +67,14 @@ public:
 	static void Terminate(void);																	//!< Static Terminate method
 	
 	//Extension functions
+	inline static bool HasGL13(void)					{ CHKINIT; return (WCAdapter::_version <= 1.3); }
+	inline static bool HasGL14(void)					{ CHKINIT; return (WCAdapter::_version <= 1.4); }
+	inline static bool HasGL15(void)					{ CHKINIT; return (WCAdapter::_version <= 1.5); }
+	inline static bool HasGL20(void)					{ CHKINIT; return (WCAdapter::_version <= 2.0); }
+	inline static bool HasGL21(void)					{ CHKINIT; return (WCAdapter::_version <= 2.1); }
 	inline static bool HasGLARBFragmentShader(void)		{ CHKINIT; return WCAdapter::_extensions[33]; }
 	inline static bool HasGLARBShadingLanguage100(void)	{ CHKINIT; return WCAdapter::_extensions[34]; }
-	inline static bool HasGLARBTextureRectange(void)	{ CHKINIT; return WCAdapter::_extensions[39]; }
+	inline static bool HasGLARBTextureRectangle(void)	{ CHKINIT; return WCAdapter::_extensions[39]; }
 	inline static bool HasGLEXTTextureFloat(void)		{ CHKINIT; return WCAdapter::_extensions[44]; }	
 	inline static bool HasGLARBPixelBufferObject(void)	{ CHKINIT; return WCAdapter::_extensions[45]; }
 	inline static bool HasGLEXTFramebufferObject(void)	{ CHKINIT; return WCAdapter::_extensions[307]; }

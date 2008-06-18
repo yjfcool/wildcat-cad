@@ -38,14 +38,15 @@
 void WCGeometryContext::StartCurve(void) {
 	GLenum retVal;
 	//Determine performance level
-	if (WCAdapter::HasGLEXTTransformFeedback() && WCAdapter::HasGLEXTBindableUniform() && 
-		WCAdapter::HasGLEXTGeometryShader4() ) {//WCAdapter::HasGLEXTGPUShader4()
-		//All criteria met for high performance
-		this->_ncPerfLevel = NURBSCURVE_PERFLEVEL_HIGH;
+//	if (WCAdapter::HasGLEXTTransformFeedback() && WCAdapter::HasGLEXTBindableUniform() && 
+//		WCAdapter::HasGLEXTGeometryShader4() && false) {//WCAdapter::HasGLEXTGPUShader4()
+//		//All criteria met for high performance
+//		this->_ncPerfLevel = NURBSCURVE_PERFLEVEL_HIGH;
 //		CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartCurve - Performance set to High.");			
-	}	
-	else if (WCAdapter::HasGLARBFragmentShader() && WCAdapter::HasGLARBShadingLanguage100() &&
-			 WCAdapter::HasGLARBTextureRectange() && WCAdapter::HasGLEXTTextureFloat() &&
+//	}	
+//	else
+	if (WCAdapter::HasGLARBFragmentShader() && WCAdapter::HasGLARBShadingLanguage100() &&
+			 WCAdapter::HasGLARBTextureRectangle() && WCAdapter::HasGLEXTTextureFloat() &&
 			 WCAdapter::HasGLARBPixelBufferObject() && WCAdapter::HasGLEXTFramebufferObject()) {
 		//All criteria met for medium performance
 		this->_ncPerfLevel = NURBSCURVE_PERFLEVEL_MEDIUM;
@@ -59,14 +60,14 @@ void WCGeometryContext::StartCurve(void) {
 /*** Debug ***/	
 	//Force Performance Level
 //	this->_ncPerfLevel = NURBSCURVE_PERFLEVEL_HIGH;
-	this->_ncPerfLevel = NURBSCURVE_PERFLEVEL_MEDIUM;
+//	this->_ncPerfLevel = NURBSCURVE_PERFLEVEL_MEDIUM;
 //	this->_ncPerfLevel = NURBSCURVE_PERFLEVEL_LOW;
 /*** Debug ***/
 	//Compile Shaders
 	switch(this->_ncPerfLevel) {
 		//Set up programs for high performance mode
 		case NURBSCURVE_PERFLEVEL_HIGH:
-//			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartCurve - Actually Running as High");
+			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartCurve - Actually Running as High");
 			//Get program IDs
 			this->_ncDefault = this->_shaderManager->ProgramFromName("nc_default_plH");
 			this->_ncDefault23 = 0;
@@ -85,7 +86,7 @@ void WCGeometryContext::StartCurve(void) {
 
 		//Set up programs for medium performance mode	
 		case NURBSCURVE_PERFLEVEL_MEDIUM:
-//			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCNurbsCurve::Start Debug - Actually Running as Medium");
+			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCNurbsCurve::Start Debug - Actually Running as Medium");
 			//Get program IDs
 			this->_ncDefault = this->_shaderManager->ProgramFromName("nc_default_plM");
 			this->_ncDefault23 = this->_shaderManager->ProgramFromName("nc23_default_plM");
@@ -145,7 +146,7 @@ void WCGeometryContext::StartCurve(void) {
 
 		//Set up low performance parameters	
 		default:
-//			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartCurve Debug - Actually Running as Low.");
+			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartCurve Debug - Actually Running as Low.");
 			//Nothing to do here for now
 			break;
 	}
@@ -241,7 +242,7 @@ void WCGeometryContext::StartSurface(void) {
 //		CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - Performance set to High.");
 	}
 	else if (WCAdapter::HasGLARBFragmentShader() && WCAdapter::HasGLARBShadingLanguage100() &&
-			 WCAdapter::HasGLARBTextureRectange() && WCAdapter::HasGLEXTTextureFloat() &&
+			 WCAdapter::HasGLARBTextureRectangle() && WCAdapter::HasGLEXTTextureFloat() &&
 			 WCAdapter::HasGLARBPixelBufferObject() && WCAdapter::HasGLEXTFramebufferObject()) {
 		//All criteria met for medium performance
 		this->_nsPerfLevel = NURBSSURFACE_PERFLEVEL_MEDIUM;

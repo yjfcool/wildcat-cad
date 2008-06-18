@@ -102,7 +102,7 @@ WCSketchWorkbench::WCSketchWorkbench(WCSketch *sketch) : ::WCWorkbench(sketch, "
 	this->_keyMap->AddMapping( WCKeyEvent('t'), WCUserMessage("threePointArc") );
 	this->_keyMap->AddMapping( WCKeyEvent('w'), WCUserMessage("construction") );
 	this->_keyMap->AddMapping( WCKeyEvent('x'), WCUserMessage("axisLine") );
-	this->_keyMap->AddMapping( WCKeyEvent('z'), WCUserMessage("analyzeSketch") );
+	this->_keyMap->AddMapping( WCKeyEvent('b'), WCUserMessage("analyzeSketch") );
 	this->_keyMap->AddMapping( WCKeyEvent('`'), WCUserMessage("select") );
 	this->_keyMap->AddMapping( WCKeyEvent(127), WCUserMessage("delete") );
 	this->_keyMap->AddMapping( WCKeyEvent('Z'), WCUserMessage("analyzeConstraint") );

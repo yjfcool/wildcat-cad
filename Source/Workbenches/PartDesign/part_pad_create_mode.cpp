@@ -105,18 +105,15 @@ void WCModePartPadCreate::ProcessProfiles(const std::list<WCSketchProfile*> &pro
 
 	//Build list of boundary points for exterior profiles
 	std::list<WCVector4> inputList, tmpList;
-	std::list< std::pair<WCSketchProfile*,bool> >::iterator profileIter;
+	std::list<std::list<WCSketchProfile*> >::iterator profileIter;
 	for (profileIter = this->_profiles.begin(); profileIter != this->_profiles.end(); profileIter++) {
-		//Only use exterior profiles
-		if ((*profileIter).second) {
-			//Get list of boundary points
-			tmpList = (*profileIter).first->BoundaryList();
+		//Only use exterior profiles and get list of boundary points (using control points is fine)
+			tmpList = (*profileIter).front()->BoundaryList(false);
 			//Merge all lists together
 			inputList.splice(inputList.begin(), tmpList);
-		}
 	}
 	//Find minimum bounding rectangle for bounding points
-	WCPartPlane *refPlane = this->_profiles.front().first->Sketch()->ReferencePlane();
+	WCPartPlane *refPlane = this->_profiles.front().front()->Sketch()->ReferencePlane();
 	std::list<WCVector4> baseCorners = MinimumBoundingRectangle(inputList, refPlane->InverseTransformMatrix(), refPlane->TransformMatrix());
 	std::list<WCVector4>::iterator baseIter = baseCorners.begin();
 	//Load the corners array - (clockwise starting at lower-left)
@@ -223,7 +220,6 @@ void WCModePartPadCreate::GenerateSurfaces(void) {
 	for (surfIter = this->_surfaces.begin(); surfIter != this->_surfaces.end(); surfIter++) {
 		(*surfIter)->Color( WCPartFeature::ConstructionColor );
 		(*surfIter)->RenderProgram(this->_workbench->Part()->Scene()->ShaderManager()->ProgramFromName("scn_basiclight"));
-//		(*surfIter)->Layer(this->_workbench->Layer());
 	}
 }
 
@@ -307,7 +303,9 @@ void WCModePartPadCreate::OnMouseDown(const WCMouseButton &button) {
 		this->_surfaces.clear();
 		//Create action to create pad
 		WCActionPartPadCreate *action = WCPartPad::ActionCreate(this->_workbench->Part()->Body(), "",
-			this->_profiles, this->_direction, this->_posDepth, this->_negDepth);
+																this->_profiles, false, 
+																WCPartPadType::Dimension(), WCPartPadType::Dimension(),
+																this->_posDepth, this->_negDepth);
 		//Execute action
 		this->_workbench->Part()->Document()->ExecuteAction( action );
 	}
@@ -369,7 +367,7 @@ void WCModePartPadCreate::Render(void) {
 	
 	//Determine the magnitude arrow
 	WCVector4 base(0.0, 0.0, 0.0, 1.0), end;
-	base = this->_profiles.front().first->Sketch()->ReferencePlane()->TransformMatrix() * base;
+	base = this->_profiles.front().front()->Sketch()->ReferencePlane()->TransformMatrix() * base;
 	if (this->_stage == 1) end = base + this->_direction * this->_posDepth;
 	else end = base + this->_direction * this->_negDepth;
 	GLfloat arrow[6] = { (GLfloat)base.I(), (GLfloat)base.J(), (GLfloat)base.K(),

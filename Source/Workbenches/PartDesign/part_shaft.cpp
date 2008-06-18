@@ -46,7 +46,7 @@ std::list<WCTrimProfile> WCPartShaft::GenerateFrontProfile(const WCRay &ray) {
 	std::list<WCTrimProfile> trimProfiles;
 	std::list<WCTrimProfile>::iterator trimProfileIter;
 	WCTrimProfile trimProfile;
-	std::list<std::pair<WCSketchProfile*,bool> >::iterator profileIter;
+	std::list<WCSketchProfile*>::iterator profileIter;
 	std::list<std::pair<WCGeometricCurve*,bool> > curveList;
 	std::list<std::pair<WCGeometricCurve*,bool> >::iterator curveIter;	
 	//Set up transform matrix
@@ -59,23 +59,23 @@ std::list<WCTrimProfile> WCPartShaft::GenerateFrontProfile(const WCRay &ray) {
 		//Loop through all profiles
 		for (profileIter = this->_profiles.begin(); profileIter != this->_profiles.end(); profileIter++) {
 			//Get the profile's list of curves
-			curveList = (*profileIter).first->CurveList();
+			curveList = (*profileIter)->CurveList();
 			//Loop through all curves and copy into trimProfiles
 			for (curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
 				//Based on side either maintain or reverse profiles
 				if (this->_profilesOnRight)
 					//Add curve to trim profile in reverse order
-					trimProfile.first.push_front( std::make_pair( (*curveIter).first, !(*curveIter).second ) );
+					trimProfile.push_front( std::make_pair( (*curveIter).first, !(*curveIter).second ) );
 				else 
 					//Add curve to trim profile and maintain order
-					trimProfile.first.push_back( std::make_pair( (*curveIter).first, (*curveIter).second ) );
+					trimProfile.push_back( std::make_pair( (*curveIter).first, (*curveIter).second ) );
 			}
 			//Set the trimProfile outside state
-			trimProfile.second = (*profileIter).second;
+//			trimProfile.second = (*profileIter).second;
 			//Add the trim profile into the list
 			trimProfiles.push_back(trimProfile);
 			//Clear the trimProfile list
-			trimProfile.first.clear();
+			trimProfile.clear();
 		}
 		//Return the list if full circle case
 		if (this->_cwAngle - this->_ccwAngle >= 2.0*M_PI) return trimProfiles;
@@ -95,7 +95,7 @@ std::list<WCTrimProfile> WCPartShaft::GenerateFrontProfile(const WCRay &ray) {
 		//Loop through all profiles
 		for (profileIter = this->_profiles.begin(); profileIter != this->_profiles.end(); profileIter++) {
 			//Get the profile's list of curves
-			curveList = (*profileIter).first->CurveList();
+			curveList = (*profileIter)->CurveList();
 			//Loop through all curves in the profile
 			for (curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
 				//Try casting to a line
@@ -137,17 +137,17 @@ std::list<WCTrimProfile> WCPartShaft::GenerateFrontProfile(const WCRay &ray) {
 				//Based on side either maintain or reverse profiles
 				if (this->_profilesOnRight)
 					//Add curve to trim profile in reverse order
-					trimProfile.first.push_front( std::make_pair( newCurve, !(*curveIter).second ) );
+					trimProfile.push_front( std::make_pair( newCurve, !(*curveIter).second ) );
 				else 
 					//Add curve to trim profile and maintain order
-					trimProfile.first.push_back( std::make_pair( newCurve, (*curveIter).second ) );
+					trimProfile.push_back( std::make_pair( newCurve, (*curveIter).second ) );
 			}
 			//Set the trimProfile outside state
-			trimProfile.second = (*profileIter).second;
+//			trimProfile.second = (*profileIter).second;
 			//Add the trim profile into the list
 			trimProfiles.push_back(trimProfile);
 			//Clear the trimProfile list
-			trimProfile.first.clear();
+			trimProfile.clear();
 		}		
 	}
 
@@ -174,16 +174,16 @@ std::list<WCTrimProfile> WCPartShaft::GenerateFrontProfile(const WCRay &ray) {
 	std::list<WCVector4> inputList, tmpList;
 	for (profileIter = this->_profiles.begin(); profileIter != this->_profiles.end(); profileIter++) {
 		//Only use profile if it is an outside profile
-		if ((*profileIter).second) {
+		if ((*profileIter) == this->_profiles.front()) {
 			//Build the boundary list (true is for detailed)
-			tmpList = (*profileIter).first->BoundaryList(true);
+			tmpList = (*profileIter)->BoundaryList(true);
 //			for(std::list<WCVector4>::iterator iter = tmpList.begin(); iter != tmpList.end(); iter++) std::cout << *iter << std::endl;
 			//Splice it into the end of the overall list
 			inputList.splice(inputList.end(), tmpList);
 		}
 	}
 	//Get reference plane
-	WCPartPlane *refPlane = this->_profiles.front().first->Sketch()->ReferencePlane();
+	WCPartPlane *refPlane = this->_profiles.front()->Sketch()->ReferencePlane();
 	//Find minimum bounding rectangle for bounding points
 	std::list<WCVector4> baseCorners = MinimumBoundingRectangle(inputList, refPlane->InverseTransformMatrix(), refPlane->TransformMatrix());
 	//Place into array
@@ -216,11 +216,10 @@ std::list<WCTrimProfile> WCPartShaft::GenerateFrontProfile(const WCRay &ray) {
 		trimProfiles, 1, 1, 2, 2, controlPoints, WCNurbsMode::Default(), WCNurbsMode::Default());
 	//Make sure front is valid
 	if (front != NULL) {
-		front->TextureSize(1024);
+		//Set the color and render program
 		front->RenderProgram( this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight_trim") );
+		//Add to the list of surfaces
 		this->_surfaces.push_back(front);
-		//Set the layer for the surface
-//		front->Layer(this->_part->SurfacesLayer());
 	}
 	
 	/*** Clean up and Finish ***/
@@ -239,7 +238,7 @@ void WCPartShaft::GenerateBackProfile(const WCRay &ray) {
 	std::list<WCTrimProfile> trimProfiles;
 	std::list<WCTrimProfile>::iterator trimProfileIter;
 	WCTrimProfile trimProfile;
-	std::list<std::pair<WCSketchProfile*,bool> >::iterator profileIter;
+	std::list<WCSketchProfile*>::iterator profileIter;
 	std::list< std::pair<WCGeometricCurve*,bool> > curveList;
 	std::list< std::pair<WCGeometricCurve*,bool> >::iterator curveIter;	
 	WCMatrix4 transform(true);
@@ -251,23 +250,23 @@ void WCPartShaft::GenerateBackProfile(const WCRay &ray) {
 		//Loop through all profiles
 		for (profileIter = this->_profiles.begin(); profileIter != this->_profiles.end(); profileIter++) {
 			//Get the profile's list of curves
-			curveList = (*profileIter).first->CurveList();
+			curveList = (*profileIter)->CurveList();
 			//Loop through all curves and copy into trimProfiles
 			for (curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
 				//Based on side either maintain or reverse profiles
 				if (this->_profilesOnRight)
 					//Add curve to trim profile and maintain order
-					trimProfile.first.push_back( std::make_pair( (*curveIter).first, (*curveIter).second ) );
+					trimProfile.push_back( std::make_pair( (*curveIter).first, (*curveIter).second ) );
 				else 
 					//Add curve to trim profile and reverse order
-					trimProfile.first.push_front( std::make_pair( (*curveIter).first, !(*curveIter).second ) );
+					trimProfile.push_front( std::make_pair( (*curveIter).first, !(*curveIter).second ) );
 			}
 			//Set the trimProfile outside state
-			trimProfile.second = (*profileIter).second;
+//			trimProfile.second = (*profileIter).second;
 			//Add the trim profile into the list
 			trimProfiles.push_back(trimProfile);
 			//Clear the trimProfile list
-			trimProfile.first.clear();
+			trimProfile.clear();
 		}
 	}
 	//General case (project points around curve
@@ -285,7 +284,7 @@ void WCPartShaft::GenerateBackProfile(const WCRay &ray) {
 		//Loop through all profiles
 		for (profileIter = this->_profiles.begin(); profileIter != this->_profiles.end(); profileIter++) {
 			//Get the profile's list of curves
-			curveList = (*profileIter).first->CurveList();
+			curveList = (*profileIter)->CurveList();
 			//Loop through all curves in the profile
 			for (curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
 				//Try casting to a line
@@ -327,17 +326,17 @@ void WCPartShaft::GenerateBackProfile(const WCRay &ray) {
 				//Based on side either maintain or reverse profiles
 				if (this->_profilesOnRight)
 					//Add curve to trim profile and maintain order
-					trimProfile.first.push_back( std::make_pair( newCurve, (*curveIter).second ) );
+					trimProfile.push_back( std::make_pair( newCurve, (*curveIter).second ) );
 				else 
 					//Add curve to trim profile in reverse order
-					trimProfile.first.push_front( std::make_pair( newCurve, !(*curveIter).second ) );
+					trimProfile.push_front( std::make_pair( newCurve, !(*curveIter).second ) );
 			}
 			//Set the trimProfile outside state
-			trimProfile.second = (*profileIter).second;
+//			trimProfile.second = (*profileIter).second;
 			//Add the trim profile into the list
 			trimProfiles.push_back(trimProfile);
 			//Clear the trimProfile list
-			trimProfile.first.clear();
+			trimProfile.clear();
 		}
 	}
 
@@ -345,16 +344,16 @@ void WCPartShaft::GenerateBackProfile(const WCRay &ray) {
 	std::list<WCVector4> inputList, tmpList;
 	for (profileIter = this->_profiles.begin(); profileIter != this->_profiles.end(); profileIter++) {
 		//Only use profile if it is an outside profile
-		if ((*profileIter).second) {
+		if ((*profileIter) == this->_profiles.front()) {
 			//Build the boundary list (true is for detailed)
-			tmpList = (*profileIter).first->BoundaryList(true);
+			tmpList = (*profileIter)->BoundaryList(true);
 //			for(std::list<WCVector4>::iterator iter = tmpList.begin(); iter != tmpList.end(); iter++) std::cout << *iter << std::endl;
 			//Splice it into the end of the overall list
 			inputList.splice(inputList.end(), tmpList);
 		}
 	}
 	//Get reference plane
-	WCPartPlane *refPlane = this->_profiles.front().first->Sketch()->ReferencePlane();
+	WCPartPlane *refPlane = this->_profiles.front()->Sketch()->ReferencePlane();
 	//Find minimum bounding rectangle for bounding points
 	std::list<WCVector4> baseCorners = MinimumBoundingRectangle(inputList, refPlane->InverseTransformMatrix(), refPlane->TransformMatrix());
 	//Place into array
@@ -387,13 +386,11 @@ void WCPartShaft::GenerateBackProfile(const WCRay &ray) {
 		trimProfiles, 1, 1, 2, 2, controlPoints, WCNurbsMode::Default(), WCNurbsMode::Default());
 	//Make sure back is valid
 	if (back != NULL) {
-		back->TextureSize(1024);
-		back->RenderProgram( this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight_trim") );
+//		back->TextureSize(1024);
+//		back->RenderProgram( this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight_trim") );
+		back->RenderProgram( this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight") );
 		//Add to list of surfaces
 		this->_surfaces.push_back(back);
-		//Set the layer for the surface
-//		back->Layer(this->_part->SurfacesLayer());
-
 	}
 }
 
@@ -411,11 +408,11 @@ void WCPartShaft::GenerateSurfaces(const WCRay &ray, const std::list<WCTrimProfi
 	//Loop through all profiles
 	for (profileIter = profileList.begin(); profileIter != profileList.end(); profileIter++) {
 		//Get the profile's list of curves
-		curveList = (*profileIter).first;
+		curveList = *profileIter;
 		//Loop through all curves and generate
 		for (curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
 			//Attempt to create a revolution surface (take profile direction into account)
-			if ((*profileIter).second)
+			if ((*profileIter) == profileList.front())
 				surface = WCNurbsSurface::RevolveCurve(this->_document->Scene()->GeometryContext(),
 					(*curveIter).first, &ray, angle, !(*curveIter).second );
 			else
@@ -434,9 +431,6 @@ void WCPartShaft::GenerateSurfaces(const WCRay &ray, const std::list<WCTrimProfi
 		//Only set if needs setting (trimmed surfaces have already been set)
 		if ((*surfIter)->RenderProgram() == 0)
 			(*surfIter)->RenderProgram( this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight"));
-//		(*surfIter)->Layer(this->_part->SurfacesLayer());
-		//Try doubling the LOD
-		(*surfIter)->LevelOfDetail( (*surfIter)->LevelOfDetailU() * 3, (*surfIter)->LevelOfDetailV() * 3 );
 	}
 	
 	/*** Done with Surfaces ***/
@@ -481,7 +475,7 @@ void WCPartShaft::GenerateCurves(const WCRay &ray, const std::list<WCTrimProfile
 	//Loop through all trim profiles
 	for (profileIter = profileList.begin(); profileIter != profileList.end(); profileIter++) {
 		//Get the profile's list of curves
-		curveList = (*profileIter).first;
+		curveList = *profileIter;
 		//Only do profiles with more than one curve
 		if (curveList.size() > 1) {
 			//Loop through all curves and generate curve from end
@@ -530,9 +524,9 @@ void WCPartShaft::Initialize(void) {
 	WSTexture* shaftIcon = this->_document->Scene()->TextureManager()->TextureFromName("shaft32");
 	this->_treeElement = new WCTreeElement(this->_document->TreeView(), this->_name, this->_controller, shaftIcon);
 	//Add profiles as children
-	std::list< std::pair<WCSketchProfile*,bool> >::iterator profIter;
+	std::list<WCSketchProfile*>::iterator profIter;
 	for (profIter = this->_profiles.begin(); profIter != this->_profiles.end(); profIter++) {
-		this->_treeElement->AddLastChild( (*profIter).first->TreeElement() );
+		this->_treeElement->AddLastChild( (*profIter)->TreeElement() );
 	}
 	this->_treeElement->IsOpen(false);
 	//Add tree view element
@@ -564,7 +558,7 @@ void WCPartShaft::Initialize(void) {
 /***********************************************~***************************************************/
 
 
-WCPartShaft::WCPartShaft(WCPartBody *body, const std::string &name, const std::list<std::pair<WCSketchProfile*,bool> > &profiles,
+WCPartShaft::WCPartShaft(WCPartBody *body, const std::string &name, const std::list<WCSketchProfile*> &profiles,
 	WCSketchAxis *axis, const bool profilesOnRight, const WPFloat &cwAngle, const WPFloat &ccwAngle) : 
 	::WCPartFeature(body, name), _profiles(profiles), _axis(axis), _profilesOnRight(profilesOnRight),
 	_cwAngle(cwAngle), _ccwAngle(ccwAngle), _points(), _lines(), _curves(), _surfaces() {
@@ -700,7 +694,7 @@ xercesc::DOMElement* WCPartShaft::Serialize(xercesc::DOMDocument *document, WCSe
 /***********************************************~***************************************************/
 
 
-bool WCPartShaft::QualifyProfiles(const std::list<WCSketchProfile*> &inputProfiles, std::list<std::pair<WCSketchProfile*,bool> > &outputProfiles, 
+bool WCPartShaft::QualifyProfiles(const std::list<WCSketchProfile*> &inputProfiles, std::list<WCSketchProfile*> &outputProfiles, 
 	const WCSketchAxis *axis) {
 	WCSketch *sketch;
 	WPUInt tmpFloat;
@@ -765,7 +759,7 @@ bool WCPartShaft::QualifyProfiles(const std::list<WCSketchProfile*> &inputProfil
 	
 	//Categorize the profiles
 	std::list<WCProfileTreeNode*> rootList = WCSketchProfile::CategorizeIntoTree(profileList);
-	outputProfiles = WCSketchProfile::FlattenCategorizationTree(rootList);
+//	outputProfiles = WCSketchProfile::FlattenCategorizationTree(rootList);
 	//Otherwise, return the side
 	return isOnRight;
 }
@@ -781,7 +775,7 @@ WCDrawingMode* WCPartShaft::ModeCreate(WCPartWorkbench *wb) {
 
 
 WCActionPartShaftCreate* WCPartShaft::ActionCreate(WCPartBody *body, const std::string &shaftName,
-	const std::list< std::pair<WCSketchProfile*,bool> > &profiles, WCSketchAxis *axis, const bool profilesOnRight, 
+	const std::list<WCSketchProfile*> &profiles, WCSketchAxis *axis, const bool profilesOnRight, 
 	const WPFloat &cwAngle, const WPFloat &ccwAngle) {
 	//Create a new shaft create action
 	return new WCActionPartShaftCreate(body, shaftName, profiles, axis, profilesOnRight, cwAngle, ccwAngle);

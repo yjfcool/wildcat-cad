@@ -63,27 +63,29 @@ struct WCProfileTreeNode {
 
 
 //Defines for profile types
-#define PROFILETYPE_OUTSIDE						1
-#define PROFILETYPE_INSIDE						2
-#define PROFILETYPE_DISTINCT					3
-#define PROFILETYPE_COINCIDENT					5
-#define PROFILETYPE_INTERSECT					6
+enum ProfileType {
+	ProfileOutside,
+	ProfileInside,
+	ProfileDistinct,
+	ProfileCoincident,
+	ProfileIntersect
+};
 
 class WCProfileType {
 private:
-	WPUInt										_type;												//!< Type id
+	ProfileType									_type;												//!< Type id
 	WCProfileType();																				//!< Deny access to default constructor 
-	WCProfileType(int type)						{ this->_type = type; }								//!< Hidden primary constructor
+	WCProfileType(ProfileType type)				{ this->_type = type; }								//!< Hidden primary constructor
 	friend class WCScene;
 public:
 	//Constructors and Destructors
 	WCProfileType(const WCProfileType &type) : _type(type._type)	{ }								//!< Copy constructor
 	~WCProfileType()							{ }													//!< Default destructor
-	static WCProfileType Outside(void)			{ return WCProfileType(PROFILETYPE_OUTSIDE); }		//!< Outside type
-	static WCProfileType Inside(void)			{ return WCProfileType(PROFILETYPE_INSIDE); }		//!< Inside type
-	static WCProfileType Distinct(void)			{ return WCProfileType(PROFILETYPE_DISTINCT); }		//!< Distinct type
-	static WCProfileType Coincident(void)		{ return WCProfileType(PROFILETYPE_COINCIDENT); }	//!< Coincident type
-	static WCProfileType Intersect(void)		{ return WCProfileType(PROFILETYPE_INTERSECT); }	//!< Intersection type
+	static WCProfileType Outside(void)			{ return WCProfileType(ProfileOutside); }			//!< Outside type
+	static WCProfileType Inside(void)			{ return WCProfileType(ProfileInside); }			//!< Inside type
+	static WCProfileType Distinct(void)			{ return WCProfileType(ProfileDistinct); }			//!< Distinct type
+	static WCProfileType Coincident(void)		{ return WCProfileType(ProfileCoincident); }		//!< Coincident type
+	static WCProfileType Intersect(void)		{ return WCProfileType(ProfileIntersect); }			//!< Intersection type
 	
 	//Overridden Operators
 	WCProfileType& operator=(const WCProfileType &type)	{ this->_type = type._type; return *this; }	//!< Type equation				
@@ -128,7 +130,9 @@ public:
 	WPInt IsOnRight(const WCSketchAxis *axis);														//!< Test relationship of profile to axis
 	WPUInt IsInside(const WCVector4 &point);														//!< Test if a point is inside the profile
 	WCProfileType Categorize(WCSketchProfile *profile);												//!< Categorize the profiles against each other
-	std::list<WCVector4> BoundaryList(const bool &detailed=false);									//!< Output list of boundary points
+	inline std::list<WCVector4> BoundaryList(const bool &detailed,									//!< Output list of boundary points
+												const WPFloat &tol=NURBSCURVE_LENGTH_ACCURACY) { 
+												return BuildBoundaryList(this->_curveList, detailed, tol); }
 	GLuint Triangulate(GLuint &vertexBuffer, GLuint &indexBuffer);									//!< Triangulate the profile (if possible)
 
 	//Overloaded Operators
@@ -150,7 +154,7 @@ public:
 	
 	/*** Static Functions ***/
 	static std::list<WCProfileTreeNode*> CategorizeIntoTree(const std::list<WCSketchProfile*> &profiles);	//!< Build categorization tree
-	static std::list< std::pair<WCSketchProfile*,bool> > FlattenCategorizationTree(std::list<WCProfileTreeNode*> &rootList);//!< Flatten tree into list
+	static std::list< std::list<WCSketchProfile*> > FlattenCategorizationTree(std::list<WCProfileTreeNode*> &rootList);//!< Flatten tree into list
 	
 	/*** Friend Functions ***/
 	friend std::ostream& operator<<(std::ostream& out, const WCSketchProfile &profile);				//!< Overloaded output operator		

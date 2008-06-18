@@ -57,7 +57,7 @@ class WCActionPartShaftCreate : public WCAction {
 private:
 	WCPartBody									*_body;												//!< Associated body
 	std::string									_shaftName;											//!< Name of new object
-	std::list< std::pair<WCSketchProfile*,bool> >_profiles;											//!< Associated profiles
+	std::list<WCSketchProfile*>					_profiles;											//!< Associated profiles
 	WCSketchAxis								*_axis;												//!< Revolution axis
 	bool										_profilesOnRight;									//!< Side on which profiles appear
 	WPFloat										_cwAngle, _ccwAngle;								//!< Revolution angles
@@ -66,8 +66,8 @@ private:
 	WCActionPartShaftCreate();																		//!< Deny access to default constructor
 	WCActionPartShaftCreate(const WCActionPartShaftCreate& action);									//!< Deny access to copy constructor
 	WCActionPartShaftCreate(WCPartBody *body, const std::string &shaftName,							//!< Primary constructor
-												const std::list< std::pair<WCSketchProfile*,bool> > &profiles,
-												WCSketchAxis *axis, const bool profilesOnRight,
+												const std::list<WCSketchProfile*> &profiles,
+												WCSketchAxis *axis, const bool &profilesOnRight,
 												const WPFloat &cwAngle, const WPFloat &ccwAngle);
 	
 	//Friend Declarations

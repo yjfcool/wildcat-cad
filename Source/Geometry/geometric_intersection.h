@@ -35,13 +35,14 @@
 
 
 /*** Locally Defined Values ***/
-#define INTERSECT_GEN_POINTS				0x0000
-#define INTERSECT_GEN_LINES					0x0001
-#define INTERSECT_GEN_CURVES				0x0002
-#define INTERSECT_GEN_SURFACES				0x0004
-#define INTERSECT_GEN_TRIMSURFACES			0x0008
+#define INTERSECT_GEN_NONE					0x0000
+#define INTERSECT_GEN_POINTS				0x0001
+#define INTERSECT_GEN_LINES					0x0002
+#define INTERSECT_GEN_CURVES				0x0004
+#define INTERSECT_GEN_SURFACES				0x0008
+#define INTERSECT_GEN_TRIMSURFACES			0x0010
 #define INTERSECT_GEN_ALL					INTERSECT_GEN_POINTS | INTERSECT_GEN_LINES | INTERSECT_GEN_CURVES | INTERSECT_GEN_SURFACES | INTERSECT_GEN_TRIMSURFACES
-#define INTERSECT_CULL_BOUNDARY				0x0010
+#define INTERSECT_CULL_BOUNDARY				0x0020
 
 
 /*** Namespace Declaration ***/
@@ -78,43 +79,43 @@ struct WCIntersectionResult {
 
 
 /*** Point-Object Functions ***/
-std::list<WCIntersectionResult> GeometricIntersection(WCGeometricPoint *left, WCGeometricPoint *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCGeometricPoint *left, WCGeometricLine *right,  const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCGeometricPoint *left, WCNurbsCurve *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCGeometricPoint *left, WCNurbsSurface *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCGeometricPoint *left, WCTrimmedNurbsSurface *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCGeometricPoint *left, WCGeometricPoint *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCGeometricPoint *left, WCGeometricLine *right,  const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCGeometricPoint *left, WCNurbsCurve *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCGeometricPoint *left, WCNurbsSurface *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCGeometricPoint *left, WCTrimmedNurbsSurface *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
 
 
 /*** Line-Object Functions ***/
-std::list<WCIntersectionResult> GeometricIntersection(WCGeometricLine *left, WCGeometricPoint *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCGeometricLine *left, WCGeometricLine *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCGeometricLine *left, WCNurbsCurve *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCGeometricLine *left, WCNurbsSurface *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCGeometricLine *left, WCTrimmedNurbsSurface *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCGeometricLine *left, WCGeometricPoint *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCGeometricLine *left, WCGeometricLine *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCGeometricLine *left, WCNurbsCurve *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCGeometricLine *left, WCNurbsSurface *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCGeometricLine *left, WCTrimmedNurbsSurface *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
 
 
 /*** Curve-Object Functions ***/
-std::list<WCIntersectionResult> GeometricIntersection(WCNurbsCurve *left, WCGeometricPoint *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCNurbsCurve *left, WCGeometricLine *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCNurbsCurve *left, WCNurbsCurve *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCNurbsCurve *left, WCNurbsSurface *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCNurbsCurve *left, WCTrimmedNurbsSurface *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCNurbsCurve *left, WCGeometricPoint *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCNurbsCurve *left, WCGeometricLine *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCNurbsCurve *left, WCNurbsCurve *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCNurbsCurve *left, WCNurbsSurface *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCNurbsCurve *left, WCTrimmedNurbsSurface *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
 
 
 /*** Surface-Object Functions ***/
-std::list<WCIntersectionResult> GeometricIntersection(WCNurbsSurface *left, WCGeometricPoint *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCNurbsSurface *left, WCGeometricLine *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCNurbsSurface *left, WCNurbsCurve *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCNurbsSurface *left, WCNurbsSurface *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCNurbsSurface *left, WCTrimmedNurbsSurface *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCNurbsSurface *left, WCGeometricPoint *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCNurbsSurface *left, WCGeometricLine *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCNurbsSurface *left, WCNurbsCurve *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCNurbsSurface *left, WCNurbsSurface *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCNurbsSurface *left, WCTrimmedNurbsSurface *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
 
 
 /*** TrimSurface-Object Functions ***/
-std::list<WCIntersectionResult> GeometricIntersection(WCTrimmedNurbsSurface *left, WCGeometricPoint *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCTrimmedNurbsSurface *left, WCGeometricLine *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCTrimmedNurbsSurface *left, WCNurbsCurve *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCTrimmedNurbsSurface *left, WCNurbsSurface *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
-std::list<WCIntersectionResult> GeometricIntersection(WCTrimmedNurbsSurface *left, WCTrimmedNurbsSurface *right, const WPFloat &tol, const int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCTrimmedNurbsSurface *left, WCGeometricPoint *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCTrimmedNurbsSurface *left, WCGeometricLine *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCTrimmedNurbsSurface *left, WCNurbsCurve *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCTrimmedNurbsSurface *left, WCNurbsSurface *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
+std::list<WCIntersectionResult> GeometricIntersection(WCTrimmedNurbsSurface *left, WCTrimmedNurbsSurface *right, const WPFloat &tol, const unsigned int &flags=INTERSECT_GEN_ALL);
 
 
 /*** Function to reverse the left and right result parameters and boundary values ***/
@@ -134,6 +135,14 @@ inline std::list<WCIntersectionResult>& IntersectionReverse(std::list<WCIntersec
 	return results;
 }
 
+
+/*** Function to delete any intersection objects ***/
+void IntersectionListDisposal(std::list<WCIntersectionResult> &results);
+
+
+/*** Non-Member Functions ***/
+std::ostream& operator<<(std::ostream& out, const WCIntersectionResult &result);					//!< Overloaded output operator
+	
 
 /***********************************************~***************************************************/
 

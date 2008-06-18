@@ -32,6 +32,7 @@
 
 /*** Included Headers ***/
 #include "Geometry/wgeol.h"
+#include "Geometry/geometric_intersection.h"
 
 
 /*** Locally Defined Values ***/
@@ -108,8 +109,8 @@ public:
 	virtual void Thickness(const WPFloat &thick){ this->_thickness = thick; }						//!< Set the line thickness
 	
 	//Required Member Function
-	virtual std::list<WPFloat> Intersect(WCGeometricPoint *point, const WPFloat &tol)=0;			//!< Check for intersection with point
-	virtual std::list<WPIntersectRec> Intersect(WCGeometricCurve *curve, const WPFloat &tol)=0;		//!< Check for intersection with curve
+//	virtual std::list<WPFloat> Intersect(WCGeometricPoint *point, const WPFloat &tol)=0;			//!< Check for intersection with point
+//	virtual std::list<WPIntersectRec> Intersect(WCGeometricCurve *curve, const WPFloat &tol)=0;		//!< Check for intersection with curve
 	virtual WPFloat Length(const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;				//!< Calculate the length of the curve
 	virtual WCVector4 Evaluate(const WPFloat &u)=0;													//!< Evaluate curve for a parametric value
 	virtual WCVector4 Derivative(const WPFloat &u, const WPUInt &der)=0;							//!< Evaluate derivative at specific point
@@ -148,13 +149,17 @@ public:
 	virtual bool IsSelfIntersecting(void) const { return this->_isSelfIntersecting; }				//!< Get the self-intersection flag
 
 	//Required Intersection Methods
-	virtual bool Intersect(const WCGeometricPoint &point, const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;		//!< Check for intersection with point
-	virtual bool Intersect(const WCGeometricCurve &curve, const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;		//!< Check for intersection with curve	
-	virtual bool Intersect(const WCGeometricSurface &surface, const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;	//!< Check for intersection with surface		
+//	virtual bool Intersect(const WCGeometricPoint &point, const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;		//!< Check for intersection with point
+//	virtual bool Intersect(const WCGeometricCurve &curve, const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;		//!< Check for intersection with curve	
+//	virtual bool Intersect(const WCGeometricSurface &surface, const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;	//!< Check for intersection with surface		
 
-	//Required Member Overloads
-	virtual WPFloat Area(void)=0;																	//!< Calculate the area of the surface
+	//Required Member Functions
+	virtual WPFloat Area(const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;				//!< Calculate the area of the surface
 	virtual WCVector4 Evaluate(const WPFloat &u, const WPFloat &v)=0;								//!< Evaluate the suface at parametric values
+	virtual WCVector4 Derivative(const WPFloat &u, const WPUInt &uDer,								//!< Evaluate derivative at specific point
+												const WPFloat &v, const WPUInt &vDer)=0;
+	virtual WCRay Tangent(const WPFloat &u, const WPFloat &v)=0;									//!< Get the tangent to the curve at U
+	virtual std::pair<WCVector4,WCVector4> PointInversion(const WCVector4 &point)=0;				//!< Get closest point on curve from point
 
 	//Serialization Method
 	virtual xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);//!< Serialize the object
