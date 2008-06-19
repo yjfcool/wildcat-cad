@@ -33,10 +33,37 @@
 
 /***********************************************~***************************************************/
 
+void _DeleteTopologyVertex(WSVertexUse *vertexUse) {
+}
+
+
+void _DeleteTopologyEdge(WSEdgeUse *edgeUse) {
+}
+
+
+void _DeleteTopologyLoop(WSLoopUse *loopUse) {
+}
+
+
+void _DeleteTopologyFace(WSFaceUse *faceUse) {
+}
+
+
+void _DeleteTopologyShell(WSTopologyShell *shell) {
+	delete shell;
+}
+
+
+/***********************************************~***************************************************/
+
 
 WCTopologyModel::~WCTopologyModel() {
-	//Delete all children
-	//...
+	//Delete all shells
+	std::list<WSTopologyShell*>::iterator listIter;
+	for (listIter = this->_shellList.begin(); listIter != this->_shellList.end(); listIter++) {
+		//Delete the shells
+		_DeleteTopologyShell( *listIter );
+	}
 }
 
 

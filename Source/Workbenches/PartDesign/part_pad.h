@@ -66,13 +66,18 @@ protected:
 	std::list<WCGeometricLine*>					_lines;												//!< List of extrusion lines
 	std::list<WCNurbsCurve*>					_curves;											//!< List of extrusion curves
 	std::list<WCNurbsSurface*>					_surfaces;											//!< List of extrusion surfaces
+	std::list<WCTrimProfile>					_topTrim, _bottomTrim;								//!< Lists of top and bottom trim profiles
+	std::list<std::list<WCGeometricPoint*> >	_topoPoints;										//!< Ordered list of all points (for topology)
+	std::list<std::list<WCGeometricCurve*> >	_topoCurves;										//!< Ordered list of all curves (for topology)
+	std::list<std::list<WCGeometricSurface*> >	_topoSurfaces;										//!< Ordered list of all surfaces (for topology)
 private:
-	void GeneratePoints(void);																		//!< Private method to generate all points
-	void GenerateCurves(void);																		//!< Private method to generate all curves
-	void GenerateSurfaces(void);																	//!< Private method to generate all surfaces
-	void GenerateTopBottom(void);																	//!< Private method to generate top and bottom surfaces and profiles
-	void GenerateTopology(void);																	//!< Private method to generate topology model
+	void GeneratePoints(void);																		//!< Generate all points
+	void GenerateCurves(void);																		//!< Generate all curves
+	void GenerateSideSurfaces(void);																//!< Generate all surfaces
+	void GenerateTopBottom(void);																	//!< Generate top and bottom surfaces
+	void GenerateTopology(void);																	//!< Generate topology model
 	void Initialize(void);																			//!< Initialization method
+	void DetermineDirection(void);																	//!< Determine direction and offsets
 	//Hidden Constructors
 	WCPartPad();																					//!< Deny access to default constructor
 	WCPartPad& operator=(const WCPartPad &pad);														//!< Deny access to equals operator

@@ -46,6 +46,11 @@
 #include "Geometry/trimmed_nurbs_surface.h"
 
 
+//Topology Headers
+#include "Topology/topology_model.h"
+#include "Topology/topology_types.h"
+
+
 //Scene Headers
 #include "Scene/wscnl.h"
 #include "Scene/background_layer.h"
