@@ -66,7 +66,7 @@ protected:
 	std::list<WCGeometricLine*>					_lines;												//!< List of extrusion lines
 	std::list<WCNurbsCurve*>					_curves;											//!< List of extrusion curves
 	std::list<WCNurbsSurface*>					_surfaces;											//!< List of extrusion surfaces
-	std::list<WCTrimProfile>					_topTrim, _bottomTrim;								//!< Lists of top and bottom trim profiles
+	std::list<std::list<WCTrimProfile> >		_topTrims, _bottomTrims;							//!< Lists of top and bottom trim profile lists
 	std::list<std::list<WCGeometricPoint*> >	_topoPoints;										//!< Ordered list of all points (for topology)
 	std::list<std::list<WCGeometricCurve*> >	_topoCurves;										//!< Ordered list of all curves (for topology)
 	std::list<std::list<WCGeometricSurface*> >	_topoSurfaces;										//!< Ordered list of all surfaces (for topology)

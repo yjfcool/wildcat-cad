@@ -130,6 +130,7 @@ void WCPartPad::GenerateCurves(void) {
 	std::list<WCSketchProfile*>::iterator profilesIter;
 	std::list<std::list<WCSketchProfile*> >::iterator listIter;
 	std::list< std::pair<WCGeometricCurve*,bool> > curveList, tmpBottom, tmpTop;
+	std::list< std::list< std::pair<WCGeometricCurve*,bool> > > tmpBottoms, tmpTops;
 	std::list< std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
 	std::list<WCGeometricCurve*> bottomCurves, midCurves, topCurves;
 	//Loop through all profiles and extrude all surfaces
@@ -224,12 +225,17 @@ void WCPartPad::GenerateCurves(void) {
 
 				/*** Done with creating ***/
 			}
+			//Add tmpBottom and tmpTop to tmpBottoms and tmpTops - make sure to clear them afterwards
+			tmpBottoms.push_back( tmpBottom );
+			tmpBottom.clear();
+			tmpTops.push_back( tmpTop );
+			tmpTop.clear();
 		}
 		//Add tmpBottom and tmpTop to bottomTrim and topTrim - make sure to clear them afterwards
-		this->_bottomTrim.push_back( tmpBottom );
-		tmpBottom.clear();
-		this->_topTrim.push_back(tmpTop );
-		tmpTop.clear();
+		this->_bottomTrims.push_back( tmpBottoms );
+		tmpBottoms.clear();
+		this->_topTrims.push_back(tmpTops );
+		tmpTops.clear();
 	}
 	//Now splice lists to generate correct and final _allCurves list
 //	this->_allCurves.splice(this->_allCurves.end(), midCurves);
@@ -297,73 +303,81 @@ void WCPartPad::GenerateSideSurfaces(void) {
  *		2) The set of trim profiles, different for top and bottom, are passed into surface creation
  ***/
 void WCPartPad::GenerateTopBottom(void) {
-
-	//Build list of boundary points for exterior profiles
-	std::list<std::list<WCSketchProfile*> >::iterator listIter;
-	std::list<WCVector4> inputList, tmpList;
-	for (listIter = this->_profiles.begin(); listIter != this->_profiles.end(); listIter++) {
-		//Go through the sub-list
-		tmpList = (*listIter).front()->BoundaryList(false);
-		inputList.splice(inputList.begin(), tmpList);
-	}
-
-	//Find minimum bounding rectangle for bounding points
-	WCPartPlane *refPlane = this->_profiles.front().front()->Sketch()->ReferencePlane();
-	std::list<WCVector4> baseCorners = MinimumBoundingRectangle(inputList, refPlane->InverseTransformMatrix(), refPlane->TransformMatrix());
-	WCVector4 corners[4];
-	corners[0] = baseCorners.front(); baseCorners.pop_front();		// Lower-left
-	corners[1] = baseCorners.front(); baseCorners.pop_front();		// Upper-left
-	corners[2] = baseCorners.front(); baseCorners.pop_front();		// Upper-right
-	corners[3] = baseCorners.front(); baseCorners.pop_front();		// Lower-right
-
-	/*** Bottom Trim Surface ***/
-
 	GLuint prog = this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight_trim");
-	//Now use the base corners to define the bottom trim surface
 	std::vector<WCVector4> controlPoints;
-	//First point (uses upper-left in base)
-	WCVector4 tmpPt1 = corners[1] + this->_direction * this->_secondOffset;
-	controlPoints.push_back(tmpPt1);
-	//Second point (uses upper-right in base)
-	tmpPt1 = corners[2] + this->_direction * this->_secondOffset;
-	controlPoints.push_back(tmpPt1);
-	//Third point (uses lower-left in base)
-	tmpPt1 = corners[0] + this->_direction * this->_secondOffset;
-	controlPoints.push_back(tmpPt1);
-	//Fourth point (uses lower-right in base)
-	tmpPt1 = corners[3] + this->_direction * this->_secondOffset;
-	controlPoints.push_back(tmpPt1);
-	//Create the bottom surface
-	WCTrimmedNurbsSurface *bottom = new WCTrimmedNurbsSurface(this->_document->Scene()->GeometryContext(), 
-		this->_bottomTrim, 1, 1, 2, 2, controlPoints, WCNurbsMode::Default(), WCNurbsMode::Default());
-	bottom->Color( WCPartFeature::DefaultSurfaceColor );
-	bottom->RenderProgram(prog);
-	this->_surfaces.push_front(bottom);
-		
-	/*** Top Trim Surface ***/
-	
-	 //Now use the base corners to define the top trim surface
-	controlPoints.clear();
-	//First point (uses lower-left in base)
-	tmpPt1 = corners[0] + this->_direction * this->_firstOffset;
-	controlPoints.push_back(tmpPt1);
-	//Second point (uses lower-right in base)
-	tmpPt1 = corners[3] + this->_direction * this->_firstOffset;
-	controlPoints.push_back(tmpPt1);
-	//Third point (uses upper-left in base)
-	tmpPt1 = corners[1] + this->_direction * this->_firstOffset;
-	controlPoints.push_back(tmpPt1);
-	//Fourth point (uses upper-right in base)
-	tmpPt1 = corners[2] + this->_direction * this->_firstOffset;
-	controlPoints.push_back(tmpPt1);
-	//Create the top surface
-	WCTrimmedNurbsSurface *top = new WCTrimmedNurbsSurface(this->_document->Scene()->GeometryContext(), 
-		this->_topTrim, 1, 1, 2, 2, controlPoints, WCNurbsMode::Default(), WCNurbsMode::Default());
-	top->Color( WCPartFeature::DefaultSurfaceColor );
-	top->RenderProgram(prog);
-	this->_surfaces.push_back(top);
+	WCVector4 tmpPt1;
+	std::list< std::list<WCTrimProfile> >::iterator topTrim = this->_topTrims.begin();
+	std::list< std::list<WCTrimProfile> >::iterator bottomTrim = this->_bottomTrims.begin();
 
-	/*** End Top-Bottom Surface Generation ***/
+	//Loop through list of profile lists
+	std::list<std::list<WCSketchProfile*> >::iterator listIter;
+	std::list<WCVector4> boundaryList;
+	for (listIter = this->_profiles.begin(); listIter != this->_profiles.end(); listIter++) {
+		//Build list of boundary points from original exterior profile
+		boundaryList = (*listIter).front()->BoundaryList(false);
+		//Find minimum bounding rectangle for bounding points
+		WCPartPlane *refPlane = this->_profiles.front().front()->Sketch()->ReferencePlane();
+		std::list<WCVector4> baseCorners = MinimumBoundingRectangle(boundaryList, refPlane->InverseTransformMatrix(), refPlane->TransformMatrix());
+		WCVector4 corners[4];
+		corners[0] = baseCorners.front(); baseCorners.pop_front();		// Lower-left
+		corners[1] = baseCorners.front(); baseCorners.pop_front();		// Upper-left
+		corners[2] = baseCorners.front(); baseCorners.pop_front();		// Upper-right
+		corners[3] = baseCorners.front(); baseCorners.pop_front();		// Lower-right
+		//Clear the boundary list
+		boundaryList.clear();
+
+		/*** Bottom Trim Surface ***/
+
+		//Now use the base corners to define the bottom trim surface
+		controlPoints.clear();
+		//First point (uses upper-left in base)
+		tmpPt1 = corners[1] + this->_direction * this->_secondOffset;
+		controlPoints.push_back(tmpPt1);
+		//Second point (uses upper-right in base)
+		tmpPt1 = corners[2] + this->_direction * this->_secondOffset;
+		controlPoints.push_back(tmpPt1);
+		//Third point (uses lower-left in base)
+		tmpPt1 = corners[0] + this->_direction * this->_secondOffset;
+		controlPoints.push_back(tmpPt1);
+		//Fourth point (uses lower-right in base)
+		tmpPt1 = corners[3] + this->_direction * this->_secondOffset;
+		controlPoints.push_back(tmpPt1);
+		//Create the bottom surface
+		WCTrimmedNurbsSurface *bottom = new WCTrimmedNurbsSurface(this->_document->Scene()->GeometryContext(), 
+			*bottomTrim, 1, 1, 2, 2, controlPoints, WCNurbsMode::Default(), WCNurbsMode::Default());
+		bottom->Color( WCPartFeature::DefaultSurfaceColor );
+		bottom->RenderProgram(prog);
+		this->_surfaces.push_front(bottom);
+			
+		/*** Top Trim Surface ***/
+	
+		 //Now use the base corners to define the top trim surface
+		controlPoints.clear();
+		//First point (uses lower-left in base)
+		tmpPt1 = corners[0] + this->_direction * this->_firstOffset;
+		controlPoints.push_back(tmpPt1);
+		//Second point (uses lower-right in base)
+		tmpPt1 = corners[3] + this->_direction * this->_firstOffset;
+		controlPoints.push_back(tmpPt1);
+		//Third point (uses upper-left in base)
+		tmpPt1 = corners[1] + this->_direction * this->_firstOffset;
+		controlPoints.push_back(tmpPt1);
+		//Fourth point (uses upper-right in base)
+		tmpPt1 = corners[2] + this->_direction * this->_firstOffset;
+		controlPoints.push_back(tmpPt1);
+		//Create the top surface
+		WCTrimmedNurbsSurface *top = new WCTrimmedNurbsSurface(this->_document->Scene()->GeometryContext(), 
+			*topTrim, 1, 1, 2, 2, controlPoints, WCNurbsMode::Default(), WCNurbsMode::Default());
+		top->Color( WCPartFeature::DefaultSurfaceColor );
+		top->RenderProgram(prog);
+		this->_surfaces.push_back(top);
+
+		/*** End Top-Bottom Surface Generation ***/
+		
+		//Make sure to increment topTrim and bottomTrim iterators
+		bottomTrim++;
+		topTrim++;
+	}
 }
 
 
@@ -458,7 +472,7 @@ WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, std::list<std::l
 	const bool &reverseDir, const WCPartPadType &firstType, const WCPartPadType &secondType, const WPFloat &firstOffset, const WPFloat &secondOffset) : 
 	::WCPartFeature(body, name), _profiles(profiles), _isReversed(reverseDir), _firstType(firstType), _secondType(secondType),
 	_firstOffset(firstOffset), _secondOffset(secondOffset), _points(), _lines(), _curves(), _surfaces(),
-	_topTrim(), _bottomTrim(), _topoPoints(), _topoCurves(), _topoSurfaces() {
+	_topTrims(), _bottomTrims(), _topoPoints(), _topoCurves(), _topoSurfaces() {
 	//Determine direction and offsets
 	this->DetermineDirection();
 
@@ -478,7 +492,7 @@ WCPartPad::WCPartPad(xercesc::DOMElement *element, WCSerialDictionary *dictionar
 	::WCPartFeature( WCSerializeableObject::ElementFromName(element,"PartFeature"), dictionary),
 	_profiles(), _isReversed(false), _firstType(WCPartPadType::Dimension()), _secondType(WCPartPadType::Dimension()),
 	_firstOffset(0.0), _secondOffset(0.0), _points(), _lines(), _curves(), _surfaces(),
-	_topTrim(), _bottomTrim(), _topoPoints(), _topoCurves(), _topoSurfaces() {
+	_topTrims(), _bottomTrims(), _topoPoints(), _topoCurves(), _topoSurfaces() {
 	//Restore the pad here
 	//...
 }
