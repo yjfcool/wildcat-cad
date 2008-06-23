@@ -1820,6 +1820,18 @@
 				Name="Shaders"
 				>
 				<File
+					RelativePath="..\..\Source\Shaders\cci_plM.fsh"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath="..\..\Source\Shaders\nc23_bezier_plH.gsh"
 					>
 					<FileConfiguration
@@ -2302,13 +2314,6 @@
 				<File
 					RelativePath="..\..\Source\Topology\topology_model.cpp"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 					<FileConfiguration
 						Name="Release|Win32"
 						ExcludedFromBuild="true"

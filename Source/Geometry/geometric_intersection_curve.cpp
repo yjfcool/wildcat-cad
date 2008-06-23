@@ -317,7 +317,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	/*** Scan output for intersection results ***/
 
 	//Loop through the output
-	for (int i=0; i<lod; i++) {
+	for (WPUInt i=0; i<lod; i++) {
 		//A non -1.0 in the first place indicates a hit
 		if (cciData[i*4] != -1.0) {
 			//Determine actual overall parametric value on left
