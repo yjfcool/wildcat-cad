@@ -141,7 +141,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	WPFloat paraFactor = 1.0 / (lod - 1);
 	WPFloat onePlusTol = 1.0 + tol;
 	//Loop through all curve segments
-	for (int i=0; i<lod-1; i++) {
+	for (WPUInt i=0; i<lod-1; i++) {
 		//Determine secVec
 		p2.Set( (WPFloat)data[index], (WPFloat)data[index+1], (WPFloat)data[index+2], 1.0 );
 		p21 = p2 - p1;

@@ -750,7 +750,7 @@ void WCNurbsCurve::Render(const GLuint &defaultProg, const WCColor &color, const
 	if (!this->_isVisible) return;
 
 	//Determine best LOD
-	WPUInt lod = STDMAX((WPFloat)this->_cp, this->_length * sqrt(zoom) / NURBSCURVE_RENDER_ACCURACY);
+	WPUInt lod = (WPUInt)STDMAX((WPFloat)this->_cp, this->_length * sqrt(zoom) / NURBSCURVE_RENDER_ACCURACY);
 	WPFloat factor = (WPFloat)this->_lod / (WPFloat)lod;
 	//See if need to regenerate
 	if ((factor < NURBSCURVE_RENDER_LOWER) || (factor > NURBSCURVE_RENDER_UPPER))  {

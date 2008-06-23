@@ -46,11 +46,10 @@ namespace __WILDCAT_NAMESPACE__ {
 	
 	
 /*** Class Predefines ***/
-class WCTopologyModel;
 class WCGeometricPoint;
 class WCGeometricCurve;
 class WCGeometricSurface;
-struct WSShellUse;
+class WCTopologyModel;
 struct WSFaceUse;
 struct WSLoopUse;
 struct WSEdgeUse;
@@ -104,7 +103,7 @@ struct WSEdgeUse {
 	WSEdgeUse									*mate;												//!< Other side of the edge
 	WSVertexUse									*vertexUse;											//!< Downward pointer to starting VertexUse
 	//Elements if wireframe
-	WSShellUse									*shellUse;											//!< Parent shell
+	WSTopologyShell								*shell;												//!< Parent shell
 	//Elements if solid model
 	WSLoopUse									*loop;												//!< Parent loop
 	WSEdgeUse									*cw, *ccw;											//!< Clock-wise and counter clockwise lists

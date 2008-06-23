@@ -178,7 +178,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCG
 					if (p2In && p4In) { hit.leftParam.I(p4Proj); hit.rightParam.I(p2Proj); }
 					
 					//Check to see if intersection is a point (think of two lines end to end)
-					if (pStart.Distance(pEnd) < tol) hit.type == IntersectPoint;
+					if (pStart.Distance(pEnd) < tol) hit.type = IntersectPoint;
 
 					//This is not the best way to check for CULL BOUNDARY, but if pStart and pEnd distance < tol, must be end-to-end
 					if ((flags & INTERSECT_CULL_BOUNDARY) && (hit.type == IntersectPoint))

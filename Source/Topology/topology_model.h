@@ -43,7 +43,7 @@ namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
-class WSTopologyShell;
+struct WSTopologyShell;
 
 
 /***********************************************~***************************************************/

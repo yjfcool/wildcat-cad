@@ -408,12 +408,12 @@ char* adapterExtensions[ADAPTER_EXTENSION_COUNT] = {
 	//Get version
 	switch (version[0]) {
 		//Must be versions 1.3, 1.4, or 1.5
-		case '1': if (version[2] == '5') WCAdapter::_version = 1.5;
-			else if (version[2] == '4') WCAdapter::_version = 1.4;
-			else WCAdapter::_version = 1.3;
+		case '1': if (version[2] == '5') WCAdapter::_version = 1.5f;
+			else if (version[2] == '4') WCAdapter::_version = 1.4f;
+			else WCAdapter::_version = 1.3f;
 			break;
-		case '2': if (version[2] == '1') WCAdapter::_version = 2.1;
-			else WCAdapter::_version = 2.0;
+		case '2': if (version[2] == '1') WCAdapter::_version = 2.1f;
+			else WCAdapter::_version = 2.0f;
 			break;
 	}
 	 
