@@ -68,7 +68,7 @@ private:
 
 	//NURBS Surface Objects
 	WPUInt										_nsPerfLevel;										//!< Static performance level indicator
-	GLint										*_nsLocations;										//!< Locations for the bindable uniform variables	
+	GLint										*_nsLocations;										//!< Values for locations of uniforms	
 	GLuint										_nsDefault, _nsDefault23, _nsBezier23;				//!< Static shader programs for vertex generation	
 	int											_nsMinCPBufferSize, _nsMinKPBufferSize;				//!< Values for the buffer sizes of CP and KP in shaders
 	GLint										_nsVertsPerBatch;									//!< Number of vertices per batch
@@ -76,12 +76,19 @@ private:
 	GLuint										_nsCPTex, _nsKPUTex, _nsKPVTex, _nsInTex, _nsVertTex, _nsNormTex;//!< Texture objects for use in medium generate
 	GLint										_nsMaxTexSize;										//!< Medium maxium texture size	
 	GLuint										_nsFramebuffer;										//!< Framebuffer for generate use
+
+	//Intersection Objects
+	GLint										*_iLocations;										//!< Values for locations of uniforms
+	GLuint										_cciM, _sciM, _ssiM, _tciM, _tsiM, _ttiM;			//!< Static shader programs for intersection
+	GLuint										_cciLeftTex, _cciRightTex, _ssiLeftTex, _ssiRightTex;//!< Textures for intersection
 	
 	//Private Initalization Methods
 	void StartCurve(void);
 	void StopCurve(void);
 	void StartSurface(void);
 	void StopSurface(void);
+	void StartIntersection(void);
+	void StopIntersection(void);
 	
 	//Deny Access
 	WCGeometryContext();																			//!< Deny access to default constructor
@@ -135,6 +142,18 @@ public:
 	inline GLuint SurfaceNormTex(void) const			{ return this->_nsNormTex; }				//!< Get surface normals output texture
 	inline GLint SurfaceMaxTextureSize(void) const		{ return this->_nsMaxTexSize; }				//!< Get surface maximum texture size
 	inline GLuint SurfaceFramebuffer(void) const		{ return this->_nsFramebuffer; }			//!< Get surface framebuffer
+
+	//Intersection Values Access Methods
+	inline GLint* IntersectionLocations(void)			{ return this->_iLocations; }				//!< Get intersection locations
+	inline GLuint CurveCurveProgram(void) const			{ return this->_cciM; }						//!< Get curve-curve program
+	inline GLuint SurfaceCurveProgram(void) const		{ return this->_sciM; }						//!< Get surface-curve program
+	inline GLuint SurfaceSurfaceProgram(void) const		{ return this->_ssiM; }						//!< Get surface-surface program
+	inline GLuint TrimCurveProgram(void) const			{ return this->_tciM; }						//!< Get trimSurface-curve program
+	inline GLuint TrimSurfaceProgram(void) const		{ return this->_tsiM; }						//!< Get trimSurface-surface program
+	inline GLuint TrimTrimProgram(void) const			{ return this->_ttiM; }						//!< Get trimSurface-trimSurface program
+	inline GLuint CCILeftTex(void) const				{ return this->_cciLeftTex; }				//!< Get CCI left texture
+	inline GLuint CCIRightTex(void) const				{ return this->_cciRightTex; }				//!< Get CCI right texture
+
 
 	/*** Non-Member Functions ***/
 	friend std::ostream& operator<<(std::ostream& out, const WCGeometryContext &context);			//!< Overloaded output operator

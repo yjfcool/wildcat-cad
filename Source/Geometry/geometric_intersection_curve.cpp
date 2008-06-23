@@ -28,6 +28,7 @@
 
 /*** Included Header Files ***/
 #include "Geometry/geometric_intersection.h"
+#include "Geometry/geometry_context.h"
 #include "Geometry/geometric_point.h"
 #include "Geometry/geometric_line.h"
 #include "Geometry/nurbs_curve.h"
@@ -109,6 +110,9 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	left->ReleaseBuffer(data);
 	return results;
 }
+
+
+/***********************************************~***************************************************/
 
 
 /*** GeometricIntersection -- Curve and Line ***
@@ -213,9 +217,149 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 }
 
 
+/***********************************************~***************************************************/
+
+
 /*** GeometricIntersection -- Curve and Curve ***
  * This algorithm tries to intersect a NURBS curve with a NURBS curve.  The result can be zero to many hits and may include an extended overlap.
  ***/
+std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsCurve *left,
+	WCNurbsCurve *right, const WPFloat &tol, const unsigned int &flags) {
+	std::list<WCIntersectionResult> results;
+	//Check if self intersection
+	if (left == right) return results;
+	
+	//See if bounding boxes intersect
+	//...
+	
+	/*** Setup programs and texture locations ***/
+	
+	WPUInt lod = 512;// (WPUInt)(left->EstimateLength() / tol);
+	WPFloat paraFactor = 1.0 / lod, mua, mub;
+	WCVector4 point;
+	GLfloat *leftData = left->GenerateClientBuffer(lod, true);
+	GLfloat *rightData = right->GenerateClientBuffer(lod, true);
+	//Set program values
+	glUseProgram(left->Context()->CurveCurveProgram());
+	glUniform2f(left->Context()->IntersectionLocations()[INTERSECTION_CCI_PARAMS], (GLfloat)lod, (GLfloat)0.005);
+
+	/*** Bind to framebuffer object ***/
+	
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, left->Context()->CurveFramebuffer());
+	//Check to make sure the framebuffer is ready
+	GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	//Check the status of the framebuffer object
+	if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) { 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveCurve Intersection - Framebuffer is not complete.");
+		return results;
+	}
+	
+	/*** Setup Left texture ***/
+	
+	//Setup and copy the data into the texture
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	//Set up texture
+	glActiveTexture(GL_TEXTURE0);	
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, left->Context()->CCILeftTex());	
+	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, lod, 1, GL_RGBA, GL_FLOAT, leftData);
+	//Delete data array
+	left->ReleaseBuffer(leftData);
+	
+	/*** Setup Right texture ***/
+	
+	//Setup and copy the data into the texture
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	//Set up texture
+	glActiveTexture(GL_TEXTURE1);	
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, left->Context()->CCIRightTex());	
+	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, lod, 1, GL_RGBA, GL_FLOAT, rightData);
+	//Delete data array
+	right->ReleaseBuffer(rightData);
+	
+	
+	/*** Setup Viewport and Render***/
+	
+	//Save the viewport setting
+	glPushAttrib(GL_VIEWPORT_BIT);
+	//Disable some settings
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	//Set the viewport
+	glViewport(0, 0, lod, 1);
+	//Draw into the framebuffer
+	glBegin(GL_QUADS);
+	glVertex3f(-1.0, -1.0, 0.0);
+	glVertex3f(-1.0, 1.0, 0.0);
+	glVertex3f(1.0, 1.0, 0.0);	
+	glVertex3f(1.0, -1.0, 0.0);
+	glEnd();
+	//Restore the viewport setting
+	glPopAttrib();
+	//Re-enable some settings
+	glEnable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+	//Check for errors
+	if (glGetError() != GL_NO_ERROR)
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveCurve Intersection - Render.");
+	
+	/*** Save output texture into array using simple memory read ***/
+	
+	GLfloat *cciData = new GLfloat[lod * 4];
+	glReadPixels(0, 0, lod, 1, GL_RGBA, GL_FLOAT, cciData);
+	//Clean up the framebuffer object and cp/kp textures
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	//Stop using a program
+	glUseProgram(0);
+	//Check for errors
+	if (glGetError() != GL_NO_ERROR)
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveCurve Intersection - Clean up.");	
+
+	/*** Scan output for intersection results ***/
+
+	//Loop through the output
+	for (int i=0; i<lod; i++) {
+		//A non -1.0 in the first place indicates a hit
+		if (cciData[i*4] != -1.0) {
+			//Determine actual overall parametric value on left
+			mua = i * paraFactor;
+			//Determine actual overall parametric value on right
+			mub = cciData[i*4] * paraFactor;
+			//Get intersection point
+			point.Set(cciData[i*4+1], cciData[i*4+2], cciData[i*4+3]);
+			//Create intersection result
+			WCIntersectionResult hit;
+			hit.type = IntersectPoint;
+			hit.leftParam.I(mua);
+			hit.rightParam.I(mub);
+			hit.leftBoundary = (fabs(mua) < paraFactor) || (fabs(mua-1.0) < paraFactor);
+			hit.rightBoundary = (fabs(mub) < paraFactor) || (fabs(mub-1.0) < paraFactor);
+			//Check if culling end-point intersections
+			if (!(flags & INTERSECT_CULL_BOUNDARY) ||  (!hit.leftBoundary && !hit.rightBoundary)) {
+				//See if genObj
+				if (flags & INTERSECT_GEN_POINTS) {
+					//Create new point
+					WCGeometricPoint *newPoint = new WCGeometricPoint(point);
+					//Add to result struct
+					hit.object = newPoint;
+				}
+				else hit.object = NULL;
+				//Add the intersection to the list
+				std::cout << hit << point << std::endl;
+				results.push_back(hit);
+			}
+		}
+	}
+	//Delete the data buffer
+	delete cciData;
+	
+	//Return the results
+	return results;
+}
+
+
+/*** GeometricIntersection -- Curve and Curve ***
+ * This algorithm tries to intersect a NURBS curve with a NURBS curve.  The result can be zero to many hits and may include an extended overlap.
+ ***
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsCurve *left,
 	WCNurbsCurve *right, const WPFloat &tol, const unsigned int &flags) {
 	std::list<WCIntersectionResult> results;
@@ -331,6 +475,13 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 }
 
 
+/***********************************************~***************************************************/
+
+
+/*** ***
+ *
+ *
+ ***/
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsCurve *left,
 	WCNurbsSurface *right, const WPFloat &tol, const unsigned int &flags) {
 	//Get intersection list
@@ -340,6 +491,13 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 }
 
 
+/***********************************************~***************************************************/
+
+
+/*** ***
+ *
+ *
+ ***/
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsCurve *left,
 	WCTrimmedNurbsSurface *right, const WPFloat &tol, const unsigned int &flags) {
 	//Get intersection list

@@ -343,6 +343,7 @@
 		58F156D10D6B15A5008290F7 /* constraint_angle_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36160D68B4B700673AE6 /* constraint_angle_controller.cpp */; };
 		58F156DE0D6B18C4008290F7 /* constraint_angle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36120D68B4B700673AE6 /* constraint_angle.cpp */; };
 		58F157040D6B1A04008290F7 /* constraint_angle_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36180D68B4B700673AE6 /* constraint_angle_edit_mode.cpp */; };
+		58F5B4CE0E10063500D730F8 /* cci_plM.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 58F5B4C30E0FFF4200D730F8 /* cci_plM.fsh */; };
 		58F5E5380DABF7CA00DC39A2 /* vis_listener_modes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58F5E5370DABF7CA00DC39A2 /* vis_listener_modes.cpp */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
@@ -560,7 +561,6 @@
 		585F35870D68B28800673AE6 /* geometric_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geometric_types.h; path = ../../Source/Geometry/geometric_types.h; sourceTree = SOURCE_ROOT; };
 		585F35880D68B28800673AE6 /* geometry_context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometry_context.cpp; path = ../../Source/Geometry/geometry_context.cpp; sourceTree = SOURCE_ROOT; };
 		585F35890D68B28800673AE6 /* geometry_context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geometry_context.h; path = ../../Source/Geometry/geometry_context.h; sourceTree = SOURCE_ROOT; };
-		585F358A0D68B28800673AE6 /* geometry_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geometry_manager.h; path = ../../Source/Geometry/geometry_manager.h; sourceTree = SOURCE_ROOT; };
 		585F358B0D68B28800673AE6 /* nurbs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nurbs.cpp; path = ../../Source/Geometry/nurbs.cpp; sourceTree = SOURCE_ROOT; };
 		585F358C0D68B28800673AE6 /* nurbs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nurbs.h; path = ../../Source/Geometry/nurbs.h; sourceTree = SOURCE_ROOT; };
 		585F358D0D68B28800673AE6 /* nurbs_curve.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nurbs_curve.cpp; path = ../../Source/Geometry/nurbs_curve.cpp; sourceTree = SOURCE_ROOT; };
@@ -922,6 +922,7 @@
 		58DB05A10DA6BFF8008FF90E /* dialog_manifest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = dialog_manifest.xml; path = ../../Source/Resources/dialog_manifest.xml; sourceTree = SOURCE_ROOT; };
 		58DB05A50DA6C085008FF90E /* dialog_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialog_manager.h; path = ../../Source/Application/dialog_manager.h; sourceTree = SOURCE_ROOT; };
 		58DB05A60DA6C085008FF90E /* dialog_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dialog_manager.cpp; path = ../../Source/Application/dialog_manager.cpp; sourceTree = SOURCE_ROOT; };
+		58F5B4C30E0FFF4200D730F8 /* cci_plM.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = cci_plM.fsh; path = ../../Source/Shaders/cci_plM.fsh; sourceTree = SOURCE_ROOT; };
 		58F5E5160DABF54200DC39A2 /* newListener.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = newListener.html; path = ../../Source/Workbenches/RTVisualization/newListener.html; sourceTree = SOURCE_ROOT; };
 		58F5E51A0DABF65600DC39A2 /* vis_listener_actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_actions.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_actions.h; sourceTree = SOURCE_ROOT; };
 		58F5E51B0DABF65600DC39A2 /* vis_listener_actions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener_actions.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener_actions.cpp; sourceTree = SOURCE_ROOT; };
@@ -1536,7 +1537,6 @@
 				585F35850D68B28800673AE6 /* geometric_point.h */,
 				585F35870D68B28800673AE6 /* geometric_types.h */,
 				585F35890D68B28800673AE6 /* geometry_context.h */,
-				585F358A0D68B28800673AE6 /* geometry_manager.h */,
 				585F358C0D68B28800673AE6 /* nurbs.h */,
 				585F358E0D68B28800673AE6 /* nurbs_curve.h */,
 				585F35900D68B28800673AE6 /* nurbs_surface.h */,
@@ -1553,6 +1553,7 @@
 				585F354B0D68B21500673AE6 /* NURBS Curve */,
 				585F354A0D68B20D00673AE6 /* NURBS Surface */,
 				585F35490D68B20200673AE6 /* Trimmed Surface */,
+				58F5B4C20E0FFEF000D730F8 /* Intersection */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -2985,6 +2986,14 @@
 			name = Dialogs;
 			sourceTree = "<group>";
 		};
+		58F5B4C20E0FFEF000D730F8 /* Intersection */ = {
+			isa = PBXGroup;
+			children = (
+				58F5B4C30E0FFF4200D730F8 /* cci_plM.fsh */,
+			);
+			name = Intersection;
+			sourceTree = "<group>";
+		};
 		58F5E5150DABF52800DC39A2 /* Dialogs */ = {
 			isa = PBXGroup;
 			children = (
@@ -3140,6 +3149,7 @@
 				585F357C0D68B26600673AE6 /* ns_default_plM.fsh in Resources */,
 				585F357D0D68B26600673AE6 /* passthrough.vsh in Resources */,
 				585F357E0D68B26600673AE6 /* trimsurface_vis.fsh in Resources */,
+				58F5B4CE0E10063500D730F8 /* cci_plM.fsh in Resources */,
 				585F368F0D68B65E00673AE6 /* Info.plist in Resources */,
 				585F369A0D68B66E00673AE6 /* Credits.rtf in Resources */,
 				585F369B0D68B66E00673AE6 /* InfoPlist.strings in Resources */,

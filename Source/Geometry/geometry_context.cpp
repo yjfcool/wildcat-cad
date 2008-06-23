@@ -102,7 +102,7 @@ void WCGeometryContext::StartCurve(void) {
 			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);		
 			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);					
-			glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA_FLOAT32_APPLE, NURBSCURVE_MAX_CONTROLPOINTS, 1, 0, GL_RGBA, GL_FLOAT, NULL);
+			glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA_FLOAT32_APPLE, this->_ncMaxTexSize, 1, 0, GL_RGBA, GL_FLOAT, NULL);
 			//Setup knot point texture
 			glGenTextures(1, &(this->_ncKPTex));	
 			glActiveTexture(GL_TEXTURE0);
@@ -111,7 +111,7 @@ void WCGeometryContext::StartCurve(void) {
 			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);		
 			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);					
-			glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA_FLOAT32_APPLE, NURBSCURVE_MAX_KNOTPOINTS, 1, 0, GL_RGBA, GL_FLOAT, NULL);
+			glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA_FLOAT32_APPLE, this->_ncMaxTexSize, 1, 0, GL_RGBA, GL_FLOAT, NULL);
 			//Setup input texture
 			glGenTextures(1, &(this->_ncInTex));
 			glActiveTexture(GL_TEXTURE0);
@@ -230,6 +230,9 @@ void WCGeometryContext::StopCurve(void) {
 	//Check for errors
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StopCurve - Unspecified error.");
 }
+
+
+/***********************************************~***************************************************/
 
 
 void WCGeometryContext::StartSurface(void) {
@@ -473,6 +476,63 @@ void WCGeometryContext::StopSurface(void) {
 /***********************************************~***************************************************/
 
 
+void WCGeometryContext::StartIntersection(void) {
+	//Get program IDs
+	this->_cciM = this->_shaderManager->ProgramFromName("cci_plM");
+//	this->_sciM = this->_shaderManager->ProgramFromName("sci_plM");
+//	this->_ssiM = this->_shaderManager->ProgramFromName("ssi_plM");
+//	this->_tciM = this->_shaderManager->ProgramFromName("tci_plM");
+//	this->_tsiM = this->_shaderManager->ProgramFromName("tsi_plM");
+//	this->_ttiM = this->_shaderManager->ProgramFromName("tti_plM");
+
+	//Set the locations of each uniform variable
+	this->_iLocations = new GLint[15];
+	this->_iLocations[INTERSECTION_CCI_PARAMS] = glGetUniformLocation(this->_cciM, "params");
+
+	//Set up CCI left texture
+	glGenTextures(1, &(this->_cciLeftTex));
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_cciLeftTex);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);		
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);					
+	glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA_FLOAT32_APPLE, this->_ncMaxTexSize, 1, 0, GL_RGBA, GL_FLOAT, NULL);
+	//Setup CCI right texture
+	glGenTextures(1, &(this->_cciRightTex));	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_cciRightTex);	
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);		
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);					
+	glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA_FLOAT32_APPLE, this->_ncMaxTexSize, 1, 0, GL_RGBA, GL_FLOAT, NULL);
+
+	//Setup the programs
+	glUseProgram(this->_cciM);
+	glUniform1i(glGetUniformLocation(this->_cciM, "leftVerts"), 0);
+	glUniform1i(glGetUniformLocation(this->_cciM, "rightVerts"), 1);
+	//Stop using any programs
+	glUseProgram(0);
+	//Check for errors
+	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartIntersection - Unspecified error.");
+}
+
+
+void WCGeometryContext::StopIntersection(void) {
+	//Delete programs
+	glDeleteProgram(this->_cciM);
+	//...
+	//Delete the program locations
+	if (this->_iLocations != NULL) delete this->_iLocations;
+	//Check for errors
+	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StopIntersection - Unspecified error.");
+}
+
+
+/***********************************************~***************************************************/
+
+
 WCGeometryContext::WCGeometryContext(const WPGLContext &context, WCShaderManager *shaderManager) : _glContext(context), _shaderManager(shaderManager) {
 	//Check to make sure context and shader manager are valid
 	if (this->_shaderManager == NULL) {
@@ -483,6 +543,8 @@ WCGeometryContext::WCGeometryContext(const WPGLContext &context, WCShaderManager
 	this->StartCurve();
 	//Initialize all NURBS surface parameters
 	this->StartSurface();
+	//Initialze all Intersection parameters
+	this->StartIntersection();
 }
 
 
@@ -491,6 +553,8 @@ WCGeometryContext::~WCGeometryContext() {
 	this->StopCurve();
 	//Conclude all NURBS surface parameters
 	this->StopSurface();
+	//Conclude all Intersection parameters
+	this->StopIntersection();
 }
 
 

@@ -18,6 +18,7 @@
 		<shader name="ns_default_plM" type="GL_FRAGMENT_SHADER" filename="ns_default_plM.fsh" />
 		<shader name="ns23_default_plM" type="GL_FRAGMENT_SHADER" filename="ns23_default_plM.fsh" />
 		<shader name="ns23_bezier_plM" type="GL_FRAGMENT_SHADER" filename="ns23_bezier_plM.fsh" />
+		<shader name="cci_plM" type="GL_FRAGMENT_SHADER" filename="cci_plM.fsh" />
 	</shaders>
 	<programs>
 		<program name="scn_basiclight">
@@ -62,6 +63,10 @@
 		<program name="nc23_default_plM">
 			<shader>passthrough</shader>
 			<shader>nc23_default_plM</shader>
+		</program>
+		<program name="cci_plM">
+			<shader>passthrough</shader>
+			<shader>cci_plM</shader>
 		</program>
 		<program name="nc23_bezier_plM">
 			<shader>passthrough</shader>

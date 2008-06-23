@@ -110,6 +110,7 @@ public:
 	~WCNurbsCurve();																				//!< Default destructor
 	
 	//General Access Functions
+	inline WCGeometryContext* Context(void)		{ return this->_context; }							//!< Get the geometry context
 	inline std::vector<WCVector4> ControlPoints(void)	{ return this->_controlPoints; }			//!< Get the control points vector
 	void ControlPoints(const std::vector<WCVector4> &controlPoints);								//!< Set the control points vector
 	inline WPUInt NumberControlPoints(void) const{ return this->_cp; }								//!< Get the number of control points

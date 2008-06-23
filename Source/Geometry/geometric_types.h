@@ -109,8 +109,6 @@ public:
 	virtual void Thickness(const WPFloat &thick){ this->_thickness = thick; }						//!< Set the line thickness
 	
 	//Required Member Function
-//	virtual std::list<WPFloat> Intersect(WCGeometricPoint *point, const WPFloat &tol)=0;			//!< Check for intersection with point
-//	virtual std::list<WPIntersectRec> Intersect(WCGeometricCurve *curve, const WPFloat &tol)=0;		//!< Check for intersection with curve
 	virtual WPFloat Length(const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;				//!< Calculate the length of the curve
 	virtual WCVector4 Evaluate(const WPFloat &u)=0;													//!< Evaluate curve for a parametric value
 	virtual WCVector4 Derivative(const WPFloat &u, const WPUInt &der)=0;							//!< Evaluate derivative at specific point
@@ -147,11 +145,6 @@ public:
 	virtual bool IsClosedU(void) const			{ return this->_isClosedU; }						//!< Get the closed on U flag
 	virtual bool IsClosedV(void) const			{ return this->_isClosedV; }						//!< Get the closed on V flag
 	virtual bool IsSelfIntersecting(void) const { return this->_isSelfIntersecting; }				//!< Get the self-intersection flag
-
-	//Required Intersection Methods
-//	virtual bool Intersect(const WCGeometricPoint &point, const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;		//!< Check for intersection with point
-//	virtual bool Intersect(const WCGeometricCurve &curve, const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;		//!< Check for intersection with curve	
-//	virtual bool Intersect(const WCGeometricSurface &surface, const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;	//!< Check for intersection with surface		
 
 	//Required Member Functions
 	virtual WPFloat Area(const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;				//!< Calculate the area of the surface
