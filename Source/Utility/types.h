@@ -85,7 +85,6 @@ typedef ULONGLONG								WPTime;
 #define M_2_SQRTPI								1.12837916709551257389615890312154517   /* 2/sqrt(pi) */
 #define M_SQRT2									1.41421356237309504880168872420969808   /* sqrt(2) */
 #define M_SQRT1_2								0.707106781186547524400844362104849039  /* 1/sqrt(2) */
-#define GL_RGBA_FLOAT32_APPLE					1
 //One-time values
 //#define D_PI									3.14159265359
 #endif

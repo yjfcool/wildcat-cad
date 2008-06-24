@@ -56,7 +56,7 @@ struct WSTexture {
 	GLenum										_target;											//!< Target of texture
 	GLint										_mipLevel;											//!< Mipmapping levels
 	GLfloat										_width, _height;									//!< Width and height of the texture
-	GLenum										_internalFormat, _format;							//!< GL_RGBA, GL_RGBA_FLOAT32_APPLE, etc.
+	GLenum										_internalFormat, _format;							//!< GL_RGBA, GL_RGBA32F_ARB, etc.
 	GLenum										_type;												//!< GL_UNSIGNED_BYTE etc.
 	GLenum										_minFilter, _magFilter;								//!< GL_NEAREST, GL_LINEAR, etc.
 	GLenum										_wrapS, _wrapT;										//!< GL_CLAMP, etc.
