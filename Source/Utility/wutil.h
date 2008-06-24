@@ -49,9 +49,7 @@
 
 /*** Included OpenGL Headers ***/
 #ifdef __APPLE__
-#include <OpenGL/gl.h>
-#include <OpenGL/glext.h>
-#include <OpenGL/OpenGL.h>
+#include "Application/MacOS/apple_gl.h"
 #define STDMIN	std::min
 #define STDMAX	std::max
 #define STDFABS	std::fabs

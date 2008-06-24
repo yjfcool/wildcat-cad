@@ -226,7 +226,8 @@ void WCNurbsSurface::LoadKnotPoints(const std::vector<WPFloat> &uKP, const std::
 
 std::vector<GLfloat*>
 WCNurbsSurface::GenerateSurfaceHigh(const WPUInt &lodU, const WPUInt &lodV, const bool &server, std::vector<GLuint> &buffers) {
-
+//Conditional compilation as long as transform feedback is present
+#ifdef GL_EXT_transform_feedback
 	/*** Setup programs and bindable uniforms ***/
 
 	//Now generate the control points VBO
@@ -351,6 +352,7 @@ WCNurbsSurface::GenerateSurfaceHigh(const WPUInt &lodU, const WPUInt &lodV, cons
 /*** Debug ***/
 	//Clean up and check on errors
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceHigh - Unspecified GL Error.");
+#endif // GL_EXT_transform_feedback
 	//Return client buffers
 	return std::vector<GLfloat*>();
 }

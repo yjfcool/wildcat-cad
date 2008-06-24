@@ -151,12 +151,11 @@ void WCVector4::FromElement(xercesc::DOMElement *element) {
 WCVector4 WCVector4::operator+(const WCVector4 &vector) const {
 	WCVector4 result;
 //Apple specific optimization
-#ifdef __APPLE__
+#if defined(__APPLE__) && defined(__SSE2__)
 	result._data.v[0] = this->_data.v[0] + vector._data.v[0];
 	result._data.v[1] = this->_data.v[1] + vector._data.v[1];
-#endif
 //Default path
-#ifndef __APPLE__
+#else
 	result._data.d[0] = this->_data.d[0] + vector._data.d[0];
 	result._data.d[1] = this->_data.d[1] + vector._data.d[1];
 	result._data.d[2] = this->_data.d[2] + vector._data.d[2];
@@ -169,12 +168,11 @@ WCVector4 WCVector4::operator+(const WCVector4 &vector) const {
 WCVector4 WCVector4::operator-(const WCVector4 &vector) const {
 	WCVector4 result;
 //Apple specific optimization
-#ifdef __APPLE__
+#if defined(__APPLE__) && defined(__SSE2__)
 	result._data.v[0] = this->_data.v[0] - vector._data.v[0];
 	result._data.v[1] = this->_data.v[1] - vector._data.v[1];
-#endif
 //Default path
-#ifndef __APPLE__
+#else
 	result._data.d[0] = this->_data.d[0] - vector._data.d[0];
 	result._data.d[1] = this->_data.d[1] - vector._data.d[1];
 	result._data.d[2] = this->_data.d[2] - vector._data.d[2];
@@ -187,14 +185,13 @@ WCVector4 WCVector4::operator-(const WCVector4 &vector) const {
 WCVector4 WCVector4::operator*(const WPFloat &scalar) const {
 	WCVector4 result;
 //Apple specific optimization
-#ifdef __APPLE__
+#if defined(__APPLE__) && defined(__SSE2__)
 	vDouble S = { scalar, scalar };
 	result._data.v[0] = this->_data.v[0] * S;
 	result._data.v[1] = this->_data.v[1] * S;
 	return result;
-#endif
 //Default path
-#ifndef __APPLE__
+#else
 	result._data.d[0] = this->_data.d[0] * scalar;
 	result._data.d[1] = this->_data.d[1] * scalar;
 	result._data.d[2] = this->_data.d[2] * scalar;
@@ -208,14 +205,13 @@ WCVector4 WCVector4::operator/(const WPFloat &scalar) const {
 	WCVector4 result;
 	WPFloat recip = 1.0 / scalar;
 //Apple specific optimization
-#ifdef __APPLE__
+#if defined(__APPLE__) && defined(__SSE2__)
 	vDouble R = { recip, recip };
 	result._data.v[0] = this->_data.v[0] * R;
 	result._data.v[1] = this->_data.v[1] * R;
 	return result;
-#endif
 //Default path
-#ifndef __APPLE__
+#else
 	result._data.d[0] = this->_data.d[0] * recip;
 	result._data.d[1] = this->_data.d[1] * recip;
 	result._data.d[2] = this->_data.d[2] * recip;
@@ -241,13 +237,12 @@ WCMatrix4 WCVector4::operator*(const WCVector4 &vector) const {
 
 WCVector4& WCVector4::operator+=(const WPFloat &scalar) {
 //Apple specific optimization
-#ifdef __APPLE__
+#if defined(__APPLE__) && defined(__SSE2__)
 	vDouble S = { scalar, scalar };
 	this->_data.v[0] += S;
 	this->_data.v[1] += S;
-#endif
 //Default path
-#ifndef __APPLE__
+#else
 	this->_data.d[0] += scalar;
 	this->_data.d[1] += scalar;
 	this->_data.d[2] += scalar;
@@ -259,12 +254,11 @@ WCVector4& WCVector4::operator+=(const WPFloat &scalar) {
 
 WCVector4& WCVector4::operator+=(const WCVector4 &vector) {
 //Apple specific optimization
-#ifdef __APPLE__
+#if defined(__APPLE__) && defined(__SSE2__)
 	this->_data.v[0] += vector._data.v[0];
 	this->_data.v[1] += vector._data.v[1];
-#endif
 //Default path
-#ifndef __APPLE__
+#else
 	this->_data.d[0] += vector._data.d[0];
 	this->_data.d[1] += vector._data.d[1];
 	this->_data.d[2] += vector._data.d[2];
@@ -276,13 +270,12 @@ WCVector4& WCVector4::operator+=(const WCVector4 &vector) {
 
 WCVector4& WCVector4::operator-=(const WPFloat &scalar) {
 //Apple specific optimization
-#ifdef __APPLE__
+#if defined(__APPLE__) && defined(__SSE2__)
 	vDouble S = { scalar, scalar };
 	this->_data.v[0] -= S;
 	this->_data.v[1] -= S;
-#endif
 //Default path
-#ifndef __APPLE__
+#else
 	this->_data.d[0] -= scalar;
 	this->_data.d[1] -= scalar;
 	this->_data.d[2] -= scalar;
@@ -294,12 +287,11 @@ WCVector4& WCVector4::operator-=(const WPFloat &scalar) {
 
 WCVector4& WCVector4::operator-=(const WCVector4 &vector) {
 //Apple specific optimization
-#ifdef __APPLE__
+#if defined(__APPLE__) && defined(__SSE2__)
 	this->_data.v[0] -= vector._data.v[0];
 	this->_data.v[1] -= vector._data.v[1];
-#endif
 //Default path
-#ifndef __APPLE__
+#else
 	this->_data.d[0] -= vector._data.d[0];
 	this->_data.d[1] -= vector._data.d[1];
 	this->_data.d[2] -= vector._data.d[2];
@@ -311,13 +303,12 @@ WCVector4& WCVector4::operator-=(const WCVector4 &vector) {
 
 WCVector4& WCVector4::operator*=(const WPFloat &scalar) {
 //Apple specific optimization
-#ifdef __APPLE__
+#if defined(__APPLE__) && defined(__SSE2__)
 	vDouble S = { scalar, scalar };
 	this->_data.v[0] *= S;
 	this->_data.v[1] *= S;
-#endif
 //Default path
-#ifndef __APPLE__
+#else
 	this->_data.d[0] *= scalar;
 	this->_data.d[1] *= scalar;
 	this->_data.d[2] *= scalar;

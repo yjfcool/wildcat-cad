@@ -209,7 +209,8 @@ void WCNurbsCurve::LoadKnotPoints(const std::vector<WPFloat> &knotPoints) {
 
 
 GLfloat* WCNurbsCurve::GenerateCurveHigh(const WPUInt &lod, const bool &server, GLuint &buffer) {
-
+//Conditional compilation as long as transform feedback is included
+#ifdef GL_EXT_transform_feedback
 	/*** Setup programs and bindable uniforms ***/		
 
 	//Now generate the control points VBO
@@ -302,6 +303,7 @@ GLfloat* WCNurbsCurve::GenerateCurveHigh(const WPUInt &lod, const bool &server, 
 	for (int i=0; i<this->_lod+1; i++) printf("\t%d: %f %f %f %f\n", i, data2[i*4], data2[i*4+1], data2[i*4+2], data2[i*4+3]);
 	glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER_EXT);	
 /*** Debug ***/
+#endif // GL_EXT_transform_feedback
 	return NULL;
 }
 

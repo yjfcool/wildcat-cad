@@ -427,9 +427,13 @@ char* adapterExtensions[ADAPTER_EXTENSION_COUNT] = {
 		
 	/*** Get Limits ***/
 
+#ifdef GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT
 	//Maximum geometry output vertices - requires GeometryShader4
 	if (WCAdapter::_extensions[321]) glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT, &(WCAdapter::_maxGeometryOutputVertices));
 	else WCAdapter::_maxGeometryOutputVertices = 0;
+#else
+	WCAdapter::_maxGeometryOutputVertices = 0;
+#endif
 
 	//Maximum 2D texture size
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &(WCAdapter::_max2DTextureSize));

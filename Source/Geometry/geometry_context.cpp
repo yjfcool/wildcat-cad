@@ -67,6 +67,7 @@ void WCGeometryContext::StartCurve(void) {
 	switch(this->_ncPerfLevel) {
 		//Set up programs for high performance mode
 		case NURBSCURVE_PERFLEVEL_HIGH:
+#ifdef GL_EXT_transform_feedback
 			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartCurve - Actually Running as High");
 			//Get program IDs
 			this->_ncDefault = this->_shaderManager->ProgramFromName("nc_default_plH");
@@ -81,6 +82,7 @@ void WCGeometryContext::StartCurve(void) {
 			glGenBuffers(1, &(this->_ncKPBuffer));
 			glBindBuffer(GL_ARRAY_BUFFER, this->_ncKPBuffer);
 			glBufferData(GL_ARRAY_BUFFER, NURBSCURVE_MAX_KNOTPOINTS*4*sizeof(GLfloat), NULL, GL_STATIC_DRAW);
+#endif // GL_EXT_transform_feedback
 			if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartCurve - GL error at High Creation.");
 			break;
 
@@ -93,7 +95,7 @@ void WCGeometryContext::StartCurve(void) {
 			this->_ncBezier23 = this->_shaderManager->ProgramFromName("nc23_bezier_plM");
 			//Set up generation static
 			glGetIntegerv(GL_MAX_TEXTURE_SIZE, &(this->_ncMaxTexSize));
-			this->_ncMaxTexSize = STDMIN(this->_ncMaxTexSize, NURBSCURVE_MAX_LOD);
+			this->_ncMaxTexSize = STDMIN(this->_ncMaxTexSize, (GLint)NURBSCURVE_MAX_LOD);
 			//Set up control point texture
 			glGenTextures(1, &(this->_ncCPTex));
 			glActiveTexture(GL_TEXTURE0);
@@ -171,6 +173,7 @@ void WCGeometryContext::StartCurve(void) {
 	}
 	//Set up remaining HIGH performance parameters
 	if (this->_ncPerfLevel == NURBSCURVE_PERFLEVEL_HIGH) {
+#ifdef GL_EXT_transform_feedback
 		//Determine min buffer sizes for bindable uniform arrays
 		this->_ncMinKPBufferSize = glGetUniformBufferSizeEXT(this->_ncDefault, this->_ncLocations[NURBSCURVE_LOC_KP_DEFAULT]);
 		this->_ncMinCPBufferSize = glGetUniformBufferSizeEXT(this->_ncDefault, this->_ncLocations[NURBSCURVE_LOC_CP_DEFAULT]);	
@@ -179,7 +182,8 @@ void WCGeometryContext::StartCurve(void) {
 		glUniformBufferEXT(this->_ncDefault,  this->_ncLocations[NURBSCURVE_LOC_CP_DEFAULT],  this->_ncCPBuffer);	
 		glUniformBufferEXT(this->_ncDefault,  this->_ncLocations[NURBSCURVE_LOC_KP_DEFAULT],  this->_ncKPBuffer);				
 		glUniformBufferEXT(this->_ncBezier23, this->_ncLocations[NURBSCURVE_LOC_CP_BEZIER23], this->_ncCPBuffer);	
-		glUniformBufferEXT(this->_ncBezier23, this->_ncLocations[NURBSCURVE_LOC_KP_BEZIER23], this->_ncKPBuffer);							
+		glUniformBufferEXT(this->_ncBezier23, this->_ncLocations[NURBSCURVE_LOC_KP_BEZIER23], this->_ncKPBuffer);
+#endif // GL_EXT_transform_feedback
 		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartCurve - At High Uniform Bindable Binding.");			
 	}
 	//Set up remaining MEDIUM performance parameters
@@ -266,6 +270,7 @@ void WCGeometryContext::StartSurface(void) {
 	switch(this->_nsPerfLevel) {
 		//Set up programs for high performance mode
 		case NURBSSURFACE_PERFLEVEL_HIGH:
+#ifdef GL_EXT_transform_feedback
 //			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - Actually Running as High.");
 			//Setup high generation programs
 			this->_nsDefault = this->_shaderManager->ProgramFromName("ns_default_plH");
@@ -284,6 +289,7 @@ void WCGeometryContext::StartSurface(void) {
 			glBufferData(GL_ARRAY_BUFFER, NURBSSURFACE_MAX_KNOTPOINTS*4*sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 			//Clean up a bit
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif // GL_EXT_transform_feedback
 			//Check for errors
 			if (glGetError() != GL_NO_ERROR)
 				CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - At High Creation.");
@@ -296,7 +302,7 @@ void WCGeometryContext::StartSurface(void) {
 			this->_nsDefault23 = this->_shaderManager->ProgramFromName("ns23_default_plM");				
 			this->_nsBezier23 = this->_shaderManager->ProgramFromName("ns23_bezier_plM");				
 			//Determine maximum texture size
-			this->_nsMaxTexSize = STDMIN(WCAdapter::GetMax2DTextureSize(), NURBSSURFACE_MAX_TEXSIZE);
+			this->_nsMaxTexSize = STDMIN(WCAdapter::GetMax2DTextureSize(), (GLint)NURBSSURFACE_MAX_TEXSIZE);
 			//Check for errors
 			if (glGetError() != GL_NO_ERROR) 
 				CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - At Medium Program Compilation.");
@@ -401,6 +407,7 @@ void WCGeometryContext::StartSurface(void) {
 		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - At Uniform Get Locations.");
 	}
 	if (this->_nsPerfLevel == NURBSSURFACE_PERFLEVEL_HIGH) {
+#ifdef GL_EXT_transform_feedback
 		//Determine min buffer sizes for bindable uniform arrays
 		this->_nsMinKPBufferSize = glGetUniformBufferSizeEXT(this->_nsDefault, this->_nsLocations[NURBSSURFACE_LOC_KPU_DEFAULT]);
 		this->_nsMinCPBufferSize = glGetUniformBufferSizeEXT(this->_nsDefault, this->_nsLocations[NURBSSURFACE_LOC_CP_DEFAULT]);
@@ -412,6 +419,7 @@ void WCGeometryContext::StartSurface(void) {
 		glUniformBufferEXT(this->_nsBezier23, this->_nsLocations[NURBSSURFACE_LOC_CP_BEZIER23], this->_nsCPBuffer);
 		glUniformBufferEXT(this->_nsBezier23, this->_nsLocations[NURBSSURFACE_LOC_KPU_BEZIER23], this->_nsKPUBuffer);
 		glUniformBufferEXT(this->_nsBezier23, this->_nsLocations[NURBSSURFACE_LOC_KPV_BEZIER23], this->_nsKPVBuffer);
+#endif // GL_EXT_transform_feedback
 		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - At High Uniform Bindable Binding.");
 	}
 	if (this->_nsPerfLevel == NURBSSURFACE_PERFLEVEL_MEDIUM) {

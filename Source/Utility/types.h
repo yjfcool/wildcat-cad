@@ -60,6 +60,11 @@ typedef std::string								WCUserMessage;
 #ifdef __APPLE__
 typedef AbsoluteTime							WPTime;
 typedef CGLContextObj							WPGLContext;
+//Cover for non-SSE2 hardware
+#ifndef __SSE2__
+typedef double									vDouble;
+#endif
+
 #endif
 
 #ifdef __WIN32__
