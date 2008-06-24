@@ -34,6 +34,10 @@
 #include "Geometry/nurbs_curve.h"
 
 
+/*** Locally Defined Values ***/
+#define CCI_CURVE_CUTOFF						3
+
+
 /***********************************************~***************************************************/
 
 
@@ -129,7 +133,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	//...
 
 	//Determine estimated length of curve and LOD
-	WPUInt lod = 128;// (WPUInt)(left->EstimateLength() / tol);
+	WPUInt lod = 256;// (WPUInt)(left->EstimateLength() / tol);
 	GLfloat *data = left->GenerateClientBuffer(lod, true);
 	//Evaluate both lines at both ends
 	WCVector4 p3 = right->Begin();
@@ -170,8 +174,8 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 			denom = (d4343 * d2121) - (d4321 * d4321);
 			//Some further calculations...
 			numer = d4343 * (d321 - d121) + d4321 * (d143 - d343);
-			mua = numer / denom;
-			mub = (d143 + d4321 * mua - d343) / d4343;
+			mua = STDMAX(0.0, STDMIN(numer / denom, 1.0));
+			mub = STDMAX(0.0, STDMIN((d143 + d4321 * mua - d343) / d4343, 1.0));
 			//Make sure mua and mub are in (0.0 +- tol, 1.0 +- tol)
 			if ( (mua < onePlusTol) && (mua > -tol) && (mub < onePlusTol) && (mub > -tol) ) {
 				//Calculate points and distance between them
@@ -201,7 +205,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 						}
 						else hit.object = NULL;
 						//Add the intersection to the list
-						std::cout << hit << pointOnFirst << std::endl;
+						std::cout << "CLI - " << hit << pointOnFirst << std::endl;
 						results.push_back(hit);
 					}
 				}
@@ -223,8 +227,8 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 /*** GeometricIntersection -- Curve and Curve ***
  * This algorithm tries to intersect a NURBS curve with a NURBS curve.  The result can be zero to many hits and may include an extended overlap.
  ***/
-std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsCurve *left,
-	WCNurbsCurve *right, const WPFloat &tol, const unsigned int &flags) {
+std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsCurve *left, WCNurbsCurve *right,
+	const WPFloat &tol, const unsigned int &flags) {
 	std::list<WCIntersectionResult> results;
 	//Check if self intersection
 	if (left == right) return results;
@@ -316,161 +320,98 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 
 	/*** Scan output for intersection results ***/
 
+	WCIntersectionResult hit;
+	WPUInt lookAhead, diff;
+	std::vector<WCVector4> curvePoints;
 	//Loop through the output
 	for (WPUInt i=0; i<lod; i++) {
 		//A non -1.0 in the first place indicates a hit
 		if (cciData[i*4] != -1.0) {
-			//Determine actual overall parametric value on left
-			mua = i * paraFactor;
-			//Determine actual overall parametric value on right
-			mub = cciData[i*4] * paraFactor;
-			//Get intersection point
-			point.Set(cciData[i*4+1], cciData[i*4+2], cciData[i*4+3]);
-			//Create intersection result
-			WCIntersectionResult hit;
-			hit.type = IntersectPoint;
-			hit.leftParam.I(mua);
-			hit.rightParam.I(mub);
-			hit.leftBoundary = (fabs(mua) < paraFactor) || (fabs(mua-1.0) < paraFactor);
-			hit.rightBoundary = (fabs(mub) < paraFactor) || (fabs(mub-1.0) < paraFactor);
-			//Check if culling end-point intersections
-			if (!(flags & INTERSECT_CULL_BOUNDARY) ||  (!hit.leftBoundary && !hit.rightBoundary)) {
-				//See if genObj
-				if (flags & INTERSECT_GEN_POINTS) {
-					//Create new point
-					WCGeometricPoint *newPoint = new WCGeometricPoint(point);
-					//Add to result struct
-					hit.object = newPoint;
+			//Look ahead to see how many hits in a row there are
+			lookAhead = i + 1;
+			while ((cciData[lookAhead * 4] != -1.0) && (lookAhead <lod)) lookAhead++;
+			diff = lookAhead - i;
+			//Diff > CCI_CURVE_CUTOFF is a curve
+			if (diff > CCI_CURVE_CUTOFF) {
+				//Determine start and stop parameters for left
+				hit.type = IntersectCurve;
+				hit.leftParam.I( STDMAX(0.0, STDMIN(i * paraFactor, 1.0)) );
+				hit.leftParam.J( STDMAX(0.0, STDMIN((lookAhead-1) * paraFactor, 1.0)) );
+				//Determine start and stop parameters for right
+				hit.rightParam.I(0.0);
+				hit.rightParam.J(1.0);
+				//Determine boundary values
+				hit.leftBoundary = false;
+				hit.rightBoundary = false;
+				//Check if culling end-point intersections
+				if (!(flags & INTERSECT_CULL_BOUNDARY) ||  (!hit.leftBoundary && !hit.rightBoundary)) {
+					//See if genObj
+					if (flags & INTERSECT_GEN_CURVES) {
+						//Accumulate the points into a vector
+						for (WPUInt j=i; j<lookAhead; j++) {
+							//Get the point data
+							point = WCVector4(cciData[j*4+1], cciData[j*4+2], cciData[j*4+3], 1.0);
+							//Add to the vector
+							curvePoints.push_back(point);
+						}
+						//Create the curve
+						WCNurbsCurve* newCurve = WCNurbsCurve::GlobalInterpolation(curvePoints, 3);
+						//Add to result struct
+						hit.object = newCurve;
+					}
+					else hit.object = NULL;
+					//Add the intersection to the list
+					std::cout << "CCI - " << hit << point << std::endl;
+					results.push_back(hit);
 				}
-				else hit.object = NULL;
-				//Add the intersection to the list
-				std::cout << hit << point << std::endl;
-				results.push_back(hit);
 			}
+			// Diff <= CCI_CURVE_CUTOFF, must be a point
+			else {
+				//Find average of mua, mub, and point
+				mua = 0.0;
+				mub = 0.0;
+				point.Set(0.0, 0.0, 0.0, 0.0);
+				//Accumulate the values
+				for (WPUInt j=i; j<lookAhead; j++) {
+					mua += (j * paraFactor);
+					mub += (cciData[j*4] * paraFactor);
+					point += WCVector4(cciData[j*4+1], cciData[j*4+2], cciData[j*4+3], 1.0);
+				}
+				//Average the values
+				mua = STDMAX(0.0, STDMIN(mua / diff, 1.0));
+				//Determine actual overall parametric value on right
+				mub = STDMAX(0.0, STDMIN(mub / diff, 1.0));
+				//Get intersection point
+				point /= diff;
+				//Create intersection result
+				hit.type = IntersectPoint;
+				hit.leftParam.I(mua);
+				hit.rightParam.I(mub);
+				hit.leftBoundary = (mua <= paraFactor) || (mua >= 1.0 - paraFactor);
+				hit.rightBoundary = (mub <= paraFactor) || (mub >= 1.0 - paraFactor);
+				//Check if culling end-point intersections
+				if (!(flags & INTERSECT_CULL_BOUNDARY) ||  (!hit.leftBoundary && !hit.rightBoundary)) {
+					//See if genObj
+					if (flags & INTERSECT_GEN_POINTS) {
+						//Create new point
+						WCGeometricPoint *newPoint = new WCGeometricPoint(point);
+						//Add to result struct
+						hit.object = newPoint;
+					}
+					else hit.object = NULL;
+					//Add the intersection to the list
+					std::cout << "CCI - " << hit << point << std::endl;
+					results.push_back(hit);
+				}
+			}
+			//Increment i to lookAhead
+			i = lookAhead;
 		}
 	}
 	//Delete the data buffer
 	delete cciData;
 	
 	//Return the results
-	return results;
-}
-
-
-/*** GeometricIntersection -- Curve and Curve ***
- * This algorithm tries to intersect a NURBS curve with a NURBS curve.  The result can be zero to many hits and may include an extended overlap.
- ***
-std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsCurve *left,
-	WCNurbsCurve *right, const WPFloat &tol, const unsigned int &flags) {
-	std::list<WCIntersectionResult> results;
-	//Check if self intersection
-	if (left == right) return results;
-
-	//See if bounding boxes intersect
-	//...
-	
-	//Determine optimum LOD for each curve
-	WPUInt lodLeft = 64;
-	WPUInt lodRight = 64;
-	//Generate buffers for both curves
-	GLfloat *leftBuffer = left->GenerateClientBuffer(lodLeft, true);
-	GLfloat *rightBuffer = right->GenerateClientBuffer(lodRight, true);
-	//Setup some variables
-	WPFloat paraLeft = 1.0 / (lodLeft - 1);
-	WPFloat paraRight = 1.0 / (lodRight - 1);
-	WPFloat onePlusTol=1.0+tol, denom, d121, d2121, d321, d4321, d143, d343, d4343, numer, mua, mub, dist;
-	WCVector4 p1, p2, p3, p4, p21, p43, cross, pointOnFirst, pointOnSecond;
-	WPUInt indexL=4, indexR;
-	p1.Set((WPFloat)leftBuffer[0], (WPFloat)leftBuffer[1], (WPFloat)leftBuffer[2], 1.0);
-	//Loop through first curve segments
-	for (WPUInt i=1; i<lodLeft; i++) {
-		//Set p2 vector
-		p2.Set((WPFloat)leftBuffer[indexL], (WPFloat)leftBuffer[indexL+1], (WPFloat)leftBuffer[indexL+2], 1.0);
-		p21 = p2 - p1;
-		//Set p3 vector
-		p3.Set((WPFloat)rightBuffer[0], (WPFloat)rightBuffer[1], (WPFloat)rightBuffer[2], 1.0);
-		indexR = 4;
-		//Loop through second curve segments
-		for (WPUInt j=1; j<lodRight; j++) {
-			//Set p4 vector
-			p4.Set((WPFloat)rightBuffer[indexR], (WPFloat)rightBuffer[indexR+1], (WPFloat)rightBuffer[indexR+2], 1.0);
-			p43 = p4 - p3;
-			//Check for parallel
-			cross = p43.CrossProduct(p21);
-			denom = cross.Magnitude();
-			if (denom < 0.0001) {
-				//Parallel case, do nothing for now...
-			}
-			//Not parallel
-			else {
-				//Many dot products
-				d121 = p1.DotProduct(p21);			// L
-				d2121 = p21.DotProduct(p21);		// M
-				d321 = p3.DotProduct(p21);			// N
-				d4321 = p43.DotProduct(p21);		// O
-				d143 = p1.DotProduct(p43);			// Q
-				d343 = p3.DotProduct(p43);			// R
-				d4343 = p43.DotProduct(p43);		// S
-				denom = (d4343 * d2121) - (d4321 * d4321);
-				//What does this correspond to?
-				if (denom == 0.0) {
-					CLOGGER_WARN(WCLogManager::RootLogger(), "GeometricIntersection::CurveCurve -  Denominator == 0.0.");
-				}
-				//Otherwise, continue...
-				else {
-					//Calculate parametric intersection values
-					numer = d4343 * (d321 - d121) + d4321 * (d143 - d343);
-					mua = numer / denom;
-					mub = (d143 + d4321 * mua - d343) / d4343;
-					//Make sure mua and mub are (0.0 +- tol, 1.0 +- tol)
-					if ( (mua < onePlusTol) && (mua > -tol) && (mub < onePlusTol) && (mub > -tol) ) {
-						//Calculate points and distance between them
-						pointOnFirst = p1 + p21 * mua;
-						pointOnSecond = p3 + p43 * mub;
-						//Make sure lines are not > tol apart
-						dist = pointOnFirst.Distance(pointOnSecond);
-						if (dist < tol) {
-							//Determine actual overall parametric value on left
-							mua = (i - 1 + mua) * paraLeft;
-							//Determine actual overall parametric value on right
-							mub = (j - 1 + mub) * paraRight;
-							//Create intersection result
-							WCIntersectionResult hit;
-							hit.type = IntersectPoint;
-							hit.leftParam.I(mua);
-							hit.rightParam.I(mub);
-							hit.leftBoundary = (fabs(mua) < tol) || (fabs(mua-1.0) < tol);
-							hit.rightBoundary = (fabs(mub) < tol) || (fabs(mub-1.0) < tol);
-							//Check if culling end-point intersections
-							if (!(flags & INTERSECT_CULL_BOUNDARY) ||  (!hit.leftBoundary && !hit.rightBoundary)) {
-								//See if genObj
-								if (flags & INTERSECT_GEN_POINTS) {
-									//Create new point
-									WCGeometricPoint *newPoint = new WCGeometricPoint(pointOnFirst);
-									//Add to result struct
-									hit.object = newPoint;
-								}
-								else hit.object = NULL;
-								//Add the intersection to the list
-								std::cout << hit << pointOnFirst << std::endl;
-								results.push_back(hit);
-							}
-						}
-					}
-				}
-			}
-			//Move right points from p4 to p3
-			p3 = p4;
-			indexR += 4;
-		}
-		//Move left points from p2 to p1
-		p1 = p2;
-		indexL += 4;
-	}
-	//Release the buffers
-	left->ReleaseBuffer(leftBuffer);
-	right->ReleaseBuffer(rightBuffer);
-	//Return the hit list
 	return results;
 }
 

@@ -94,8 +94,7 @@ void WCGeometryContext::StartCurve(void) {
 			this->_ncDefault23 = this->_shaderManager->ProgramFromName("nc23_default_plM");
 			this->_ncBezier23 = this->_shaderManager->ProgramFromName("nc23_bezier_plM");
 			//Set up generation static
-			glGetIntegerv(GL_MAX_TEXTURE_SIZE, &(this->_ncMaxTexSize));
-			this->_ncMaxTexSize = STDMIN(this->_ncMaxTexSize, (GLint)NURBSCURVE_MAX_LOD);
+			this->_ncMaxTexSize = STDMIN(WCAdapter::GetMax2DTextureSize(), (GLint)NURBSCURVE_MAX_LOD);
 			//Set up control point texture
 			glGenTextures(1, &(this->_ncCPTex));
 			glActiveTexture(GL_TEXTURE0);

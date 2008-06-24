@@ -15,7 +15,7 @@ uniform vec2						params;				// {lod, tol}
 void main(void) {
 	int i = 0;
 	int lod = int(params.x);
-	float dist;
+	float dist, minDist = params.y;
 	
 	//Get basic vertex info
 	vec4 leftVert = texture2DRect(leftVerts, gl_FragCoord.xy);
@@ -29,14 +29,18 @@ void main(void) {
 		//Determine distance from inVert to 
 		dist = distance(leftVert, rightVert);
 		//If distance is within tolerance, set the return
-		if (dist < params.y) {
-			//Set the parametric v value
-			gl_FragColor = vec4(i, leftVert.xyz);
-			//Set i to LOD
-			i = lod;
+		if (dist <= params.y) {
+			//Make sure we are continuing to reduce minDist
+			if (dist < minDist) {
+				minDist = dist;
+				//Set the parametric v value
+				gl_FragColor = vec4(i, leftVert.xyz);
+			}
+			//Otherwise we are done here
+			else i = lod;
 		}
-		//Otherwise, just increment i
-		else i++;
+		//Just increment i
+		i++;
 	}
 }
 

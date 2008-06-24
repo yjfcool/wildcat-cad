@@ -153,6 +153,8 @@ public:
 	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object
 	
 	/*** Static Creation Methods ***/
+	static WCNurbsCurve* GlobalInterpolation(const std::vector<WCVector4> &pts, const WPUInt &degree);	//!< Global curve interpolation
+	static WCNurbsCurve* LocalInterpolation(const std::vector<WCVector4> &pts, const WPUInt &degree);	//!< Local curve interpolation
 	static WCNurbsCurve* CircularArc(WCGeometryContext *context, const WCVector4 &center,			//!< Generate a circular arc curve
 												const WCVector4 &xUnit, const WCVector4 &yUnit, const WPFloat &radius, 
 												const WPFloat &startAngleDeg, const WPFloat &endAngleDeg);

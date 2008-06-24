@@ -1365,6 +1365,17 @@ xercesc::DOMElement* WCNurbsCurve::Serialize(xercesc::DOMDocument *document, WCS
 /***********************************************~***************************************************/
 
 
+WCNurbsCurve* WCNurbsCurve::GlobalInterpolation(const std::vector<WCVector4> &pts, const WPUInt &degree) {
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GlobalInterpolation - Not yet implemented.");
+	return NULL;
+}
+
+
+WCNurbsCurve* WCNurbsCurve::LocalInterpolation(const std::vector<WCVector4> &pts, const WPUInt &degree) {
+	return NULL;
+}
+
+
 WCNurbsCurve* WCNurbsCurve::CircularArc(WCGeometryContext *context, const WCVector4 &center, const WCVector4 &xUnit, const WCVector4 &yUnit, 
 	const WPFloat &radius, const WPFloat &startAngleDeg, const WPFloat &endAngleDeg) {
 	//Create vector of control points
