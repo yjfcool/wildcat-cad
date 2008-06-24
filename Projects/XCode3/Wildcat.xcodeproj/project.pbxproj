@@ -369,6 +369,7 @@
 		5806B9FC0DA3C0A800D9989D /* vis_listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener.cpp; sourceTree = SOURCE_ROOT; };
 		580873CB0D9A7C3600038336 /* wildcat.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = wildcat.icns; path = ../../Source/Application/MacOS/wildcat.icns; sourceTree = SOURCE_ROOT; };
 		58212ED10E098D150012DE71 /* part_pad_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_pad_types.h; path = ../../Source/Workbenches/PartDesign/part_pad_types.h; sourceTree = SOURCE_ROOT; };
+		5831C1C80E1099CF00EA53DD /* apple_gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = apple_gl.h; path = ../../Source/Application/MacOS/apple_gl.h; sourceTree = SOURCE_ROOT; };
 		583FEAC60DAA69D100CCE245 /* document_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = document_controller.h; path = ../../Source/Application/MacOS/document_controller.h; sourceTree = SOURCE_ROOT; };
 		583FEAC70DAA69D100CCE245 /* document_controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = document_controller.mm; path = ../../Source/Application/MacOS/document_controller.mm; sourceTree = SOURCE_ROOT; };
 		5845428A0DA53F49005BC943 /* vis_listener_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_controller.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_controller.h; sourceTree = SOURCE_ROOT; };
@@ -1486,6 +1487,7 @@
 			children = (
 				585F35360D68B15E00673AE6 /* wutil.h */,
 				585F351B0D68B15E00673AE6 /* adapter.h */,
+				5831C1C80E1099CF00EA53DD /* apple_gl.h */,
 				588D973F0DAFA99800BDDE8D /* assert_exception.h */,
 				585F351D0D68B15E00673AE6 /* bounding_object.h */,
 				585F351F0D68B15E00673AE6 /* color.h */,

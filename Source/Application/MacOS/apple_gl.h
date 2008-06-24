@@ -47,7 +47,7 @@ void glTransformFeedbackVaryingsEXT(GLuint id, GLuint count, const GLchar** vary
 #endif //GL_EXT_transform_feedback
 
 //GL_GEOMETRY_SHADER_EXT
-#ifndef GL_EXT_geometry_shader
+#ifndef GL_EXT_geometry_shader4
 #define GL_GEOMETRY_SHADER_EXT					0
 #define GL_GEOMETRY_INPUT_TYPE_EXT				1
 #define GL_GEOMETRY_VERTICES_OUT_EXT			2
