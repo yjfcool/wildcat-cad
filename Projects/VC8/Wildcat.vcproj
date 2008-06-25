@@ -1821,6 +1821,18 @@
 				Name="Shaders"
 				>
 				<File
+					RelativePath="..\..\Source\Shaders\cci_plM.fsh"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath="..\..\Source\Shaders\nc23_bezier_plH.gsh"
 					>
 					<FileConfiguration
@@ -1973,6 +1985,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Source\Geometry\geometric_intersection.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Source\Geometry\geometric_line.h"
 					>
 				</File>
@@ -2026,6 +2042,26 @@
 				</File>
 				<File
 					RelativePath="..\..\Source\Geometry\geometric_algorithms_triangulation.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometric_intersection_curve.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometric_intersection_line.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometric_intersection_point.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometric_intersection_surface.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Geometry\geometric_intersection_trimsurface.cpp"
 					>
 				</File>
 				<File
@@ -2261,35 +2297,11 @@
 				Name="Headers"
 				>
 				<File
-					RelativePath="..\..\Source\Topology\edge_use.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Topology\face_use.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Topology\loop_use.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Topology\shell_use.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Topology\topology.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\Source\Topology\topology_model.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\Source\Topology\topology_region.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Topology\vertex_use.h"
+					RelativePath="..\..\Source\Topology\topology_types.h"
 					>
 				</File>
 				<File
@@ -2301,91 +2313,14 @@
 				Name="Source"
 				>
 				<File
-					RelativePath="..\..\Source\Topology\edge_use.cpp"
+					RelativePath="..\..\Source\Topology\topology_intersect.cpp"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\Source\Topology\face_use.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\Source\Topology\loop_use.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\Source\Topology\shell_use.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\Source\Topology\topology_model.cpp"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
-						ExcludedFromBuild="true"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -2401,44 +2336,16 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\Source\Topology\topology_region.cpp"
+					RelativePath="..\..\Source\Topology\topology_slice.cpp"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\Source\Topology\vertex_use.cpp"
+					RelativePath="..\..\Source\Topology\topology_subtract.cpp"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\Source\Topology\topology_union.cpp"
+					>
 				</File>
 			</Filter>
 		</Filter>
