@@ -36,7 +36,6 @@
 
 
 /*** Locally Defined Values ***/
-#define TRIMSURFACE_TEX_LOCATION				0
 #define TRIMSURFACE_MAX_TEX_WIDTH				1024
 #define TRIMSURFACE_MAX_TEX_HEIGHT				1024
 
@@ -56,7 +55,6 @@ struct WCTrimTriangulation {
 	GLuint numTriangles;
 	GLuint vertexBuffer;
 	GLuint indexBuffer;
-	bool outside;
 };
 
 
@@ -69,18 +67,16 @@ typedef std::list<std::pair<WCGeometricCurve*,bool> > WCTrimProfile;
 class WCTrimmedNurbsSurface : public WCNurbsSurface {
 protected:
 	WCGeometryContext							*_context;											//!< Geometry context object
-	std::list<WCTrimTriangulation>				_triList;											//!< List of trim triangulations
 	std::list<WCTrimProfile>					_profileList;										//!< List of profiles
 	WCMatrix4									_trimMatrix, _invTrimMatrix;						//!< Orientation matrices
 	GLuint										_trimTexture;										//!< Trim texture
-	WPFloat										_width, _height;									//!< Width and height of the surface
-	WPUInt										_texWidth, _texHeight;								//!< Trim texture width and height
+	GLuint										_texWidth, _texHeight;								//!< Trim texture width and height
 
 private:
 	//Private Methods
-	void ClearTriangulations(void);																	//!< Clear all triangulations (GL buffers)
-	void GenerateTrimList(void);																	//!< Generate trim list
-	void GenerateTexture(void);																		//!< Generate texture for display
+	GLfloat* PointInversion(std::list<WCVector4> &boundaryList);									//!< Invert list of points
+	void GenerateTriangulations(std::list<WCTrimTriangulation> &triList);							//!< Generate triangulation list
+	void ClearTriangulations(std::list<WCTrimTriangulation> &triList);								//!< Clear all triangulations (GL buffers)
 	//Hidden Constructors
 	WCTrimmedNurbsSurface();																		//!< Deny access to default constructor
 public:
@@ -106,8 +102,8 @@ public:
 	virtual void ReceiveNotice(WCObjectMsg msg, WCObject *sender);									//!< Receive messages from other objects
 
 	//Original Member Functions
-	virtual std::vector<GLfloat*> GenerateClientBuffers(WPUInt &lodU, WPUInt &lodV);				//!< Generate uo to LOD (vert, tex, norm, index) - put in RAM
-	virtual void GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vector<GLuint> &buffers);	//!< Generate uo to LOD (vert, tex, norm, index) - put in VRAM
+	void GenerateTrimTexture(GLuint &texWidth, GLuint &texHeight, GLuint &texture, const bool &managed);//!< Generate trim texture
+	void ReleaseTrimTexture(GLuint &texture);														//!< Release the trim texture
 
 	//Operator Overloads
 	WCTrimmedNurbsSurface& operator=(const WCTrimmedNurbsSurface &surface);							//!< Equals operator

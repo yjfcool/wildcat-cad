@@ -124,9 +124,10 @@ std::list<WCVector4> MinimumBoundingRectangle(const std::list<WCVector4> &pointL
 
 
 GLint* TriangulatePolygon(const std::list<WCVector4> &pointList);
+GLint* TriangulatePolygon(GLfloat *pointList, const GLuint &numPoints);
 
 	
-std::list<WCVector4> BuildBoundaryList(std::list<std::pair<WCGeometricCurve*,bool> > &curveList,
+void BuildBoundaryList(std::list<std::pair<WCGeometricCurve*,bool> > &curveList, std::list<WCVector4> &outputList,
 												const bool &detailed, const WPFloat &tol=GEOMETRY_DEFAULT_TOLERANCE);
 
 	

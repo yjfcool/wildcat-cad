@@ -120,7 +120,7 @@ void WCModePartShaftCreate::ProcessProfiles(const std::list<WCSketchProfile*> &p
 		//Only use exterior profiles
 		if ((*profileIter) == this->_profiles.front()) {
 			//Get list of boundary points (using control points is fine)
-			tmpList = (*profileIter)->BoundaryList(false);
+			(*profileIter)->BoundaryList(false, tmpList);
 			//Merge all lists together
 			inputList.splice(inputList.begin(), tmpList);
 		}

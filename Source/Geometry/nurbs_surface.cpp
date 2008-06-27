@@ -819,12 +819,12 @@ GLuint* WCNurbsSurface::GenerateIndex(const WPUInt &lodU, const WPUInt &lodV, co
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
 		//Copy data into buffer object
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(GLuint), data, GL_STATIC_DRAW);	
-		/*** Debug ***
+/*** Debug ***
 		 std::cout << "Generate Index Values: " << size << std::endl;	
 		 GLint *data2 = (GLint*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_ONLY);
 		 for (int i=0; i<size/3; i++) printf("\t%d: %d %d %d\n", i, data2[i*3], data2[i*3+1], data2[i*3+2]);
 		 glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);	
-		 /*** Debug ***/
+/*** Debug ***/
 		//Clean up and report errors
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);	
 		if (glGetError() != GL_NO_ERROR) 
@@ -916,18 +916,8 @@ WCNurbsSurface::WCNurbsSurface(const WCNurbsSurface &surf) : ::WCGeometricSurfac
 
 WCNurbsSurface::~WCNurbsSurface() {
 	//See if need to Delete the buffers
-	if (!this->_buffers.empty()) {
-		glDeleteBuffers(1, &(this->_buffers.at(NURBSSURFACE_VERTEX_BUFFER)));
-		glDeleteBuffers(1, &(this->_buffers.at(NURBSSURFACE_INDEX_BUFFER)));
-		glDeleteBuffers(1, &(this->_buffers.at(NURBSSURFACE_NORMAL_BUFFER)));
-		glDeleteBuffers(1, &(this->_buffers.at(NURBSSURFACE_TEXCOORD_BUFFER)));
-	}
-	if (!this->_altBuffers.empty()) {
-		delete this->_altBuffers.at(NURBSSURFACE_VERTEX_BUFFER);
-		delete this->_altBuffers.at(NURBSSURFACE_INDEX_BUFFER);
-		delete this->_altBuffers.at(NURBSSURFACE_NORMAL_BUFFER);
-		delete this->_altBuffers.at(NURBSSURFACE_TEXCOORD_BUFFER);
-	}
+	if (!this->_buffers.empty()) this->ReleaseBuffers(this->_buffers);
+	if (!this->_altBuffers.empty()) this->ReleaseBuffers(this->_altBuffers);
 	//Clear the collection of control points
 	this->_controlPoints.clear();
 	//Delete the knot point array
@@ -1022,7 +1012,6 @@ void WCNurbsSurface::Render(const GLuint &defaultProg, const WCColor &color, con
 	WPUInt lodV = STDMAX((WPUInt)(this->_cpV * 5), (WPUInt)(lengthV * sqrt(zoom) / NURBSSURFACE_RENDER_ACCURACY));
 	WPFloat factorU = (WPFloat)this->_lodU / (WPFloat)lodU;
 	WPFloat factorV = (WPFloat)this->_lodV / (WPFloat)lodV;
-
 	//See if need to regenerate
 	if ((factorU < NURBSSURFACE_RENDER_LOWER) || (factorU > NURBSSURFACE_RENDER_UPPER) ||
 		(factorV < NURBSSURFACE_RENDER_LOWER) || (factorV > NURBSSURFACE_RENDER_UPPER))  {
@@ -1032,10 +1021,11 @@ void WCNurbsSurface::Render(const GLuint &defaultProg, const WCColor &color, con
 		//Mark as dirty
 		this->IsVisualDirty(true);
 	}
+
 	//Check to see if surface needs to be generated
 	if (this->IsVisualDirty()) {
 		//Generate the server buffer of data
-		this->GenerateServerBuffers(this->_lodU, this->_lodV, this->_buffers);
+		this->GenerateServerBuffers(this->_lodU, this->_lodV, this->_buffers, true);
 		//Mark as clean
 		this->IsVisualDirty(false);
 	}
@@ -1310,26 +1300,81 @@ std::pair<WCVector4,WCVector4> WCNurbsSurface::PointInversion(const WCVector4 &p
 }
 
 
-std::vector<GLfloat*> WCNurbsSurface::GenerateClientBuffers(WPUInt &lodU, WPUInt &lodV) {
-	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateClientBuffers - Not yet implemented.");
-	return std::vector<GLfloat*>();
+std::vector<GLfloat*> WCNurbsSurface::GenerateClientBuffers(WPUInt &lodU, WPUInt &lodV, const bool &managed) {
+	//Make sure LOD >= 2
+	lodU = STDMAX(lodU, (WPUInt)2);
+	lodV = STDMAX(lodV, (WPUInt)2);
+
+	std::vector<GLuint> dummy;
+	std::vector<GLfloat*> buffers;
+	//See if numVerts < NURBSSURFACE_SIZE4_CUTOFF
+	if (lodU * lodV < NURBSSURFACE_SIZE4_CUTOFF) {
+		//Generate the buffers of data using size4 method
+		buffers = this->GenerateSurfaceSize4(lodU, lodV, false, dummy);
+	}
+	//Low generation only on LOD > MaxTextureSize || PerfLevel == Low
+	else if ( (lodU > (WPUInt)this->_context->CurveMaxTextureSize()) ||
+			 (lodV > (WPUInt)this->_context->CurveMaxTextureSize()) ||
+			 (this->_context->SurfacePerformanceLevel() == NURBSSURFACE_PERFLEVEL_LOW) ) {
+		//Generate the buffers of data using low method
+		buffers = this->GenerateSurfaceLow(lodU, lodV, false, dummy);
+	}
+	//Medium generation only if PerfLevel == Med
+	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_MEDIUM) {
+		//Generate the buffer of data using medium method
+		buffers = this->GenerateSurfaceMedium(lodU, lodV, false, dummy);
+	}
+	//High generation only if perf level == High
+	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_HIGH) {
+		//Generate the buffer of data using high method
+		buffers = this->GenerateSurfaceHigh(lodU, lodV, false, dummy);
+	}
+	//Error path
+	else {
+		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateServerBuffer - Unknown generation path.");
+		//throw error
+	}
+	//Generate index buffer
+	GLuint buffer = 0;
+	GLuint *indexBuffer = GenerateIndex(lodU, lodV, false, buffer);
+	buffers.push_back((GLfloat*)indexBuffer);
+/*** Debug ***
+	 std::cout << "Generate Client Buffers (" << lodU << " x " << lodV << ")\n";
+	 GLfloat *data = buffers.at(0);
+	 for (int i=0; i<lodU*lodV; i++) 
+		printf("\t%d: %f %f %f %f\n", i, data[i*4], data[i*4+1], data[i*4+2], data[i*4+3]);
+ /*** Debug ***/
+	
+	//Return the buffers
+	return buffers;
 }
 
 
-void WCNurbsSurface::GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vector<GLuint> &buffers) {
+void WCNurbsSurface::ReleaseBuffers(std::vector<GLfloat*> &buffers) {
+	//Make sure there are atleast 4 to delete
+	if (this->_altBuffers.size() >= 4) {
+		delete buffers.at(NURBSSURFACE_VERTEX_BUFFER);
+		delete buffers.at(NURBSSURFACE_INDEX_BUFFER);
+		delete buffers.at(NURBSSURFACE_NORMAL_BUFFER);
+		delete buffers.at(NURBSSURFACE_TEXCOORD_BUFFER);
+	}
+}
+
+
+void WCNurbsSurface::GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vector<GLuint> &buffers, const bool &managed) {
 	//Make sure LOD >= 2
 	lodU = STDMAX(lodU, (WPUInt)2);
 	lodV = STDMAX(lodV, (WPUInt)2);
 	//Make sure buffers has 4 elements
-	if (buffers.size() != 4) {
+	if (buffers.size() < 4) {
 		//Clear the buffer
 		buffers.clear();
 		//Put in four 0 elements
 		buffers = std::vector<GLuint>(4, 0);
 	}
 
-	//See if numVerts < NURBSSURFACE_SIZE4_CUTOFF
-	if (lodU * lodV < NURBSSURFACE_SIZE4_CUTOFF) {
+	//See if numVerts < NURBSSURFACE_SIZE4_CUTOFF or degree 1
+	if ((lodU * lodV < NURBSSURFACE_SIZE4_CUTOFF) || (this->_degreeU == 1) || (this->_degreeV == 1)) {
 		//Generate the buffers of data using size4 method
 		this->GenerateSurfaceSize4(lodU, lodV, true, buffers);
 	}
@@ -1359,6 +1404,17 @@ void WCNurbsSurface::GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vect
 	GLuint buffer = 0;
 	GenerateIndex(lodU, lodV, true, buffer);
 	buffers.at(NURBSSURFACE_INDEX_BUFFER) = buffer;
+}
+
+
+void WCNurbsSurface::ReleaseBuffers(std::vector<GLuint> &buffers) {
+	//Make sure there are some values
+	if (this->_buffers.size() >= 4) {
+		glDeleteBuffers(1, &(buffers.at(NURBSSURFACE_VERTEX_BUFFER)));
+		glDeleteBuffers(1, &(buffers.at(NURBSSURFACE_INDEX_BUFFER)));
+		glDeleteBuffers(1, &(buffers.at(NURBSSURFACE_NORMAL_BUFFER)));
+		glDeleteBuffers(1, &(buffers.at(NURBSSURFACE_TEXCOORD_BUFFER)));
+	}	
 }
 
 

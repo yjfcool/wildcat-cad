@@ -182,3 +182,18 @@ GLint* __WILDCAT_NAMESPACE__::TriangulatePolygon(const std::list<WCVector4> &poi
 	//Return the list of triangles
 	return triangles;
 }
+
+
+GLint* __WILDCAT_NAMESPACE__::TriangulatePolygon(GLfloat *pointList, const GLuint &numPoints) {
+	//Really really hacky -- create list of points
+	std::list<WCVector4> pList;
+	WCVector4 pt;
+	for (GLuint i=0; i<numPoints; i++) {
+		//Create point
+		pt.Set(pointList[i*2], pointList[i*2+1], 0.0, 1.0);
+		pList.push_back(pt);
+	}
+	//Return the pointer to the list
+	return TriangulatePolygon(pList);
+}
+

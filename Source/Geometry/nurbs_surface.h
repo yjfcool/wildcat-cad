@@ -165,8 +165,11 @@ public:
 	virtual void ReceiveNotice(WCObjectMsg msg, WCObject *sender);									//!< Receive messages from other objects
 
 	//Original Member Functions
-	virtual std::vector<GLfloat*> GenerateClientBuffers(WPUInt &lodU, WPUInt &lodV);				//!< Generate uo to LOD (vert, tex, norm, index) - put in RAM
-	virtual void GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vector<GLuint> &buffers);	//!< Generate uo to LOD (vert, tex, norm, index) - put in VRAM
+	std::vector<GLfloat*> GenerateClientBuffers(WPUInt &lodU, WPUInt &lodV,	const bool &managed);	//!< Generate uo to LOD (vert, tex, norm, index) - put in RAM
+	void ReleaseBuffers(std::vector<GLfloat*> &buffers);											//!< Manage the release of buffer resources
+	void GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vector<GLuint> &buffers,			//!< Generate uo to LOD (vert, tex, norm, index) - put in VRAM
+													const bool &managed);
+	void ReleaseBuffers(std::vector<GLuint> &buffers);												//!< Manage the release of buffer resources
 	void InsertKnotU(const WPFloat &u, const WPUInt &multiplicity=1);								//!< Insert a knot a parametric value u
 	void InsertKnotV(const WPFloat &v, const WPUInt &multiplicity=1);								//!< Insert a knot a parametric value v	
 	void RefineKnot(void);																			//!< Refine the curve with multiple knot insertions

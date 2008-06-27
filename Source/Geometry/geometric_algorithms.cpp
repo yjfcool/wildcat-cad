@@ -481,9 +481,11 @@ std::list<WCVector4> _MinimumBoundingRectangleArea(std::list<WCVector4>::iterato
 
 
 /*** Algorithm taken from http://cgm.cs.mcgill.ca/~orm/maer.html called rotating calipers,
-//     More detail information taken from "Computational Geometry with the Rotating Calipers",
-//	   submitted as Master's Thesis by Hormoz Pirzadeh, 1999 ***/
-// Algorithm actually is just brute force for now.  Want to move to above algorithm...
+ * More detail information taken from "Computational Geometry with the Rotating Calipers",
+ *  submitted as Master's Thesis by Hormoz Pirzadeh, 1999
+ * Algorithm actually is just brute force for now.  Want to move to above algorithm...
+ * It is important to note that the winding order of the points is maintained
+***/
 std::list<WCVector4> __WILDCAT_NAMESPACE__::MinimumBoundingRectangle(const std::list<WCVector4> &pointList,
 	const WCMatrix4 &toPlane, const WCMatrix4 &fromPlane) {
 	//Check for size 1 or 2
@@ -538,14 +540,17 @@ std::list<WCVector4> __WILDCAT_NAMESPACE__::MinimumBoundingRectangle(const std::
  *	The only tricky part of this algorithm is that the end point of one curve is the same as the starting point of the next curve.  So,
  *	in order to not have duplicate points the last point (remember to keep curve direction in mind) is ignored.
  ***/
-std::list<WCVector4> __WILDCAT_NAMESPACE__::BuildBoundaryList(std::list<std::pair<WCGeometricCurve*,bool> > &curveList,
+void __WILDCAT_NAMESPACE__::BuildBoundaryList(std::list<std::pair<WCGeometricCurve*,bool> > &curveList, std::list<WCVector4> &outputList,
 	const bool &detailed, const WPFloat &tolerance) {
-	std::list<WCVector4> pointList;
+//	std::list<WCVector4> pointList;
 	WCGeometricLine *line;
 	WCNurbsCurve *nurb;
 	std::vector<WCVector4> controlPoints;
 	WCVector4 point;
-	
+
+	//Make sure the output list is clear
+	outputList.clear();
+
 	//Go through each curve and get boundary points
 	std::list< std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
 	for(curveIter = curveList.begin(); curveIter != curveList.end(); curveIter++) {
@@ -554,9 +559,9 @@ std::list<WCVector4> __WILDCAT_NAMESPACE__::BuildBoundaryList(std::list<std::pai
 		//If it is a line, process as such
 		if (line != NULL) {
 			//Process forwards line (only get end of line)
-			if ((*curveIter).second) pointList.push_back( line->End() );
+			if ((*curveIter).second) outputList.push_back( line->End() );
 			//Process backwards line
-			else pointList.push_back( line->Begin() );
+			else outputList.push_back( line->Begin() );
 		}
 		//Try to cast to a nurbs curve
 		else {
@@ -566,7 +571,7 @@ std::list<WCVector4> __WILDCAT_NAMESPACE__::BuildBoundaryList(std::list<std::pai
 				//If detailed, get all evaluated points
 				if (detailed) {
 					//Need to determine best LOD
-					WPUInt lod = (WPUInt)(nurb->Length(tolerance) / tolerance);
+					WPUInt lod = 256; //(WPUInt)(nurb->Length(tolerance) / tolerance);
 					GLfloat* data = nurb->GenerateClientBuffer(lod, true);
 					//Process forwards
 					if ((*curveIter).second) {
@@ -574,7 +579,7 @@ std::list<WCVector4> __WILDCAT_NAMESPACE__::BuildBoundaryList(std::list<std::pai
 							//Get point data
 							point.Set(data[i*4], data[i*4+1], data[i*4+2], 1.0);
 							//Put point into list
-							pointList.push_back(point);
+							outputList.push_back(point);
 						}
 					}
 					//Process backwards
@@ -583,7 +588,7 @@ std::list<WCVector4> __WILDCAT_NAMESPACE__::BuildBoundaryList(std::list<std::pai
 							//Get point data
 							point.Set(data[i*4], data[i*4+1], data[i*4+2], 1.0);
 							//Put point into list
-							pointList.push_back(point);
+							outputList.push_back(point);
 						}
 					}
 					//Clean up the data from the curve
@@ -602,7 +607,7 @@ std::list<WCVector4> __WILDCAT_NAMESPACE__::BuildBoundaryList(std::list<std::pai
 							//Set the weight to 1.0
 							point.L(1.0);
 							//Add point to point line
-							pointList.push_back(point);
+							outputList.push_back(point);
 						}
 					}
 					//Process curve backwards
@@ -614,7 +619,7 @@ std::list<WCVector4> __WILDCAT_NAMESPACE__::BuildBoundaryList(std::list<std::pai
 							//Set the weight to 1.0
 							point.L(1.0);
 							//Add point to point line
-							pointList.push_back(point);
+							outputList.push_back(point);
 						}				
 					}
 				}
@@ -623,12 +628,16 @@ std::list<WCVector4> __WILDCAT_NAMESPACE__::BuildBoundaryList(std::list<std::pai
 			else {
 				CLOGGER_ERROR(WCLogManager::RootLogger(), "GeometricAlgorithms::BuildBoundaryList - Unknown curve type.");
 				//throw error
-				return std::list<WCVector4>();
+				return;
 			}
 		}
 	}
-	//Return the complete list
-	return pointList;
+/*** DEBUG ***
+	std::cout << "Boundary Points --->\n";
+	for (std::list<WCVector4>::iterator ptIter=outputList.begin(); ptIter != outputList.end(); ptIter++) {
+		std::cout << *ptIter << std::endl;
+	}
+/*** DEBUG ***/
 }
 
 

@@ -897,6 +897,8 @@
 		586BA53E0DABDE8F00E2DF91 /* dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = dialog.mm; path = ../../Source/Application/MacOS/dialog.mm; sourceTree = SOURCE_ROOT; };
 		587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_arc_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_arc_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		588D973F0DAFA99800BDDE8D /* assert_exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = assert_exception.h; path = ../../Source/Utility/assert_exception.h; sourceTree = SOURCE_ROOT; };
+		5899BE1A0E13DCFE00210936 /* trimsurface_inversion.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = trimsurface_inversion.fsh; path = ../../Source/Shaders/trimsurface_inversion.fsh; sourceTree = SOURCE_ROOT; };
+		5899BE4D0E1407CD00210936 /* trimsurface_triangulate.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = trimsurface_triangulate.fsh; path = ../../Source/Shaders/trimsurface_triangulate.fsh; sourceTree = SOURCE_ROOT; };
 		58AD01DA0DF986E500ED713F /* geometric_intersection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geometric_intersection.h; path = ../../Source/Geometry/geometric_intersection.h; sourceTree = SOURCE_ROOT; };
 		58AD01F10DF98A3000ED713F /* geometric_intersection_point.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_intersection_point.cpp; path = ../../Source/Geometry/geometric_intersection_point.cpp; sourceTree = SOURCE_ROOT; };
 		58AD021F0DF997B700ED713F /* geometric_intersection_line.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_intersection_line.cpp; path = ../../Source/Geometry/geometric_intersection_line.cpp; sourceTree = SOURCE_ROOT; };
@@ -1571,6 +1573,8 @@
 		585F35490D68B20200673AE6 /* Trimmed Surface */ = {
 			isa = PBXGroup;
 			children = (
+				5899BE1A0E13DCFE00210936 /* trimsurface_inversion.fsh */,
+				5899BE4D0E1407CD00210936 /* trimsurface_triangulate.fsh */,
 				585F35710D68B26600673AE6 /* trimsurface_vis.fsh */,
 			);
 			name = "Trimmed Surface";

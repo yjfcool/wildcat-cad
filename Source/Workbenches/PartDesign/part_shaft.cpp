@@ -176,7 +176,7 @@ std::list<WCTrimProfile> WCPartShaft::GenerateFrontProfile(const WCRay &ray) {
 		//Only use profile if it is an outside profile
 		if ((*profileIter) == this->_profiles.front()) {
 			//Build the boundary list (true is for detailed)
-			tmpList = (*profileIter)->BoundaryList(true);
+			(*profileIter)->BoundaryList(true, tmpList);
 //			for(std::list<WCVector4>::iterator iter = tmpList.begin(); iter != tmpList.end(); iter++) std::cout << *iter << std::endl;
 			//Splice it into the end of the overall list
 			inputList.splice(inputList.end(), tmpList);
@@ -346,7 +346,7 @@ void WCPartShaft::GenerateBackProfile(const WCRay &ray) {
 		//Only use profile if it is an outside profile
 		if ((*profileIter) == this->_profiles.front()) {
 			//Build the boundary list (true is for detailed)
-			tmpList = (*profileIter)->BoundaryList(true);
+			(*profileIter)->BoundaryList(true, tmpList);
 //			for(std::list<WCVector4>::iterator iter = tmpList.begin(); iter != tmpList.end(); iter++) std::cout << *iter << std::endl;
 			//Splice it into the end of the overall list
 			inputList.splice(inputList.end(), tmpList);

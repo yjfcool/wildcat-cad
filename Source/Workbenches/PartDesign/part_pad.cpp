@@ -314,7 +314,7 @@ void WCPartPad::GenerateTopBottom(void) {
 	std::list<WCVector4> boundaryList;
 	for (listIter = this->_profiles.begin(); listIter != this->_profiles.end(); listIter++) {
 		//Build list of boundary points from original exterior profile
-		boundaryList = (*listIter).front()->BoundaryList(false);
+		(*listIter).front()->BoundaryList(false, boundaryList);
 		//Find minimum bounding rectangle for bounding points
 		WCPartPlane *refPlane = this->_profiles.front().front()->Sketch()->ReferencePlane();
 		std::list<WCVector4> baseCorners = MinimumBoundingRectangle(boundaryList, refPlane->InverseTransformMatrix(), refPlane->TransformMatrix());
@@ -325,6 +325,9 @@ void WCPartPad::GenerateTopBottom(void) {
 		corners[3] = baseCorners.front(); baseCorners.pop_front();		// Lower-right
 		//Clear the boundary list
 		boundaryList.clear();
+
+		//Need to make sure that ordering is consistent with sketch plane of profiles
+		//...
 
 		/*** Bottom Trim Surface ***/
 

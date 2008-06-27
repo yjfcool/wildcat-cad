@@ -483,8 +483,60 @@ void WCGeometryContext::StopSurface(void) {
 /***********************************************~***************************************************/
 
 
+void WCGeometryContext::StartTrimSurface(void) {
+	//Make sure there is support for needed extensions
+	if (WCAdapter::HasGLEXTTextureFloat() && WCAdapter::HasGLARBTextureRectangle() && WCAdapter::HasGLEXTFramebufferObject()) {
+		//Get program IDs
+		this->_tsPointInversion = this->_shaderManager->ProgramFromName("trimsurface_inversion");
+		this->_tsTriangulate = this->_shaderManager->ProgramFromName("trimsurface_triangulate");
+		//Set up trim texture generation texture
+		glGenTextures(1, &(this->_tsInTex));
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_tsInTex);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, WCAdapter::GetMax2DTextureSize(), 1, 0, GL_RGBA, GL_FLOAT, NULL);
+		GLenum err = glGetError();
+		if (err != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartTrimSurface - Create Texture: " << err);
+		//Set up trim texture generation texture
+		glGenTextures(1, &(this->_tsOutTex));
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_tsOutTex);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, WCAdapter::GetMax2DTextureSize(), 1, 0, GL_RGBA, GL_FLOAT, NULL);
+		err = glGetError();
+		if (err != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartTrimSurface - Create Texture: " << err);
+		//Generate the framebuffer object
+		glGenFramebuffersEXT(1, &(this->_tsFramebuffer));
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_tsFramebuffer);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB,this->_tsOutTex, 0);
+		err = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+		//Check for errors
+		if (err != GL_FRAMEBUFFER_COMPLETE_EXT) 
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartTrimSurface - Framebuffer is not complete.");		
+	}
+	//No texture float support, this could be tough
+	else {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartTrimSurface - No support for needed extensions.");
+	}
+}
+
+
+void WCGeometryContext::StopTrimSurface(void) {
+}
+
+
+/***********************************************~***************************************************/
+
+
 void WCGeometryContext::StartIntersection(void) {
-	if (WCAdapter::HasGLEXTTextureFloat() && WCAdapter::HasGLARBTextureRectangle()) {
+	//Make sure there is support for needed extensions
+	if (WCAdapter::HasGLEXTTextureFloat() && WCAdapter::HasGLARBTextureRectangle() && WCAdapter::HasGLEXTFramebufferObject()) {
 		//Get program IDs
 		this->_cciM = this->_shaderManager->ProgramFromName("cci_plM");
 //		this->_sciM = this->_shaderManager->ProgramFromName("sci_plM");
@@ -519,7 +571,27 @@ void WCGeometryContext::StartIntersection(void) {
 		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);					
 		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, WCAdapter::GetMax2DTextureSize(), 1, 0, GL_RGBA, GL_FLOAT, NULL);
 		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartIntersection - Right Texture.");
-
+		//Setup output texture				
+		glGenTextures(1, &(this->_cciOutTex));
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_cciOutTex);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);		
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);					
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, WCAdapter::GetMax2DTextureSize(), 1, 0, GL_RGBA, GL_FLOAT, NULL);
+		//Setup the framebuffer object
+		glGenFramebuffersEXT(1, &(this->_cciFramebuffer));
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_cciFramebuffer);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_cciOutTex, 0);
+		GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+		if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT)
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartIntersection - Framebuffer is not complete.");				
+		//Clean up a bit
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		if (glGetError() != GL_NO_ERROR) 
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartIntersection - GL error at Framebuffer Creation.");
 		//Setup the programs
 		glUseProgram(this->_cciM);
 		glUniform1i(glGetUniformLocation(this->_cciM, "leftVerts"), 0);
@@ -531,7 +603,7 @@ void WCGeometryContext::StartIntersection(void) {
 	}
 	//No texture float support, this could be tough
 	else {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartIntersection - No support for GL_EXT_TEXTURE_FLOAT");
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartIntersection - No support for needed extensions");
 	}
 }
 
@@ -560,6 +632,8 @@ WCGeometryContext::WCGeometryContext(const WPGLContext &context, WCShaderManager
 	this->StartCurve();
 	//Initialize all NURBS surface parameters
 	this->StartSurface();
+	//Initialize all Trimmed NURBS surface parameters
+	this->StartTrimSurface();
 	//Initialze all Intersection parameters
 	this->StartIntersection();
 }
@@ -570,6 +644,8 @@ WCGeometryContext::~WCGeometryContext() {
 	this->StopCurve();
 	//Conclude all NURBS surface parameters
 	this->StopSurface();
+	//Conclude all Trimmed NURBS surface parameters
+	this->StopTrimSurface();
 	//Conclude all Intersection parameters
 	this->StopIntersection();
 }

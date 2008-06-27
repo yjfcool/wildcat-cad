@@ -77,18 +77,28 @@ private:
 	GLint										_nsMaxTexSize;										//!< Medium maxium texture size	
 	GLuint										_nsFramebuffer;										//!< Framebuffer for generate use
 
+	//Trim NURBS Surface Objects
+	GLint										*_tsLocations;										//!< Values for locations of uniforms
+	GLuint										_tsPointInversion, _tsTriangulate;					//!< Static shader programs for trims
+	GLuint										_tsInTex, _tsOutTex;								//!< Textures for trim generation
+	GLuint										_tsFramebuffer;										//!< Framebuffer for trim surface use
+
 	//Intersection Objects
 	GLint										*_iLocations;										//!< Values for locations of uniforms
 	GLuint										_cciM, _sciM, _ssiM, _tciM, _tsiM, _ttiM;			//!< Static shader programs for intersection
 	GLuint										_cciLeftTex, _cciRightTex, _ssiLeftTex, _ssiRightTex;//!< Textures for intersection
+	GLuint										_cciOutTex, _ssiOutTex;								//!< Output textures for framebuffers
+	GLuint										_cciFramebuffer, _ssiFramebuffer;					//!< Framebuffers for intersection
 	
 	//Private Initalization Methods
-	void StartCurve(void);
-	void StopCurve(void);
-	void StartSurface(void);
-	void StopSurface(void);
-	void StartIntersection(void);
-	void StopIntersection(void);
+	void StartCurve(void);																			//!< Set up all NURBS curve global objects
+	void StopCurve(void);																			//!< Destroy all NURBS curve global objects
+	void StartSurface(void);																		//!< Set up all NURBS surface global objects
+	void StopSurface(void);																			//!< Destroy all NURBS surface global objects
+	void StartTrimSurface(void);																	//!< Set up all Trimmed NURBS surface global objects
+	void StopTrimSurface(void);																		//!< Destroy all Trimmed NURBS curve global objects
+	void StartIntersection(void);																	//!< Set up all Intersection global objects
+	void StopIntersection(void);																	//!< Destroy all Intersection global objects
 	
 	//Deny Access
 	WCGeometryContext();																			//!< Deny access to default constructor
@@ -104,7 +114,7 @@ public:
 	inline WPGLContext Context(void)			{ return this->_glContext; }						//!< Get the GL context
 	inline WCShaderManager* ShaderManager(void)	{ return this->_shaderManager; }					//!< Get the shader manager
 	
-	//Curve Values Access Methods
+	//NURBS Curve Access Methods
 	inline WPUInt CurvePerformanceLevel(void) const		{ return this->_ncPerfLevel; }				//!< Get curve generation performance level
 	inline GLint* CurveLocations(void)					{ return this->_ncLocations; }				//!< Get curve locations
 	inline GLuint CurveDefaultProgram(void) const		{ return this->_ncDefault; }				//!< Get curve default program
@@ -122,7 +132,7 @@ public:
 	inline GLint CurveMaxTextureSize(void) const		{ return this->_ncMaxTexSize; }				//!< Get curve maximum texture size
 	inline GLuint CurveFramebuffer(void) const			{ return this->_ncFramebuffer; }			//!< Get curve framebuffer
 	
-	//Surface Values Access Methods
+	//NURBS Surface Access Methods
 	inline WPUInt SurfacePerformanceLevel(void) const	{ return this->_nsPerfLevel; }				//!< Get surface generation performance level
 	inline GLint* SurfaceLocations(void)				{ return this->_nsLocations; }				//!< Get surface locations
 	inline GLuint SurfaceDefaultProgram(void) const		{ return this->_nsDefault; }				//!< Get surface default program
@@ -143,6 +153,14 @@ public:
 	inline GLint SurfaceMaxTextureSize(void) const		{ return this->_nsMaxTexSize; }				//!< Get surface maximum texture size
 	inline GLuint SurfaceFramebuffer(void) const		{ return this->_nsFramebuffer; }			//!< Get surface framebuffer
 
+	//Trimmed NURBS Surface Access Methods
+	inline GLint* TrimLocations(void)					{ return this->_tsLocations; }				//!< Get trim surface locations
+	inline GLuint TrimInversionProgram(void) const		{ return this->_tsPointInversion; }			//!< Get point inversion program
+	inline GLuint TrimTriangulateProgram(void) const	{ return this->_tsTriangulate; }			//!< Get triangulation program
+	inline GLuint TrimInTex(void) const					{ return this->_tsInTex; }					//!< Get trim surface input texture
+	inline GLuint TrimOutTex(void) const				{ return this->_tsOutTex; }					//!< Get trim surface output texture
+	inline GLuint TrimFramebuffer(void) const			{ return this->_tsFramebuffer; }			//!< Get trim surface framebuffer
+	
 	//Intersection Values Access Methods
 	inline GLint* IntersectionLocations(void)			{ return this->_iLocations; }				//!< Get intersection locations
 	inline GLuint CurveCurveProgram(void) const			{ return this->_cciM; }						//!< Get curve-curve program
@@ -153,7 +171,10 @@ public:
 	inline GLuint TrimTrimProgram(void) const			{ return this->_ttiM; }						//!< Get trimSurface-trimSurface program
 	inline GLuint CCILeftTex(void) const				{ return this->_cciLeftTex; }				//!< Get CCI left texture
 	inline GLuint CCIRightTex(void) const				{ return this->_cciRightTex; }				//!< Get CCI right texture
-
+	inline GLuint CCIOutTex(void) const					{ return this->_cciOutTex; }				//!< Get CCI output texture
+	inline GLuint SSIOutTex(void) const					{ return this->_ssiOutTex; }				//!< Get SSI output texture
+	inline GLuint CurveCurveFramebuffer(void) const		{ return this->_cciFramebuffer; }			//!< Get CCI framebuffer
+	inline GLuint SurfaceSurfaceFramebuffer(void) const	{ return this->_ssiFramebuffer; }			//!< Get SSI framebuffer
 
 	/*** Non-Member Functions ***/
 	friend std::ostream& operator<<(std::ostream& out, const WCGeometryContext &context);			//!< Overloaded output operator

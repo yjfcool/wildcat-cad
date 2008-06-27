@@ -249,7 +249,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 
 	/*** Bind to framebuffer object ***/
 	
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, left->Context()->CurveFramebuffer());
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, left->Context()->CurveCurveFramebuffer());
 	//Check to make sure the framebuffer is ready
 	GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 	//Check the status of the framebuffer object

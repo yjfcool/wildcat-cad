@@ -209,7 +209,11 @@ bool WCSketchProfile::DetermineIsSelfIntersecting(void) {
 void WCSketchProfile::ForceClockwise(void) {
 	bool ccw = false;
 	//Check on size 1 special case
-	if (this->_curveList.size() == 1) ccw = true;
+	if (this->_curveList.size() == 1) {
+//		std::list<WCVector4> boundaryPoints;
+//		BuildBoundaryList(this->_curveList, boundaryPoints, true, 0.01);
+		ccw = true;
+	}
 	//Otherwise...
 	else {
 		//Find point and tangent at curve mid-point
@@ -476,7 +480,8 @@ WCProfileType WCSketchProfile::Categorize(WCSketchProfile *profile) {
 ***/
 GLuint WCSketchProfile::Triangulate(GLuint &vertexBuffer, GLuint &indexBuffer) {
 	//Put all vertices into a list
-	std::list<WCVector4> boundaryList = this->BoundaryList(true);
+	std::list<WCVector4> boundaryList;
+	this->BoundaryList(true, boundaryList);
 	std::list<WCVector4>::iterator boundaryIter;
 	//Define some arrays and variables
 	int numVerts = (int)boundaryList.size();
