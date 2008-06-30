@@ -61,7 +61,7 @@ vec4 CalcDegree3(float u) {
 
 void main(void) {
 	//Get basic vertex info
-	vec4 inVert = texture2DRect(verts, gl_FragCoord.xy);
+	vec4 inVert = texture2DRect(verts, floor(gl_FragCoord.xy));
 	if (numParams.x == 2)	gl_FragColor = CalcDegree2(inVert.x);
 	else					gl_FragColor = CalcDegree3(inVert.x);
 }

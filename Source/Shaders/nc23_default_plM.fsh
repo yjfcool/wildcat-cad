@@ -71,7 +71,7 @@ void main(void) {
 	float w;
 	
 	//Get basic vertex info
-	vec4 inVert = texture2DRect(verts, gl_FragCoord.xy);
+	vec4 inVert = texture2DRect(verts, floor(gl_FragCoord.xy));
 	//Find the span for the vertex
 	span = FindSpan(inVert.x);
 	BasisValues(inVert.x, span);
