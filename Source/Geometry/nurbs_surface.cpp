@@ -1358,6 +1358,8 @@ void WCNurbsSurface::ReleaseBuffers(std::vector<GLfloat*> &buffers) {
 		delete buffers.at(NURBSSURFACE_NORMAL_BUFFER);
 		delete buffers.at(NURBSSURFACE_TEXCOORD_BUFFER);
 	}
+	//Clear the list
+	buffers.clear();
 }
 
 

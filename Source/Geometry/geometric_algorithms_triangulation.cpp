@@ -190,7 +190,7 @@ GLint* __WILDCAT_NAMESPACE__::TriangulatePolygon(GLfloat *pointList, const GLuin
 	WCVector4 pt;
 	for (GLuint i=0; i<numPoints; i++) {
 		//Create point
-		pt.Set(pointList[i*2], pointList[i*2+1], 0.0, 1.0);
+		pt.Set(pointList[i*4], pointList[i*4+1], 0.0, 1.0);
 		pList.push_back(pt);
 	}
 	//Return the pointer to the list

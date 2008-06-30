@@ -30,6 +30,7 @@
 #include "Geometry/geometry_context.h"
 #include "Geometry/nurbs_curve.h"
 #include "Geometry/nurbs_surface.h"
+#include "Geometry/trimmed_nurbs_surface.h"
 
 
 /***********************************************~***************************************************/
@@ -364,7 +365,7 @@ void WCGeometryContext::StartSurface(void) {
 			//Generate the framebuffer object
 			glGenFramebuffersEXT(1, &(this->_nsFramebuffer));
 			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_nsFramebuffer);
-			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB,this->_nsVertTex, 0);
+			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_nsVertTex, 0);
 			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_nsNormTex, 0);
 			retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 			//Check for errors
@@ -489,6 +490,16 @@ void WCGeometryContext::StartTrimSurface(void) {
 		//Get program IDs
 		this->_tsPointInversion = this->_shaderManager->ProgramFromName("trimsurface_inversion");
 		this->_tsTriangulate = this->_shaderManager->ProgramFromName("trimsurface_triangulate");
+		//Set some program values
+		this->_tsLocations = new GLint[1];
+		this->_tsLocations[TRIMSURFACE_LOC_PI_PARAMS] = glGetUniformLocation(this->_tsPointInversion, "params");
+		this->_tsLocations[TRIMSURFACE_LOC_PI_SURFDATA] = glGetUniformLocation(this->_tsPointInversion, "surfData");
+		glUseProgram(this->_tsPointInversion);
+		glUniform1i(glGetUniformLocation(this->_tsPointInversion, "verts"), 0);
+		glUniform1i(this->_tsLocations[TRIMSURFACE_LOC_PI_SURFDATA], 1);
+		glUseProgram(0);
+		//Determine maximum texture size
+		this->_tsMaxTexSize = STDMIN(WCAdapter::GetMax2DTextureSize(), (GLint)TRIMSURFACE_MAX_TEX_SIZE);
 		//Set up trim texture generation texture
 		glGenTextures(1, &(this->_tsInTex));
 		glActiveTexture(GL_TEXTURE0);
@@ -497,9 +508,20 @@ void WCGeometryContext::StartTrimSurface(void) {
 		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, WCAdapter::GetMax2DTextureSize(), 1, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, this->_tsMaxTexSize, this->_tsMaxTexSize, 0, GL_RGBA, GL_FLOAT, NULL);
 		GLenum err = glGetError();
-		if (err != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartTrimSurface - Create Texture: " << err);
+		if (err != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartTrimSurface - Create Input Texture: " << err);
+		//Set up trim texture generation texture
+		glGenTextures(1, &(this->_tsSurfTex));
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_tsSurfTex);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, TRIMSURFACE_PI_TEX_SIZE, TRIMSURFACE_PI_TEX_SIZE, 0, GL_RGBA, GL_FLOAT, NULL);
+		err = glGetError();
+		if (err != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartTrimSurface - Create Surface Texture: " << err);
 		//Set up trim texture generation texture
 		glGenTextures(1, &(this->_tsOutTex));
 		glActiveTexture(GL_TEXTURE0);
@@ -508,17 +530,17 @@ void WCGeometryContext::StartTrimSurface(void) {
 		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, WCAdapter::GetMax2DTextureSize(), 1, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, this->_tsMaxTexSize, this->_tsMaxTexSize, 0, GL_RGBA, GL_FLOAT, NULL);
 		err = glGetError();
-		if (err != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartTrimSurface - Create Texture: " << err);
+		if (err != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartTrimSurface - Create Output Texture: " << err);
 		//Generate the framebuffer object
 		glGenFramebuffersEXT(1, &(this->_tsFramebuffer));
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_tsFramebuffer);
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB,this->_tsOutTex, 0);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_tsOutTex, 0);
 		err = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 		//Check for errors
 		if (err != GL_FRAMEBUFFER_COMPLETE_EXT) 
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartTrimSurface - Framebuffer is not complete.");		
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartTrimSurface - Framebuffer is not complete: " << err);		
 	}
 	//No texture float support, this could be tough
 	else {
@@ -528,6 +550,18 @@ void WCGeometryContext::StartTrimSurface(void) {
 
 
 void WCGeometryContext::StopTrimSurface(void) {
+	//Delete programs
+	glDeleteProgram(this->_tsPointInversion);
+	glDeleteProgram(this->_tsTriangulate);
+	//Delete locations
+	if (this->_tsLocations != NULL) delete this->_tsLocations;
+	//Delete framebuffers
+	glDeleteFramebuffersEXT(1, &this->_tsFramebuffer);
+	//Delete the generation textures
+	glDeleteTextures(1, &this->_tsInTex);
+	glDeleteTextures(1, &this->_tsOutTex);
+	//Check for errors
+	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StopTrimSurface - Unspecified error.");
 }
 
 

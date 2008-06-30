@@ -133,7 +133,7 @@ public:
 	WCNurbsSurface(xercesc::DOMElement *element, WCSerialDictionary *dictionary);					//!< Persistance constructor
 	virtual ~WCNurbsSurface();																		//!< Default destructor
 	
-	//General Access Functions
+	//General Access Methods
 	inline WCGeometryContext* Context(void)		{ return this->_context; }							//!< Get the geometry context
 	inline std::vector<WCVector4> ControlPoints(void){ return this->_controlPoints; }				//!< Get the control points
 	void ControlPoints(const std::vector<WCVector4> &controlPoints);								//!< Set the control points
@@ -151,7 +151,7 @@ public:
 	inline WPUInt DegreeU(void) const				{ return this->_degreeU; }						//!< Get the U degree of the curve	
 	inline WPUInt DegreeV(void) const				{ return this->_degreeV; }						//!< Get the V degree of the curve	
 	
-	//Inherited Member Functions
+	//Inherited Member Methods
 	virtual WPFloat Area(const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON);					//!< Return the area of the surface
 	virtual WCVector4 Evaluate(const WPFloat &u, const WPFloat &v);									//!< Evaluate a specific point on the surface
 	virtual WCVector4 Derivative(const WPFloat &u, const WPUInt &uDer,								//!< Get the surface derivative
@@ -164,7 +164,7 @@ public:
 	virtual void Render(const GLuint &defaultProg, const WCColor &color, const WPFloat &zoom);		//!< Render the object
 	virtual void ReceiveNotice(WCObjectMsg msg, WCObject *sender);									//!< Receive messages from other objects
 
-	//Original Member Functions
+	//Original Member Methods
 	std::vector<GLfloat*> GenerateClientBuffers(WPUInt &lodU, WPUInt &lodV,	const bool &managed);	//!< Generate uo to LOD (vert, tex, norm, index) - put in RAM
 	void ReleaseBuffers(std::vector<GLfloat*> &buffers);											//!< Manage the release of buffer resources
 	void GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vector<GLuint> &buffers,			//!< Generate uo to LOD (vert, tex, norm, index) - put in VRAM

@@ -36,8 +36,12 @@
 
 
 /*** Locally Defined Values ***/
-#define TRIMSURFACE_MAX_TEX_WIDTH				1024
-#define TRIMSURFACE_MAX_TEX_HEIGHT				1024
+//Size Constants
+#define TRIMSURFACE_MAX_TEX_SIZE				512
+#define TRIMSURFACE_PI_TEX_SIZE					32
+//Shader Location Constants
+#define TRIMSURFACE_LOC_PI_PARAMS				0
+#define TRIMSURFACE_LOC_PI_SURFDATA				1
 
 
 /*** Namespace Declaration ***/
@@ -68,15 +72,18 @@ class WCTrimmedNurbsSurface : public WCNurbsSurface {
 protected:
 	WCGeometryContext							*_context;											//!< Geometry context object
 	std::list<WCTrimProfile>					_profileList;										//!< List of profiles
+	bool										_isTextureDirty;									//!< Texture dirty flag
 	WCMatrix4									_trimMatrix, _invTrimMatrix;						//!< Orientation matrices
 	GLuint										_trimTexture;										//!< Trim texture
 	GLuint										_texWidth, _texHeight;								//!< Trim texture width and height
 
 private:
 	//Private Methods
-	GLfloat* PointInversion(std::list<WCVector4> &boundaryList);									//!< Invert list of points
-	void GenerateTriangulations(std::list<WCTrimTriangulation> &triList);							//!< Generate triangulation list
 	void ClearTriangulations(std::list<WCTrimTriangulation> &triList);								//!< Clear all triangulations (GL buffers)
+	void GeneratePISurfaceTexture(const GLfloat* buffer, const WPUInt &lodU, const WPUInt &lodV);	//!< Setup PI surface texture
+	GLfloat* PointInversionHigh(std::list<WCVector4> &boundaryList);								//!< Invert list of points - GPU-based method
+	GLfloat* PointInversionLow(std::list<WCVector4> &boundaryList);									//!< Invert list of points - CPU-based method
+	void GenerateTriangulations(std::list<WCTrimTriangulation> &triList);							//!< Generate triangulation list
 	//Hidden Constructors
 	WCTrimmedNurbsSurface();																		//!< Deny access to default constructor
 public:
@@ -89,8 +96,12 @@ public:
 	WCTrimmedNurbsSurface(const WCTrimmedNurbsSurface &surf);										//!< Copy constructor
 	WCTrimmedNurbsSurface(xercesc::DOMElement *element, WCSerialDictionary *dictionary);			//!< Persistance constructor
 	virtual ~WCTrimmedNurbsSurface();																//!< Default destructor
-	
-	//Inherited Member Functions
+
+	//General Access Methods
+	inline bool IsTextureDirty(void)			{ return this->_isTextureDirty; }					//!< Get the texture dirty state
+	inline void IsTextureDirty(const bool &flg) { this->_isTextureDirty = flg; }					//!< Set the texture dirty state
+
+	//Inherited Member Methods
 	virtual WPFloat Area(const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON);					//!< Return the area of the surface
 	virtual WCVector4 Evaluate(const WPFloat &u, const WPFloat &v);									//!< Evaluate a specific point on the surface
 	virtual WCVector4 Derivative(const WPFloat &u, const WPUInt &uDer,								//!< Get the surface derivative

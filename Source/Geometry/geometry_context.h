@@ -79,8 +79,9 @@ private:
 
 	//Trim NURBS Surface Objects
 	GLint										*_tsLocations;										//!< Values for locations of uniforms
+	GLint										_tsMaxTexSize;										//!< Maxium texture size	
 	GLuint										_tsPointInversion, _tsTriangulate;					//!< Static shader programs for trims
-	GLuint										_tsInTex, _tsOutTex;								//!< Textures for trim generation
+	GLuint										_tsInTex, _tsSurfTex, _tsOutTex;					//!< Textures for trim generation
 	GLuint										_tsFramebuffer;										//!< Framebuffer for trim surface use
 
 	//Intersection Objects
@@ -155,9 +156,11 @@ public:
 
 	//Trimmed NURBS Surface Access Methods
 	inline GLint* TrimLocations(void)					{ return this->_tsLocations; }				//!< Get trim surface locations
+	inline GLint TrimMaxTextureSize(void) const			{ return this->_tsMaxTexSize; }				//!< Get trim maximum texture size
 	inline GLuint TrimInversionProgram(void) const		{ return this->_tsPointInversion; }			//!< Get point inversion program
 	inline GLuint TrimTriangulateProgram(void) const	{ return this->_tsTriangulate; }			//!< Get triangulation program
 	inline GLuint TrimInTex(void) const					{ return this->_tsInTex; }					//!< Get trim surface input texture
+	inline GLuint TrimSurfTex(void) const				{ return this->_tsSurfTex; }				//!< Get trim surface surface data texture
 	inline GLuint TrimOutTex(void) const				{ return this->_tsOutTex; }					//!< Get trim surface output texture
 	inline GLuint TrimFramebuffer(void) const			{ return this->_tsFramebuffer; }			//!< Get trim surface framebuffer
 	

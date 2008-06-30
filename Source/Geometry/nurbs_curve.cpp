@@ -392,6 +392,7 @@ GLfloat* WCNurbsCurve::GenerateCurveMedium(const WPUInt &lod, const bool &server
 	/*** Save output texture into vertex VBO using simple memory read ***/
 
 	GLfloat *vertData = new GLfloat[lod * NURBSCURVE_FLOATS_PER_VERTEX];
+	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 	glReadPixels(0, 0, lod, 1, GL_RGBA, GL_FLOAT, vertData);
 /*** Debug ***
 	std::cout << "Medium Generation Vertices: " << lod << std::endl;	

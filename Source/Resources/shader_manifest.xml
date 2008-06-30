@@ -18,6 +18,8 @@
 		<shader name="ns_default_plM" type="GL_FRAGMENT_SHADER" filename="ns_default_plM.fsh" />
 		<shader name="ns23_default_plM" type="GL_FRAGMENT_SHADER" filename="ns23_default_plM.fsh" />
 		<shader name="ns23_bezier_plM" type="GL_FRAGMENT_SHADER" filename="ns23_bezier_plM.fsh" />
+		<shader name="trimsurface_inversion" type="GL_FRAGMENT_SHADER" filename="trimsurface_inversion.fsh" />
+		<shader name="trimsurface_triangulate" type="GL_FRAGMENT_SHADER" filename="trimsurface_triangulate.fsh" />
 		<shader name="cci_plM" type="GL_FRAGMENT_SHADER" filename="cci_plM.fsh" />
 	</shaders>
 	<programs>
@@ -64,10 +66,6 @@
 			<shader>passthrough</shader>
 			<shader>nc23_default_plM</shader>
 		</program>
-		<program name="cci_plM">
-			<shader>passthrough</shader>
-			<shader>cci_plM</shader>
-		</program>
 		<program name="nc23_bezier_plM">
 			<shader>passthrough</shader>
 			<shader>nc23_bezier_plM</shader>
@@ -101,6 +99,18 @@
 		<program name="ns23_bezier_plM">
 			<shader>passthrough</shader>
 			<shader>ns23_bezier_plM</shader>
+		</program>
+		<program name="trimsurface_inversion">
+			<shader>passthrough</shader>
+			<shader>trimsurface_inversion</shader>
+		</program>
+		<program name="trimsurface_triangulate">
+			<shader>passthrough</shader>
+			<shader>trimsurface_triangulate</shader>
+		</program>
+		<program name="cci_plM">
+			<shader>passthrough</shader>
+			<shader>cci_plM</shader>
 		</program>
 	</programs>
 </manifest>

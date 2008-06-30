@@ -43,7 +43,7 @@
 #define TRIMSURFACE_EQUALITY_EPSILON			0.001
 #define TRIMSURFACE_RENDER_ACCURACY				0.20
 #define TRIMSURFACE_RENDER_LOWER				0.85
-#define TRIMSURFACE_RENDER_UPPER				1.15
+#define TRIMSURFACE_RENDER_UPPER				1.55
 
 
 /***********************************************~***************************************************/
@@ -61,25 +61,144 @@ void WCTrimmedNurbsSurface::ClearTriangulations(std::list<WCTrimTriangulation> &
 }
 
 
-#define TRIMSURFACE_LOD_TMP						32
-GLfloat* WCTrimmedNurbsSurface::PointInversion(std::list<WCVector4> &boundaryList) {
-/*** DEBUG ***
-	for (WPUInt i=0; i<this->_controlPoints.size(); i++) {
-		std::cout << "CP-" << i << ": " << this->_controlPoints.at(i) << std::endl;
+void WCTrimmedNurbsSurface::GeneratePISurfaceTexture(const GLfloat* buffer, const WPUInt &lodU, const WPUInt &lodV) {
+	//Set up some parameters
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	//Set up texture
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_context->TrimSurfTex());
+	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, buffer);
+	//Check for GL errors here
+	if (glGetError() != GL_NO_ERROR) 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::GeneratePISurfaceTexture Error - Surface Texture Setup.");
+}
+
+
+
+GLfloat* WCTrimmedNurbsSurface::PointInversionHigh(std::list<WCVector4> &boundaryList) {
+	GLuint numVerts = (GLuint)boundaryList.size();
+	//Get the surface data
+	WPUInt lodU=TRIMSURFACE_PI_TEX_SIZE, lodV=TRIMSURFACE_PI_TEX_SIZE;
+	std::vector<GLfloat*> buffers = this->WCNurbsSurface::GenerateClientBuffers(lodU, lodV, true);
+	if ((lodU != TRIMSURFACE_PI_TEX_SIZE) || (lodV != TRIMSURFACE_PI_TEX_SIZE))
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::PointInversionHigh - Altered LOD.");
+
+	//Setup program, parameters, and surface texture
+	glUseProgram(this->_context->TrimInversionProgram());
+	glUniform2i(this->_context->TrimLocations()[TRIMSURFACE_LOC_PI_PARAMS], lodU, lodV);
+	//Copy surface data into a texture
+	this->GeneratePISurfaceTexture(buffers[0], lodU, lodV);
+	//Release the surface buffers
+	this->ReleaseBuffers(buffers);
+
+	/*** Setup framebuffer object ***/
+	
+	//Bind to framebuffer
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_context->TrimFramebuffer());
+	//Check to make sure the framebuffer is ready
+	GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	//Check the status of the framebuffer object
+	if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) { 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::PointInversionHigh - Framebuffer is not complete: " << retVal); 
+		return NULL;
 	}
-/*** DEBUG ***/
+
+	/*** Setup input texture ***/
+	
+	//Allocate space for the input texture (w * h * RGBA)
+	GLuint texWidth = this->_context->TrimMaxTextureSize();
+	GLuint texHeight = ceil((GLfloat)numVerts / (GLfloat)texWidth);
+	GLfloat *pointData = new GLfloat[texWidth * texHeight * 4];
+	GLuint index = 0;
+	WCVector4 pt;
+	//Initialize data in the array
+	for (std::list<WCVector4>::iterator listIter=boundaryList.begin(); listIter != boundaryList.end(); listIter++) {
+		pt = (*listIter);
+		pointData[index*4] =   pt.I();					//Set first position to x
+		pointData[index*4+1] = pt.J();					//Set second position to y
+		pointData[index*4+2] = pt.K();					//Set third position to z
+		pointData[index*4+3] = 1.0;						//Set fourth position to 1.0
+		index++;
+	}
+	//Setup and copy the data into the texture
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_context->TrimInTex());
+	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, texWidth, texHeight, GL_RGBA, GL_FLOAT, pointData);
+	//Check for errors
+	if (glGetError() != GL_NO_ERROR) 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::PointInversionHigh - Setup Input Texture.");
+	//Delete data array
+	delete pointData;
+
+	 /*** Setup and render ***/
+	
+	//Save the viewport and polygon mode bits
+	glPushAttrib(GL_VIEWPORT_BIT | GL_POLYGON_BIT);
+	//Disable some settings
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	//Set up the viewport and polygon mode
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glViewport(0, 0, texWidth, texHeight);
+	GLfloat vertData[] = { -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0 };
+	GLfloat texData[] = { -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0 };
+	//Turn on vertex arrays
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(2, GL_FLOAT, 0, vertData);
+	//Turn on texturing
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glTexCoordPointer(2, GL_FLOAT, 0, texData);
+	//--- Draw ---
+	glDrawArrays(GL_QUADS, 0, 4);
+	//Clean up
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	//Restore the viewport and polygon mode
+	glPopAttrib();
+	//Re-enable some settings
+	glEnable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);	
+	//Do some error checking
+	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceMedium - At Render.");
+	
+	/*** Save output textures into vertex VBO and normal VBO using simple memory read ***/
+	
+	//Read the vertex data
+	GLfloat *inverseData = new GLfloat[texHeight * texWidth * 4];
+	glReadPixels(0, 0, texWidth, texHeight, GL_RGBA, GL_FLOAT, inverseData);
+	//Do some error checking
+	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceMedium - At Read Data.");
+
+	/*** Restore the framebuffer ***/
+
+	//Clean up the framebuffer object
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	//Should check for errors here
+	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::PointInversionHigh - At Cleanup.");
+/*** Debug ***
+	 CLOGGER_DEBUG(WCLogManager::RootLogger(), "PointInversion High: " << numVerts);
+	 for (int i=0; i<numVerts; i++)
+		 printf("\t%d: %f %f %f %f\n", i, inverseData[i*4], inverseData[i*4+1], inverseData[i*4+2], inverseData[i*4+3]);
+/*** Debug ***/
+	//Return the array of inverted data
+	return inverseData;
+}
+
+
+GLfloat* WCTrimmedNurbsSurface::PointInversionLow(std::list<WCVector4> &boundaryList) {
+	//Setup a whole lot of variables
 	unsigned int numPoints = boundaryList.size();
-	GLint tmpVal = TRIMSURFACE_LOD_TMP * 4;
+	GLint tmpVal = TRIMSURFACE_PI_TEX_SIZE * 4;
 	WPFloat minDist, dist, leftDist, rightDist, topDist, bottomDist, hSign, vSign, vValue, uValue, uDot, vDot, hDirMag, vDirMag;
-	WPUInt lodU=TRIMSURFACE_LOD_TMP, lodV=TRIMSURFACE_LOD_TMP;
+	WPUInt lodU=TRIMSURFACE_PI_TEX_SIZE, lodV=TRIMSURFACE_PI_TEX_SIZE;
 	//Get the surface data
 	std::vector<GLfloat*> buffers = this->WCNurbsSurface::GenerateClientBuffers(lodU, lodV, true);
-	if ((lodU != TRIMSURFACE_LOD_TMP) || (lodV != TRIMSURFACE_LOD_TMP))
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::PointInversion - Altered LOD.");
+	if ((lodU != TRIMSURFACE_PI_TEX_SIZE) || (lodV != TRIMSURFACE_PI_TEX_SIZE))
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::PointInversionLow - Altered LOD.");
 	WPFloat paraU = 1.0 / ((WPFloat)lodU - 1.0);
 	WPFloat paraV = 1.0 / ((WPFloat)lodV - 1.0);
 	GLfloat* surfData = buffers.at(0);
-	GLfloat* buffer = new GLfloat[numPoints * 2];
+	GLfloat* buffer = new GLfloat[numPoints * 4];
 	GLint markIndex, markU, markV, ptIndex=0, surfIndex;
 	WCVector4 pt, surfPt, center, left, right, top, bottom, hPt, vPt, vDir, hDir, pDir;
 
@@ -149,9 +268,14 @@ GLfloat* WCTrimmedNurbsSurface::PointInversion(std::list<WCVector4> &boundaryLis
 		vDot = vDir.DotProduct(pDir) / (vDirMag * vDirMag);
 		uValue = (paraU * (WPFloat)markU) + (uDot * paraU * hSign);
 		vValue = (paraV * (WPFloat)markV) + (vDot * paraV * vSign);
+		//Bound u and v [0,1]
+		uValue = STDMAX(0.0, STDMIN(1.0, uValue));
+		vValue = STDMAX(0.0, STDMIN(1.0, vValue));
 		//Record [u,v] value into buffer
-		buffer[ptIndex*2] = uValue;			// u value
-		buffer[ptIndex*2 + 1] = vValue;		// v value
+		buffer[ptIndex*4] = uValue;			// u value
+		buffer[ptIndex*4 + 1] = vValue;		// v value
+		buffer[ptIndex*4 + 2] = 0.0;		// non-value
+		buffer[ptIndex*4 + 3] = 1.0;		// non-value
 //		std::cout << ptIndex << ": " << pt << " --> U: " << uValue << ", V: " << vValue << ", UDot: " << uDot << ", VDot: " << vDot << std::endl;
 		ptIndex++;
 	}
@@ -159,7 +283,7 @@ GLfloat* WCTrimmedNurbsSurface::PointInversion(std::list<WCVector4> &boundaryLis
 	this->ReleaseBuffers(buffers);
 /*** DEBUG ***
 	for (int i=0; i<numPoints; i++)
-		std::cout << i << ": " << buffer[i*2] << ", " << buffer[i*2+1] << std::endl;
+		std::cout << i << ": " << buffer[i*4] << ", " << buffer[i*4+1] << std::endl;
 /*** DEBUG ***/
 	//Return the buffer
 	return buffer;
@@ -187,7 +311,10 @@ void WCTrimmedNurbsSurface::GenerateTriangulations(std::list<WCTrimTriangulation
 		numVerts = (GLint)boundaryList.size();
 
 		//Invert all of the points (only u,v values)
-		vertData = this->PointInversion(boundaryList);
+		if (boundaryList.size() > 32)
+			vertData = this->PointInversionHigh(boundaryList);
+		else
+			vertData = this->PointInversionLow(boundaryList);
 		//Triangulate (expects verts in CW order, outputs triangles in CW order)
 		indexData = TriangulatePolygon(vertData, numVerts);
 
@@ -203,7 +330,7 @@ void WCTrimmedNurbsSurface::GenerateTriangulations(std::list<WCTrimTriangulation
 		
 		//Load vertex buffer
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 2 * numVerts, vertData, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * numVerts, vertData, GL_STATIC_DRAW);
 		//Load index buffer
 		glBindBuffer(GL_ARRAY_BUFFER, indexBuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLint) * 3 * triangulation.numTriangles, indexData, GL_STATIC_DRAW);
@@ -230,8 +357,7 @@ void WCTrimmedNurbsSurface::GenerateTriangulations(std::list<WCTrimTriangulation
 	//Check for errors here
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
-		std::cout << error << std::endl;
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::GenerateTrimList - Unspecified GL Error at cleanup.");
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::GenerateTrimList - GL Error at cleanup: " << error);
 	}
 }
 
@@ -244,7 +370,8 @@ WCTrimmedNurbsSurface::WCTrimmedNurbsSurface(WCGeometryContext *context, const s
 	const std::vector<WCVector4> &controlPoints, const WCNurbsMode &modeU, const WCNurbsMode &modeV,
 	const std::vector<WPFloat> &kpU, const std::vector<WPFloat> &kpV) : 
 	:: WCNurbsSurface(context, degreeU, degreeV, cpU, cpV, controlPoints, modeU, modeV, kpU, kpV), _context(context),
-	_profileList(profileList), _trimMatrix(), _invTrimMatrix(), _trimTexture(0),  _texWidth(0), _texHeight(0) {
+	_profileList(profileList), _isTextureDirty(false), _trimMatrix(), _invTrimMatrix(),
+	_trimTexture(0),  _texWidth(0), _texHeight(0) {
 	//Make sure there are some profiles
 	if (this->_profileList.size() == 0) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::WCTrimmedNurbsSurface - No profiles attached.");
@@ -303,6 +430,10 @@ WCRay WCTrimmedNurbsSurface::Tangent(const WPFloat &u, const WPFloat &v) {
 
 std::pair<WCVector4,WCVector4> WCTrimmedNurbsSurface::PointInversion(const WCVector4 &point) {
 	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::PointInversion - Not yet implemented.");
+	//Get point inversion from base surface
+	//...
+	//Look up [uv] coordinates in texture to make sure point is in trimmed surface
+	//...
 	return std::make_pair(WCVector4(), WCVector4());
 }
 
@@ -319,34 +450,42 @@ void WCTrimmedNurbsSurface::Render(const GLuint &defaultProg, const WCColor &col
 
 	//Determine best LOD values
 	WPFloat lengthU = WCNurbs::EstimateLengthU(this->_controlPoints, this->_cpU);
-	WPFloat lU = lengthU * sqrt(zoom) / TRIMSURFACE_RENDER_ACCURACY;
-	WPUInt lodU = STDMAX((WPUInt)(this->_cpU * 5), (WPUInt)lU);
+	WPUInt lodU = STDMAX((WPUInt)(this->_cpU * 5), (WPUInt)(lengthU * sqrt(zoom) / TRIMSURFACE_RENDER_ACCURACY));
 	WPFloat lengthV = WCNurbs::EstimateLengthV(this->_controlPoints, this->_cpV);
-	WPFloat lV = lengthV * sqrt(zoom) / TRIMSURFACE_RENDER_ACCURACY;
-	WPUInt lodV = STDMAX((WPUInt)(this->_cpV * 5), (WPUInt)lV);
+	WPUInt lodV = STDMAX((WPUInt)(this->_cpV * 5), (WPUInt)(lengthV * sqrt(zoom) / TRIMSURFACE_RENDER_ACCURACY));
 	WPFloat factorU = (WPFloat)this->_lodU / (WPFloat)lodU;
 	WPFloat factorV = (WPFloat)this->_lodV / (WPFloat)lodV;
-	//See if need to regenerate
+	//See if need to regenerate underlying surface
 	if ((factorU < TRIMSURFACE_RENDER_LOWER) || (factorU > TRIMSURFACE_RENDER_UPPER) ||
-		(factorV < TRIMSURFACE_RENDER_LOWER) || (factorV > TRIMSURFACE_RENDER_UPPER))  {
+		(factorV < TRIMSURFACE_RENDER_LOWER) || (factorV > TRIMSURFACE_RENDER_UPPER) ||
+		this->IsVisualDirty())  {
 		//Set the new lod
 		this->_lodU = lodU;
 		this->_lodV = lodV;
-		this->_texWidth = (WPUInt)STDMIN(lU * 24.0, 1024.0);
-		this->_texHeight = (WPUInt)STDMIN(lV * 24.0, 1024.0);
-//		std::cout << "TexWidth: " << this->_texWidth << ", Height: " << this->_texHeight << std::endl;
-		//Mark as dirty
-		this->IsVisualDirty(true);
-	}
-
-	//Check to see if surface needs to be generated
-	if (this->IsVisualDirty()) {
 		//Generate the server buffer of data
 		this->GenerateServerBuffers(this->_lodU, this->_lodV, this->_buffers, true);
+		//Mark as clean
+		this->IsVisualDirty(false);
+	}
+	//See if texture forces regen.
+	WPUInt texU = STDMIN((WPUInt)TRIMSURFACE_MAX_TEX_SIZE, (WPUInt)(lengthU * sqrt(zoom) / TRIMSURFACE_RENDER_ACCURACY) * 24);
+	WPUInt texV = STDMIN((WPUInt)TRIMSURFACE_MAX_TEX_SIZE, (WPUInt)(lengthV * sqrt(zoom) / TRIMSURFACE_RENDER_ACCURACY) * 24);
+	texU = STDMAX(texU, (WPUInt)16);
+	texV = STDMAX(texV, (WPUInt)16);
+	factorU = (WPFloat)this->_texWidth / (WPFloat)texU;
+	factorV = (WPFloat)this->_texHeight / (WPFloat)texV;
+	//Check to see if trim texture is dirty
+	if ((factorU < TRIMSURFACE_RENDER_LOWER) || (factorU > TRIMSURFACE_RENDER_UPPER) ||
+		(factorV < TRIMSURFACE_RENDER_LOWER) || (factorV > TRIMSURFACE_RENDER_UPPER) ||
+		this->IsTextureDirty()) {
+//		std::cout << "TexU: " << texU << ", TexV: " << texV << std::endl;
+		//Set the new texture sizes
+		this->_texWidth = texU;
+		this->_texHeight = texV;
 		//Generate the trim texture
 		this->GenerateTrimTexture(this->_texWidth, this->_texHeight, this->_trimTexture, true);		
 		//Mark as clean
-		this->IsVisualDirty(false);
+		this->IsTextureDirty(false);
 	}
 	//Set the rendering program
 	if (this->_renderProg != 0) {
@@ -492,7 +631,7 @@ void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHei
 	glColor3f(1.0, 0.0, 0.0);
 	//Setup vertex buffer
 	glBindBuffer(GL_ARRAY_BUFFER, (*triIter).vertexBuffer );
-	glVertexPointer(2, GL_FLOAT, 0, NULL);
+	glVertexPointer(4, GL_FLOAT, 0, NULL);
 	//Set up index buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*triIter).indexBuffer );
 	glIndexPointer(GL_INT, 0, NULL);
@@ -505,7 +644,7 @@ void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHei
 		glColor3f(0.0, 0.0, 0.0);
 		//Setup vertex buffer
 		glBindBuffer(GL_ARRAY_BUFFER, (*triIter).vertexBuffer );
-		glVertexPointer(2, GL_FLOAT, 0, NULL);
+		glVertexPointer(4, GL_FLOAT, 0, NULL);
 		//Set up index buffer
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*triIter).indexBuffer );
 		glIndexPointer(GL_INT, 0, NULL);

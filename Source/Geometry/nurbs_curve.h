@@ -109,7 +109,7 @@ public:
 	WCNurbsCurve(xercesc::DOMElement *element, WCSerialDictionary *dictionary);						//!< Persistance constructor
 	~WCNurbsCurve();																				//!< Default destructor
 	
-	//General Access Functions
+	//General Access Methods
 	inline WCGeometryContext* Context(void)		{ return this->_context; }							//!< Get the geometry context
 	inline std::vector<WCVector4> ControlPoints(void)	{ return this->_controlPoints; }			//!< Get the control points vector
 	void ControlPoints(const std::vector<WCVector4> &controlPoints);								//!< Set the control points vector
@@ -121,7 +121,7 @@ public:
 	inline WPUInt Degree(void)	const			{ return this->_degree; }							//!< Get the degree of the curve		
 	WPUInt Degree(const WPUInt &degree);															//!< Set the degree of the curve
 	
-	//Inherited Member Functions
+	//Inherited Member Methods
 	WPFloat Length(const WPFloat &tolerance=NURBSCURVE_LENGTH_ACCURACY);							//!< Calculate the length of the curve
 	inline WPFloat EstimateLength(void)			{ return WCNurbs::EstimateLength(this->_controlPoints); } //!< Estimate the length of the curve
 	WCVector4 Evaluate(const WPFloat &u);															//!< Evaluate a specific point on the curve
@@ -131,7 +131,7 @@ public:
 	void Render(const GLuint &defaultProg, const WCColor &color, const WPFloat &zoom);				//!< Render the object
 	void ReceiveNotice(WCObjectMsg msg, WCObject *sender);											//!< Receive messages from other objects
 
-	//Original Member Functions
+	//Original Member Methods
 	GLfloat* GenerateClientBuffer(WPUInt &lod, const bool &managed);								//!< Generate up to LOD vert - put in RAM
 	void ReleaseBuffer(GLfloat* buffer);															//!< Manage the release of buffer resources
 	void GenerateServerBuffer(WPUInt &lod, GLuint &buffer, const bool &managed);					//!< Generate up to LOD vert - put in VRAM
