@@ -107,17 +107,17 @@ GLfloat* WCTrimmedNurbsSurface::PointInversionHigh(std::list<WCVector4> &boundar
 	
 	//Allocate space for the input texture (w * h * RGBA)
 	GLuint texWidth = this->_context->TrimMaxTextureSize();
-	GLuint texHeight = ceil((GLfloat)numVerts / (GLfloat)texWidth);
+	GLuint texHeight = (GLuint)ceil((GLfloat)numVerts / (GLfloat)texWidth);
 	GLfloat *pointData = new GLfloat[texWidth * texHeight * 4];
 	GLuint index = 0;
 	WCVector4 pt;
 	//Initialize data in the array
 	for (std::list<WCVector4>::iterator listIter=boundaryList.begin(); listIter != boundaryList.end(); listIter++) {
 		pt = (*listIter);
-		pointData[index*4] =   pt.I();					//Set first position to x
-		pointData[index*4+1] = pt.J();					//Set second position to y
-		pointData[index*4+2] = pt.K();					//Set third position to z
-		pointData[index*4+3] = 1.0;						//Set fourth position to 1.0
+		pointData[index*4] =   (GLfloat)pt.I();					//Set first position to x
+		pointData[index*4+1] = (GLfloat)pt.J();					//Set second position to y
+		pointData[index*4+2] = (GLfloat)pt.K();					//Set third position to z
+		pointData[index*4+3] = (GLfloat)1.0;					//Set fourth position to 1.0
 		index++;
 	}
 	//Setup and copy the data into the texture
@@ -189,17 +189,17 @@ GLfloat* WCTrimmedNurbsSurface::PointInversionLow(std::list<WCVector4> &boundary
 	//Setup a whole lot of variables
 	unsigned int numPoints = boundaryList.size();
 	GLint tmpVal = TRIMSURFACE_PI_TEX_SIZE * 4;
-	WPFloat minDist, dist, leftDist, rightDist, topDist, bottomDist, hSign, vSign, vValue, uValue, uDot, vDot, hDirMag, vDirMag;
+	GLfloat minDist, dist, leftDist, rightDist, topDist, bottomDist, hSign, vSign, vValue, uValue, uDot, vDot, hDirMag, vDirMag;
 	WPUInt lodU=TRIMSURFACE_PI_TEX_SIZE, lodV=TRIMSURFACE_PI_TEX_SIZE;
 	//Get the surface data
 	std::vector<GLfloat*> buffers = this->WCNurbsSurface::GenerateClientBuffers(lodU, lodV, true);
 	if ((lodU != TRIMSURFACE_PI_TEX_SIZE) || (lodV != TRIMSURFACE_PI_TEX_SIZE))
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::PointInversionLow - Altered LOD.");
-	WPFloat paraU = 1.0 / ((WPFloat)lodU - 1.0);
-	WPFloat paraV = 1.0 / ((WPFloat)lodV - 1.0);
+	GLfloat paraU = (GLfloat)(1.0 / (lodU - 1.0));
+	GLfloat paraV = (GLfloat)(1.0 / (lodV - 1.0));
 	GLfloat* surfData = buffers.at(0);
 	GLfloat* buffer = new GLfloat[numPoints * 4];
-	GLint markIndex, markU, markV, ptIndex=0, surfIndex;
+	GLuint markIndex, markU, markV, ptIndex=0, surfIndex;
 	WCVector4 pt, surfPt, center, left, right, top, bottom, hPt, vPt, vDir, hDir, pDir;
 
 	//Loop through each point - trying to find surface vertex closest to point
@@ -210,11 +210,11 @@ GLfloat* WCTrimmedNurbsSurface::PointInversionLow(std::list<WCVector4> &boundary
 		surfIndex = 0;
 		minDist = 100000.0;
 		//Loop and find the closest point on the surface
-		for (GLint v=0; v<lodV; v++) {
-			for (GLint u=0; u<lodU; u++) {
+		for (GLuint v=0; v<lodV; v++) {
+			for (GLuint u=0; u<lodU; u++) {
 				//Determine distance from point to surface point
 				surfPt.Set(surfData[surfIndex], surfData[surfIndex + 1], surfData[surfIndex + 2], 1.0);
-				dist = surfPt.Distance(pt);
+				dist = (GLfloat)surfPt.Distance(pt);
 				//Is this smaller than current smallest
 				if (dist <= minDist) {
 					//Capture the location
@@ -232,25 +232,25 @@ GLfloat* WCTrimmedNurbsSurface::PointInversionLow(std::list<WCVector4> &boundary
 		//Set left point
 		if (markU > 0) {
 			left.Set(surfData[markIndex-4], surfData[markIndex-3], surfData[markIndex-2], 1.0);
-			leftDist = pt.Distance(left);
+			leftDist = (GLfloat)pt.Distance(left);
 		}
 		else leftDist = 10000.0;
 		//Set the right point
 		if (markU <lodU-1) {
 			right.Set(surfData[markIndex+4], surfData[markIndex+5], surfData[markIndex+6], 1.0);
-			rightDist = pt.Distance(right);
+			rightDist = (GLfloat)pt.Distance(right);
 		}
 		else rightDist = 10000.0;
 		//Set the bottom point
 		if (markV > 0) {
 			bottom.Set(surfData[markIndex-tmpVal], surfData[markIndex-tmpVal+1], surfData[markIndex-tmpVal+2], 1.0);
-			bottomDist = pt.Distance(bottom);
+			bottomDist = (GLfloat)pt.Distance(bottom);
 		}
 		else bottomDist = 10000.0;
 		//Set the top point
 		if (markV < lodV-1) {
 			top.Set(surfData[markIndex+tmpVal], surfData[markIndex+tmpVal+1], surfData[markIndex+tmpVal+2], 1.0);
-			topDist = pt.Distance(top);
+			topDist = (GLfloat)pt.Distance(top);
 		}
 		else topDist = 10000.0;
 		//Set the signs
@@ -260,17 +260,17 @@ GLfloat* WCTrimmedNurbsSurface::PointInversionLow(std::list<WCVector4> &boundary
 		else { vSign = 1.0; vPt = top; }
 		//Convert from triangle values to [uv]
 		vDir = vPt - center;
-		vDirMag = vDir.Magnitude();
+		vDirMag = (GLfloat)vDir.Magnitude();
 		hDir = hPt - center;
-		hDirMag = hDir.Magnitude();
+		hDirMag = (GLfloat)hDir.Magnitude();
 		pDir = pt - center;
-		uDot = hDir.DotProduct(pDir) / (hDirMag * hDirMag);
-		vDot = vDir.DotProduct(pDir) / (vDirMag * vDirMag);
-		uValue = (paraU * (WPFloat)markU) + (uDot * paraU * hSign);
-		vValue = (paraV * (WPFloat)markV) + (vDot * paraV * vSign);
+		uDot = (GLfloat)hDir.DotProduct(pDir) / (hDirMag * hDirMag);
+		vDot = (GLfloat)vDir.DotProduct(pDir) / (vDirMag * vDirMag);
+		uValue = (paraU * (GLfloat)markU) + (uDot * paraU * hSign);
+		vValue = (paraV * (GLfloat)markV) + (vDot * paraV * vSign);
 		//Bound u and v [0,1]
-		uValue = STDMAX(0.0, STDMIN(1.0, uValue));
-		vValue = STDMAX(0.0, STDMIN(1.0, vValue));
+		uValue = (GLfloat)STDMAX(0.0, STDMIN(1.0, uValue));
+		vValue = (GLfloat)STDMAX(0.0, STDMIN(1.0, vValue));
 		//Record [u,v] value into buffer
 		buffer[ptIndex*4] = uValue;			// u value
 		buffer[ptIndex*4 + 1] = vValue;		// v value
