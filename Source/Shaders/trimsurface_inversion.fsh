@@ -1,16 +1,18 @@
 //Uniform Textures
-uniform sampler2DRect				surfData;
 uniform sampler2DRect				verts;
-
+uniform sampler2DRect				surfData;
 #define sd(i,j)						(texture2DRect(surfData, vec2(i,j)))
 
 //Uniform Inputs
-uniform ivec2						params;		// { surfWidth, surfHeight, foo, foo }
+uniform ivec2						params;		// { surfWidth, surfHeight }
+
+
+/*************************************************************************/
 
 
 void main(void) {
 	float dist, minDist = 100000.0;
-	int surfIndex = 0, u, v, markU, markV;
+	int u, v, markU, markV;
 	vec4 surfPt;
 	vec4 pt = texture2DRect(verts, floor(gl_FragCoord.xy));
 	float paraU = 1.0 / (float(params.x) - 1.0);
@@ -84,4 +86,7 @@ void main(void) {
 	//Record [u,v] value into output texture
 	gl_FragColor = vec4(uValue, vValue, 0.0, 1.0);
 }
+
+
+/*************************************************************************/
 

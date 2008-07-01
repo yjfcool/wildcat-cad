@@ -269,8 +269,8 @@ GLfloat* WCTrimmedNurbsSurface::PointInversionLow(std::list<WCVector4> &boundary
 		uValue = (paraU * (GLfloat)markU) + (uDot * paraU * hSign);
 		vValue = (paraV * (GLfloat)markV) + (vDot * paraV * vSign);
 		//Bound u and v [0,1]
-		uValue = (GLfloat)STDMAX(0.0, STDMIN(1.0, uValue));
-		vValue = (GLfloat)STDMAX(0.0, STDMIN(1.0, vValue));
+		uValue = STDMAX((GLfloat)0.0, STDMIN((GLfloat)1.0, uValue));
+		vValue = STDMAX((GLfloat)0.0, STDMIN((GLfloat)1.0, vValue));
 		//Record [u,v] value into buffer
 		buffer[ptIndex*4] = uValue;			// u value
 		buffer[ptIndex*4 + 1] = vValue;		// v value

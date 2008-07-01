@@ -124,6 +124,11 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCG
 			WPFloat p2Proj = p43.DotProduct(p23) / p43mag;
 			WPFloat p3Proj = p21.DotProduct(p31) / p21mag;
 			WPFloat p4Proj = p21.DotProduct(p41) / p21mag;
+			//Bounds check all of the projections
+			p1Proj = STDMAX(0.0, STDMIN(1.0, p1Proj));
+			p2Proj = STDMAX(0.0, STDMIN(1.0, p2Proj));
+			p3Proj = STDMAX(0.0, STDMIN(1.0, p3Proj));
+			p4Proj = STDMAX(0.0, STDMIN(1.0, p4Proj));
 
 			//See if each point is in 0.0 to 1.0 +- tolerance
 			bool p1In = (p1Proj > -tol) && (p1Proj < onePlusTol);
@@ -234,8 +239,8 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCG
 			//Make sure mua and mub are (0.0 +- tol, 1.0 +- tol)
 			if ( (mua < onePlusTol) && (mua > -tol) && (mub < onePlusTol) && (mub > -tol) ) {
 				//Bound mua and mub [0, 1]
-				mua = STDMAX(0.0, STDMIN(mua, 1.0));
-				mub = STDMAX(0.0, STDMIN(mub, 1.0));
+				mua = STDMAX(0.0, STDMIN(1.0, mua));
+				mub = STDMAX(0.0, STDMIN(1.0, mub));
 				//Calculate points and distance between them
 				WCVector4 pointOnFirst = p1 + p21 * mua;
 				WCVector4 pointOnSecond = p3 + p43 * mub;

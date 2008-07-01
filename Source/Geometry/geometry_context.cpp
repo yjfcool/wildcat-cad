@@ -572,9 +572,12 @@ void WCGeometryContext::StartIntersection(void) {
 	//Make sure there is support for needed extensions
 	if (WCAdapter::HasGLEXTTextureFloat() && WCAdapter::HasGLARBTextureRectangle() && WCAdapter::HasGLEXTFramebufferObject()) {
 		//Get program IDs
+		this->_cliM = this->_shaderManager->ProgramFromName("cli_plM");
 		this->_cciM = this->_shaderManager->ProgramFromName("cci_plM");
+//		this->_sliM = this->_shaderManager->ProgramFromName("sli_plM");
 //		this->_sciM = this->_shaderManager->ProgramFromName("sci_plM");
 //		this->_ssiM = this->_shaderManager->ProgramFromName("ssi_plM");
+//		this->_tliM = this->_shaderManager->ProgramFromName("tli_plM");
 //		this->_tciM = this->_shaderManager->ProgramFromName("tci_plM");
 //		this->_tsiM = this->_shaderManager->ProgramFromName("tsi_plM");
 //		this->_ttiM = this->_shaderManager->ProgramFromName("tti_plM");
@@ -582,6 +585,9 @@ void WCGeometryContext::StartIntersection(void) {
 		//Set the locations of each uniform variable
 		this->_iLocations = new GLint[15];
 		this->_iLocations[INTERSECTION_CCI_PARAMS] = glGetUniformLocation(this->_cciM, "params");
+		this->_iLocations[INTERSECTION_CLI_PARAMS] = glGetUniformLocation(this->_cliM, "params");
+		this->_iLocations[INTERSECTION_CLI_LBEGIN] = glGetUniformLocation(this->_cliM, "lineBegin");
+		this->_iLocations[INTERSECTION_CLI_LEND] = glGetUniformLocation(this->_cliM, "lineEnd");
 		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartIntersection - Locations.");
 
 		//Set up CCI left texture
@@ -626,10 +632,14 @@ void WCGeometryContext::StartIntersection(void) {
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 		if (glGetError() != GL_NO_ERROR) 
 			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartIntersection - GL error at Framebuffer Creation.");
-		//Setup the programs
+		//Setup the curve-line program
+		glUseProgram(this->_cliM);
+		glUniform1i(glGetUniformLocation(this->_cliM, "leftVerts"), 0);
+		//Setup the curve-curve program
 		glUseProgram(this->_cciM);
 		glUniform1i(glGetUniformLocation(this->_cciM, "leftVerts"), 0);
 		glUniform1i(glGetUniformLocation(this->_cciM, "rightVerts"), 1);
+		
 		//Stop using any programs
 		glUseProgram(0);
 		//Check for errors

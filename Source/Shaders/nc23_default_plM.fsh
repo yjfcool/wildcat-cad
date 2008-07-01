@@ -8,7 +8,7 @@ uniform sampler2DRect				controlPoints;
 uniform sampler2DRect				verts;
 
 //Uniform Inputs
-uniform ivec4						numParams;			// { degree, cp, kp, foo }
+uniform ivec4						numParams; // { degree, cp, kp, foo }
 vec4 bv;
 
 

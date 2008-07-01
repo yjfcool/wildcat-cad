@@ -18,7 +18,7 @@ void main(void) {
 	float dist, minDist = params.y;
 	
 	//Get basic vertex info
-	vec4 leftVert = texture2DRect(leftVerts, gl_FragCoord.xy);
+	vec4 leftVert = texture2DRect(leftVerts, floor(gl_FragCoord.xy));
 	vec4 rightVert;
 	gl_FragColor = vec4(-1.0, -1.0, -1.0, -1.0);
 	

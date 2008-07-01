@@ -35,6 +35,7 @@
 
 
 /*** Locally Defined Values ***/
+#define CLI_LINE_CUTOFF							5
 #define CCI_CURVE_CUTOFF						3
 
 
@@ -119,13 +120,167 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 /***********************************************~***************************************************/
 
 
+std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsCurve *left,
+	 WCGeometricLine *right, const WPFloat &tol, const unsigned int &flags) {
+	std::list<WCIntersectionResult> results;
+	//See if line intersects curve bounding box
+	//...
+
+	/*** Setup programs and texture locations ***/
+	
+	WPUInt lod = 512;// (WPUInt)(left->EstimateLength() / tol);
+	WPFloat paraFactor = 1.0 / lod, mua, mub;
+	WCVector4 point;
+	GLfloat *leftData = left->GenerateClientBuffer(lod, true);
+	
+	//Set program values
+	glUseProgram(left->Context()->CurveLineProgram());
+	glUniform2f(left->Context()->IntersectionLocations()[INTERSECTION_CLI_PARAMS], (GLfloat)lod, (GLfloat)0.005);
+	glUniform4f(left->Context()->IntersectionLocations()[INTERSECTION_CLI_LBEGIN], 
+				(GLfloat)right->Begin().I(), (GLfloat)right->Begin().J(), (GLfloat)right->Begin().K(), 1.0);
+	glUniform4f(left->Context()->IntersectionLocations()[INTERSECTION_CLI_LEND],
+				(GLfloat)right->End().I(), (GLfloat)right->End().J(), (GLfloat)right->End().K(), 1.0);
+	
+	/*** Bind to framebuffer object ***/
+	
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, left->Context()->CurveCurveFramebuffer());
+	//Check to make sure the framebuffer is ready
+	GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	//Check the status of the framebuffer object
+	if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) { 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveLine Intersection - Framebuffer is not complete.");
+		return results;
+	}
+
+	/*** Setup Left texture ***/
+	
+	//Setup and copy the data into the texture
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	//Set up texture
+	glActiveTexture(GL_TEXTURE0);	
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, left->Context()->CCILeftTex());	
+	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, lod, 1, GL_RGBA, GL_FLOAT, leftData);
+	//Delete data array
+	left->ReleaseBuffer(leftData);
+
+	/*** Setup Viewport and Render***/
+	
+	//Save the viewport setting
+	glPushAttrib(GL_VIEWPORT_BIT);
+	//Disable some settings
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	//Set the viewport
+	glViewport(0, 0, lod, 1);
+	//Draw into the framebuffer
+	GLfloat vertData[] = { -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0 };
+	//Turn on vertex arrays
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(2, GL_FLOAT, 0, vertData);
+	//--- Draw ---
+	glDrawArrays(GL_QUADS, 0, 4);
+	//Clean up
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glPopAttrib();
+	//Re-enable some settings
+	glEnable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+	//Check for errors
+	if (glGetError() != GL_NO_ERROR)
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveLine Intersection - Render.");
+
+	/*** Save output texture into array using simple memory read ***/
+	
+	GLfloat *cciData = new GLfloat[lod * 4];
+	glReadPixels(0, 0, lod, 1, GL_RGBA, GL_FLOAT, cciData);
+	//Clean up the framebuffer object and cp/kp textures
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	//Stop using a program
+	glUseProgram(0);
+	//Check for errors
+	if (glGetError() != GL_NO_ERROR)
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveLine Intersection - Clean up.");
+/*** DEBUG ***
+	 for (int i=0; i<lod; i++)
+	 CLOGGER_ERROR(WCLogManager::RootLogger(), cciData[i*4] << ", " << cciData[i*4+1] << ", " << cciData[i*4+2] << ", " << cciData[i*4+3]);
+ /*** DEBUG ***/
+
+	/*** Scan output for intersection results ***/
+	
+	WCIntersectionResult hit;
+	WPUInt lookAhead, diff;
+	std::vector<WCVector4> curvePoints;
+	//Loop through the output
+	for (WPUInt i=0; i<lod; i++) {
+		//A non -1.0 in the first place indicates a hit
+		if (cciData[i*4] != -1.0) {
+			//Look ahead to see how many hits in a row there are
+			lookAhead = i + 1;
+			while ((cciData[lookAhead * 4] != -1.0) && (lookAhead <lod)) lookAhead++;
+			diff = lookAhead - i;
+			//Diff > CLI_CURVE_CUTOFF is a line
+			if (diff > CLI_LINE_CUTOFF) {
+				CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveLine Intersection - Line overlap not yet implemented.");
+			}
+			//Diff <= CLI_CURVE_CUTOFF is a point
+			else {
+				//Find average of mua, mub, and point
+				mua = 0.0;
+				mub = 0.0;
+				point.Set(0.0, 0.0, 0.0, 0.0);
+				//Accumulate the values
+				for (WPUInt j=i; j<lookAhead; j++) {
+					mua += (j * paraFactor);
+					mub += cciData[j*4];
+					point += WCVector4(cciData[j*4+1], cciData[j*4+2], cciData[j*4+3], 1.0);
+				}
+				//Average the values
+				mua = STDMAX(0.0, STDMIN(mua / diff, 1.0));
+				//Determine actual overall parametric value on right
+				mub = STDMAX(0.0, STDMIN(mub / diff, 1.0));
+				//Get intersection point
+				point /= diff;
+				//Create intersection result
+				hit.type = IntersectPoint;
+				hit.leftParam.I(mua);
+				hit.rightParam.I(mub);
+				hit.leftBoundary = (mua <= paraFactor) || (mua >= 1.0 - paraFactor);
+				hit.rightBoundary = (mub <= paraFactor) || (mub >= 1.0 - paraFactor);
+				//Check if culling end-point intersections
+				if (!(flags & INTERSECT_CULL_BOUNDARY) ||  (!hit.leftBoundary && !hit.rightBoundary)) {
+					//See if genObj
+					if (flags & INTERSECT_GEN_POINTS) {
+						//Create new point
+						WCGeometricPoint *newPoint = new WCGeometricPoint(point);
+						//Add to result struct
+						hit.object = newPoint;
+					}
+					else hit.object = NULL;
+					//Add the intersection to the list
+					std::cout << "CLI - " << hit << point << std::endl;
+					results.push_back(hit);
+				}
+			}
+			//Increment i to lookAhead
+			i = lookAhead;
+		}
+	}
+	//Delete the data buffer
+	delete cciData;
+	//Return the results
+	return results;
+}
+
+/***********************************************~***************************************************/
+
+
 /*** GeometricIntersection -- Curve and Line ***
  * This algorithm tries to intersect a line with a NURBS curve.  The result can be zero to many hits and may include a linear overlaps.
  * General approach is as follows:
  *		1) Generate curve as multiple line segments
  *		2) Intersect each segment with the line.  Store all hit values.
  *		3) If there is a parallel intersection (overlap), need to 
- ***/
+ ***
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsCurve *left,
 	WCGeometricLine *right, const WPFloat &tol, const unsigned int &flags) {
 	std::list<WCIntersectionResult> results;
@@ -291,13 +446,14 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	//Set the viewport
 	glViewport(0, 0, lod, 1);
 	//Draw into the framebuffer
-	glBegin(GL_QUADS);
-	glVertex3f(-1.0, -1.0, 0.0);
-	glVertex3f(-1.0, 1.0, 0.0);
-	glVertex3f(1.0, 1.0, 0.0);	
-	glVertex3f(1.0, -1.0, 0.0);
-	glEnd();
-	//Restore the viewport setting
+	GLfloat vertData[] = { -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0 };
+	//Turn on vertex arrays
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(2, GL_FLOAT, 0, vertData);
+	//--- Draw ---
+	glDrawArrays(GL_QUADS, 0, 4);
+	//Clean up
+	glDisableClientState(GL_VERTEX_ARRAY);
 	glPopAttrib();
 	//Re-enable some settings
 	glEnable(GL_BLEND);
@@ -316,7 +472,11 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	glUseProgram(0);
 	//Check for errors
 	if (glGetError() != GL_NO_ERROR)
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveCurve Intersection - Clean up.");	
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveCurve Intersection - Clean up.");
+/*** DEBUG ***
+	for (int i=0; i<lod; i++)
+		CLOGGER_ERROR(WCLogManager::RootLogger(), cciData[i*4] << ", " << cciData[i*4+1] << ", " << cciData[i*4+2] << ", " << cciData[i*4+3]);
+/*** DEBUG ***/
 
 	/*** Scan output for intersection results ***/
 

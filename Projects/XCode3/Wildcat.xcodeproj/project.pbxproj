@@ -36,6 +36,7 @@
 		5852580B0D7F173A00A0C6C8 /* orientedRect32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585258030D7F173A00A0C6C8 /* orientedRect32.tiff */; };
 		5852580C0D7F173A00A0C6C8 /* parallelogram32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585258040D7F173A00A0C6C8 /* parallelogram32.tiff */; };
 		5852581C0D7F179C00A0C6C8 /* keyhole32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 5852581B0D7F179C00A0C6C8 /* keyhole32.tiff */; };
+		5857A8240E1AC7E100808402 /* cli_plM.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5857A8210E1AC71900808402 /* cli_plM.fsh */; };
 		585F314B0D68AFF600673AE6 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 585F31490D68AFF600673AE6 /* Accelerate.framework */; };
 		585F314C0D68AFF600673AE6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 585F314A0D68AFF600673AE6 /* OpenGL.framework */; };
 		585F319E0D68B01B00673AE6 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 585F319D0D68B01B00673AE6 /* CoreFoundation.framework */; };
@@ -417,6 +418,7 @@
 		585258030D7F173A00A0C6C8 /* orientedRect32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = orientedRect32.tiff; path = ../../Source/Resources/orientedRect32.tiff; sourceTree = SOURCE_ROOT; };
 		585258040D7F173A00A0C6C8 /* parallelogram32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = parallelogram32.tiff; path = ../../Source/Resources/parallelogram32.tiff; sourceTree = SOURCE_ROOT; };
 		5852581B0D7F179C00A0C6C8 /* keyhole32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = keyhole32.tiff; path = ../../Source/Resources/keyhole32.tiff; sourceTree = SOURCE_ROOT; };
+		5857A8210E1AC71900808402 /* cli_plM.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = cli_plM.fsh; path = ../../Source/Shaders/cli_plM.fsh; sourceTree = SOURCE_ROOT; };
 		585F31490D68AFF600673AE6 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		585F314A0D68AFF600673AE6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		585F319D0D68B01B00673AE6 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
@@ -2997,6 +2999,7 @@
 		58F5B4C20E0FFEF000D730F8 /* Intersection */ = {
 			isa = PBXGroup;
 			children = (
+				5857A8210E1AC71900808402 /* cli_plM.fsh */,
 				58F5B4C30E0FFF4200D730F8 /* cci_plM.fsh */,
 			);
 			name = Intersection;
@@ -3160,6 +3163,7 @@
 				58F8E7590E1940910041A7DA /* trimsurface_triangulate.fsh in Resources */,
 				585F357E0D68B26600673AE6 /* trimsurface_vis.fsh in Resources */,
 				58F5B4CE0E10063500D730F8 /* cci_plM.fsh in Resources */,
+				5857A8240E1AC7E100808402 /* cli_plM.fsh in Resources */,
 				585F368F0D68B65E00673AE6 /* Info.plist in Resources */,
 				585F369A0D68B66E00673AE6 /* Credits.rtf in Resources */,
 				585F369B0D68B66E00673AE6 /* InfoPlist.strings in Resources */,

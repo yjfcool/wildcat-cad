@@ -86,7 +86,7 @@ private:
 
 	//Intersection Objects
 	GLint										*_iLocations;										//!< Values for locations of uniforms
-	GLuint										_cciM, _sciM, _ssiM, _tciM, _tsiM, _ttiM;			//!< Static shader programs for intersection
+	GLuint										_cliM, _cciM, _sliM, _sciM, _ssiM, _tliM, _tciM, _tsiM, _ttiM;	//!< Static shader programs for intersection
 	GLuint										_cciLeftTex, _cciRightTex, _ssiLeftTex, _ssiRightTex;//!< Textures for intersection
 	GLuint										_cciOutTex, _ssiOutTex;								//!< Output textures for framebuffers
 	GLuint										_cciFramebuffer, _ssiFramebuffer;					//!< Framebuffers for intersection
@@ -166,9 +166,12 @@ public:
 	
 	//Intersection Values Access Methods
 	inline GLint* IntersectionLocations(void)			{ return this->_iLocations; }				//!< Get intersection locations
+	inline GLuint CurveLineProgram(void) const			{ return this->_cliM; }						//!< Get curve-line program
 	inline GLuint CurveCurveProgram(void) const			{ return this->_cciM; }						//!< Get curve-curve program
+	inline GLuint SurfaceLineProgram(void) const		{ return this->_sliM; }						//!< Get surface-line program
 	inline GLuint SurfaceCurveProgram(void) const		{ return this->_sciM; }						//!< Get surface-curve program
 	inline GLuint SurfaceSurfaceProgram(void) const		{ return this->_ssiM; }						//!< Get surface-surface program
+	inline GLuint TrimLineProgram(void) const			{ return this->_tliM; }						//!< Get trimSurface-line program
 	inline GLuint TrimCurveProgram(void) const			{ return this->_tciM; }						//!< Get trimSurface-curve program
 	inline GLuint TrimSurfaceProgram(void) const		{ return this->_tsiM; }						//!< Get trimSurface-surface program
 	inline GLuint TrimTrimProgram(void) const			{ return this->_ttiM; }						//!< Get trimSurface-trimSurface program

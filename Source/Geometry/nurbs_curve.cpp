@@ -219,7 +219,7 @@ GLfloat* WCNurbsCurve::GenerateCurveHigh(const WPUInt &lod, const bool &server, 
 	this->GenerateKnotPointsVBO();
 	//Setup the right program
 	if ((this->_mode == WCNurbsMode::Bezier()) && (this->_degree <= 3)) {
-		std::cout << "Error in sing Bezier23.\n";
+		std::cout << "Error in using Bezier23.\n";
 //		glUseProgram(this->_context->CurveBezier23());
 //		glUniform4i(WCNurbsCurve::_locations[NURBSCURVE_LOC_PARAMS_BEZIER23], this->_degree, this->_cp, this->_kp, WCNurbsCurve::_vertsPerBatch);
 	}
