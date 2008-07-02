@@ -48,7 +48,8 @@ void WCGeometryContext::StartCurve(void) {
 //	else
 	if (WCAdapter::HasGLARBFragmentShader() && WCAdapter::HasGLARBShadingLanguage100() &&
 		WCAdapter::HasGLARBTextureRectangle() && WCAdapter::HasGLEXTTextureFloat() &&
-		WCAdapter::HasGLARBPixelBufferObject() && WCAdapter::HasGLEXTFramebufferObject()) {
+		WCAdapter::HasGLEXTGPUShader4() && 
+		WCAdapter::HasGLEXTFramebufferObject()) {
 		//All criteria met for medium performance
 		this->_ncPerfLevel = NURBSCURVE_PERFLEVEL_MEDIUM;
 //		CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartCurve - Performance set to Medium.");

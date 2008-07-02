@@ -395,8 +395,9 @@ GLfloat* WCNurbsCurve::GenerateCurveMedium(const WPUInt &lod, const bool &server
 	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 	glReadPixels(0, 0, lod, 1, GL_RGBA, GL_FLOAT, vertData);
 /*** Debug ***
-	std::cout << "Medium Generation Vertices: " << lod << std::endl;	
-	for (int i=0; i<lod; i++) printf("\t%d: %f %f %f %f\n", i, vertData[i*4], vertData[i*4+1], vertData[i*4+2], vertData[i*4+3]);
+	CLOGGER_DEBUG(WCLogManager::RootLogger(), "Medium Generation Vertices: " << lod);
+	for (WPUInt i=0; i<lod; i++) 
+		CLOGGER_DEBUG(WCLogManager::RootLogger(), i << ": " << vertData[i*4] << ", " << vertData[i*4+1] << ", " << vertData[i*4+2] << ", " << vertData[i*4+3]);
 /*** Debug ***/
 	//See if server or client
 	if (server) {
