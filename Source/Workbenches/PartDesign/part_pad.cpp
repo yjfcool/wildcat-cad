@@ -265,6 +265,8 @@ void WCPartPad::GenerateSideSurfaces(void) {
 	for (listIter = this->_profiles.begin(); listIter != this->_profiles.end(); listIter++) {
 		//Mark as exterior
 		exterior = true;
+		//Create list of surfaces in topological order
+		std::list<WCGeometricSurface*> topoList;
 		//Go through the sub-list
 		for (profilesIter = (*listIter).begin(); profilesIter != (*listIter).end(); profilesIter++) {
 			//Get the list of curves
@@ -288,10 +290,14 @@ void WCPartPad::GenerateSideSurfaces(void) {
 				surface->RenderProgram(WCPartFeature::DefaultSurfaceRenderer);
 				//Add surface into surfaces list
 				this->_surfaces.push_back(surface);
+				//Add surface into topo list
+				topoList.push_back(surface);
 			}
 			//Mark as interior
 			exterior = false;
 		}
+		//Add the topoList to the master
+		this->_topoSurfaces.push_back(topoList);
 	}
 }
 
@@ -308,6 +314,7 @@ void WCPartPad::GenerateTopBottom(void) {
 	WCVector4 tmpPt1;
 	std::list< std::list<WCTrimProfile> >::iterator topTrim = this->_topTrims.begin();
 	std::list< std::list<WCTrimProfile> >::iterator bottomTrim = this->_bottomTrims.begin();
+	std::list< std::list<WCGeometricSurface*> >::iterator topoIter = this->_topoSurfaces.begin();
 
 	//Loop through list of profile lists
 	std::list<std::list<WCSketchProfile*> >::iterator listIter;
@@ -350,7 +357,10 @@ void WCPartPad::GenerateTopBottom(void) {
 			*bottomTrim, 1, 1, 2, 2, controlPoints, WCNurbsMode::Default(), WCNurbsMode::Default());
 		bottom->Color( WCPartFeature::DefaultSurfaceColor );
 		bottom->RenderProgram(prog);
-		this->_surfaces.push_front(bottom);
+		//Add to master list
+		this->_surfaces.push_back(bottom);
+		//Add to the topoList
+		(*topoIter).push_back(bottom);
 			
 		/*** Top Trim Surface ***/
 	
@@ -373,39 +383,88 @@ void WCPartPad::GenerateTopBottom(void) {
 			*topTrim, 1, 1, 2, 2, controlPoints, WCNurbsMode::Default(), WCNurbsMode::Default());
 		top->Color( WCPartFeature::DefaultSurfaceColor );
 		top->RenderProgram(prog);
+		//Add to the master list
 		this->_surfaces.push_back(top);
+		//Add to the topo list
+		(*topoIter).push_front(top);
 
 		/*** End Top-Bottom Surface Generation ***/
 		
 		//Make sure to increment topTrim and bottomTrim iterators
 		bottomTrim++;
 		topTrim++;
+		//Increment topoIter
+		topoIter++;
 	}
 }
 
 
-void WCPartPad::GenerateTopology(void) {
+WCTopologyModel* WCPartPad::GenerateTopology(void) {
 	//Create one model
 	WCTopologyModel *model = new WCTopologyModel();
 	//Create one shell per item in main profile list
 	WSTopologyShell *shell;
+	WSFaceUse *faceUse, *topFU, *bottomFU;
+	WSLoopUse *loopUse;
+	WSEdgeUse *edgeUse;
+	WSVertexUse *vertexUse;
 	std::list<WCSketchProfile*>::iterator profilesIter;
 	std::list<std::list<WCSketchProfile*> >::iterator listIter;
+	std::list<std::list<WCGeometricPoint*> >::iterator	pointsListIter = this->_topoPoints.begin();
+	std::list<std::list<WCGeometricCurve*> >::iterator	curvesListIter = this->_topoCurves.begin();
+	std::list<std::list<WCGeometricSurface*> >::iterator surfacesListIter = this->_topoSurfaces.begin();
 	for (listIter = this->_profiles.begin(); listIter != this->_profiles.end(); listIter++) {
 		//Create a shell
-		shell = new WSTopologyShell();
+		shell = new WSTopologyShell;
 		//Set shell values
 		shell->model = model;
 		shell->type = SolidModel;
+		shell->faceUses = NULL;
+		shell->edgeUses = NULL;
+		shell->vertexUses = NULL;
 		//Add shell to model
 		model->AddShell(shell);
-		//Go through the sub-list
-		for (profilesIter = (*listIter).begin(); profilesIter != (*listIter).end(); profilesIter++) {
-			WPUInt numFaces = (*listIter).size() + 2;
+
+		/*** Create all of the FaceUses ***/
+
+		bottomFU = NULL;
+		std::list<WCGeometricSurface*>::iterator surfaceIter;
+		//Go through each surface in this list - order is [T, S, ..., S, B]
+		for (surfaceIter = (*surfacesListIter).begin(); surfaceIter != (*surfacesListIter).end(); surfaceIter++) {
+			//Create a new FaceUse - and set its values
+			faceUse = new WSFaceUse;
+			faceUse->surface = *surfaceIter;
+			faceUse->orientation = true;
+			faceUse->shell = shell;
+			faceUse->prev = bottomFU;
+			//Get the list pointers ready
+			if (bottomFU) bottomFU->next = faceUse;
+			else topFU = faceUse;
+			faceUse->mate = NULL;
+			//Create single loopUse for the face
+//			faceUse->loopUses = new WSLoopUse;
+			faceUse->loopUses = NULL;
+			//Prep for the next faceUse
+			bottomFU = faceUse;
 		}
+		//Do a bit of clean up
+		bottomFU->next = topFU;
+		topFU->prev = bottomFU;
+		shell->faceUses = topFU;
+
+		/*** Create all of the LoopUses ***/
+
+		/*** Create all of the EdgeUses ***/
+		
+		/*** Create all of the VertexUses ***/
+
+		//Move to the next shell
+		pointsListIter++;
+		curvesListIter++;
+		surfacesListIter++;
 	}
-	//Clean up
-	delete model;
+	//Return the model
+	return model;
 }
 
 
@@ -484,7 +543,12 @@ WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, std::list<std::l
 	this->GenerateCurves();
 	this->GenerateSideSurfaces();
 	this->GenerateTopBottom();
-//	this->GenerateTopology();
+	WCTopologyModel* model = this->GenerateTopology();
+	std::cout << *model << std::endl;;
+	//Now union the pad model (both geometric and topological) with the part model
+//	this->_part->Union(model);
+	//Clean up
+	delete model;
 
 	//Finish initialization
 	this->Initialize();

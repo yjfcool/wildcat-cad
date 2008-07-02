@@ -75,7 +75,7 @@ private:
 	void GenerateCurves(void);																		//!< Generate all curves
 	void GenerateSideSurfaces(void);																//!< Generate all surfaces
 	void GenerateTopBottom(void);																	//!< Generate top and bottom surfaces
-	void GenerateTopology(void);																	//!< Generate topology model
+	WCTopologyModel* GenerateTopology(void);														//!< Generate topology model for the extrusion
 	void Initialize(void);																			//!< Initialization method
 	void DetermineDirection(void);																	//!< Determine direction and offsets
 	//Hidden Constructors

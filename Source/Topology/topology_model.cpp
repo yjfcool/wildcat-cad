@@ -33,23 +33,103 @@
 
 /***********************************************~***************************************************/
 
-void _DeleteTopologyVertex(WSVertexUse *vertexUse) {
+WSVertexUse* _DeleteTopologyVertex(WSVertexUse *vertexUse) {
+	//Make sure not NULL
+	if (!vertexUse) return NULL;
+	
+	WSVertexUse* retVal = NULL;
+	//See if not only VU in list
+	if (vertexUse->next != vertexUse) {
+		//Remove vertexUse from list
+		vertexUse->next->prev = vertexUse->prev;
+		vertexUse->prev->next = vertexUse->next;
+		//Set the return value
+		retVal = vertexUse->next;
+	}
+	//Delete the vertexUse
+	delete vertexUse;
+	//Return the return value
+	return retVal;
 }
 
 
-void _DeleteTopologyEdge(WSEdgeUse *edgeUse) {
+WSEdgeUse* _DeleteTopologyEdge(WSEdgeUse *edgeUse) {
+	//Make sure not NULL
+	if (!edgeUse) return NULL;
+	//Delete all vertexUses
+	WSVertexUse *vu = edgeUse->vertexUse;
+	while (vu) vu = _DeleteTopologyVertex(vu);
+
+	//Delete the edgeUse
+	delete edgeUse;
+	//Return the return value
+	return NULL;
 }
 
 
-void _DeleteTopologyLoop(WSLoopUse *loopUse) {
+WSLoopUse* _DeleteTopologyLoop(WSLoopUse *loopUse) {
+	//Make sure not NULL
+	if (!loopUse) return NULL;
+	//Delete all edgeUses
+	WSEdgeUse *eu = loopUse->edgeUses;
+	while (eu) eu = _DeleteTopologyEdge(eu);
+	
+	WSLoopUse* retVal = NULL;
+	//See if not only LU in list
+	if (loopUse->next != loopUse) {
+		//Remove loopUse from list
+		loopUse->next->prev = loopUse->prev;
+		loopUse->prev->next = loopUse->next;
+		//Set the return value
+		retVal = loopUse->next;
+	}
+	//Delete the loopUse
+	delete loopUse;
+	//Return the return value
+	return retVal;
 }
 
 
-void _DeleteTopologyFace(WSFaceUse *faceUse) {
+WSFaceUse* _DeleteTopologyFace(WSFaceUse *faceUse) {
+	//Make sure not NULL
+	if (!faceUse) return NULL;
+	//Delete all loopUses
+	WSLoopUse *lu = faceUse->loopUses;
+	while (lu) lu = _DeleteTopologyLoop(lu);
+
+	WSFaceUse* retVal = NULL;
+	//See if not only FU in list
+	if (faceUse->next != faceUse) {
+		//Remove faceUse from list
+		faceUse->next->prev = faceUse->prev;
+		faceUse->prev->next = faceUse->next;
+		//Set the return value
+		retVal = faceUse->next;
+	}
+	//Delete the faceUse
+	delete faceUse;
+	//Return the return value
+	return retVal;
 }
 
 
 void _DeleteTopologyShell(WSTopologyShell *shell) {
+	//Make sure not NULL
+	if (!shell) return;
+
+	//Try to delete all vertexUses
+	WSVertexUse *vu = shell->vertexUses;
+	while (vu) vu = _DeleteTopologyVertex(vu);
+
+	//Try to delete all edgeUses
+	WSEdgeUse *eu = shell->edgeUses;
+	while (eu) eu = _DeleteTopologyEdge(eu);
+	
+	//Try to delete all faceUses
+	WSFaceUse *fu = shell->faceUses;
+	while (fu) fu = _DeleteTopologyFace(fu);
+	
+	//Delete the shell
 	delete shell;
 }
 
@@ -81,8 +161,44 @@ xercesc::DOMElement* WCTopologyModel::Serialize(xercesc::DOMDocument *document, 
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCTopologyModel &model) {
+void _PrintTopologyVertex(std::ostream &out, WSVertexUse *vertexUse, const unsigned int &depth) {
+}
+
+
+void _PrintTopologyEdge(std::ostream &out, WSEdgeUse *edgeUse, const unsigned int &depth) {
+}
+
+
+void _PrintTopologyLoop(std::ostream &out, WSLoopUse *loopUse, const unsigned int &depth) {
+}
+
+
+void _PrintTopologyFace(std::ostream &out, WSFaceUse *faceUse, const unsigned int &depth) {
+}
+
+
+void _PrintTopologyShell(std::ostream &out, WSTopologyShell *shell, const unsigned int &depth) {
+	//Do the spacing
+	for (unsigned int i=0; i<depth; i++) out << "\t";
+	//Print the info
+	out << "TopologyShell (" << shell << ")\n";
+	//Print the faces
+	WSFaceUse *start = shell->faceUses;
+	WSFaceUse *face = NULL;
+	while (face && (face != start)) {
+		_PrintTopologyFace(out, face, depth+1);
+	}
+}
+
+
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCTopologyModel &model) {
 	out << "Topology Model (" << &model << ")\n";
+	//Print all shells
+	std::list<WSTopologyShell*>::const_iterator listIter = model._shellList.begin();
+	for (; listIter != model._shellList.end(); listIter++) {
+		//Print the shells
+		_PrintTopologyShell(out, *listIter, 1);
+	}
 	return out;
 }
 
