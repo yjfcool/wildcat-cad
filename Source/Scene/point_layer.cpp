@@ -173,9 +173,14 @@ void WCPointLayer::Render(WCRenderState *state) {
 	}
 
 	//Set up rendering environment
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	//Bump z to move points off of surfaces
+	glTranslated(0.0, 0.0, 0.05);
+
+	//Set up rendering environment
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
-
 	//Render the points from the buffers
 	glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
 	glVertexPointer(3, GL_FLOAT, 0, 0);
@@ -183,11 +188,14 @@ void WCPointLayer::Render(WCRenderState *state) {
 	glColorPointer(4, GL_FLOAT, 0, 0);
 	//Draw the points
 	glDrawArrays(GL_POINTS, 0, this->_numVisible);
-	
 	//Clean up the environment
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
+
+	//Restore matrix and mode
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
 
 	//Check for errors
 	if (glGetError() != GL_NO_ERROR)

@@ -103,7 +103,7 @@ void WCLineLayer::GenerateBuffers(void) {
 
 
 WCLineLayer::WCLineLayer(WCScene *scene, std::string name) : ::WCLayer(scene, name), _renderProg(0),
-	_numVisible(0), _vertexBuffer(0), _colorBuffer(0) {
+	_numVisible(0), _thickness(LINELAYER_THICKNESS), _vertexBuffer(0), _colorBuffer(0) {
 	//Generate the two buffers
 	glGenBuffers(1, &this->_vertexBuffer);
 	glGenBuffers(1, &this->_colorBuffer);
@@ -196,6 +196,7 @@ void WCLineLayer::Render(WCRenderState *state) {
 	glPushMatrix();
 	//Bump z to move lines off of surfaces
 	glTranslated(0.0, 0.0, 0.05);
+
 	glEnable(GL_LINE_SMOOTH);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
@@ -205,14 +206,15 @@ void WCLineLayer::Render(WCRenderState *state) {
 	glVertexPointer(3, GL_FLOAT, 0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);
 	glColorPointer(4, GL_FLOAT, 0, 0);
+	glLineWidth((GLfloat)this->_thickness);
 	//Draw the lines
 	glDrawArrays(GL_LINES, 0, this->_numVisible);
-	
 	//Clean up the environment
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisable(GL_LINE_SMOOTH);
+
 	//Restore matrix and mode
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);

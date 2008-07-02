@@ -92,25 +92,26 @@ void WCModePartPadCreate::ProcessProfiles(const std::list<WCSketchProfile*> &pro
 			}
 		}
 	}
-	
+
 	//Categorize the profiles
 	std::list<WCProfileTreeNode*> rootList = WCSketchProfile::CategorizeIntoTree(profileList);
 	this->_profiles = WCSketchProfile::FlattenCategorizationTree(rootList);
 	//Make sure there is atleast one profile remains
 	if (this->_profiles.size() == 0) {
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCModePadCreate::WCModePadCreate - No valid profiles remain.");
-			//throw error
-			return;
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCModePadCreate::WCModePadCreate - No valid profiles remain.");
+		//throw error
+		return;
 	}
 
 	//Build list of boundary points for exterior profiles
 	std::list<WCVector4> inputList, tmpList;
 	std::list<std::list<WCSketchProfile*> >::iterator profileIter;
 	for (profileIter = this->_profiles.begin(); profileIter != this->_profiles.end(); profileIter++) {
+		std::cout << "Profiles\n";
 		//Only use exterior profiles and get list of boundary points (using control points is fine)
-			(*profileIter).front()->BoundaryList(false, tmpList);
-			//Merge all lists together
-			inputList.splice(inputList.begin(), tmpList);
+		(*profileIter).front()->BoundaryList(false, tmpList);
+		//Merge all lists together
+		inputList.splice(inputList.begin(), tmpList);
 	}
 	//Find minimum bounding rectangle for bounding points
 	WCPartPlane *refPlane = this->_profiles.front().front()->Sketch()->ReferencePlane();

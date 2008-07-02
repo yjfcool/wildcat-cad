@@ -56,6 +56,7 @@ WCPart::WCPart(std::string name, std::string filename) : ::WCDocument(NULL, name
 	//Create rendering layers
 	this->_pointLayer = new WCPointLayer(this->_scene, "Points");
 	this->_lineLayer = new WCLineLayer(this->_scene, "Lines");
+	this->_lineLayer->Thickness(PARTFEATURE_LINE_THICKNESS);
 	this->_curveLayer = new WCVisualLayer(this->_scene, "Curves");
 	this->_surfaceLayer = new WCVisualLayer(this->_scene, "Surfaces");
 	this->_surfaceLayer->RenderProgram(this->_scene->ShaderManager()->ProgramFromName("scn_basiclight"));
@@ -100,6 +101,7 @@ WCPart::WCPart(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	//Create rendering layers
 	this->_pointLayer = new WCPointLayer(this->_scene, "Points");
 	this->_lineLayer = new WCLineLayer(this->_scene, "Lines");
+	this->_lineLayer->Thickness(PARTFEATURE_LINE_THICKNESS);
 	this->_curveLayer = new WCVisualLayer(this->_scene, "Curves");
 	this->_surfaceLayer = new WCVisualLayer(this->_scene, "Surfaces");
 	this->_surfaceLayer->RenderProgram(this->_scene->ShaderManager()->ProgramFromName("scn_basiclight"));
