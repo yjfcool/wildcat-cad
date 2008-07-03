@@ -383,6 +383,7 @@
 		584542EC0DA54ECD005BC943 /* vis_signal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_signal.h; path = ../../Source/Workbenches/RTVisualization/vis_signal.h; sourceTree = SOURCE_ROOT; };
 		5845436E0DA55467005BC943 /* vis_recorder_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_recorder_controller.h; path = ../../Source/Workbenches/RTVisualization/vis_recorder_controller.h; sourceTree = SOURCE_ROOT; };
 		5845436F0DA55467005BC943 /* vis_recorder_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_recorder_controller.cpp; path = ../../Source/Workbenches/RTVisualization/vis_recorder_controller.cpp; sourceTree = SOURCE_ROOT; };
+		584556D90E1C7C8700364A00 /* Wildcat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wildcat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5849B6030DA274890031E7CC /* visualization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = visualization.h; path = ../../Source/Workbenches/RTVisualization/visualization.h; sourceTree = SOURCE_ROOT; };
 		5849B6040DA274890031E7CC /* visualization.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = visualization.cpp; path = ../../Source/Workbenches/RTVisualization/visualization.cpp; sourceTree = SOURCE_ROOT; };
 		5849B6060DA275E20031E7CC /* vis_workbench.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_workbench.h; path = ../../Source/Workbenches/RTVisualization/vis_workbench.h; sourceTree = SOURCE_ROOT; };
@@ -934,7 +935,6 @@
 		58F5E51B0DABF65600DC39A2 /* vis_listener_actions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener_actions.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener_actions.cpp; sourceTree = SOURCE_ROOT; };
 		58F5E5360DABF7CA00DC39A2 /* vis_listener_modes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_modes.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_modes.h; sourceTree = SOURCE_ROOT; };
 		58F5E5370DABF7CA00DC39A2 /* vis_listener_modes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener_modes.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener_modes.cpp; sourceTree = SOURCE_ROOT; };
-		58F6C2570DEF099800410534 /* Wildcat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wildcat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58F8E8A50E196E280041A7DA /* trimsurface_inversion.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = trimsurface_inversion.fsh; path = ../../Source/Shaders/trimsurface_inversion.fsh; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -977,14 +977,6 @@
 			name = "Included Frameworks";
 			sourceTree = "<group>";
 		};
-		19C28FACFE9D520D11CA2CBB /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				58F6C2570DEF099800410534 /* Wildcat.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		29B97314FDCFA39411CA2CEA /* Wildcat */ = {
 			isa = PBXGroup;
 			children = (
@@ -997,7 +989,7 @@
 				585F34720D68B08B00673AE6 /* Workbenches */,
 				585F34730D68B09200673AE6 /* Application */,
 				585F34740D68B09900673AE6 /* Resources */,
-				19C28FACFE9D520D11CA2CBB /* Products */,
+				584556DA0E1C7C8700364A00 /* Products */,
 			);
 			name = Wildcat;
 			sourceTree = "<group>";
@@ -1188,6 +1180,14 @@
 				5845436E0DA55467005BC943 /* vis_recorder_controller.h */,
 			);
 			name = Headers;
+			sourceTree = "<group>";
+		};
+		584556DA0E1C7C8700364A00 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				584556D90E1C7C8700364A00 /* Wildcat.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		5849B5E80DA2741D0031E7CC /* RT Visualization */ = {
@@ -3032,7 +3032,7 @@
 			name = Wildcat;
 			productInstallPath = "$(HOME)/Applications";
 			productName = Wildcat;
-			productReference = 58F6C2570DEF099800410534 /* Wildcat.app */;
+			productReference = 584556D90E1C7C8700364A00 /* Wildcat.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -3044,6 +3044,7 @@
 			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 1;
 			mainGroup = 29B97314FDCFA39411CA2CEA /* Wildcat */;
+			productRefGroup = 584556DA0E1C7C8700364A00 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
