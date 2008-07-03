@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-	<dialog name="docTypeSelector" width="300" height="100" modal="true" boundary="true" mode="dynamic"/>
-	<dialog name="newListener" width="300" height="400" modal="false" boundary="true" mode="default"/>
-</manifest>
