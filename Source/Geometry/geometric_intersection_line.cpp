@@ -40,10 +40,11 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCG
 	std::list<WCIntersectionResult> results;
 	//Get line direction vector
 	WCVector4 direction = left->End() - left->Begin();
-	direction.Normalize(true);
+	//Get the length of the direction vector
+	WPFloat dirLen = direction.Magnitude();
 	//Get line-being to point vector
 	WCVector4 pointVector = right->Data() - left->Begin();
-	WPFloat u = direction.DotProduct(pointVector);
+	WPFloat u = direction.DotProduct(pointVector) / (dirLen * dirLen);
 
 	//Bounds check u for [0, 1] - return empty if out of bounds
 	if ((u < -tol) || (u > (1.0 + tol))) return results;

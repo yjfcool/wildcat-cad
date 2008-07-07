@@ -20,13 +20,16 @@ void main(void) {
 	//Get basic vertex info
 	vec4 leftVert = texture2DRect(leftVerts, floor(gl_FragCoord.xy));
 	//Get line direction vector
-	vec4 direction = normalize(lineEnd - lineBegin);
+	vec4 direction = lineEnd - lineBegin;
+	//Get the length of the direction vector
+	float dirLen = length(direction);
 	//Get line-begin to point vector
 	vec4 pointVector = leftVert - lineBegin;
-	float u = dot(direction, pointVector);
+	//Calculate the projected u value
+	float u = dot(direction, pointVector) / (dirLen * dirLen);
 
 	//Bounds check u for [0, 1] - return empty if out of bounds
-	if ( (u > -params.x) && (u < (1.0 + params.x)) ) {
+	if ( (u > -params.y) && (u < (1.0 + params.y)) ) {
 		//Bound u [0.0 to 1.0]
 		u = max( min(u, 1.0), 0.0);
 		//Get the point on the line
