@@ -311,7 +311,7 @@ void WCTrimmedNurbsSurface::GenerateTriangulations(std::list<WCTrimTriangulation
 		numVerts = (GLint)boundaryList.size();
 
 		//Invert all of the points (only u,v values)
-		if (boundaryList.size() > 32)
+		if ((boundaryList.size() > 32) && (boundaryList.size() < 262144))
 			vertData = this->PointInversionHigh(boundaryList);
 		else
 			vertData = this->PointInversionLow(boundaryList);

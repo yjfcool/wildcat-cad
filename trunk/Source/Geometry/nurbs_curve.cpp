@@ -963,7 +963,7 @@ WCVector4 WCNurbsCurve::Derivative(const WPFloat &u, const WPUInt &der) {
 }
 
 
-/*** Need to normalize rational derivatives ***/
+/*** Evaluate the curve at a given parametric value and return a ray with its position and first derivative ***/
 WCRay WCNurbsCurve::Tangent(const WPFloat &u) {
 	WPFloat eval = u;
 	//Check on degree 1
@@ -983,10 +983,10 @@ WCRay WCNurbsCurve::Tangent(const WPFloat &u) {
 	//Calculate the derivative value
 	for (WPUInt i=0; i<=this->_degree; i++) {
 		pt = this->_controlPoints.at(span - this->_degree + i);
-		d +=	pt.L() * basisValues[i];
+		d	 +=	pt.L() * basisValues[i];
 		dDer += pt.L() * basisValues[i+this->_degree+1];
-		n +=	pt * basisValues[i];// * pt.L();
-		nDer += pt * basisValues[i+this->_degree+1];// * pt.L();
+		n	 +=	pt * pt.L() * basisValues[i];
+		nDer += pt * pt.L() * basisValues[i+this->_degree+1];
 	}
 	//Make sure to delete basisValues
 	delete basisValues;

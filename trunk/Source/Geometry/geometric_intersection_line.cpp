@@ -124,11 +124,6 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCG
 			WPFloat p2Proj = p43.DotProduct(p23) / p43mag;
 			WPFloat p3Proj = p21.DotProduct(p31) / p21mag;
 			WPFloat p4Proj = p21.DotProduct(p41) / p21mag;
-			//Bounds check all of the projections
-			p1Proj = STDMAX(0.0, STDMIN(1.0, p1Proj));
-			p2Proj = STDMAX(0.0, STDMIN(1.0, p2Proj));
-			p3Proj = STDMAX(0.0, STDMIN(1.0, p3Proj));
-			p4Proj = STDMAX(0.0, STDMIN(1.0, p4Proj));
 
 			//See if each point is in 0.0 to 1.0 +- tolerance
 			bool p1In = (p1Proj > -tol) && (p1Proj < onePlusTol);
@@ -137,6 +132,11 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCG
 			bool p4In = (p4Proj > -tol) && (p4Proj < onePlusTol);
 			//If none are in then no overlap, return
 			if ( p1In || p2In || p3In || p4In) {
+				//Bounds check all of the projections
+				p1Proj = STDMAX(0.0, STDMIN(1.0, p1Proj));
+				p2Proj = STDMAX(0.0, STDMIN(1.0, p2Proj));
+				p3Proj = STDMAX(0.0, STDMIN(1.0, p3Proj));
+				p4Proj = STDMAX(0.0, STDMIN(1.0, p4Proj));
 				//Create hit result
 				WCIntersectionResult hit;
 				hit.type = IntersectLine;

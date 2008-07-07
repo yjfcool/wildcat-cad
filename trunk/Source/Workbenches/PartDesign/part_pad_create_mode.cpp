@@ -107,7 +107,6 @@ void WCModePartPadCreate::ProcessProfiles(const std::list<WCSketchProfile*> &pro
 	std::list<WCVector4> inputList, tmpList;
 	std::list<std::list<WCSketchProfile*> >::iterator profileIter;
 	for (profileIter = this->_profiles.begin(); profileIter != this->_profiles.end(); profileIter++) {
-		std::cout << "Profiles\n";
 		//Only use exterior profiles and get list of boundary points (using control points is fine)
 		(*profileIter).front()->BoundaryList(false, tmpList);
 		//Merge all lists together

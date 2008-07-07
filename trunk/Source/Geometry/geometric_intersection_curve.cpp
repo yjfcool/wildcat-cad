@@ -35,7 +35,7 @@
 
 
 /*** Locally Defined Values ***/
-#define CLI_LINE_CUTOFF							5
+#define CLI_LINE_CUTOFF							0.075
 #define CCI_CURVE_CUTOFF						3
 
 
@@ -200,7 +200,8 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	//Check for errors
 	if (glGetError() != GL_NO_ERROR)
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveLine Intersection - Clean up.");
-/*** DEBUG ***/
+/*** DEBUG ***
+	std::cout << "Debug output for CLI\n";
 	 for (int i=0; i<lod; i++)
 	 CLOGGER_ERROR(WCLogManager::RootLogger(), cciData[i*4] << ", " << cciData[i*4+1] << ", " << cciData[i*4+2] << ", " << cciData[i*4+3]);
  /*** DEBUG ***/
@@ -218,8 +219,12 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 			lookAhead = i + 1;
 			while ((cciData[lookAhead * 4] != -1.0) && (lookAhead <lod)) lookAhead++;
 			diff = lookAhead - i;
-			//Diff > CLI_CURVE_CUTOFF is a line
-			if (diff > CLI_LINE_CUTOFF) {
+			//Get the first and last points
+			WCVector4 start(cciData[i*4], cciData[i*4+1], cciData[i*4+2], 1.0);
+			WCVector4 end(cciData[lookAhead*4-4], cciData[lookAhead*4-3], cciData[lookAhead*4-2], 1.0);
+			WPFloat dist = start.Distance(end);
+			//See how long the overlap is
+			if (dist > CLI_LINE_CUTOFF) {
 				CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveLine Intersection - Line overlap not yet implemented.");
 			}
 			//Diff <= CLI_CURVE_CUTOFF is a point
