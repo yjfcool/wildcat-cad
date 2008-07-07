@@ -132,7 +132,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	WPFloat paraFactor = 1.0 / lod, mua, mub;
 	WCVector4 point;
 	GLfloat *leftData = left->GenerateClientBuffer(lod, true);
-	
+
 	//Set program values
 	glUseProgram(left->Context()->CurveLineProgram());
 	glUniform2f(left->Context()->IntersectionLocations()[INTERSECTION_CLI_PARAMS], (GLfloat)lod, (GLfloat)0.005);
@@ -160,8 +160,6 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	glActiveTexture(GL_TEXTURE0);	
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, left->Context()->CCILeftTex());	
 	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, lod, 1, GL_RGBA, GL_FLOAT, leftData);
-	//Delete data array
-	left->ReleaseBuffer(leftData);
 
 	/*** Setup Viewport and Render***/
 	
@@ -200,10 +198,14 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	//Check for errors
 	if (glGetError() != GL_NO_ERROR)
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveLine Intersection - Clean up.");
-/*** DEBUG ***
-	std::cout << "Debug output for CLI\n";
-	 for (int i=0; i<lod; i++)
-	 CLOGGER_ERROR(WCLogManager::RootLogger(), cciData[i*4] << ", " << cciData[i*4+1] << ", " << cciData[i*4+2] << ", " << cciData[i*4+3]);
+/*** DEBUG ***/
+//	std::cout << "Debug output for CLI\n";
+	for (int i=0; i<lod; i++) {
+		 if (cciData[i*4] != -1.0) {
+			 std::cout << i << ": " << leftData[i*4] << ", " << leftData[i*4+1] << ", " << leftData[i*4+2] << ", " << leftData[i*4+3] << std::endl;
+			 std::cout << i << ": " << cciData[i*4] << ", " << cciData[i*4+1] << ", " << cciData[i*4+2] << ", " << cciData[i*4+3] << std::endl;
+		 }
+	}
  /*** DEBUG ***/
 
 	/*** Scan output for intersection results ***/
@@ -270,6 +272,8 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 			i = lookAhead;
 		}
 	}
+	//Delete data array
+	left->ReleaseBuffer(leftData);
 	//Delete the data buffer
 	delete cciData;
 	//Return the results
