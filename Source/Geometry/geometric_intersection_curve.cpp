@@ -198,7 +198,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	//Check for errors
 	if (glGetError() != GL_NO_ERROR)
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveLine Intersection - Clean up.");
-/*** DEBUG ***/
+/*** DEBUG ***
 //	std::cout << "Debug output for CLI\n";
 	for (int i=0; i<lod; i++) {
 		 if (cciData[i*4] != -1.0) {

@@ -747,17 +747,17 @@ std::list<WCProfileTreeNode*> WCSketchProfile::CategorizeIntoTree(const std::lis
 	WCProfileTreeNode *firstNode, *node;
 	firstNode = new WCProfileTreeNode();
 	firstNode->profile = *profileIter;
-	std::cout << *(firstNode->profile);
+//	std::cout << *(firstNode->profile);
 	rootList.push_back(firstNode);
 
 	//Process all of the profiles
 	for (profileIter++; profileIter != profiles.end(); profileIter++) {
 		node = new WCProfileTreeNode();
 		node->profile = *profileIter;
-		std::cout << *(node->profile);
+//		std::cout << *(node->profile);
 		_AddProfileToTree(rootList, node);
 	}
-/*** DEBUG ***/
+/*** DEBUG ***
 	std::list<WCProfileTreeNode*>::iterator rlIter;
 	for (rlIter = rootList.begin(); rlIter != rootList.end(); rlIter++) {
 		_RecursiveNodePrint(*rlIter, 0);
@@ -778,7 +778,7 @@ std::list<std::list<WCSketchProfile*> > WCSketchProfile::FlattenCategorizationTr
 		//Add list into master list
 		outputList.splice(outputList.end(), tmpList);
 	}
-/*** DEBUG ***/
+/*** DEBUG ***
 	std::list<WCSketchProfile*> innerList;
 	std::list<WCSketchProfile*>::iterator innerIter;
 	std::list<std::list<WCSketchProfile*> >::iterator outerIter;
