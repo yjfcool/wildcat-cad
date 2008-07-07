@@ -105,6 +105,10 @@ std::list<TriangulateVertex*>::iterator _TriangulateFindEar(std::list<Triangulat
 
 
 GLint* __WILDCAT_NAMESPACE__::TriangulatePolygon(const std::list<WCVector4> &pointList) {
+/*** DEBUG ***
+	std::list<WCVector4>::const_iterator plIter;
+	for (plIter = pointList.begin(); plIter != pointList.end(); plIter++) std::cout << *plIter << std::endl;
+/*** DEBUG ***/
 	//Make sure there are at least 4 points
 	if (pointList.size() < 4) {
 		//Trivial case
