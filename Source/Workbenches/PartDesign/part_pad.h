@@ -67,9 +67,9 @@ protected:
 	std::list<WCNurbsCurve*>					_curves;											//!< List of extrusion curves
 	std::list<WCNurbsSurface*>					_surfaces;											//!< List of extrusion surfaces
 	std::list<std::list<WCTrimProfile> >		_topTrims, _bottomTrims;							//!< Lists of top and bottom trim profile lists
-	std::list<std::list<WCGeometricPoint*> >	_topoPoints;										//!< Ordered list of all points (for topology)
-	std::list<std::list<WCGeometricCurve*> >	_topoCurves;										//!< Ordered list of all curves (for topology)
-	std::list<std::list<WCGeometricSurface*> >	_topoSurfaces;										//!< Ordered list of all surfaces (for topology)
+	std::list<std::list<WSVertexUse*> >			_topoBottomPoints, _topoTopPoints;					//!< Ordered lists of all points (for topology)
+	std::list<std::list<WSEdgeUse*> >			_topoBottomCurves, _topoSideCurves, _topoTopCurves;	//!< Ordered lists of all curves (for topology)
+	std::list<std::list<WSFaceUse*> >			_topoSurfaces;										//!< Ordered list of all surfaces (for topology)
 private:
 	void GeneratePoints(void);																		//!< Generate all points
 	void GenerateCurves(void);																		//!< Generate all curves

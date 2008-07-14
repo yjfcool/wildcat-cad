@@ -162,18 +162,66 @@ xercesc::DOMElement* WCTopologyModel::Serialize(xercesc::DOMDocument *document, 
 
 
 void _PrintTopologyVertex(std::ostream &out, WSVertexUse *vertexUse, const unsigned int &depth) {
+	//Do the spacing
+	for (unsigned int i=0; i<depth; i++) out << "\t";
+	//Print the info
+	out << "TopologyVertex (" << vertexUse << ")\n";
 }
 
 
 void _PrintTopologyEdge(std::ostream &out, WSEdgeUse *edgeUse, const unsigned int &depth) {
+	//Do the spacing
+	for (unsigned int i=0; i<depth; i++) out << "\t";
+	//Print the info
+	out << "TopologyEdge (" << edgeUse << ")\n";
 }
 
 
 void _PrintTopologyLoop(std::ostream &out, WSLoopUse *loopUse, const unsigned int &depth) {
+	//Do the spacing
+	for (unsigned int i=0; i<depth; i++) out << "\t";
+	//Print the info
+	out << "TopologyLoop (*: " << loopUse << ", Prev: " << loopUse->prev << ", Next: " << loopUse->next << ", Mate: " << loopUse->mate;
+	out << ", E: " << loopUse->edgeUses << ", V: " << loopUse->vertexUses << ")\n";
+	//Print the edges, if appropriate
+	if (loopUse->edgeUses) {
+		WSEdgeUse *sEdge = loopUse->edgeUses, *cEdge = sEdge;
+		do {
+			//Print the info
+			_PrintTopologyEdge(out, cEdge, depth+1);
+			//Go to the next one
+			cEdge = cEdge->cw;
+		} while (cEdge != sEdge);
+	}
+	//Print the vertices, if appropriate
+	if (loopUse->vertexUses) {
+		WSVertexUse *sVertex = loopUse->vertexUses, *cVertex = sVertex;
+		do {
+			//Print the info
+			_PrintTopologyVertex(out, cVertex, depth+1);
+			//Go to the next one
+			cVertex = cVertex->next;
+		} while (cVertex != sVertex);		
+	}
 }
 
 
 void _PrintTopologyFace(std::ostream &out, WSFaceUse *faceUse, const unsigned int &depth) {
+	//Do the spacing
+	for (unsigned int i=0; i<depth; i++) out << "\t";
+	//Print the info
+	out << "TopologyFace (*: " << faceUse << ", Surf: " << faceUse->surface << ", Oriet: " << faceUse->orientation;
+	out << ", Prev: " << faceUse->prev << ", Next: " << faceUse->next << ", Mate: " << faceUse->mate << ", L: " << faceUse->loopUses << ")\n";
+	//Print the loops, if appropriate
+	if (faceUse->loopUses) {
+		WSLoopUse *sLoop = faceUse->loopUses, *cLoop = sLoop;
+		do {
+			//Print the info
+			_PrintTopologyLoop(out, cLoop, depth+1);
+			//Go to the next one
+			cLoop = cLoop->next;
+		} while (cLoop != sLoop);
+	}
 }
 
 
@@ -181,12 +229,36 @@ void _PrintTopologyShell(std::ostream &out, WSTopologyShell *shell, const unsign
 	//Do the spacing
 	for (unsigned int i=0; i<depth; i++) out << "\t";
 	//Print the info
-	out << "TopologyShell (" << shell << ")\n";
-	//Print the faces
-	WSFaceUse *start = shell->faceUses;
-	WSFaceUse *face = NULL;
-	while (face && (face != start)) {
-		_PrintTopologyFace(out, face, depth+1);
+	out << "TopologyShell (*: " << shell << ", F: " << shell->faceUses << ", E: " << shell->edgeUses << ", V: " << shell->vertexUses << ")\n";
+	//Print the faces, if appropriate
+	if (shell->faceUses) {
+		WSFaceUse *sFace = shell->faceUses, *cFace = sFace;
+		do {
+			//Print the info
+			_PrintTopologyFace(out, cFace, depth+1);
+			//Go to the next one
+			cFace = cFace->next;
+		} while (cFace != sFace);
+	}
+	//Print the edges, if appropriate
+	if (shell->edgeUses) {
+		WSEdgeUse *sEdge = shell->edgeUses, *cEdge = sEdge;
+		do {
+			//Print the info
+			_PrintTopologyEdge(out, cEdge, depth+1);
+			//Go to the next one
+			cEdge = cEdge->cw;
+		} while (cEdge != sEdge);
+	}
+	//Print the vertices, if appropriate
+	if (shell->vertexUses) {
+		WSVertexUse *sVertex = shell->vertexUses, *cVertex = sVertex;
+		do {
+			//Print the info
+			_PrintTopologyVertex(out, cVertex, depth+1);
+			//Go to the next one
+			cVertex = cVertex->next;
+		} while (cVertex != sVertex);		
 	}
 }
 

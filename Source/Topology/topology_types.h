@@ -61,10 +61,10 @@ struct WSVertexUse;
 
 struct WSTopologyShell {
 	WCTopologyModel								*model;												//!< Parent topology model
-	WCTopologyType								type;												//!< Type of shell
 	WSFaceUse									*faceUses;											//!< List of face uses (solid model)
 	WSEdgeUse									*edgeUses;											//!< List of edge uses (wireframe model)
 	WSVertexUse									*vertexUses;										//!< List of vertex uses (not sure)
+	WSTopologyShell() : model(NULL), faceUses(NULL), edgeUses(NULL), vertexUses(NULL) { }			//!< Default constructor
 };
 
 
@@ -78,6 +78,7 @@ struct WSFaceUse {
 	WSFaceUse									*next, *prev;										//!< Next and previous faces in the shell
 	WSFaceUse									*mate;												//!< Other side of the face
 	WSLoopUse									*loopUses;											//!< List of LoopUses
+	WSFaceUse() : surface(NULL), orientation(true), shell(NULL), next(NULL), prev(NULL), mate(NULL), loopUses(NULL) { }	//!< Default constructor
 };
 
 
@@ -90,6 +91,7 @@ struct WSLoopUse {
 	WSLoopUse									*mate;												//!< Other side of the loop
 	WSEdgeUse									*edgeUses;											//!< List of EdgeUses
 	WSVertexUse									*vertexUses;										//!< List of VertexUses
+	WSLoopUse() : face(NULL), next(NULL), prev(NULL), mate(NULL), edgeUses(NULL), vertexUses(NULL) { }	//!< Default constructor
 };
 
 
@@ -99,7 +101,6 @@ struct WSLoopUse {
 struct WSEdgeUse {
 	WCGeometricCurve							*curve;												//!< Associated geometric curve
 	bool										orientation;										//!< Orientation compared to curve
-	WCTopologyType								type;												//!< Type of edge
 	WSEdgeUse									*mate;												//!< Other side of the edge
 	WSVertexUse									*vertexUse;											//!< Downward pointer to starting VertexUse
 	//Elements if wireframe
@@ -108,6 +109,8 @@ struct WSEdgeUse {
 	WSLoopUse									*loop;												//!< Parent loop
 	WSEdgeUse									*cw, *ccw;											//!< Clock-wise and counter clockwise lists
 	WSEdgeUse									*radial;											//!< Pointer to the next radial EdgeUse
+	WSEdgeUse() : curve(NULL), orientation(true), mate(NULL), vertexUse(NULL), shell(NULL),			//!< Default constructor
+												loop(NULL), cw(NULL), ccw(NULL), radial(NULL) { }
 };
 
 
@@ -120,6 +123,7 @@ struct WSVertexUse {
 	WSLoopUse									*loop;												//!< Parent loop
 	WSEdgeUse									*edge;												//!< Parent edge
 	WSVertexUse									*next, *prev;										//!< Next and previous vertices in parent
+	WSVertexUse() : point(NULL), shell(NULL), loop(NULL), edge(NULL), next(NULL), prev(NULL) { }	//!< Default constructor
 };
 
 
