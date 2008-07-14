@@ -211,6 +211,7 @@ bool WCSketchProfile::DetermineIsSelfIntersecting(void) {
  *		7) If IsInside count is even, then profile is CW, otherwise profile is CCW
 ***/
 void WCSketchProfile::ForceClockwise(void) {
+//	std::cout << *this;
 	bool ccw = false;
 	//Check on size 1 special case
 	if (this->_curveList.size() == 1) {

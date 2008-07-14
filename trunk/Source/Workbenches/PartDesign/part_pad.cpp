@@ -55,8 +55,9 @@ void WCPartPad::GeneratePoints(void) {
 
 	//Create a point from the start of each curve in each profile
 	WCVector4 pt, lower, upper;
+	WSVertexUse *tmpUse;
 	WCGeometricPoint *lowerPt, *upperPt;
-	std::list<WCGeometricPoint*> lowerPoints, upperPoints;
+	std::list<WSVertexUse*> lowerPoints, upperPoints;
 	std::list<WCSketchProfile*>::iterator profilesIter;
 	std::list<std::list<WCSketchProfile*> >::iterator listIter;
 	std::list< std::pair<WCGeometricCurve*,bool> > curveList;
@@ -88,16 +89,20 @@ void WCPartPad::GeneratePoints(void) {
 					//Add the points to the lists of all points
 					this->_points.push_back(lowerPt);
 					this->_points.push_back(upperPt);
-					//Add the points to the list of points for topology
-					lowerPoints.push_front(lowerPt);
-					upperPoints.push_back(upperPt);
+					//Create bottom vertex uses for topology
+					tmpUse = new WSVertexUse();
+					tmpUse->point = lowerPt;
+					lowerPoints.push_back(tmpUse);
+					//Create top vertex uses for topology
+					tmpUse = new WSVertexUse();
+					tmpUse->point = upperPt;
+					upperPoints.push_back(tmpUse);
 				}
 			}
 		}
-		//Splice the upper points after the lower points
-		lowerPoints.splice(lowerPoints.end(), upperPoints);
-		//Push the whole think onto the topoPoints list
-		this->_topoPoints.push_back(lowerPoints);
+		//Push the whole think onto the topoPoints lists
+		this->_topoBottomPoints.push_back(lowerPoints);
+		this->_topoTopPoints.push_back(upperPoints);
 		//Clear lower and upper points
 		lowerPoints.clear();
 		upperPoints.clear();
@@ -127,12 +132,13 @@ void WCPartPad::GenerateCurves(void) {
 	WCNurbsCurve *nurb, *newNurb;
 	WCGeometricCurve *curve, *newCurve;
 	WCVector4 pt, lower, upper;
+	WSEdgeUse *tmpUse1, *tmpUse2;
 	std::list<WCSketchProfile*>::iterator profilesIter;
 	std::list<std::list<WCSketchProfile*> >::iterator listIter;
 	std::list< std::pair<WCGeometricCurve*,bool> > curveList, tmpBottom, tmpTop;
 	std::list< std::list< std::pair<WCGeometricCurve*,bool> > > tmpBottoms, tmpTops;
 	std::list< std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
-	std::list<WCGeometricCurve*> bottomCurves, midCurves, topCurves;
+	std::list<WSEdgeUse*> bottomCurves, sideCurves, topCurves;
 	//Loop through all profiles and extrude all surfaces
 	for (listIter = this->_profiles.begin(); listIter != this->_profiles.end(); listIter++) {
 		//Go through the sub-list
@@ -145,6 +151,79 @@ void WCPartPad::GenerateCurves(void) {
 				curve = (*curveIter).first;
 				//Try casting to line, otherwise cast to a nurbs curve
 				line = dynamic_cast<WCGeometricLine*>(curve);
+
+				/*** Duplicate curve for top ***/
+
+				if (line) {
+					//Duplicate the line
+					newLine = new WCGeometricLine( *line );
+					//Add the line to the lines list
+					this->_lines.push_back( newLine );
+					//Set newCurve
+					newCurve = newLine;
+				}
+				//Otherwise, create duplicate of nurbs curve
+				else {
+					//Cast to a nurb
+					nurb = dynamic_cast<WCNurbsCurve*>(curve);
+					//Duplicate the curve
+					newNurb= new WCNurbsCurve( *nurb );
+					//Add the Nurb to the curves list
+					this->_curves.push_back( newNurb );
+					//Set newCurve
+					newCurve = newNurb;
+				}
+				//Set the properties
+				newCurve->Color( WCPartFeature::DefaultCurveColor );
+				newCurve->Thickness( PARTFEATURE_LINE_THICKNESS );
+				//Transform it to the top
+				newCurve->ApplyTranslation( this->_direction * this->_firstOffset );
+				//Add it to the list of top curves for trimming
+				tmpTop.push_back( std::make_pair(newCurve, (*curveIter).second) );
+				//Create top edge use (for topology)
+				tmpUse1 = new WSEdgeUse();
+				tmpUse1->curve = newCurve;
+				tmpUse1->orientation = (*curveIter).second;
+				topCurves.push_back(tmpUse1);
+				//Create side edge use
+				tmpUse2 = new WSEdgeUse();
+				tmpUse2->curve = newCurve;
+				tmpUse2->orientation = !(*curveIter).second;
+				sideCurves.push_back(tmpUse2);
+				//Set edgeUse radials
+				tmpUse1->radial = tmpUse2;
+				tmpUse2->radial = tmpUse1;
+				
+				/*** Create Extrusion Lines ***/
+
+				//Make sure curveList is > 1
+				if (curveList.size() > 1) {
+					//See if curve is forward
+					if ((*curveIter).second) pt = (*curveIter).first->Evaluate(0.0);
+					//...Or backwards
+					else pt = (*curveIter).first->Evaluate(1.0);
+					//Create a line using the point
+					lower = pt + this->_direction * this->_secondOffset;
+					upper = pt + this->_direction * this->_firstOffset;
+					newLine = new WCGeometricLine(lower, upper);
+					//Set the properties for the line
+					newLine->Color( WCPartFeature::DefaultCurveColor );
+					newLine->Thickness( PARTFEATURE_LINE_THICKNESS );
+					//Add the line to the list of all lines
+					this->_lines.push_back(newLine);
+					//Create side edge uses (for topology)
+					tmpUse1 = new WSEdgeUse();
+					tmpUse1->curve = newLine;
+					tmpUse1->orientation = false;	// -- Goes from top to bottom
+					sideCurves.push_back(tmpUse1);
+					tmpUse2 = new WSEdgeUse();
+					tmpUse2->curve = newLine;
+					tmpUse2->orientation = true;		// -- Goes from bottom to top
+					sideCurves.push_back(tmpUse2);
+					//Set edgeUse radials
+					tmpUse1->radial = tmpUse2;
+					tmpUse2->radial = tmpUse1;
+				}
 
 				/*** Duplicate curve for bottom ***/
 
@@ -172,56 +251,21 @@ void WCPartPad::GenerateCurves(void) {
 				newCurve->Thickness( PARTFEATURE_LINE_THICKNESS );
 				//Transform it to the bottom
 				newCurve->ApplyTranslation( this->_direction * this->_secondOffset );
+				//Add it to the list of bottom curves for trimming
 				tmpBottom.push_front( std::make_pair(newCurve, !(*curveIter).second) );
-
-				/*** Create Extrusion Lines ***/
-
-				//Make sure curveList is > 1
-				if (curveList.size() > 1) {
-					//See if curve is forward
-					if ((*curveIter).second) pt = (*curveIter).first->Evaluate(0.0);
-					//...Or backwards
-					else pt = (*curveIter).first->Evaluate(1.0);
-					//Create a line using the point
-					lower = pt + this->_direction * this->_secondOffset;
-					upper = pt + this->_direction * this->_firstOffset;
-					newLine = new WCGeometricLine(lower, upper);
-					//Set the properties for the line
-					newLine->Color( WCPartFeature::DefaultCurveColor );
-					newLine->Thickness( PARTFEATURE_LINE_THICKNESS );
-					//Add the line to the list of all lines
-					this->_lines.push_back(newLine);
-					//Add the "curve" to the list of middle curves
-					midCurves.push_back(newLine);
-				}
-
-				/*** Duplicate curve for top ***/
-
-				if (line) {
-					//Duplicate the line
-					newLine = new WCGeometricLine( *line );
-					//Add the line to the lines list
-					this->_lines.push_back( newLine );
-					//Set newCurve
-					newCurve = newLine;
-				}
-				//Otherwise, create duplicate of nurbs curve
-				else {
-					//Cast to a nurb
-					nurb = dynamic_cast<WCNurbsCurve*>(curve);
-					//Duplicate the curve
-					newNurb= new WCNurbsCurve( *nurb );
-					//Add the Nurb to the curves list
-					this->_curves.push_back( newNurb );
-					//Set newCurve
-					newCurve = newNurb;
-				}
-				//Set the properties
-				newCurve->Color( WCPartFeature::DefaultCurveColor );
-				newCurve->Thickness( PARTFEATURE_LINE_THICKNESS );
-				//Transform it to the bottom
-				newCurve->ApplyTranslation( this->_direction * this->_firstOffset );
-				tmpTop.push_back( std::make_pair(newCurve, (*curveIter).second) );
+				//Create bottom edge use (for topology)
+				tmpUse1 = new WSEdgeUse();
+				tmpUse1->curve = newCurve;
+				tmpUse1->orientation = (*curveIter).second;
+				bottomCurves.push_back(tmpUse1);
+				//Create side edge use
+				tmpUse2 = new WSEdgeUse();
+				tmpUse2->curve = newCurve;
+				tmpUse2->orientation = !(*curveIter).second;
+				sideCurves.push_back(tmpUse2);
+				//Set edgeUse radials
+				tmpUse1->radial = tmpUse2;
+				tmpUse2->radial = tmpUse1;
 
 				/*** Done with creating ***/
 			}
@@ -236,10 +280,15 @@ void WCPartPad::GenerateCurves(void) {
 		tmpBottoms.clear();
 		this->_topTrims.push_back(tmpTops );
 		tmpTops.clear();
+		//Add topology edge uses to master list
+		this->_topoTopCurves.push_back(topCurves);
+		this->_topoSideCurves.push_back(sideCurves);
+		this->_topoBottomCurves.push_back(bottomCurves);
+		//Clear the topo lists
+		topCurves.clear();
+		sideCurves.clear();
+		bottomCurves.clear();
 	}
-	//Now splice lists to generate correct and final _allCurves list
-//	this->_allCurves.splice(this->_allCurves.end(), midCurves);
-//	this->_allCurves.splice(this->_allCurves.end(), topCurves);
 }
 
 
@@ -257,6 +306,7 @@ void WCPartPad::GenerateSideSurfaces(void) {
 	bool exterior;
 	WCGeometricCurve* curve;
 	WCNurbsSurface* surface;
+	WSFaceUse *tmpUse;
 	std::list<WCSketchProfile*>::iterator profilesIter;
 	std::list<std::list<WCSketchProfile*> >::iterator listIter;
 	std::list< std::pair<WCGeometricCurve*,bool> > curveList;
@@ -266,7 +316,7 @@ void WCPartPad::GenerateSideSurfaces(void) {
 		//Mark as exterior
 		exterior = true;
 		//Create list of surfaces in topological order
-		std::list<WCGeometricSurface*> topoList;
+		std::list<WSFaceUse*> topoList;
 		//Go through the sub-list
 		for (profilesIter = (*listIter).begin(); profilesIter != (*listIter).end(); profilesIter++) {
 			//Get the list of curves
@@ -290,8 +340,11 @@ void WCPartPad::GenerateSideSurfaces(void) {
 				surface->RenderProgram(WCPartFeature::DefaultSurfaceRenderer);
 				//Add surface into surfaces list
 				this->_surfaces.push_back(surface);
-				//Add surface into topo list
-				topoList.push_back(surface);
+				//Create surface use (for topology)
+				tmpUse = new WSFaceUse();
+				tmpUse->surface = surface;
+				tmpUse->orientation = true;
+				topoList.push_back(tmpUse);
 			}
 			//Mark as interior
 			exterior = false;
@@ -312,9 +365,10 @@ void WCPartPad::GenerateTopBottom(void) {
 	GLuint prog = this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight_trim");
 	std::vector<WCVector4> controlPoints;
 	WCVector4 tmpPt1;
+	WSFaceUse *tmpUse;
 	std::list< std::list<WCTrimProfile> >::iterator topTrim = this->_topTrims.begin();
 	std::list< std::list<WCTrimProfile> >::iterator bottomTrim = this->_bottomTrims.begin();
-	std::list< std::list<WCGeometricSurface*> >::iterator topoIter = this->_topoSurfaces.begin();
+	std::list< std::list<WSFaceUse*> >::iterator topoIter = this->_topoSurfaces.begin();
 
 	//Loop through list of profile lists
 	std::list<std::list<WCSketchProfile*> >::iterator listIter;
@@ -332,9 +386,6 @@ void WCPartPad::GenerateTopBottom(void) {
 		corners[3] = baseCorners.front(); baseCorners.pop_front();		// Lower-right
 		//Clear the boundary list
 		boundaryList.clear();
-
-		//Need to make sure that ordering is consistent with sketch plane of profiles
-		//...
 
 		/*** Bottom Trim Surface ***/
 
@@ -359,8 +410,11 @@ void WCPartPad::GenerateTopBottom(void) {
 		bottom->RenderProgram(prog);
 		//Add to master list
 		this->_surfaces.push_back(bottom);
-		//Add to the topoList
-		(*topoIter).push_back(bottom);
+		//Create Face Use and add to the topoList (for Topology)
+		tmpUse = new WSFaceUse();
+		tmpUse->surface = bottom;
+		tmpUse->orientation = true;
+		(*topoIter).push_back(tmpUse);
 			
 		/*** Top Trim Surface ***/
 	
@@ -385,8 +439,11 @@ void WCPartPad::GenerateTopBottom(void) {
 		top->RenderProgram(prog);
 		//Add to the master list
 		this->_surfaces.push_back(top);
-		//Add to the topo list
-		(*topoIter).push_front(top);
+		//Create face use and add to the topo list (for Topology)
+		tmpUse = new WSFaceUse();
+		tmpUse->surface = top;
+		tmpUse->orientation = true;
+		(*topoIter).push_front(tmpUse);
 
 		/*** End Top-Bottom Surface Generation ***/
 		
@@ -404,63 +461,86 @@ WCTopologyModel* WCPartPad::GenerateTopology(void) {
 	WCTopologyModel *model = new WCTopologyModel();
 	//Create one shell per item in main profile list
 	WSTopologyShell *shell;
-	WSFaceUse *faceUse, *topFU, *bottomFU;
+	WPUInt profileCount;
+	WSFaceUse *faceUse;
 	WSLoopUse *loopUse;
-	WSEdgeUse *edgeUse;
-	WSVertexUse *vertexUse;
+//	WSEdgeUse *edgeUse;
+//	WSVertexUse *vertexUse;
 	std::list<WCSketchProfile*>::iterator profilesIter;
 	std::list<std::list<WCSketchProfile*> >::iterator listIter;
-	std::list<std::list<WCGeometricPoint*> >::iterator	pointsListIter = this->_topoPoints.begin();
-	std::list<std::list<WCGeometricCurve*> >::iterator	curvesListIter = this->_topoCurves.begin();
-	std::list<std::list<WCGeometricSurface*> >::iterator surfacesListIter = this->_topoSurfaces.begin();
+//	std::list<std::list<WCGeometricPoint*> >::iterator	pointsListIter = this->_topoPoints.begin();
+//	std::list<std::list<WCGeometricCurve*> >::iterator	curvesListIter = this->_topoCurves.begin();
+	std::list<std::list<WSFaceUse*> >::iterator surfacesListIter = this->_topoSurfaces.begin();
 	for (listIter = this->_profiles.begin(); listIter != this->_profiles.end(); listIter++) {
+		//Get the number of profiles in this shell
+		profileCount = (WPUInt)(*listIter).size();
+//		std::cout << "Profile Count: " << profileCount << std::endl;
 		//Create a shell
-		shell = new WSTopologyShell;
+		shell = new WSTopologyShell();
 		//Set shell values
 		shell->model = model;
-		shell->type = SolidModel;
-		shell->faceUses = NULL;
-		shell->edgeUses = NULL;
-		shell->vertexUses = NULL;
 		//Add shell to model
 		model->AddShell(shell);
 
-		/*** Create all of the FaceUses ***/
+		/*** Configure all of the FaceUses ***/
 
-		bottomFU = NULL;
-		std::list<WCGeometricSurface*>::iterator surfaceIter;
-		//Go through each surface in this list - order is [T, S, ..., S, B]
-		for (surfaceIter = (*surfacesListIter).begin(); surfaceIter != (*surfacesListIter).end(); surfaceIter++) {
-			//Create a new FaceUse - and set its values
-			faceUse = new WSFaceUse;
-			faceUse->surface = *surfaceIter;
-			faceUse->orientation = true;
+		WSFaceUse *prevFU = NULL, *firstFU = NULL, *lastFU = NULL;
+		for (std::list<WSFaceUse*>::iterator fuIter = (*surfacesListIter).begin(); fuIter != (*surfacesListIter).end(); fuIter++) {
+			faceUse = *fuIter;
+			//Set the shell value for the faceUse
 			faceUse->shell = shell;
-			faceUse->prev = bottomFU;
-			//Get the list pointers ready
-			if (bottomFU) bottomFU->next = faceUse;
-			else topFU = faceUse;
-			faceUse->mate = NULL;
-			//Create single loopUse for the face
-//			faceUse->loopUses = new WSLoopUse;
-			faceUse->loopUses = NULL;
-			//Prep for the next faceUse
-			bottomFU = faceUse;
+			//Set the firstFU value if necessary
+			if (!firstFU) firstFU = faceUse;
+			//Set the lastFU value
+			lastFU = faceUse;
+			//Set the previous and next values
+			faceUse->prev = prevFU;
+			if (prevFU) prevFU->next = faceUse;
+			//Set the value of prevFU
+			prevFU = faceUse;
+
+			/*** Create all of the LoopUses ***/
+
+			// Top and bottom faces may have multiple loopUses
+			WSLoopUse *prevLU = NULL, *firstLU = NULL, *lastLU = NULL;
+			if ((faceUse == (*surfacesListIter).front()) || (faceUse == (*surfacesListIter).back())) {
+				//Add profile count loops
+				for (WPUInt i=0; i<profileCount; i++) {
+					//Create a new loopUse and attach it to the faceUse
+					loopUse = new WSLoopUse();
+					loopUse->face = faceUse;
+					//Set the firstLU value if necessary
+					if (!firstLU) firstLU = loopUse;
+					//Set the last LU value
+					lastLU = loopUse;
+					//Set the previous and next values
+					loopUse->prev = prevLU;
+					if (prevLU) prevLU->next = loopUse;
+					//Set the value of prevLU
+					prevLU = loopUse;
+				}
+				//Clean up dangling loopUse and faceUse pointers
+				firstLU->prev = lastLU;
+				lastLU->next = firstLU;
+				faceUse->loopUses = firstLU;
+			}
+			//Otherwise side faces only have one loop
+			else {
+				//Create a new loopUse and attach it to the faceUse
+				loopUse = new WSLoopUse();
+				loopUse->face = faceUse;
+				loopUse->next = loopUse;
+				loopUse->prev = loopUse;
+				faceUse->loopUses = loopUse;
+			}
 		}
-		//Do a bit of clean up
-		bottomFU->next = topFU;
-		topFU->prev = bottomFU;
-		shell->faceUses = topFU;
-
-		/*** Create all of the LoopUses ***/
-
-		/*** Create all of the EdgeUses ***/
-		
-		/*** Create all of the VertexUses ***/
-
+		//Clean up dangling faceUse and shell pointers
+		firstFU->prev = lastFU;
+		lastFU->next = firstFU;
+		shell->faceUses = firstFU;
 		//Move to the next shell
-		pointsListIter++;
-		curvesListIter++;
+//		pointsListIter++;
+//		curvesListIter++;
 		surfacesListIter++;
 	}
 	//Return the model
@@ -533,8 +613,8 @@ void WCPartPad::DetermineDirection(void) {
 WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, std::list<std::list<WCSketchProfile*> > &profiles, 
 	const bool &reverseDir, const WCPartPadType &firstType, const WCPartPadType &secondType, const WPFloat &firstOffset, const WPFloat &secondOffset) : 
 	::WCPartFeature(body, name), _profiles(profiles), _isReversed(reverseDir), _firstType(firstType), _secondType(secondType),
-	_firstOffset(firstOffset), _secondOffset(secondOffset), _points(), _lines(), _curves(), _surfaces(),
-	_topTrims(), _bottomTrims(), _topoPoints(), _topoCurves(), _topoSurfaces() {
+	_firstOffset(firstOffset), _secondOffset(secondOffset), _points(), _lines(), _curves(), _surfaces(), _topTrims(), _bottomTrims(),
+	_topoBottomPoints(), _topoTopPoints(), _topoBottomCurves(), _topoSideCurves(), _topoTopCurves(), _topoSurfaces() {
 	//Determine direction and offsets
 	this->DetermineDirection();
 
@@ -558,8 +638,8 @@ WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, std::list<std::l
 WCPartPad::WCPartPad(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	::WCPartFeature( WCSerializeableObject::ElementFromName(element,"PartFeature"), dictionary),
 	_profiles(), _isReversed(false), _firstType(WCPartPadType::Dimension()), _secondType(WCPartPadType::Dimension()),
-	_firstOffset(0.0), _secondOffset(0.0), _points(), _lines(), _curves(), _surfaces(),
-	_topTrims(), _bottomTrims(), _topoPoints(), _topoCurves(), _topoSurfaces() {
+	_firstOffset(0.0), _secondOffset(0.0), _points(), _lines(), _curves(), _surfaces(), _topTrims(), _bottomTrims(),
+	_topoBottomPoints(), _topoTopPoints(), _topoBottomCurves(), _topoSideCurves(), _topoTopCurves(), _topoSurfaces() {
 	//Restore the pad here
 	//...
 }
