@@ -173,7 +173,8 @@ void _PrintTopologyEdge(std::ostream &out, WSEdgeUse *edgeUse, const unsigned in
 	//Do the spacing
 	for (unsigned int i=0; i<depth; i++) out << "\t";
 	//Print the info
-	out << "TopologyEdge (" << edgeUse << ")\n";
+	out << "TopologyEdge (*: " << edgeUse << ", Curve: " << edgeUse->curve << ", Orient: " << edgeUse->orientation;
+	out << ", CCW: " << edgeUse->ccw << ", CW: " << edgeUse->cw << ", Mate: " << edgeUse->mate << ", Radial: " << edgeUse->radial << ")\n";
 }
 
 
@@ -210,7 +211,7 @@ void _PrintTopologyFace(std::ostream &out, WSFaceUse *faceUse, const unsigned in
 	//Do the spacing
 	for (unsigned int i=0; i<depth; i++) out << "\t";
 	//Print the info
-	out << "TopologyFace (*: " << faceUse << ", Surf: " << faceUse->surface << ", Oriet: " << faceUse->orientation;
+	out << "TopologyFace (*: " << faceUse << ", Surf: " << faceUse->surface << ", Orient: " << faceUse->orientation;
 	out << ", Prev: " << faceUse->prev << ", Next: " << faceUse->next << ", Mate: " << faceUse->mate << ", L: " << faceUse->loopUses << ")\n";
 	//Print the loops, if appropriate
 	if (faceUse->loopUses) {

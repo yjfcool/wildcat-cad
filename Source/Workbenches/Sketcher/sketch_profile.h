@@ -130,6 +130,7 @@ public:
 	WPInt IsOnRight(const WCSketchAxis *axis);														//!< Test relationship of profile to axis
 	WPUInt IsInside(const WCVector4 &point);														//!< Test if a point is inside the profile
 	WCProfileType Categorize(WCSketchProfile *profile);												//!< Categorize the profiles against each other
+	WPUInt CurveCount(void) const				{ return (WPUInt)this->_curveList.size(); }			//!< Get the number of curves in the profile
 	inline void BoundaryList(const bool &detailed, std::list<WCVector4> &outputList,				//!< Output list of boundary points
 												const WPFloat &tol=NURBSCURVE_LENGTH_ACCURACY) { 
 												return BuildBoundaryList(this->_curveList, outputList, detailed, tol); }

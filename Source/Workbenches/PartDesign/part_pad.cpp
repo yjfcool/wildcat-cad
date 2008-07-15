@@ -138,7 +138,7 @@ void WCPartPad::GenerateCurves(void) {
 	std::list< std::pair<WCGeometricCurve*,bool> > curveList, tmpBottom, tmpTop;
 	std::list< std::list< std::pair<WCGeometricCurve*,bool> > > tmpBottoms, tmpTops;
 	std::list< std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
-	std::list<WSEdgeUse*> bottomCurves, sideCurves, topCurves;
+	std::vector<WSEdgeUse*> bottomCurves, sideCurves, topCurves;
 	//Loop through all profiles and extrude all surfaces
 	for (listIter = this->_profiles.begin(); listIter != this->_profiles.end(); listIter++) {
 		//Go through the sub-list
@@ -281,9 +281,9 @@ void WCPartPad::GenerateCurves(void) {
 		this->_topTrims.push_back(tmpTops );
 		tmpTops.clear();
 		//Add topology edge uses to master list
-		this->_topoTopCurves.push_back(topCurves);
-		this->_topoSideCurves.push_back(sideCurves);
-		this->_topoBottomCurves.push_back(bottomCurves);
+		this->_topoTopEUs.push_back(topCurves);
+		this->_topoSideEUs.push_back(sideCurves);
+		this->_topoBottomEUs.push_back(bottomCurves);
 		//Clear the topo lists
 		topCurves.clear();
 		sideCurves.clear();
@@ -350,7 +350,7 @@ void WCPartPad::GenerateSideSurfaces(void) {
 			exterior = false;
 		}
 		//Add the topoList to the master
-		this->_topoSurfaces.push_back(topoList);
+		this->_topoFUs.push_back(topoList);
 	}
 }
 
@@ -368,7 +368,7 @@ void WCPartPad::GenerateTopBottom(void) {
 	WSFaceUse *tmpUse;
 	std::list< std::list<WCTrimProfile> >::iterator topTrim = this->_topTrims.begin();
 	std::list< std::list<WCTrimProfile> >::iterator bottomTrim = this->_bottomTrims.begin();
-	std::list< std::list<WSFaceUse*> >::iterator topoIter = this->_topoSurfaces.begin();
+	std::list< std::list<WSFaceUse*> >::iterator topoIter = this->_topoFUs.begin();
 
 	//Loop through list of profile lists
 	std::list<std::list<WCSketchProfile*> >::iterator listIter;
@@ -456,34 +456,195 @@ void WCPartPad::GenerateTopBottom(void) {
 }
 
 
+void _ConfigureVertexUses(void) {
+}
+
+
+void _ConfigureTopEdgeUses(WSLoopUse *loopUse, WPUInt &index, const WPUInt &count, std::vector<WSEdgeUse*> &edgeUseList, 
+	std::list<WSVertexUse*> &vuList) {
+	WSEdgeUse *edgeUse, *prevEU = NULL, *firstEU = NULL, *lastEU = NULL;
+	//Loop through edgeUses in top list
+	for (int i=index; i<index+count; i++) {
+		//Get the edgeUse and set the loop
+		edgeUse = edgeUseList.at(i);
+		edgeUse->loop = loopUse;
+		//Set the firstEU value if necessary
+		if (!firstEU) firstEU = edgeUse;
+		//Set the lastEU value
+		lastEU = edgeUse;
+		//Set the ccw and cw values
+		edgeUse->ccw = prevEU;
+		if (prevEU) prevEU->cw = edgeUse;
+		//Set the value of prevEU
+		prevEU = edgeUse;
+	}
+	//Clean up dangling edgeUse and loopUse pointers
+	firstEU->ccw = lastEU;
+	lastEU->cw = firstEU;
+	loopUse->edgeUses = firstEU;
+	//Increment index
+	index += count;
+}
+
+
+void _ConfigureSideEdgeUses(void) {
+}
+
+
+void _ConfigureBottomEdgeUses(WSLoopUse *loopUse, WPUInt &index, const WPUInt &count, std::vector<WSEdgeUse*> &edgeUseList, 
+	std::list<WSVertexUse*> &vuList) {
+	WSEdgeUse *edgeUse, *prevEU = NULL, *firstEU = NULL, *lastEU = NULL;
+	//Loop through edgeUses in top list
+	for (int i=index; i<index+count; i++) {
+		//Get the edgeUse and set the loop
+		edgeUse = edgeUseList.at(i);
+		edgeUse->loop = loopUse;
+		//Set the firstEU value if necessary
+		if (!firstEU) firstEU = edgeUse;
+		//Set the lastEU value
+		lastEU = edgeUse;
+		//Set the ccw and cw values
+		edgeUse->ccw = prevEU;
+		if (prevEU) prevEU->cw = edgeUse;
+		//Set the value of prevEU
+		prevEU = edgeUse;
+	}
+	//Clean up dangling edgeUse and loopUse pointers
+	firstEU->ccw = lastEU;
+	lastEU->cw = firstEU;
+	loopUse->edgeUses = firstEU;
+	//Increment index
+	index += count;
+}
+
+
+void _ConfigureFaceUses(std::list<WCSketchProfile*> &profileList, WSTopologyShell *shell, std::list<WSFaceUse*> &faceList,
+	std::vector<WSEdgeUse*> &bottomEUs, std::vector<WSEdgeUse*> &sideEUs, std::vector<WSEdgeUse*> &topEUs,
+	std::list<WSVertexUse*> &bottomVUs, std::list<WSVertexUse*> &topVUs) {
+	WSFaceUse *faceUse, *prevFU = NULL, *firstFU = NULL, *lastFU = NULL;
+	//Loop through all of the faces for the shell
+	for (std::list<WSFaceUse*>::iterator fuIter = faceList.begin(); fuIter != faceList.end(); fuIter++) {
+		faceUse = *fuIter;
+		//Set the shell value for the faceUse
+		faceUse->shell = shell;
+		//Set the firstFU value if necessary
+		if (!firstFU) firstFU = faceUse;
+		//Set the lastFU value
+		lastFU = faceUse;
+		//Set the previous and next values
+		faceUse->prev = prevFU;
+		if (prevFU) prevFU->next = faceUse;
+		//Set the value of prevFU
+		prevFU = faceUse;
+		
+		/*** Create all of the LoopUses ***/
+
+		// Top and bottom faces may have multiple loopUses
+		WSLoopUse *loopUse, *prevLU = NULL, *firstLU = NULL, *lastLU = NULL;
+		if ((faceUse == faceList.front()) || (faceUse == faceList.back())) {
+			WPUInt index = 0;
+			//Add profile count loops
+			for (std::list<WCSketchProfile*>::iterator profileIter = profileList.begin(); profileIter != profileList.end(); profileIter++) {
+				//Create a new loopUse and attach it to the faceUse
+				loopUse = new WSLoopUse();
+				loopUse->face = faceUse;
+				//Set the firstLU value if necessary
+				if (!firstLU) firstLU = loopUse;
+				//Set the last LU value
+				lastLU = loopUse;
+				//Set the previous and next values
+				loopUse->prev = prevLU;
+				if (prevLU) prevLU->next = loopUse;
+				//Set the value of prevLU
+				prevLU = loopUse;
+				
+				/*** Configure dependent edgeUses ***/
+				
+				//If top face, pass in top edgeUses and top vertexUses
+				if (faceUse == faceList.front())
+					_ConfigureTopEdgeUses(loopUse, index, (*profileIter)->CurveCount(), topEUs, topVUs);
+				//Must be bottom edgeUses
+				else
+					_ConfigureBottomEdgeUses(loopUse, index, (*profileIter)->CurveCount(), bottomEUs, bottomVUs);
+
+			}
+			//Clean up dangling loopUse and faceUse pointers
+			firstLU->prev = lastLU;
+			lastLU->next = firstLU;
+			faceUse->loopUses = firstLU;
+		}
+		//Otherwise side faces only have one loop
+		else {
+			//Create a new loopUse and attach it to the faceUse
+			loopUse = new WSLoopUse();
+			loopUse->face = faceUse;
+			loopUse->next = loopUse;
+			loopUse->prev = loopUse;
+			faceUse->loopUses = loopUse;
+
+			/*** Configure dependent edgeUses ***/
+			_ConfigureSideEdgeUses();
+
+		}
+	}
+	//Clean up dangling faceUse and shell pointers
+	firstFU->prev = lastFU;
+	lastFU->next = firstFU;
+	shell->faceUses = firstFU;
+}
+
+
 WCTopologyModel* WCPartPad::GenerateTopology(void) {
 	//Create one model
 	WCTopologyModel *model = new WCTopologyModel();
 	//Create one shell per item in main profile list
 	WSTopologyShell *shell;
-	WPUInt profileCount;
-	WSFaceUse *faceUse;
-	WSLoopUse *loopUse;
-//	WSEdgeUse *edgeUse;
-//	WSVertexUse *vertexUse;
-	std::list<WCSketchProfile*>::iterator profilesIter;
-	std::list<std::list<WCSketchProfile*> >::iterator listIter;
-//	std::list<std::list<WCGeometricPoint*> >::iterator	pointsListIter = this->_topoPoints.begin();
-//	std::list<std::list<WCGeometricCurve*> >::iterator	curvesListIter = this->_topoCurves.begin();
-	std::list<std::list<WSFaceUse*> >::iterator surfacesListIter = this->_topoSurfaces.begin();
-	for (listIter = this->_profiles.begin(); listIter != this->_profiles.end(); listIter++) {
-		//Get the number of profiles in this shell
-		profileCount = (WPUInt)(*listIter).size();
-//		std::cout << "Profile Count: " << profileCount << std::endl;
+
+	//Ready all of the Use lists
+	std::list<std::list<WSFaceUse*> >::iterator faceListIter = this->_topoFUs.begin();
+	std::list<std::vector<WSEdgeUse*> >::iterator	euBottomListIter = this->_topoBottomEUs.begin();
+	std::list<std::vector<WSEdgeUse*> >::iterator	euSideListIter = this->_topoSideEUs.begin();
+	std::list<std::vector<WSEdgeUse*> >::iterator	euTopListIter = this->_topoTopEUs.begin();
+	std::list<std::list<WSVertexUse*> >::iterator vuBottomListIter = this->_topoBottomPoints.begin();
+	std::list<std::list<WSVertexUse*> >::iterator vuTopListIter = this->_topoTopPoints.begin();
+
+	std::list<std::list<WCSketchProfile*> >::iterator profileListIter;
+	//Loop through each separate shell
+	for (profileListIter = this->_profiles.begin(); profileListIter != this->_profiles.end(); profileListIter++) {
 		//Create a shell
 		shell = new WSTopologyShell();
 		//Set shell values
 		shell->model = model;
 		//Add shell to model
 		model->AddShell(shell);
+		//Configure all of the FaceUses (and below) for this shell
+		_ConfigureFaceUses(*profileListIter, shell, *faceListIter, *euBottomListIter, *euSideListIter,
+						   *euTopListIter, *vuBottomListIter, *vuTopListIter);
 
-		/*** Configure all of the FaceUses ***/
+		//Make sure to increment to the next lists of Uses
+		faceListIter++;
+		euBottomListIter++;
+		euSideListIter++;
+		euTopListIter++;
+		vuBottomListIter++;
+		vuTopListIter++;
+	}
+	//Return the model
+	return model;
+}
 
+/*
+
+ //	WSFaceUse *faceUse;
+ //	WSLoopUse *loopUse;
+ //	WPUInt numEdges;
+ //	WSEdgeUse *edgeUse;
+ //	std::list<WSEdgeUse*>::iterator edgeUseIter;
+ //	WSVertexUse *vertexUse;
+ //	std::list<WCSketchProfile*>::iterator profilesIter;
+ 
+
+		 
 		WSFaceUse *prevFU = NULL, *firstFU = NULL, *lastFU = NULL;
 		for (std::list<WSFaceUse*>::iterator fuIter = (*surfacesListIter).begin(); fuIter != (*surfacesListIter).end(); fuIter++) {
 			faceUse = *fuIter;
@@ -499,7 +660,7 @@ WCTopologyModel* WCPartPad::GenerateTopology(void) {
 			//Set the value of prevFU
 			prevFU = faceUse;
 
-			/*** Create all of the LoopUses ***/
+			/*** Create all of the LoopUses ***
 
 			// Top and bottom faces may have multiple loopUses
 			WSLoopUse *prevLU = NULL, *firstLU = NULL, *lastLU = NULL;
@@ -518,6 +679,66 @@ WCTopologyModel* WCPartPad::GenerateTopology(void) {
 					if (prevLU) prevLU->next = loopUse;
 					//Set the value of prevLU
 					prevLU = loopUse;
+
+					/*** Configure dependent edgeUses ***
+
+					//See if this is top surface of this shell
+					WSEdgeUse *prevEU = NULL, *firstEU = NULL, *lastEU = NULL;
+					if (faceUse == (*surfacesListIter).front()) {
+						//Set the edgeUseIter to the top list
+						edgeUseIter = (*euTopListIter).begin();
+						//Determine how many edges are in loop
+						numEdges = 4;
+						//Loop through edgeUses in top list
+						for (int j=0; j<numEdges; j++) {
+							//Get the edgeUse and set the loop
+							edgeUse = *edgeUseIter;
+							edgeUse->loop = loopUse;
+							//Set the firstEU value if necessary
+							if (!firstEU) firstEU = edgeUse;
+							//Set the lastEU value
+							lastEU = edgeUse;
+							//Set the ccw and cw values
+							edgeUse->ccw = prevEU;
+							if (prevEU) prevEU->cw = edgeUse;
+							//Set the value of prevEU
+							prevEU = edgeUse;
+							//Make sure to move to the next edgeUse
+							edgeUseIter++;
+						}
+						//Clean up dangling edgeUse and loopUse pointers
+						firstEU->ccw = lastEU;
+						lastEU->cw = firstEU;
+						loopUse->edgeUses = firstEU;
+					}
+					//Must be bottom surface of this shell
+					else {
+						//Set the edgeUseIter to the bottom list
+						edgeUseIter = (*euBottomListIter).begin();
+						//Determine how many edges are in loop
+						numEdges = 4;
+						//Loop through edgeUses in top list
+						for (int j=0; j<numEdges; j++) {
+							//Get the edgeUse and set the loop
+							edgeUse = *edgeUseIter;
+							edgeUse->loop = loopUse;
+							//Set the firstEU value if necessary
+							if (!firstEU) firstEU = edgeUse;
+							//Set the lastEU value
+							lastEU = edgeUse;
+							//Set the ccw and cw values
+							edgeUse->cw = prevEU;
+							if (prevEU) prevEU->ccw = edgeUse;
+							//Set the value of prevEU
+							prevEU = edgeUse;
+							//Make sure to move to the next edgeUse
+							edgeUseIter++;
+						}
+						//Clean up dangling edgeUse and loopUse pointers
+						firstEU->cw = lastEU;
+						lastEU->ccw = firstEU;
+						loopUse->edgeUses = firstEU;
+					}
 				}
 				//Clean up dangling loopUse and faceUse pointers
 				firstLU->prev = lastLU;
@@ -532,6 +753,10 @@ WCTopologyModel* WCPartPad::GenerateTopology(void) {
 				loopUse->next = loopUse;
 				loopUse->prev = loopUse;
 				faceUse->loopUses = loopUse;
+				
+				/*** Configure dependent edgeUses ***
+				
+				//...
 			}
 		}
 		//Clean up dangling faceUse and shell pointers
@@ -540,12 +765,10 @@ WCTopologyModel* WCPartPad::GenerateTopology(void) {
 		shell->faceUses = firstFU;
 		//Move to the next shell
 //		pointsListIter++;
-//		curvesListIter++;
-		surfacesListIter++;
-	}
-	//Return the model
-	return model;
-}
+		euTopListIter++;
+		euSideListIter++;
+		euBottomListIter++;
+*/
 
 
 void WCPartPad::Initialize(void) {
@@ -614,7 +837,7 @@ WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, std::list<std::l
 	const bool &reverseDir, const WCPartPadType &firstType, const WCPartPadType &secondType, const WPFloat &firstOffset, const WPFloat &secondOffset) : 
 	::WCPartFeature(body, name), _profiles(profiles), _isReversed(reverseDir), _firstType(firstType), _secondType(secondType),
 	_firstOffset(firstOffset), _secondOffset(secondOffset), _points(), _lines(), _curves(), _surfaces(), _topTrims(), _bottomTrims(),
-	_topoBottomPoints(), _topoTopPoints(), _topoBottomCurves(), _topoSideCurves(), _topoTopCurves(), _topoSurfaces() {
+	_topoBottomPoints(), _topoTopPoints(), _topoBottomEUs(), _topoSideEUs(), _topoTopEUs(), _topoFUs() {
 	//Determine direction and offsets
 	this->DetermineDirection();
 
@@ -639,7 +862,7 @@ WCPartPad::WCPartPad(xercesc::DOMElement *element, WCSerialDictionary *dictionar
 	::WCPartFeature( WCSerializeableObject::ElementFromName(element,"PartFeature"), dictionary),
 	_profiles(), _isReversed(false), _firstType(WCPartPadType::Dimension()), _secondType(WCPartPadType::Dimension()),
 	_firstOffset(0.0), _secondOffset(0.0), _points(), _lines(), _curves(), _surfaces(), _topTrims(), _bottomTrims(),
-	_topoBottomPoints(), _topoTopPoints(), _topoBottomCurves(), _topoSideCurves(), _topoTopCurves(), _topoSurfaces() {
+	_topoBottomPoints(), _topoTopPoints(), _topoBottomEUs(), _topoSideEUs(), _topoTopEUs(), _topoFUs() {
 	//Restore the pad here
 	//...
 }
