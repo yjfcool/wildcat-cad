@@ -132,13 +132,13 @@ void WCPartPad::GenerateCurves(void) {
 	WCNurbsCurve *nurb, *newNurb;
 	WCGeometricCurve *curve, *newCurve;
 	WCVector4 pt, lower, upper;
-	WSEdgeUse *tmpUse1, *tmpUse2;
+	WSEdgeUse *tmpUse, *topUse, *leftUse, *bottomUse, *rightUse;
 	std::list<WCSketchProfile*>::iterator profilesIter;
 	std::list<std::list<WCSketchProfile*> >::iterator listIter;
 	std::list< std::pair<WCGeometricCurve*,bool> > curveList, tmpBottom, tmpTop;
 	std::list< std::list< std::pair<WCGeometricCurve*,bool> > > tmpBottoms, tmpTops;
 	std::list< std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
-	std::vector<WSEdgeUse*> bottomCurves, sideCurves, topCurves;
+	std::vector<WSEdgeUse*> bottomUses, tmpSideUses, sideUses, topUses;
 	//Loop through all profiles and extrude all surfaces
 	for (listIter = this->_profiles.begin(); listIter != this->_profiles.end(); listIter++) {
 		//Go through the sub-list
@@ -181,22 +181,21 @@ void WCPartPad::GenerateCurves(void) {
 				//Add it to the list of top curves for trimming
 				tmpTop.push_back( std::make_pair(newCurve, (*curveIter).second) );
 				//Create top edge use (for topology)
-				tmpUse1 = new WSEdgeUse();
-				tmpUse1->curve = newCurve;
-				tmpUse1->orientation = (*curveIter).second;
-				topCurves.push_back(tmpUse1);
+				tmpUse = new WSEdgeUse();
+				tmpUse->curve = newCurve;
+				tmpUse->orientation = (*curveIter).second;
+				topUses.push_back(tmpUse);
 				//Create side edge use
-				tmpUse2 = new WSEdgeUse();
-				tmpUse2->curve = newCurve;
-				tmpUse2->orientation = !(*curveIter).second;
-				sideCurves.push_back(tmpUse2);
+				topUse = new WSEdgeUse();
+				topUse->curve = newCurve;
+				topUse->orientation = !(*curveIter).second;
 				//Set edgeUse radials
-				tmpUse1->radial = tmpUse2;
-				tmpUse2->radial = tmpUse1;
+				tmpUse->radial = topUse;
+				topUse->radial = tmpUse;
 				
 				/*** Create Extrusion Lines ***/
 
-				//Make sure curveList is > 1
+				//Make sure curveList is > 1 (not a circle)
 				if (curveList.size() > 1) {
 					//See if curve is forward
 					if ((*curveIter).second) pt = (*curveIter).first->Evaluate(0.0);
@@ -212,17 +211,21 @@ void WCPartPad::GenerateCurves(void) {
 					//Add the line to the list of all lines
 					this->_lines.push_back(newLine);
 					//Create side edge uses (for topology)
-					tmpUse1 = new WSEdgeUse();
-					tmpUse1->curve = newLine;
-					tmpUse1->orientation = false;	// -- Goes from top to bottom
-					sideCurves.push_back(tmpUse1);
-					tmpUse2 = new WSEdgeUse();
-					tmpUse2->curve = newLine;
-					tmpUse2->orientation = true;		// -- Goes from bottom to top
-					sideCurves.push_back(tmpUse2);
+					rightUse = new WSEdgeUse();
+					rightUse->curve = newLine;
+					rightUse->orientation = false;		// -- Goes from top to bottom
+					leftUse = new WSEdgeUse();
+					leftUse->curve = newLine;
+					leftUse->orientation = true;		// -- Goes from bottom to top
 					//Set edgeUse radials
-					tmpUse1->radial = tmpUse2;
-					tmpUse2->radial = tmpUse1;
+					rightUse->radial = leftUse;
+					leftUse->radial = rightUse;
+				}
+				//If it is a circle (or ellipse)
+				else {
+					//Set both left and right uses to NULL
+					leftUse = NULL;
+					rightUse = NULL;
 				}
 
 				/*** Duplicate curve for bottom ***/
@@ -254,26 +257,39 @@ void WCPartPad::GenerateCurves(void) {
 				//Add it to the list of bottom curves for trimming
 				tmpBottom.push_front( std::make_pair(newCurve, !(*curveIter).second) );
 				//Create bottom edge use (for topology)
-				tmpUse1 = new WSEdgeUse();
-				tmpUse1->curve = newCurve;
-				tmpUse1->orientation = (*curveIter).second;
-				bottomCurves.push_back(tmpUse1);
+				tmpUse = new WSEdgeUse();
+				tmpUse->curve = newCurve;
+				tmpUse->orientation = (*curveIter).second;
+				bottomUses.push_back(tmpUse);
 				//Create side edge use
-				tmpUse2 = new WSEdgeUse();
-				tmpUse2->curve = newCurve;
-				tmpUse2->orientation = !(*curveIter).second;
-				sideCurves.push_back(tmpUse2);
+				bottomUse = new WSEdgeUse();
+				bottomUse->curve = newCurve;
+				bottomUse->orientation = !(*curveIter).second;
 				//Set edgeUse radials
-				tmpUse1->radial = tmpUse2;
-				tmpUse2->radial = tmpUse1;
+				tmpUse->radial = bottomUse;
+				bottomUse->radial = tmpUse;
 
 				/*** Done with creating ***/
+				
+				//Add side Uses in proper order
+				tmpSideUses.push_back(rightUse);
+				tmpSideUses.push_back(topUse);
+				tmpSideUses.push_back(leftUse);
+				tmpSideUses.push_back(bottomUse);
 			}
 			//Add tmpBottom and tmpTop to tmpBottoms and tmpTops - make sure to clear them afterwards
 			tmpBottoms.push_back( tmpBottom );
 			tmpBottom.clear();
 			tmpTops.push_back( tmpTop );
 			tmpTop.clear();
+			//Copy first tmpSideUse to the back
+			tmpUse = tmpSideUses.front();
+			tmpSideUses.push_back(tmpUse);
+			//Copy [1,N] tmpSide uses into sideUses
+			for (int i=1; i<tmpSideUses.size(); i++)
+				sideUses.push_back(tmpSideUses.at(i));
+			//Make sure to clear tmpSideUses
+			tmpSideUses.clear();
 		}
 		//Add tmpBottom and tmpTop to bottomTrim and topTrim - make sure to clear them afterwards
 		this->_bottomTrims.push_back( tmpBottoms );
@@ -281,13 +297,13 @@ void WCPartPad::GenerateCurves(void) {
 		this->_topTrims.push_back(tmpTops );
 		tmpTops.clear();
 		//Add topology edge uses to master list
-		this->_topoTopEUs.push_back(topCurves);
-		this->_topoSideEUs.push_back(sideCurves);
-		this->_topoBottomEUs.push_back(bottomCurves);
+		this->_topoTopEUs.push_back(topUses);
+		this->_topoSideEUs.push_back(sideUses);
+		this->_topoBottomEUs.push_back(bottomUses);
 		//Clear the topo lists
-		topCurves.clear();
-		sideCurves.clear();
-		bottomCurves.clear();
+		topUses.clear();
+		sideUses.clear();
+		bottomUses.clear();
 	}
 }
 
@@ -487,7 +503,43 @@ void _ConfigureTopEdgeUses(WSLoopUse *loopUse, WPUInt &index, const WPUInt &coun
 }
 
 
-void _ConfigureSideEdgeUses(void) {
+void _ConfigureSideEdgeUses(WSLoopUse *loopUse, WPUInt &index, std::vector<WSEdgeUse*> &edgeUseList, 
+	std::list<WSVertexUse*> &vuTopList, std::list<WSVertexUse*> &vuBottomList) {
+	WSEdgeUse *top, *left, *bottom, *right;
+	//Get the values for all 4 edgeUses
+	top = edgeUseList.at(index++);
+	left = edgeUseList.at(index++);
+	bottom = edgeUseList.at(index++);
+	right = edgeUseList.at(index++);
+	//Set the loop value for top and bottom
+	top->loop = loopUse;
+	bottom->loop = loopUse;
+	
+	//Check to see if this is part of a circle or ellipse
+	if (!left || !right) {
+		//Just have top point to bottom and bottom to top
+		top->cw = bottom;
+		top->ccw = bottom;
+		bottom->cw = top;
+		bottom->ccw =top;
+	}
+	//Setup all of the pointers
+	else {
+		//Make the list pointers correct
+		top->cw = left;
+		top->ccw = right;
+		left->cw = bottom;
+		left->ccw = top;
+		bottom->cw = right;
+		bottom->ccw = left;
+		right->cw = top;
+		right->ccw = bottom;
+		//Set the loop value for left and right
+		left->loop = loopUse;
+		right->loop = loopUse;
+	}
+	//Always use top as the link
+	loopUse->edgeUses = top;
 }
 
 
@@ -522,6 +574,7 @@ void _ConfigureFaceUses(std::list<WCSketchProfile*> &profileList, WSTopologyShel
 	std::vector<WSEdgeUse*> &bottomEUs, std::vector<WSEdgeUse*> &sideEUs, std::vector<WSEdgeUse*> &topEUs,
 	std::list<WSVertexUse*> &bottomVUs, std::list<WSVertexUse*> &topVUs) {
 	WSFaceUse *faceUse, *prevFU = NULL, *firstFU = NULL, *lastFU = NULL;
+	WPUInt sideIndex = 0;
 	//Loop through all of the faces for the shell
 	for (std::list<WSFaceUse*>::iterator fuIter = faceList.begin(); fuIter != faceList.end(); fuIter++) {
 		faceUse = *fuIter;
@@ -583,7 +636,7 @@ void _ConfigureFaceUses(std::list<WCSketchProfile*> &profileList, WSTopologyShel
 			faceUse->loopUses = loopUse;
 
 			/*** Configure dependent edgeUses ***/
-			_ConfigureSideEdgeUses();
+			_ConfigureSideEdgeUses(loopUse, sideIndex, sideEUs, topVUs, bottomVUs);
 
 		}
 	}
@@ -632,143 +685,6 @@ WCTopologyModel* WCPartPad::GenerateTopology(void) {
 	//Return the model
 	return model;
 }
-
-/*
-
- //	WSFaceUse *faceUse;
- //	WSLoopUse *loopUse;
- //	WPUInt numEdges;
- //	WSEdgeUse *edgeUse;
- //	std::list<WSEdgeUse*>::iterator edgeUseIter;
- //	WSVertexUse *vertexUse;
- //	std::list<WCSketchProfile*>::iterator profilesIter;
- 
-
-		 
-		WSFaceUse *prevFU = NULL, *firstFU = NULL, *lastFU = NULL;
-		for (std::list<WSFaceUse*>::iterator fuIter = (*surfacesListIter).begin(); fuIter != (*surfacesListIter).end(); fuIter++) {
-			faceUse = *fuIter;
-			//Set the shell value for the faceUse
-			faceUse->shell = shell;
-			//Set the firstFU value if necessary
-			if (!firstFU) firstFU = faceUse;
-			//Set the lastFU value
-			lastFU = faceUse;
-			//Set the previous and next values
-			faceUse->prev = prevFU;
-			if (prevFU) prevFU->next = faceUse;
-			//Set the value of prevFU
-			prevFU = faceUse;
-
-			/*** Create all of the LoopUses ***
-
-			// Top and bottom faces may have multiple loopUses
-			WSLoopUse *prevLU = NULL, *firstLU = NULL, *lastLU = NULL;
-			if ((faceUse == (*surfacesListIter).front()) || (faceUse == (*surfacesListIter).back())) {
-				//Add profile count loops
-				for (WPUInt i=0; i<profileCount; i++) {
-					//Create a new loopUse and attach it to the faceUse
-					loopUse = new WSLoopUse();
-					loopUse->face = faceUse;
-					//Set the firstLU value if necessary
-					if (!firstLU) firstLU = loopUse;
-					//Set the last LU value
-					lastLU = loopUse;
-					//Set the previous and next values
-					loopUse->prev = prevLU;
-					if (prevLU) prevLU->next = loopUse;
-					//Set the value of prevLU
-					prevLU = loopUse;
-
-					/*** Configure dependent edgeUses ***
-
-					//See if this is top surface of this shell
-					WSEdgeUse *prevEU = NULL, *firstEU = NULL, *lastEU = NULL;
-					if (faceUse == (*surfacesListIter).front()) {
-						//Set the edgeUseIter to the top list
-						edgeUseIter = (*euTopListIter).begin();
-						//Determine how many edges are in loop
-						numEdges = 4;
-						//Loop through edgeUses in top list
-						for (int j=0; j<numEdges; j++) {
-							//Get the edgeUse and set the loop
-							edgeUse = *edgeUseIter;
-							edgeUse->loop = loopUse;
-							//Set the firstEU value if necessary
-							if (!firstEU) firstEU = edgeUse;
-							//Set the lastEU value
-							lastEU = edgeUse;
-							//Set the ccw and cw values
-							edgeUse->ccw = prevEU;
-							if (prevEU) prevEU->cw = edgeUse;
-							//Set the value of prevEU
-							prevEU = edgeUse;
-							//Make sure to move to the next edgeUse
-							edgeUseIter++;
-						}
-						//Clean up dangling edgeUse and loopUse pointers
-						firstEU->ccw = lastEU;
-						lastEU->cw = firstEU;
-						loopUse->edgeUses = firstEU;
-					}
-					//Must be bottom surface of this shell
-					else {
-						//Set the edgeUseIter to the bottom list
-						edgeUseIter = (*euBottomListIter).begin();
-						//Determine how many edges are in loop
-						numEdges = 4;
-						//Loop through edgeUses in top list
-						for (int j=0; j<numEdges; j++) {
-							//Get the edgeUse and set the loop
-							edgeUse = *edgeUseIter;
-							edgeUse->loop = loopUse;
-							//Set the firstEU value if necessary
-							if (!firstEU) firstEU = edgeUse;
-							//Set the lastEU value
-							lastEU = edgeUse;
-							//Set the ccw and cw values
-							edgeUse->cw = prevEU;
-							if (prevEU) prevEU->ccw = edgeUse;
-							//Set the value of prevEU
-							prevEU = edgeUse;
-							//Make sure to move to the next edgeUse
-							edgeUseIter++;
-						}
-						//Clean up dangling edgeUse and loopUse pointers
-						firstEU->cw = lastEU;
-						lastEU->ccw = firstEU;
-						loopUse->edgeUses = firstEU;
-					}
-				}
-				//Clean up dangling loopUse and faceUse pointers
-				firstLU->prev = lastLU;
-				lastLU->next = firstLU;
-				faceUse->loopUses = firstLU;
-			}
-			//Otherwise side faces only have one loop
-			else {
-				//Create a new loopUse and attach it to the faceUse
-				loopUse = new WSLoopUse();
-				loopUse->face = faceUse;
-				loopUse->next = loopUse;
-				loopUse->prev = loopUse;
-				faceUse->loopUses = loopUse;
-				
-				/*** Configure dependent edgeUses ***
-				
-				//...
-			}
-		}
-		//Clean up dangling faceUse and shell pointers
-		firstFU->prev = lastFU;
-		lastFU->next = firstFU;
-		shell->faceUses = firstFU;
-		//Move to the next shell
-//		pointsListIter++;
-		euTopListIter++;
-		euSideListIter++;
-		euBottomListIter++;
-*/
 
 
 void WCPartPad::Initialize(void) {
