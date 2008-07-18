@@ -213,10 +213,10 @@ void WCPartPad::GenerateCurves(void) {
 					//Create side edge uses (for topology)
 					rightUse = new WSEdgeUse();
 					rightUse->curve = newLine;
-					rightUse->orientation = false;		// -- Goes from top to bottom
+					rightUse->orientation = true;		// -- Goes from top to bottom
 					leftUse = new WSEdgeUse();
 					leftUse->curve = newLine;
-					leftUse->orientation = true;		// -- Goes from bottom to top
+					leftUse->orientation = false;		// -- Goes from bottom to top
 					//Set edgeUse radials
 					rightUse->radial = leftUse;
 					leftUse->radial = rightUse;
@@ -259,12 +259,12 @@ void WCPartPad::GenerateCurves(void) {
 				//Create bottom edge use (for topology)
 				tmpUse = new WSEdgeUse();
 				tmpUse->curve = newCurve;
-				tmpUse->orientation = (*curveIter).second;
+				tmpUse->orientation = !(*curveIter).second;
 				bottomUses.push_back(tmpUse);
 				//Create side edge use
 				bottomUse = new WSEdgeUse();
 				bottomUse->curve = newCurve;
-				bottomUse->orientation = !(*curveIter).second;
+				bottomUse->orientation = (*curveIter).second;
 				//Set edgeUse radials
 				tmpUse->radial = bottomUse;
 				bottomUse->radial = tmpUse;
@@ -473,6 +473,7 @@ void WCPartPad::GenerateTopBottom(void) {
 
 
 void _ConfigureVertexUses(void) {
+	//Do nothing for now...
 }
 
 
@@ -503,14 +504,14 @@ void _ConfigureTopEdgeUses(WSLoopUse *loopUse, WPUInt &index, const WPUInt &coun
 }
 
 
-void _ConfigureSideEdgeUses(WSLoopUse *loopUse, WPUInt &index, std::vector<WSEdgeUse*> &edgeUseList, 
+void _ConfigureSideEdgeUses(WSLoopUse *loopUse, WPUInt &index, const WPUInt &outerFaces, std::vector<WSEdgeUse*> &edgeUseList, 
 	std::list<WSVertexUse*> &vuTopList, std::list<WSVertexUse*> &vuBottomList) {
 	WSEdgeUse *top, *left, *bottom, *right;
 	//Get the values for all 4 edgeUses
 	top = edgeUseList.at(index++);
-	left = edgeUseList.at(index++);
-	bottom = edgeUseList.at(index++);
 	right = edgeUseList.at(index++);
+	bottom = edgeUseList.at(index++);
+	left = edgeUseList.at(index++);
 	//Set the loop value for top and bottom
 	top->loop = loopUse;
 	bottom->loop = loopUse;
@@ -525,15 +526,35 @@ void _ConfigureSideEdgeUses(WSLoopUse *loopUse, WPUInt &index, std::vector<WSEdg
 	}
 	//Setup all of the pointers
 	else {
-		//Make the list pointers correct
-		top->cw = left;
-		top->ccw = right;
-		left->cw = bottom;
-		left->ccw = top;
-		bottom->cw = right;
-		bottom->ccw = left;
-		right->cw = top;
-		right->ccw = bottom;
+		//Check to see if this is the inside set of edgeUses
+		if (index > outerFaces * 4) {
+			//Make the list pointers correct (winding backwards and invert orientation
+			top->cw = left;
+			top->ccw = right;
+			left->cw = bottom;
+			left->ccw = top;
+			bottom->cw = right;
+			bottom->ccw = left;
+			right->cw = top;
+			right->ccw = bottom;
+			//Invert the orientation flags
+			top->orientation = !top->orientation;
+			left->orientation = !left->orientation;
+			bottom->orientation = !bottom->orientation;
+			right->orientation = !right->orientation;
+		}
+		//Must be outside faces
+		else {
+			//Make the list pointers correct
+			top->cw = right;
+			top->ccw = left;
+			right->cw = bottom;
+			right->ccw = top;
+			bottom->cw = left;
+			bottom->ccw = right;
+			left->cw = top;
+			left->ccw = bottom;
+		}
 		//Set the loop value for left and right
 		left->loop = loopUse;
 		right->loop = loopUse;
@@ -556,14 +577,14 @@ void _ConfigureBottomEdgeUses(WSLoopUse *loopUse, WPUInt &index, const WPUInt &c
 		//Set the lastEU value
 		lastEU = edgeUse;
 		//Set the ccw and cw values
-		edgeUse->ccw = prevEU;
-		if (prevEU) prevEU->cw = edgeUse;
+		edgeUse->cw = prevEU;
+		if (prevEU) prevEU->ccw = edgeUse;
 		//Set the value of prevEU
 		prevEU = edgeUse;
 	}
 	//Clean up dangling edgeUse and loopUse pointers
-	firstEU->ccw = lastEU;
-	lastEU->cw = firstEU;
+	firstEU->cw = lastEU;
+	lastEU->ccw = firstEU;
 	loopUse->edgeUses = firstEU;
 	//Increment index
 	index += count;
@@ -636,7 +657,7 @@ void _ConfigureFaceUses(std::list<WCSketchProfile*> &profileList, WSTopologyShel
 			faceUse->loopUses = loopUse;
 
 			/*** Configure dependent edgeUses ***/
-			_ConfigureSideEdgeUses(loopUse, sideIndex, sideEUs, topVUs, bottomVUs);
+			_ConfigureSideEdgeUses(loopUse, sideIndex, profileList.front()->CurveCount(),  sideEUs, topVUs, bottomVUs);
 
 		}
 	}
@@ -753,7 +774,7 @@ WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, std::list<std::l
 	const bool &reverseDir, const WCPartPadType &firstType, const WCPartPadType &secondType, const WPFloat &firstOffset, const WPFloat &secondOffset) : 
 	::WCPartFeature(body, name), _profiles(profiles), _isReversed(reverseDir), _firstType(firstType), _secondType(secondType),
 	_firstOffset(firstOffset), _secondOffset(secondOffset), _points(), _lines(), _curves(), _surfaces(), _topTrims(), _bottomTrims(),
-	_topoBottomPoints(), _topoTopPoints(), _topoBottomEUs(), _topoSideEUs(), _topoTopEUs(), _topoFUs() {
+	_topologyModel(NULL), _topoBottomPoints(), _topoTopPoints(), _topoBottomEUs(), _topoSideEUs(), _topoTopEUs(), _topoFUs() {
 	//Determine direction and offsets
 	this->DetermineDirection();
 
@@ -762,13 +783,9 @@ WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, std::list<std::l
 	this->GenerateCurves();
 	this->GenerateSideSurfaces();
 	this->GenerateTopBottom();
-	WCTopologyModel* model = this->GenerateTopology();
-	std::cout << *model << std::endl;;
+	this->_topologyModel = this->GenerateTopology();
 	//Now union the pad model (both geometric and topological) with the part model
-//	this->_part->Union(model);
-	//Clean up
-	delete model;
-
+	this->_part->TopologyModel()->Union(this->_topologyModel);
 	//Finish initialization
 	this->Initialize();
 }
@@ -778,7 +795,7 @@ WCPartPad::WCPartPad(xercesc::DOMElement *element, WCSerialDictionary *dictionar
 	::WCPartFeature( WCSerializeableObject::ElementFromName(element,"PartFeature"), dictionary),
 	_profiles(), _isReversed(false), _firstType(WCPartPadType::Dimension()), _secondType(WCPartPadType::Dimension()),
 	_firstOffset(0.0), _secondOffset(0.0), _points(), _lines(), _curves(), _surfaces(), _topTrims(), _bottomTrims(),
-	_topoBottomPoints(), _topoTopPoints(), _topoBottomEUs(), _topoSideEUs(), _topoTopEUs(), _topoFUs() {
+	_topologyModel(NULL), _topoBottomPoints(), _topoTopPoints(), _topoBottomEUs(), _topoSideEUs(), _topoTopEUs(), _topoFUs() {
 	//Restore the pad here
 	//...
 }
@@ -904,7 +921,12 @@ WCActionPartPadCreate* WCPartPad::ActionCreate(WCPartBody *body, const std::stri
 /***********************************************~***************************************************/
 
 
-std::ostream& operator<<(std::ostream& out, const WCPartPad &pad) {
+std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCPartPad &pad) {
+	out << "Part Pad(" << &pad << ")\n";
+	//Print out geometry
+	//...
+	//Print the topology model
+	out << *(pad._topologyModel);
 	return out;
 }
 

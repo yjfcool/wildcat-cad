@@ -53,7 +53,7 @@ inline WCObject* WCPartPadController::Associate(void) {
 
 void WCPartPadController::OnSelection(const bool fromManager, std::list<WCVisualObject*> objects) {
 	this->_pad->Document()->Status("Pad " + this->_pad->GetName() + " was selected");
-//	std::cout << "Pad: " << this->_pad->GetName() << "(" << this << ") was selected.\n";
+	std::cout << *(this->_pad);
 	//Is this from the selection manager
 	if (!fromManager) {
 		//Clear selection buffer if appropriate

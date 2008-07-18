@@ -61,21 +61,18 @@ protected:
 	std::list<WCPartFeature*>					_featureList;										//!< List of all features in the part
 	WCPartWorkbench								*_workbench;										//!< Associated part workbench
 	WCPartBody									*_currentBody;										//!< Current body
-
 	//Scene Objects
 	WCPointLayer								*_pointLayer;										//!< Point layer
 	WCLineLayer									*_lineLayer;										//!< Line layer
 	WCVisualLayer								*_curveLayer;										//!< Curve layer
 	WCVisualLayer								*_surfaceLayer;										//!< Surface layer
-
 	//Geometry Objects
 	std::map<WCGeometricPoint*,WCEventController*>	_pointMap;										//!< Part points
 	std::map<WCGeometricLine*,WCEventController*>	_lineMap;										//!< Part lines
 	std::map<WCGeometricCurve*,WCEventController*>	_curveMap;										//!< Part curves
 	std::map<WCGeometricSurface*,WCEventController*>_surfaceMap;									//!< Part surfaces
-
 	//Topology Objects
-	//...
+	WCTopologyModel								*_topologyModel;									//!< Master topology model
 private:
 	void Initialize(void);																			//!< Initialization method
 	//Hidden Constructors
@@ -100,6 +97,7 @@ public:
 	inline std::map<WCGeometricPoint*,WCEventController*>& PointMap(void) { return this->_pointMap;}//!< Get the point map
 	inline std::map<WCGeometricLine*,WCEventController*>& LineMap(void) { return this->_lineMap; }	//!< Get the line map
 	inline std::map<WCGeometricCurve*,WCEventController*>& CurveMap(void) { return this->_curveMap;}//!< Get the curve map
+	inline WCTopologyModel* TopologyModel(void)	{ return this->_topologyModel; }					//!< Get the topology model
 
 	//Feature Methods
 	bool AddFeature(WCPartFeature *feature, const bool &selectable);								//!< Add a part feature

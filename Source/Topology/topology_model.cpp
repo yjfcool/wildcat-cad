@@ -29,6 +29,9 @@
 /*** Included Header Files ***/
 #include "Topology/topology_model.h"
 #include "Topology/topology_types.h"
+#include "Geometry/geometric_types.h"
+#include "Geometry/geometric_line.h"
+#include "Geometry/nurbs_curve.h"
 
 
 /***********************************************~***************************************************/
@@ -175,6 +178,18 @@ void _PrintTopologyEdge(std::ostream &out, WSEdgeUse *edgeUse, const unsigned in
 	//Print the info
 	out << "TopologyEdge (*: " << edgeUse << ", Curve: " << edgeUse->curve << ", Orient: " << edgeUse->orientation;
 	out << ", CCW: " << edgeUse->ccw << ", CW: " << edgeUse->cw << ", Mate: " << edgeUse->mate << ", Radial: " << edgeUse->radial << ")\n";
+	//If there is a curve
+	if (edgeUse->curve) {
+		//Do sub-spacing
+		for (unsigned int i=0; i<=depth; i++) out << "\t";
+		out << "Begin: " << edgeUse->curve->Evaluate(0.0) << ", End: " << edgeUse->curve->Evaluate(1.0) << std::endl;
+//		WCGeometricLine *line = dynamic_cast<WCGeometricLine*> (edgeUse->curve);
+//		if (line) out << *line;
+//		else {
+//			WCNurbsCurve *curve = dynamic_cast<WCNurbsCurve*> (edgeUse->curve);
+//			out << *curve;
+//		}
+	}
 }
 
 
