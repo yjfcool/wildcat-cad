@@ -35,7 +35,13 @@
 
 
 WCTopologyModel* WCTopologyModel::Union(WCTopologyModel *model) { 
-	return NULL;
+	//See if any shells are in shellList
+	if (this->_shellList.empty()) {
+		//Copy the shell list
+		this->_shellList = model->_shellList;
+	}
+	//Return this for now
+	return this;
 }
 
 

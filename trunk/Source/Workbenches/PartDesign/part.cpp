@@ -34,8 +34,10 @@
 
 /***********************************************~***************************************************/
 
+
 void WCPart::Initialize(void) {
 }
+
 
 /***********************************************~***************************************************/
 
@@ -43,7 +45,7 @@ void WCPart::Initialize(void) {
 WCPart::WCPart(std::string name, std::string filename) : ::WCDocument(NULL, name, filename), 
 	_featureMap(), _featureList(), _workbench(NULL), _currentBody(NULL),
 	_pointLayer(NULL), _lineLayer(NULL), _curveLayer(NULL), _surfaceLayer(NULL),
-	_pointMap(), _lineMap(), _curveMap(), _surfaceMap() {
+	_pointMap(), _lineMap(), _curveMap(), _surfaceMap(), _topologyModel(NULL) {
 
 	//Check feature name
 	if (this->_name == "") this->_name = this->RootName() + ".1";
@@ -52,7 +54,9 @@ WCPart::WCPart(std::string name, std::string filename) : ::WCDocument(NULL, name
 	//Create tree element
 	WSTexture* partIcon = this->_scene->TextureManager()->TextureFromName("part32");
 	this->_treeElement = new WCTreeElement(this->_treeView, this->_name, this->_controller, partIcon);
-	
+	//Create the topology model
+	this->_topologyModel = new WCTopologyModel();
+
 	//Create rendering layers
 	this->_pointLayer = new WCPointLayer(this->_scene, "Points");
 	this->_lineLayer = new WCLineLayer(this->_scene, "Lines");
@@ -85,7 +89,7 @@ WCPart::WCPart(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	::WCDocument( WCSerializeableObject::ElementFromName(element,"Document"), dictionary),
 	_featureMap(), _featureList(), _workbench(NULL), _currentBody(NULL),
 	_pointLayer(NULL), _lineLayer(NULL), _curveLayer(NULL), _surfaceLayer(NULL),
-	_pointMap(), _lineMap(), _curveMap(), _surfaceMap() {
+	_pointMap(), _lineMap(), _curveMap(), _surfaceMap(), _topologyModel(NULL) {
 	//Make sure element if not null
 	if (element == NULL) return;
 	//Get GUID and register it
