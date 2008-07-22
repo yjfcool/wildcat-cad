@@ -211,7 +211,6 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCG
 				}
 				else hit.object = NULL;
 				//Add the hit to the list
-//				std::cout << hit << std::endl;
 				results.push_back(hit);
 			}
 		}

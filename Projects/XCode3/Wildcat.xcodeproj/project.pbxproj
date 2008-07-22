@@ -912,6 +912,10 @@
 		58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_circle_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_circle_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		58B3A4080DF4988500A08C0C /* libxerces-c.28.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libxerces-c.28.0.dylib"; path = "../../Dependencies/xerces-c-src_2_8_0/lib/libxerces-c.28.0.dylib"; sourceTree = SOURCE_ROOT; };
 		58C5DE8D0DAE6E5900003673 /* vis_listener_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_types.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_types.h; sourceTree = SOURCE_ROOT; };
+		58D4C6E20E36521900A466D1 /* spi_plM.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = spi_plM.fsh; path = ../../Source/Shaders/spi_plM.fsh; sourceTree = SOURCE_ROOT; };
+		58D4C6E30E36522A00A466D1 /* sli_plM.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sli_plM.fsh; path = ../../Source/Shaders/sli_plM.fsh; sourceTree = SOURCE_ROOT; };
+		58D4C6E40E36524700A466D1 /* ssi_plM.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ssi_plM.fsh; path = ../../Source/Shaders/ssi_plM.fsh; sourceTree = SOURCE_ROOT; };
+		58D4C6E50E36525900A466D1 /* sci_plM.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sci_plM.fsh; path = ../../Source/Shaders/sci_plM.fsh; sourceTree = SOURCE_ROOT; };
 		58DAD6400D69C7610093679D /* constraint_measure_radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = constraint_measure_radius.h; path = ../../Source/Constraint/constraint_measure_radius.h; sourceTree = SOURCE_ROOT; };
 		58DAD6410D69C7610093679D /* constraint_measure_radius.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = constraint_measure_radius.cpp; path = ../../Source/Constraint/constraint_measure_radius.cpp; sourceTree = SOURCE_ROOT; };
 		58DAD6480D69CB100093679D /* constraint_radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = constraint_radius.h; path = ../../Source/Constraint/constraint_radius.h; sourceTree = SOURCE_ROOT; };
@@ -3001,6 +3005,10 @@
 			children = (
 				5857A8210E1AC71900808402 /* cli_plM.fsh */,
 				58F5B4C30E0FFF4200D730F8 /* cci_plM.fsh */,
+				58D4C6E20E36521900A466D1 /* spi_plM.fsh */,
+				58D4C6E30E36522A00A466D1 /* sli_plM.fsh */,
+				58D4C6E50E36525900A466D1 /* sci_plM.fsh */,
+				58D4C6E40E36524700A466D1 /* ssi_plM.fsh */,
 			);
 			name = Intersection;
 			sourceTree = "<group>";
