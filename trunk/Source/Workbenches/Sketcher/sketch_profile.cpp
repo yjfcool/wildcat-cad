@@ -409,7 +409,7 @@ WPUInt WCSketchProfile::IsInside(const WCVector4 &point) {
 		if (!iterLine) iterCurve = dynamic_cast<WCNurbsCurve*>((*iter).first);
 		//Try the intersection
 		if (iterLine) hits = GeometricIntersection(line, iterLine, SKETCH_PROFILE_DEFAULT_TOLERANCE, flags);
-		else hits = GeometricIntersection(iterCurve, line, SKETCH_PROFILE_DEFAULT_TOLERANCE, flags);
+		else hits = GeometricIntersection(iterCurve, line, 0.005, flags);
 		//Adjust hits count
 		for (hitsIter = hits.begin(); hitsIter != hits.end(); hitsIter++) {
 			//Adjust for boundary hit

@@ -98,7 +98,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 					hit.rightParam = right->Data();
 					//Do boundary cull check, insert if ok
 					if (!(flags * INTERSECT_CULL_BOUNDARY) || !hit.leftBoundary) {
-						std::cout << hit;
+//						std::cout << hit;
 						//Add the hit to the list
 						results.push_back(hit);
 					}
@@ -135,7 +135,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 
 	//Set program values
 	glUseProgram(left->Context()->CurveLineProgram());
-	glUniform2f(left->Context()->IntersectionLocations()[INTERSECTION_CLI_PARAMS], (GLfloat)lod, (GLfloat)0.005);
+	glUniform2f(left->Context()->IntersectionLocations()[INTERSECTION_CLI_PARAMS], (GLfloat)lod, (GLfloat)tol);
 	glUniform4f(left->Context()->IntersectionLocations()[INTERSECTION_CLI_LBEGIN], 
 				(GLfloat)right->Begin().I(), (GLfloat)right->Begin().J(), (GLfloat)right->Begin().K(), 1.0);
 	glUniform4f(left->Context()->IntersectionLocations()[INTERSECTION_CLI_LEND],
@@ -206,7 +206,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 			 std::cout << i << ": " << cciData[i*4] << ", " << cciData[i*4+1] << ", " << cciData[i*4+2] << ", " << cciData[i*4+3] << std::endl;
 		 }
 	}
- /*** DEBUG ***/
+/*** DEBUG ***/
 
 	/*** Scan output for intersection results ***/
 	
@@ -222,12 +222,43 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 			while ((cciData[lookAhead * 4] != -1.0) && (lookAhead <lod)) lookAhead++;
 			diff = lookAhead - i;
 			//Get the first and last points
-			WCVector4 start(cciData[i*4], cciData[i*4+1], cciData[i*4+2], 1.0);
-			WCVector4 end(cciData[lookAhead*4-4], cciData[lookAhead*4-3], cciData[lookAhead*4-2], 1.0);
+			WCVector4 start(cciData[i*4+1], cciData[i*4+2], cciData[i*4+3], 1.0);
+			WCVector4 end(cciData[lookAhead*4-3], cciData[lookAhead*4-2], cciData[lookAhead*4-1], 1.0);
 			WPFloat dist = start.Distance(end);
 			//See how long the overlap is
 			if (dist > CLI_LINE_CUTOFF) {
-				CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveLine Intersection - Line overlap not yet implemented.");
+				//Determine left and right start and stop parametric values
+				WPFloat leftStart = i * paraFactor;
+				WPFloat leftEnd = (lookAhead-1) * paraFactor;
+				WPFloat rightStart = cciData[i*4];
+				WPFloat rightEnd = cciData[lookAhead*4-4];
+				//Set hit param values
+				hit.leftParam.I(leftStart);
+				hit.leftParam.J(leftEnd);
+				hit.rightParam.I(rightStart);
+				hit.rightParam.J(rightEnd);
+				//Set hit type
+				hit.type = IntersectLine;
+				//Set hit boundary values
+				hit.leftBoundary = ( (leftStart < paraFactor) || (leftEnd > 1.0-paraFactor) );
+				hit.rightBoundary = ( (rightStart < paraFactor) || (rightEnd > 1.0-paraFactor) );
+				//Check if culling end-point intersections
+				if (!(flags & INTERSECT_CULL_BOUNDARY) ||  (!hit.leftBoundary && !hit.rightBoundary)) {
+					//See if genObj
+					if (flags & INTERSECT_GEN_LINES) {
+						//Determine line start and end values
+						WCVector4 ptA = right->Evaluate(rightStart);
+						WCVector4 ptB = right->Evaluate(rightEnd);
+						//Create new line
+						WCGeometricLine *newLine = new WCGeometricLine(ptA, ptB);
+						//Add to result struct
+						hit.object = newLine;
+					}
+					else hit.object = NULL;
+					//Add the intersection to the list
+//					std::cout << "CLI - " << hit << std::endl;
+					results.push_back(hit);
+				}
 			}
 			//Diff <= CLI_CURVE_CUTOFF is a point
 			else {
@@ -264,7 +295,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 					}
 					else hit.object = NULL;
 					//Add the intersection to the list
-					std::cout << "CLI - " << hit << point << std::endl;
+//					std::cout << "CLI - " << hit << point << std::endl;
 					results.push_back(hit);
 				}
 			}
@@ -409,7 +440,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	GLfloat *rightData = right->GenerateClientBuffer(lod, true);
 	//Set program values
 	glUseProgram(left->Context()->CurveCurveProgram());
-	glUniform2f(left->Context()->IntersectionLocations()[INTERSECTION_CCI_PARAMS], (GLfloat)lod, (GLfloat)0.005);
+	glUniform2f(left->Context()->IntersectionLocations()[INTERSECTION_CCI_PARAMS], (GLfloat)lod, (GLfloat)tol);
 
 	/*** Bind to framebuffer object ***/
 	
@@ -483,8 +514,11 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	if (glGetError() != GL_NO_ERROR)
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveCurve Intersection - Clean up.");
 /*** DEBUG ***
-	for (int i=0; i<lod; i++)
-		CLOGGER_ERROR(WCLogManager::RootLogger(), cciData[i*4] << ", " << cciData[i*4+1] << ", " << cciData[i*4+2] << ", " << cciData[i*4+3]);
+	for (int i=0; i<lod; i++) {
+		if (cciData[i*4] != -1.0) {
+			CLOGGER_ERROR(WCLogManager::RootLogger(), i << ": " << cciData[i*4] << ", " << cciData[i*4+1] << ", " << cciData[i*4+2] << ", " << cciData[i*4+3]);
+		}
+	}
 /*** DEBUG ***/
 
 	/*** Scan output for intersection results ***/
@@ -530,7 +564,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 					}
 					else hit.object = NULL;
 					//Add the intersection to the list
-					std::cout << "CCI - " << hit << point << std::endl;
+//					std::cout << "CCI - " << hit << point << std::endl;
 					results.push_back(hit);
 				}
 			}
@@ -569,7 +603,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 					}
 					else hit.object = NULL;
 					//Add the intersection to the list
-					std::cout << "CCI - " << hit << point << std::endl;
+//					std::cout << "CCI - " << hit << point << std::endl;
 					results.push_back(hit);
 				}
 			}
