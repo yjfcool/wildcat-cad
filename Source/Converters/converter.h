@@ -56,7 +56,7 @@ public:
 	virtual ~WCConverter() { }
 
 	//Required Virtual Methods
-	virtual WCFeature* Import(const std::string filename)=0;
+	virtual WCFeature* Import(const std::string &filename)=0;
 	virtual bool Export(WCFeature *feature)=0;
 };
 	

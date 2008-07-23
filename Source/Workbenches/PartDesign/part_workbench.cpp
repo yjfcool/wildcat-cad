@@ -42,6 +42,10 @@
 #include "PartDesign/part_shaft.h"
 
 
+//Temporarily Included Headers
+#include "Converters/converter_stl.h"
+
+
 /***********************************************~***************************************************/
 
 
@@ -60,6 +64,7 @@ WCPartWorkbench::WCPartWorkbench(WCPart *part) : ::WCWorkbench(part, "Part Desig
 	this->_keyMap->AddMapping( WCKeyEvent('p'), WCUserMessage("pad") );
 	this->_keyMap->AddMapping( WCKeyEvent('s'), WCUserMessage("sketch") );
 	this->_keyMap->AddMapping( WCKeyEvent(127), WCUserMessage("delete") );
+	this->_keyMap->AddMapping( WCKeyEvent('x'), WCUserMessage("export") );
 	
 	//Create UI objects if part is root document
 	if (this->_part->Document() == this->_part) {
@@ -136,6 +141,12 @@ bool WCPartWorkbench::OnUserMessage(const WCUserMessage &message) {
 		//Revert to default drawing mode
 //		this->DrawingMode( WCDrawingMode::Selection( this->_part->ActiveWorkbench() ));
 		this->DrawingMode( new WCSelectionMode( this->_part->ActiveWorkbench() ));
+	}
+	//Export the current part
+	else if (message == "export") {
+		//Export the part
+		WCConverterSTL converter;
+		converter.Export(this->_part);
 	}
 	//Delete the selected elements
 	else if (message == "delete") {

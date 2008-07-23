@@ -63,6 +63,7 @@ public:
 
 	//General Access Methods
 	void AddShell(WSTopologyShell* shell);															//!< Add a shell to the model
+	inline std::list<WSTopologyShell*> ShellList(void) { return this->_shellList; }					//!< Get the list of shells
 	
 	//Boolean Methods
 	WCTopologyModel* Slice(const WCMatrix4 &plane, const bool &retainBottom);						//!< Slice the model using the plane
