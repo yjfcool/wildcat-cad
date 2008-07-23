@@ -39,8 +39,9 @@
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsSurface *left,
 	WCGeometricPoint *right, const WPFloat &tol, const unsigned int &flags) {
+	std::list<WCIntersectionResult> results;
 	//See if point is within surface bounding box
-	//...
+	if (left->BoundingBox().Intersection(right->BoundingBox())) return results;
 	
 	//Otherwise, generate surface to precision of tol and place into local buffer
 	//...
@@ -48,13 +49,14 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	//Compare point against each triangle within buffer
 	//...
 	
-	return std::list<WCIntersectionResult>();
+	return results;
 }
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsSurface *left,
 	WCGeometricLine *right, const WPFloat &tol, const unsigned int &flags) {
+	std::list<WCIntersectionResult> results;
 	//See if line intersects surface bounding box
-	//...
+	if (left->BoundingBox().Intersection(right->BoundingBox())) return results;
 	
 	//Otherwise, generate surface to precision of tol and place into local buffer
 	//...
@@ -62,14 +64,15 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	//Try to intersect line with each triangle within buffer
 	//...
 	
-	return std::list<WCIntersectionResult>();
+	return results;
 }
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsSurface *left,
 	WCNurbsCurve *right, const WPFloat &tol, const unsigned int &flags) {
+	std::list<WCIntersectionResult> results;
 	//See if curve bounding box intersects surface bounding box
-	//...
+	if (left->BoundingBox().Intersection(right->BoundingBox())) return results;
 	
 	//Otherwise, generate surface to precision of tol and place into local buffer
 	//...
@@ -80,14 +83,15 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	//Try to intersect all sections of curve in buffer with each triangle in buffer
 	//...
 	
-	return std::list<WCIntersectionResult>();
+	return results;
 }
 
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsSurface *left,
 	WCNurbsSurface *right, const WPFloat &tol, const unsigned int &flags) {
+	std::list<WCIntersectionResult> results;
 	//See if left bounding box intersects right bounding box
-	//...
+	if (left->BoundingBox().Intersection(right->BoundingBox())) return results;
 	
 	//Otherwise, generate left and right to precision of tol and place into local buffers
 	//...
@@ -95,7 +99,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	//Try to intersect all triangles of left with each triangle in right
 	//...
 	
-	return std::list<WCIntersectionResult>();
+	return results;
 }
 
 

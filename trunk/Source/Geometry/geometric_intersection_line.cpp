@@ -99,9 +99,6 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCG
 	WCVector4 p43(p4 - p3);
 	WPFloat dist;
 	
-	//Make sure both lines have some minimal length
-//	if ((p21mag < tol) || (p43Mag < tol)) return results;
-	
 	//Check for parallel
 	WCVector4 cross = p43.CrossProduct(p21);
 	WPFloat denom = cross.Magnitude();

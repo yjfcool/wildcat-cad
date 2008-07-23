@@ -62,7 +62,8 @@ public:
 	WCVector4(const WPFloat *data);																	//!< Double array constructor
 	WCVector4(const WPUInt &size, const WPFloat *data);												//!< Size and pointer constructor
 	WCVector4(const WCVector4 &vector);																//!< Copy constructor
-	~WCVector4()								{ }													//!< Standard destructor	
+	~WCVector4()								{ }													//!< Standard destructor
+
 	//General access methods
 	inline WPFloat I(void) const				{ return this->_data.d[0]; }						//!< Return the I element
 	inline WPFloat J(void) const				{ return this->_data.d[1]; }						//!< Return the J element

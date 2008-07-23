@@ -174,8 +174,6 @@ void WCAlignedBoundingBox::Render(void) {
 	//Generate VBO if dirty
 	if (this->_isDirty) this->GenerateVBO();
 
-	//Get current program
-//	GLuint prog = (GLuint)glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 	//Get the current polymode
 	GLint polyMode[2];
 	glGetIntegerv(GL_POLYGON_MODE, polyMode);
@@ -195,10 +193,8 @@ void WCAlignedBoundingBox::Render(void) {
 	
 	//Reset the polygon mode
 	if (polyMode[0] == GL_LINE)	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//Reset the program
-//	glUseProgram(prog);
 	//Check for errors
-	if (glGetError() != GL_NO_ERROR) std::cout << "WCAlignedBoundingBox::Render Error - Unknown error.\n";
+	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCAlignedBoundingBox::Render Error - Unknown error.");
 }
 
 

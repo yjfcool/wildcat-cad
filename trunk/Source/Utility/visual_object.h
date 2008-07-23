@@ -71,9 +71,9 @@ public:
 	virtual inline bool IsVisualDirty(void) const		{ return this->_isVisualDirty; }			//!< Get the dirty flag
 	virtual inline void IsVisible(const bool &status)	{ this->_isVisible = status; }				//!< Set the visible flag
 	virtual inline bool IsVisible(void) const			{ return this->_isVisible; }				//!< Get the visible flag
-	virtual inline WCAlignedBoundingBox BoundingBox(void)	{										//!< Get the current bounding box
+	virtual inline WCAlignedBoundingBox BoundingBox(void) {											//!< Get the current bounding box
 														if (this->_bounds == NULL) return WCAlignedBoundingBox();
-														return *this->_bounds; }
+														else return *this->_bounds; }
 	virtual inline void RenderProgram(const GLuint &prog){ this->_renderProg = prog; }				//!< Set the rendering prog
 	virtual inline GLuint RenderProgram(void) const		{ return this->_renderProg; }				//!< Get the rendering prog
 	virtual inline void Color(const WCColor &color)		{ this->_color = color; }					//!< Set the object color

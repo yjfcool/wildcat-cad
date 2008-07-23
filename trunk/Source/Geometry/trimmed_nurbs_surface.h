@@ -115,6 +115,7 @@ public:
 	//Original Member Functions
 	void GenerateTrimTexture(GLuint &texWidth, GLuint &texHeight, GLuint &texture, const bool &managed);//!< Generate trim texture
 	void ReleaseTrimTexture(GLuint &texture);														//!< Release the trim texture
+	void GenerateTessellation(WPUInt &lodU, WPUInt &lodV, std::vector<GLfloat*> &buffers);			//!< Generate tessellation of surface
 
 	//Operator Overloads
 	WCTrimmedNurbsSurface& operator=(const WCTrimmedNurbsSurface &surface);							//!< Equals operator

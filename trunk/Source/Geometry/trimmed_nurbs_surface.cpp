@@ -690,6 +690,12 @@ void WCTrimmedNurbsSurface::ReleaseTrimTexture(GLuint &texture) {
 }
 
 
+void WCTrimmedNurbsSurface::GenerateTessellation(WPUInt &lodU, WPUInt &lodV, std::vector<GLfloat*> &buffers) {
+	//Steps...
+	
+}
+
+
 xercesc::DOMElement* WCTrimmedNurbsSurface::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
 	//Create the base element for the object
 	xercesc::DOMElement*  trimmedElem = document->createElement(xercesc::XMLString::transcode("TrimmedSurface"));
