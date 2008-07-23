@@ -32,6 +32,7 @@
 
 /*** Included Header Files ***/
 #include "Converters/converter.h"
+#include "PartDesign/part.h"
 
 
 /*** Locally Defined Values ***/
@@ -50,11 +51,14 @@ namespace __WILDCAT_NAMESPACE__ {
 	
 	
 class WCConverterSTL : public WCConverter{
+private:
+	bool ExecuteExport(const std::string &filename, WCPart *part);									//!< Execute the export
 public:
 	//Constructors and Destructors
 	WCConverterSTL() { }
 	virtual ~WCConverterSTL() { }
 	
+	//Required Inherited Methods
 	virtual WCFeature* Import(const std::string &filename) { return NULL; }							//!< No STL import
 	virtual bool Export(WCFeature *feature);														//!< Export a feature
 };

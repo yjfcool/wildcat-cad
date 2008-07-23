@@ -97,6 +97,7 @@ public:
 	inline std::map<WCGeometricPoint*,WCEventController*>& PointMap(void) { return this->_pointMap;}//!< Get the point map
 	inline std::map<WCGeometricLine*,WCEventController*>& LineMap(void) { return this->_lineMap; }	//!< Get the line map
 	inline std::map<WCGeometricCurve*,WCEventController*>& CurveMap(void) { return this->_curveMap;}//!< Get the curve map
+	inline std::map<WCGeometricSurface*,WCEventController*>& SurfaceMap(void) { return this->_surfaceMap;}//!< Get the surface map
 	inline WCTopologyModel* TopologyModel(void)	{ return this->_topologyModel; }					//!< Get the topology model
 
 	//Feature Methods
