@@ -49,15 +49,16 @@
  *		2) Point must be > tol parametric value (u) after the last point - avoids case of point being very close to where segments meet
  *		3) Must check flags for CULL_BOUNDARY case and only add hit as appropriate
  *		4) Make sure to delete generated segement data
+ *		5) Also need to check for point intersecting loop at loop-closure
 ***/
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsCurve *left,
 	WCGeometricPoint *right, const WPFloat &tol, const unsigned int &flags) {
 	std::list<WCIntersectionResult> results;
 	//See if point is within curve bounding box
-	//...
+	if (left->BoundingBox().Intersection( right->BoundingBox() )) return results;
 
 	//Determine estimated length of curve and LOD
-	WPUInt lod = 128; //(WPUInt)(left->EstimateLength() / tol);
+	WPUInt lod = STDMIN((WPUInt)(left->EstimateLength() / tol), (WPUInt)WCAdapter::GetMax2DTextureSize());
 	GLfloat *data = left->GenerateClientBuffer(lod, true);
 
 	//Initialize the p0 vector and other variables
@@ -124,11 +125,12 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	 WCGeometricLine *right, const WPFloat &tol, const unsigned int &flags) {
 	std::list<WCIntersectionResult> results;
 	//See if line intersects curve bounding box
-	//...
+	if (left->BoundingBox().Intersection(right->BoundingBox())) return results;
 
 	/*** Setup programs and texture locations ***/
 	
-	WPUInt lod = 512;// (WPUInt)(left->EstimateLength() / tol);
+	//LOD is smaller of length/tolerance and maximum texture size
+	WPUInt lod = STDMIN((WPUInt)(left->EstimateLength() / tol), (WPUInt)WCAdapter::GetMax2DTextureSize());
 	WPFloat paraFactor = 1.0 / lod, mua, mub;
 	WCVector4 point;
 	GLfloat *leftData = left->GenerateClientBuffer(lod, true);
@@ -427,13 +429,13 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	std::list<WCIntersectionResult> results;
 	//Check if self intersection
 	if (left == right) return results;
-	
 	//See if bounding boxes intersect
-	//...
+	if (left->BoundingBox().Intersection(right->BoundingBox())) return results;
 	
 	/*** Setup programs and texture locations ***/
-	
-	WPUInt lod = 512;// (WPUInt)(left->EstimateLength() / tol);
+
+	WPFloat length = STDMAX(left->EstimateLength(), right->EstimateLength());
+	WPUInt lod = STDMIN((WPUInt)(length / tol), (WPUInt)WCAdapter::GetMax2DTextureSize());
 	WPFloat paraFactor = 1.0 / lod, mua, mub;
 	WCVector4 point;
 	GLfloat *leftData = left->GenerateClientBuffer(lod, true);

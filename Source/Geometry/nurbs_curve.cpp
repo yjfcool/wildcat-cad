@@ -548,7 +548,7 @@ WCNurbsCurve::WCNurbsCurve(WCGeometryContext *context, const WPUInt &degree, con
 	//Find the rough length of the curve and the number of needed segments
 	this->_length = WCNurbs::EstimateLength(this->_controlPoints);
 	//Establish oriented bounding box
-	this->_bounds = new WCAlignedBoundingBox(this->_controlPoints);		
+	this->_bounds = new WCAlignedBoundingBox(this->_controlPoints);
 }
 
 

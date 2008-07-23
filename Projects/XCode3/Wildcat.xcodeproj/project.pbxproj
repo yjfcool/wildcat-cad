@@ -305,6 +305,7 @@
 		585F37FD0D68B8D300673AE6 /* part_plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37DE0D68B8D300673AE6 /* part_plane.cpp */; };
 		585F37FE0D68B8D300673AE6 /* part_plane_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37E00D68B8D300673AE6 /* part_plane_actions.cpp */; };
 		585F37FF0D68B8D300673AE6 /* part_plane_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37E20D68B8D300673AE6 /* part_plane_controller.cpp */; };
+		586257100E379A5C00369675 /* converter_stl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5862570F0E379A5C00369675 /* converter_stl.cpp */; };
 		5864E0BC0DB52AB600DB0CD2 /* geometric_algorithms_triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F35810D68B28800673AE6 /* geometric_algorithms_triangulation.cpp */; };
 		586BA53F0DABDE8F00E2DF91 /* dialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 586BA53E0DABDE8F00E2DF91 /* dialog.mm */; };
 		587CB6EA0D89A48D00833178 /* sketch_arc_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */; };
@@ -896,6 +897,9 @@
 		585F37E10D68B8D300673AE6 /* part_plane_actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_plane_actions.h; path = ../../Source/Workbenches/PartDesign/part_plane_actions.h; sourceTree = SOURCE_ROOT; };
 		585F37E20D68B8D300673AE6 /* part_plane_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = part_plane_controller.cpp; path = ../../Source/Workbenches/PartDesign/part_plane_controller.cpp; sourceTree = SOURCE_ROOT; };
 		585F37E30D68B8D300673AE6 /* part_plane_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_plane_controller.h; path = ../../Source/Workbenches/PartDesign/part_plane_controller.h; sourceTree = SOURCE_ROOT; };
+		5862570E0E379A4C00369675 /* converter_stl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = converter_stl.h; path = ../../Source/Converters/converter_stl.h; sourceTree = SOURCE_ROOT; };
+		5862570F0E379A5C00369675 /* converter_stl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = converter_stl.cpp; path = ../../Source/Converters/converter_stl.cpp; sourceTree = SOURCE_ROOT; };
+		586257130E379BCE00369675 /* converter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = converter.h; path = ../../Source/Converters/converter.h; sourceTree = SOURCE_ROOT; };
 		5864E0B80DB50ED700DB0CD2 /* triangle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = triangle.c; path = ../../Source/Geometry/triangle.c; sourceTree = SOURCE_ROOT; };
 		5864E0B90DB50ED700DB0CD2 /* triangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = triangle.h; path = ../../Source/Geometry/triangle.h; sourceTree = SOURCE_ROOT; };
 		586BA3B10DABC40400E2DF91 /* dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialog.h; path = ../../Source/Application/dialog.h; sourceTree = SOURCE_ROOT; };
@@ -991,6 +995,7 @@
 				585F34700D68B07F00673AE6 /* Topology */,
 				585F34710D68B08500673AE6 /* Constraints */,
 				585F34720D68B08B00673AE6 /* Workbenches */,
+				586256F20E3790C100369675 /* Converters */,
 				585F34730D68B09200673AE6 /* Application */,
 				585F34740D68B09900673AE6 /* Resources */,
 				584556DA0E1C7C8700364A00 /* Products */,
@@ -2938,6 +2943,40 @@
 			name = Headers;
 			sourceTree = "<group>";
 		};
+		586256F20E3790C100369675 /* Converters */ = {
+			isa = PBXGroup;
+			children = (
+				586256F30E3790CE00369675 /* STL */,
+			);
+			name = Converters;
+			sourceTree = "<group>";
+		};
+		586256F30E3790CE00369675 /* STL */ = {
+			isa = PBXGroup;
+			children = (
+				586256F40E3790D800369675 /* Headers */,
+				586256F50E3790DE00369675 /* Source */,
+			);
+			name = STL;
+			sourceTree = "<group>";
+		};
+		586256F40E3790D800369675 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				586257130E379BCE00369675 /* converter.h */,
+				5862570E0E379A4C00369675 /* converter_stl.h */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		586256F50E3790DE00369675 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				5862570F0E379A5C00369675 /* converter_stl.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
 		5864E0BB0DB50EE400DB0CD2 /* External */ = {
 			isa = PBXGroup;
 			children = (
@@ -3412,6 +3451,7 @@
 				585027860E08273100BF2CBB /* topology_intersect.cpp in Sources */,
 				585027880E08274100BF2CBB /* topology_union.cpp in Sources */,
 				5850278A0E08274F00BF2CBB /* topology_subtract.cpp in Sources */,
+				586257100E379A5C00369675 /* converter_stl.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

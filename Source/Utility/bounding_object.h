@@ -105,7 +105,7 @@ public:
 	WCAlignedBoundingBox(const GLuint &buffer, const WPUInt &size);									//!< Alternate VBO constructor
 	~WCAlignedBoundingBox()						{ glDeleteBuffers(1, &this->_buffer); }				//!< Default destructor
 	
-	//Axis Max/Min Values
+	//Member Access Methods
 	inline WPFloat XMin(void) const				{ return this->_xMin; }								//!< X-axis min value
 	inline WPFloat XMax(void) const				{ return this->_xMax; }								//!< X-axis max value
 	inline WPFloat YMin(void) const				{ return this->_yMin; }								//!< Y-axis min value
@@ -113,7 +113,11 @@ public:
 	inline WPFloat ZMin(void) const				{ return this->_zMin; }								//!< Z-axis min value
 	inline WPFloat ZMax(void) const				{ return this->_zMax; }								//!< Z-axis max value
 	
-	//Conversion Routines
+	//Original Member Functions
+	bool Intersection(const WCAlignedBoundingBox &box) { return										//!< Intersect with another AABB
+												(this->_xMin < box._xMax) && (this->_xMax > box._xMin) &&
+												(this->_yMin < box._yMax) && (this->_yMax > box._yMin) &&
+												(this->_zMin < box._zMax) && (this->_zMax > box._zMin); }
 	WCMatrix ToMatrix(void);																		//!< Convert to a 4x8 matrix
 		
 	//Inherited Methods

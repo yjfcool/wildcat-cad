@@ -38,7 +38,7 @@
 
 /*** Locally Defined Values ***/
 #define SKETCHPROFILE_CLASSNAME					"Profile"
-#define SKETCH_PROFILE_DEFAULT_TOLERANCE		0.00001
+#define SKETCH_PROFILE_DEFAULT_TOLERANCE		0.001
 
 
 /*** Namespace Declaration ***/

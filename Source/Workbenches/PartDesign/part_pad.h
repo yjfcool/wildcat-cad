@@ -66,17 +66,25 @@ protected:
 	std::list<WCGeometricLine*>					_lines;												//!< List of extrusion lines
 	std::list<WCNurbsCurve*>					_curves;											//!< List of extrusion curves
 	std::list<WCNurbsSurface*>					_surfaces;											//!< List of extrusion surfaces
-	std::list<std::list<WCTrimProfile> >		_topTrims, _bottomTrims;							//!< Lists of top and bottom trim profile lists
 	WCTopologyModel								*_topologyModel;									//!< Primary topology model
-	std::list<std::list<WSVertexUse*> >			_topoBottomPoints, _topoTopPoints;					//!< Ordered lists of all points (for topology)
-	std::list<std::vector<WSEdgeUse*> >			_topoBottomEUs, _topoSideEUs, _topoTopEUs;			//!< Ordered lists of all edgeUses (for topology)
-	std::list<std::list<WSFaceUse*> >			_topoFUs;											//!< Ordered lists of all faceUses (for topology)
 private:
-	void GeneratePoints(void);																		//!< Generate all points
-	void GenerateCurves(void);																		//!< Generate all curves
-	void GenerateSideSurfaces(void);																//!< Generate all surfaces
-	void GenerateTopBottom(void);																	//!< Generate top and bottom surfaces
-	WCTopologyModel* GenerateTopology(void);														//!< Generate topology model for the extrusion
+	void GeneratePoints(std::list<std::list<WSVertexUse*> > &topoBottomPoints,						//!< Generate all points
+												std::list<std::list<WSVertexUse*> > &topoTopPoints);
+	void GenerateCurves(std::list<std::list<WCTrimProfile> > &topTrims,								//!< Generate all curves
+												std::list<std::list<WCTrimProfile> > &bottomTrims,
+												std::list<std::vector<WSEdgeUse*> > &topoBottomEUs,
+												std::list<std::vector<WSEdgeUse*> > &topoSideEUs, 
+												std::list<std::vector<WSEdgeUse*> > &topoTopEUs);
+	void GenerateSideSurfaces(std::list<std::list<WSFaceUse*> > &topoFaceUses);						//!< Generate all surfaces
+	void GenerateTopBottom(std::list<std::list<WCTrimProfile> > &topTrims,							//!< Generate top and bottom surfaces
+												std::list<std::list<WCTrimProfile> > &bottomTrims,
+												std::list<std::list<WSFaceUse*> > &topoFaceUses);
+	WCTopologyModel* GenerateTopology(std::list<std::list<WSVertexUse*> > &topoBottomPoints,		//!< Generate topology model for the extrusion
+												std::list<std::list<WSVertexUse*> > &topoTopPoints,
+												std::list<std::vector<WSEdgeUse*> > &topoBottomEUs, 
+												std::list<std::vector<WSEdgeUse*> > &topoSideEUs, 
+												std::list<std::vector<WSEdgeUse*> > &topoTopEUs,
+												std::list<std::list<WSFaceUse*> > &topoFaceUses);
 	void Initialize(void);																			//!< Initialization method
 	void DetermineDirection(void);																	//!< Determine direction and offsets
 	//Hidden Constructors
