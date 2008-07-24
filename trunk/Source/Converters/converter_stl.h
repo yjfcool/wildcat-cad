@@ -52,7 +52,7 @@ namespace __WILDCAT_NAMESPACE__ {
 	
 class WCConverterSTL : public WCConverter{
 private:
-	bool ExecuteExport(const std::string &filename, WCPart *part);									//!< Execute the export
+	bool ExecuteExport(const std::string &filename, WSTopologyShell *shell, const WPFloat &tol);	//!< Execute the export
 public:
 	//Constructors and Destructors
 	WCConverterSTL() { }

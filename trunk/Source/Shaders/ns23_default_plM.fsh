@@ -2,13 +2,14 @@
 uniform sampler2DRect				knotPointsU;
 uniform sampler2DRect				knotPointsV;
 uniform sampler2DRect				controlPoints;
-uniform sampler2DRect				verts;
+//uniform sampler2DRect				verts;
 
 #define cp(i,j)						(texture2DRect(controlPoints, vec2(i,j)))
 #define kp(sampler, index)			(texture2DRect(sampler, vec2(index)).r)
 
 
 //Uniform Inputs
+uniform vec4						params;		// { uStart, uStep, vStart, vStep }
 uniform ivec4						numParamsU;	// { degree, cp, kp, foo }
 uniform ivec4						numParamsV;	// { degree, cp, kp, foo }
 
@@ -77,37 +78,45 @@ void BasisValues(in float u, in int span, out vec4 bv, out vec4 bvD, in ivec4 nu
 
 
 void main() {
-	int i, j, index;
+	int i, j;
 	ivec2 span;
-	vec2 inPos = floor(gl_FragCoord.xy);
-	vec3 pos, derX, derY;
-	vec4 bvU, bvV, bvUU, bvVV;
+	vec4 bvU, bvV, bvUU, bvVV, pt;
 
-	//Get basic vertex info
-	vec4 inVert = texture2DRect(verts, inPos);
+	//Calculate [u,v] values
+	vec2 inPos = floor(gl_FragCoord.xy);
+	vec2 uv = vec2(params.x + inPos.x * params.y, params.z + inPos.y * params.w);
+
 	//Find the span for the vertex
-	span[0] = FindSpan(inVert[0], numParamsU, knotPointsU);
-	span[1] = FindSpan(inVert[1], numParamsV, knotPointsV);
-	BasisValues(inVert[0], span[0], bvU, bvUU, numParamsU, knotPointsU);
-	BasisValues(inVert[1], span[1], bvV, bvVV, numParamsV, knotPointsV);
+	span[0] = FindSpan(uv.x, numParamsU, knotPointsU);
+	span[1] = FindSpan(uv.y, numParamsV, knotPointsV);
+	BasisValues(uv.x, span[0], bvU, bvUU, numParamsU, knotPointsU);
+	BasisValues(uv.y, span[1], bvV, bvVV, numParamsV, knotPointsV);
 
 	//Make sure to zero the results
-	pos = vec3(0.0);
-	derX = vec3(0.0);
-	derY = vec3(0.0);
+	float w = 0.0, wU = 0.0, wV = 0.0;
+	vec4 pos = vec4(0.0);
+	vec4 derU = vec4(0.0);
+	vec4 derV = vec4(0.0);
 	//Loop through each basis value
 	for (i=0; i<=numParamsV.x; i++) {
 		for (j=0; j<=numParamsU.x; j++) {
-			pos += (cp(span.x - numParamsU.x + j,span.y - numParamsV.x + i).xyz * bvU[j] * bvV[i]);
-			derX += (cp(span.x - numParamsU.x + j,span.y - numParamsV.x + i).xyz * bvUU[j] * bvV[i]);
-			derY += (cp(span.x - numParamsU.x + j,span.y - numParamsV.x + i).xyz * bvU[j] * bvVV[i]);
+			pt = cp(span.x - numParamsU.x + j,span.y - numParamsV.x + i);
+			pos += pt * pt.w * bvU[j] * bvV[i];
+			w += pt.w * bvU[j] * bvV[i];
+			derU += pt * bvUU[j] * bvV[i];
+			derV += pt * bvU[j] * bvVV[i];
 		}
 	}
 	//Set the position (don't forget the w divide) and emit
-//	pos = pos / w;
-	gl_FragData[0] = vec4(pos, 1.0);	//Calculate the normal
+	pos = pos / w;
+	gl_FragData[0] = vec4(pos.xyz, 1.0);	//Calculate the normal
 	
 	//Write normal information
-	vec4 norm = normalize(vec4(cross(derX, derY), 0.0));
+	derU = (derU * w - pos * derU) / (w * w);
+	derV = (derV * w - pos * derV) / (w * w);
+	vec4 norm = normalize(vec4(cross(derU.xyz, derV.xyz), 0.0));
 	gl_FragData[1] = norm;
+
+	//Write texCoord information
+	gl_FragData[2] = vec4(uv, 0.0, 0.0);
 }
