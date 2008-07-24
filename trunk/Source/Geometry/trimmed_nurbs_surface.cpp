@@ -613,7 +613,6 @@ void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHei
 	glPushMatrix();
 	//Load the trim matrix for modelview
 	glLoadIdentity();
-	//this->_trimMatrix.GLLoadMatrix();
 	
 	//Set render state
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -691,8 +690,26 @@ void WCTrimmedNurbsSurface::ReleaseTrimTexture(GLuint &texture) {
 
 
 void WCTrimmedNurbsSurface::GenerateTessellation(WPUInt &lodU, WPUInt &lodV, std::vector<GLfloat*> &buffers) {
-	//Steps...
-	
+	//Generate dense trim texture
+	//...
+	//Generate lodU x lodV surface mesh
+	//...
+	//Generate all trim boundary points
+	//...
+
+	//Add all trim boundary points into triangle.c input structure (marked as boundary)
+	//and into output buffer
+	//...
+
+	//Look up all surface mesh point in texture to see if they are in or out
+	//add in vertices to both triangle.c (marked as interior) and output structures
+	//...
+
+	//Run triangle.c and get index buffer
+	//...
+
+	//Output correct data
+	//...
 }
 
 
