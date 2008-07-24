@@ -73,7 +73,7 @@ private:
 	int											_nsMinCPBufferSize, _nsMinKPBufferSize;				//!< Values for the buffer sizes of CP and KP in shaders
 	GLint										_nsVertsPerBatch;									//!< Number of vertices per batch
 	GLuint										_nsCPBuffer, _nsKPUBuffer, _nsKPVBuffer;			//!< High uniform buffers for generation
-	GLuint										_nsCPTex, _nsKPUTex, _nsKPVTex, _nsInTex, _nsVertTex, _nsNormTex;//!< Texture objects for use in medium generate
+	GLuint										_nsCPTex, _nsKPUTex, _nsKPVTex, _nsVertTex, _nsNormTex, _nsTexTex;//!< Texture objects for use in medium generate
 	GLint										_nsMaxTexSize;										//!< Medium maxium texture size	
 	GLuint										_nsFramebuffer;										//!< Framebuffer for generate use
 
@@ -148,9 +148,9 @@ public:
 	inline GLuint SurfaceCPTex(void) const				{ return this->_nsCPTex; }					//!< Get surface cp texture
 	inline GLuint SurfaceKPUTex(void) const				{ return this->_nsKPUTex; }					//!< Get surface kp-u texture
 	inline GLuint SurfaceKPVTex(void) const				{ return this->_nsKPVTex; }					//!< Get surface kp-v texture
-	inline GLuint SurfaceInTex(void) const				{ return this->_nsInTex; }					//!< Get surface input texture
 	inline GLuint SurfaceVerticesTex(void) const		{ return this->_nsVertTex; }				//!< Get surface vertex output texture
 	inline GLuint SurfaceNormTex(void) const			{ return this->_nsNormTex; }				//!< Get surface normals output texture
+	inline GLuint SurfaceTexCoorTex(void) const			{ return this->_nsTexTex; }					//!< Get surface texcoords output texture
 	inline GLint SurfaceMaxTextureSize(void) const		{ return this->_nsMaxTexSize; }				//!< Get surface maximum texture size
 	inline GLuint SurfaceFramebuffer(void) const		{ return this->_nsFramebuffer; }			//!< Get surface framebuffer
 

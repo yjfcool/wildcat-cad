@@ -90,7 +90,7 @@ void WCGeometryContext::StartCurve(void) {
 
 		//Set up programs for medium performance mode	
 		case NURBSCURVE_PERFLEVEL_MEDIUM:
-			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCNurbsCurve::Start Debug - Actually Running as Medium");
+			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartCurve Debug - Actually Running as Medium");
 			//Get program IDs
 			this->_ncDefault = this->_shaderManager->ProgramFromName("nc_default_plM");
 			this->_ncDefault23 = this->_shaderManager->ProgramFromName("nc23_default_plM");
@@ -243,13 +243,14 @@ void WCGeometryContext::StopCurve(void) {
 void WCGeometryContext::StartSurface(void) {
 	GLenum retVal;
 	//Determine performance level
-	if (WCAdapter::HasGLEXTTransformFeedback() && WCAdapter::HasGLEXTBindableUniform() &&
-		WCAdapter::HasGLEXTGeometryShader4() ) {//WCAdapter::HasGLEXTGPUShader4()
-		//All criteria met for high performance
-		this->_nsPerfLevel = NURBSSURFACE_PERFLEVEL_HIGH;
+//	if (WCAdapter::HasGLEXTTransformFeedback() && WCAdapter::HasGLEXTBindableUniform() &&
+//		WCAdapter::HasGLEXTGeometryShader4() ) {//WCAdapter::HasGLEXTGPUShader4()
+//		//All criteria met for high performance
+//		this->_nsPerfLevel = NURBSSURFACE_PERFLEVEL_HIGH;
 //		CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - Performance set to High.");
-	}
-	else if (WCAdapter::HasGLARBFragmentShader() && WCAdapter::HasGLARBShadingLanguage100() &&
+//	}
+//	else 
+	if (WCAdapter::HasGLARBFragmentShader() && WCAdapter::HasGLARBShadingLanguage100() &&
 			 WCAdapter::HasGLARBTextureRectangle() && WCAdapter::HasGLEXTTextureFloat() &&
 			 WCAdapter::HasGLARBPixelBufferObject() && WCAdapter::HasGLEXTFramebufferObject()) {
 		//All criteria met for medium performance
@@ -265,7 +266,7 @@ void WCGeometryContext::StartSurface(void) {
 	//Force Performance Level
 //		this->_nsPerfLevel = NURBSSURFACE_PERFLEVEL_HIGH;
 //		this->_nsPerfLevel = NURBSSURFACE_PERFLEVEL_MEDIUM;
-		this->_nsPerfLevel = NURBSSURFACE_PERFLEVEL_LOW;
+//		this->_nsPerfLevel = NURBSSURFACE_PERFLEVEL_LOW;
 /*** Debug ***/
 	//Perform initialization based on performance level
 	switch(this->_nsPerfLevel) {
@@ -297,7 +298,7 @@ void WCGeometryContext::StartSurface(void) {
 			break;
 
 		case NURBSSURFACE_PERFLEVEL_MEDIUM:
-//			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - Actually Running as Medium.");
+			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - Actually Running as Medium.");
 			//Setup medium generation programs
 			this->_nsDefault = this->_shaderManager->ProgramFromName("ns_default_plM");
 			this->_nsDefault23 = this->_shaderManager->ProgramFromName("ns23_default_plM");				
@@ -334,15 +335,6 @@ void WCGeometryContext::StartSurface(void) {
 			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, NURBSSURFACE_MAX_KNOTPOINTS, 1, 0, GL_RGBA, GL_FLOAT, NULL);
-			//Set up main input texture
-			glGenTextures(1, &(this->_nsInTex));
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_nsInTex);
-			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, this->_nsMaxTexSize, this->_nsMaxTexSize, 0, GL_RGBA, GL_FLOAT, NULL);
 			//Set up output vertex texture
 			glGenTextures(1, &(this->_nsVertTex));
 			glActiveTexture(GL_TEXTURE0);
@@ -361,6 +353,15 @@ void WCGeometryContext::StartSurface(void) {
 			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, this->_nsMaxTexSize, this->_nsMaxTexSize, 0, GL_RGBA, GL_FLOAT, NULL);
+			//Set up output texCoords texture
+			glGenTextures(1, &(this->_nsTexTex));
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_nsTexTex);
+			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, this->_nsMaxTexSize, this->_nsMaxTexSize, 0, GL_RGBA, GL_FLOAT, NULL);
 			//Check for errors
 			if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - At Medium Texture Creation.");
 			//Generate the framebuffer object
@@ -368,6 +369,7 @@ void WCGeometryContext::StartSurface(void) {
 			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_nsFramebuffer);
 			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_nsVertTex, 0);
 			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_nsNormTex, 0);
+			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT2_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_nsTexTex, 0);
 			retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 			//Check for errors
 			if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) 
@@ -388,7 +390,7 @@ void WCGeometryContext::StartSurface(void) {
 	//Setup locations for all programs
 	if (this->_nsPerfLevel != NURBSSURFACE_PERFLEVEL_LOW) {
 		//Set the locations of each uniform variable
-		this->_nsLocations = new GLint[15];
+		this->_nsLocations = new GLint[32];
 		//Set the locations of each control point variable
 		this->_nsLocations[NURBSSURFACE_LOC_CP_DEFAULT] = glGetUniformLocation(this->_nsDefault, "controlPoints");
 		this->_nsLocations[NURBSSURFACE_LOC_CP_BEZIER23] = glGetUniformLocation(this->_nsBezier23, "controlPoints");
@@ -428,21 +430,23 @@ void WCGeometryContext::StartSurface(void) {
 		this->_nsLocations[NURBSSURFACE_LOC_CP_DEFAULT23] = glGetUniformLocation(this->_nsDefault23, "controlPoints");
 		this->_nsLocations[NURBSSURFACE_LOC_KPU_DEFAULT23] = glGetUniformLocation(this->_nsDefault23, "knotPointsU");
 		this->_nsLocations[NURBSSURFACE_LOC_KPV_DEFAULT23] = glGetUniformLocation(this->_nsDefault23, "knotPointsV");
+		this->_nsLocations[NURBSSURFACE_LOC_PARAMS_DEFAULT23] = glGetUniformLocation(this->_nsDefault23, "params");
 		this->_nsLocations[NURBSSURFACE_LOC_PARAMSU_DEFAULT23] = glGetUniformLocation(this->_nsDefault23, "numParamsU");
 		this->_nsLocations[NURBSSURFACE_LOC_PARAMSV_DEFAULT23] = glGetUniformLocation(this->_nsDefault23, "numParamsV");
+
 		//Set up more stuff
 		glUseProgram(this->_nsDefault);
-		glUniform1i(glGetUniformLocation(this->_nsDefault, "verts"), 0);
+//		glUniform1i(glGetUniformLocation(this->_nsDefault, "verts"), 0);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_CP_DEFAULT], 1);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_KPU_DEFAULT], 2);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_KPV_DEFAULT], 3);
 		glUseProgram(this->_nsDefault23);
-		glUniform1i(glGetUniformLocation(this->_nsDefault23, "verts"), 0);
+//		glUniform1i(glGetUniformLocation(this->_nsDefault23, "verts"), 0);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_CP_DEFAULT23], 1);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_KPU_DEFAULT23], 2);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_KPV_DEFAULT23], 3);
 		glUseProgram(this->_nsBezier23);
-		glUniform1i(glGetUniformLocation(this->_nsBezier23, "verts"), 0);
+//		glUniform1i(glGetUniformLocation(this->_nsBezier23, "verts"), 0);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_CP_BEZIER23], 1);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_KPU_BEZIER23], 2);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_KPV_BEZIER23], 3);
@@ -473,7 +477,7 @@ void WCGeometryContext::StopSurface(void) {
 		glDeleteTextures(1, &this->_nsCPTex);
 		glDeleteTextures(1, &this->_nsKPUTex);
 		glDeleteTextures(1, &this->_nsKPVTex);
-		glDeleteTextures(1, &this->_nsInTex);
+		glDeleteTextures(1, &this->_nsTexTex);
 		glDeleteTextures(1, &this->_nsVertTex);
 		glDeleteTextures(1, &this->_nsNormTex);
 	}
