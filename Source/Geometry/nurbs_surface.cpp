@@ -493,8 +493,16 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, co
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, this->_buffers[NURBSSURFACE_NORMAL_BUFFER]);
 	glBufferData(GL_PIXEL_PACK_BUFFER, this->_numVerts * 4 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 	glReadPixels(0, 0, this->_lodU, this->_lodV, GL_RGBA, GL_FLOAT, NULL);
-	//Clean up the PBO
+	 //Read the texCoord texture
+	 glReadBuffer(GL_COLOR_ATTACHMENT2_EXT);
+	 glBindBuffer(GL_PIXEL_PACK_BUFFER, this->_buffers[NURBSSURFACE_TEXCOORD_BUFFER]);
+	 glBufferData(GL_PIXEL_PACK_BUFFER, this->_numVerts * 4 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+	 glReadPixels(0, 0, this->_lodU, this->_lodV, GL_RGBA, GL_FLOAT, NULL);
+	 //Need to convert four element to two element
+	 //...
+	 //Clean up the PBO
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 //	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsSurface::GenerateSurfaceMedium Error - FBO -> PBO -> VBO.\n";
 	
 	/*** Restore the framebuffer ***/
