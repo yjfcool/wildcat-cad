@@ -3,10 +3,10 @@ uniform sampler2DRect				knotPoints;
 #define kp(index)					(texture2DRect(knotPoints, vec2(index)).r)
 uniform sampler2DRect				controlPoints;
 #define cp(index)					(texture2DRect(controlPoints, vec2(index)))
-uniform sampler2DRect				verts;
 
 //Uniform Inputs
-uniform ivec4						numParams;			// { degree, cp, kp, foo }
+uniform ivec4						numParams;			// { degree, cp, texWidth, texHeight }
+uniform vec2						fltParams;			// { start, step }
 vec4 bva[2];
 vec4 lefta[2];
 vec4 righta[2];
@@ -99,19 +99,19 @@ void BasisValues(float u, int span) {
 
 
 void main(void) {
-	int i, j, span, index;
-	vec3 pos;
-	float w;
+	int j, span, index;
 	
-	//Get basic vertex info
-	vec4 inVert = texture2DRect(verts, floor(gl_FragCoord.xy));
+	//Calculate u value
+	vec2 inPos = floor(gl_FragCoord.xy);
+	float u = fltParams.x + inPos.x * fltParams.y;
+
 	//Find the span for the vertex
-	span = FindSpan(inVert.x);
-	BasisValues(inVert.x, span);
+	span = FindSpan(u);
+	BasisValues(u, span);
 	
 	//Make sure to zero the results
-	pos = vec3(0.0);
-	w = 0.0;
+	vec3 pos = vec3(0.0);
+	float w = 0.0;
 	//Loop through each basis value
 	for (j=0; j<=numParams.x; j++) {
 		index = span - numParams.x + j;

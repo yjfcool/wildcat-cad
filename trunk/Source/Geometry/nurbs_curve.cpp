@@ -309,60 +309,28 @@ GLfloat* WCNurbsCurve::GenerateCurveHigh(const WPUInt &lod, const bool &server, 
 
 
 GLfloat* WCNurbsCurve::GenerateCurveMedium(const WPUInt &lod, const bool &server, GLuint &buffer) {
-	/*** Setup programs and texture locations ***/		
+	GLfloat step = 1.0 / (GLfloat)(lod - 1);
 	//Default and custom case
 	switch (this->_degree) {
 		case 2: case 3:
 			glUseProgram(this->_context->CurveDefault23Program());
-			glUniform4i(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS_DEFAULT23], this->_degree, this->_cp, this->_kp, lod);
+			glUniform4i(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS_DEFAULT23], this->_degree, this->_cp, lod, 1);
+			glUniform2f(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS2_DEFAULT23], 0.0, step);
 			break;
 		default:
 			//Degree > 3 Default, Custom, and Bezier
 			glUseProgram(this->_context->CurveDefaultProgram());
-			glUniform4i(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS_DEFAULT], this->_degree, this->_cp, this->_kp, lod);
+			glUniform4i(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS_DEFAULT], this->_degree, this->_cp, lod, 1);
+			glUniform2f(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS2_DEFAULT], 0.0, step);
 			break;
 	}
+
 	//Now generate the control points texture
 	this->GenerateControlPointsTexture();
 	//Create a knotpoint texture
 	this->GenerateKnotPointsTexture();
-
-	/*** Bind to framebuffer object ***/
-	
+	//Bind to framebuffer object
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_context->CurveFramebuffer());
-	//Check to make sure the framebuffer is ready
-	GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-	//Check the status of the framebuffer object
-	if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) { 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Framebuffer is not complete.");
-		return NULL;
-	}
-	
-	/*** Setup input texture ***/
-	
-	//Allocate space for the input texture (w * h * RGBA)
-	GLfloat *data = new GLfloat[lod * NURBSCURVE_FLOATS_PER_VERTEX];
-	WPFloat u = this->_knotPoints[0];
-	WPFloat range = this->_knotPoints[this->_kp-1] - this->_knotPoints[0];
-	WPFloat du = range / ((GLfloat)(lod-1));	
-	//Initialize data in the array
-	for (WPUInt i=0; i<lod; i++) {
-		data[i*4] =   (GLfloat)u;						//Set first position to u
-		data[i*4+1] = (GLfloat)du;						//Set second position to du
-		data[i*4+2] = (GLfloat)this->_knotPoints[this->_kp-1];	//Set third position to uMax
-		data[i*4+3] = (GLfloat)(i);						//Set fourth position to index		
-		//Increment u
-		u = STDMIN(u+du, this->_knotPoints[this->_kp-1]);
-	}
-	//Setup and copy the data into the texture
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_context->CurveInTex());
-	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, lod, 1, GL_RGBA, GL_FLOAT, data);
-	//Check for errors
-	if (glGetError() != GL_NO_ERROR) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Setup Input Texture.");
-	//Delete data array
-	delete data;
 
 	/*** Setup Viewport and Render***/
 
@@ -374,59 +342,42 @@ GLfloat* WCNurbsCurve::GenerateCurveMedium(const WPUInt &lod, const bool &server
 	//Set the viewport
 	glViewport(0, 0, lod, 1);
 	//Draw into the framebuffer
-	glBegin(GL_QUADS);
-		glVertex3f(-1.0, -1.0, 0.0);
-		glVertex3f(-1.0, 1.0, 0.0);
-		glVertex3f(1.0, 1.0, 0.0);	
-		glVertex3f(1.0, -1.0, 0.0);
-	glEnd();
+	GLfloat quad[] = { -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0 };
+	//Turn on vertex arrays
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(2, GL_FLOAT, 0, quad);
+	glDrawArrays(GL_QUADS, 0, 4);
+	glDisableClientState(GL_VERTEX_ARRAY);
 	//Restore the viewport setting
 	glPopAttrib();
 	//Re-enable some settings
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
-	//Check for errors
-	if (glGetError() != GL_NO_ERROR)
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Render.");
 
-	/*** Save output texture into vertex VBO using simple memory read ***/
-
-	GLfloat *vertData = new GLfloat[lod * NURBSCURVE_FLOATS_PER_VERTEX];
-	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
-	glReadPixels(0, 0, lod, 1, GL_RGBA, GL_FLOAT, vertData);
-/*** Debug ***
-	CLOGGER_DEBUG(WCLogManager::RootLogger(), "Medium Generation Vertices: " << lod);
-	for (WPUInt i=0; i<lod; i++) 
-		CLOGGER_DEBUG(WCLogManager::RootLogger(), i << ": " << vertData[i*4] << ", " << vertData[i*4+1] << ", " << vertData[i*4+2] << ", " << vertData[i*4+3]);
-/*** Debug ***/
+	GLfloat *vertData = NULL;
 	//See if server or client
 	if (server) {
 		//If the buffer is not already present, gen it
 		if (!buffer) glGenBuffers(1, &buffer);
-		//Bind the buffer and load it up
-		glBindBuffer(GL_ARRAY_BUFFER, buffer);
-		glBufferData(GL_ARRAY_BUFFER, lod * NURBSCURVE_FLOATS_PER_VERTEX * sizeof(GLfloat), vertData, GL_STATIC_DRAW);
-		//No longer need vertData
-		delete vertData;
-		//Make sure to set to NULL since we return vertData
-		vertData = NULL;
+		glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
+		glBufferData(GL_PIXEL_PACK_BUFFER, lod * NURBSCURVE_FLOATS_PER_VERTEX * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+		glReadPixels(0, 0, lod, 1, GL_RGBA, GL_FLOAT, NULL);
+		glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 		//Clean up and check for errors
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Cleanup.");
+//		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Cleanup.");
 	}
-
-	/*** Save output texture into vertex VBO using a PBO ***
-
-	glBindBuffer(GL_PIXEL_PACK_BUFFER, this->_buffer);
-	glBufferData(GL_PIXEL_PACK_BUFFER, this->_context->CurveMaxTextureSize() * 4 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
-	glFlush();
-	glReadPixels(0, 0, this->_context->CurveMaxTextureSize(), 1, GL_RGBA, GL_FLOAT, NULL);
-	glFlush();
-	glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
-	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - FBO -> PBO -> VBO.");	
-	
-	/*** Restore the framebuffer ***/
-		
+	//Must be client
+	else {
+		//Save output texture into vertex VBO using simple memory read
+		vertData = new GLfloat[lod * NURBSCURVE_FLOATS_PER_VERTEX];
+		glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
+		glReadPixels(0, 0, lod, 1, GL_RGBA, GL_FLOAT, vertData);
+/*** Debug ***
+		 CLOGGER_DEBUG(WCLogManager::RootLogger(), "Medium Generation Vertices (Client): " << lod);
+		 for (WPUInt i=0; i<lod; i++) 
+		 CLOGGER_DEBUG(WCLogManager::RootLogger(), i << ": " << vertData[i*4] << ", " << vertData[i*4+1] << ", " << vertData[i*4+2] << ", " << vertData[i*4+3]);
+ /*** Debug ***/
+	}
 	//Clean up the framebuffer object and cp/kp textures
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);	
 	//Return client buffer
