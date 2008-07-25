@@ -5,10 +5,10 @@ uniform sampler2DRect				knotPoints;
 #define kp(index)					(texture2DRect(knotPoints, vec2(index)).r)
 uniform sampler2DRect				controlPoints;
 #define cp(index)					(texture2DRect(controlPoints, vec2(index)))
-uniform sampler2DRect				verts;
 
 //Uniform Inputs
-uniform ivec4						numParams;			// { degree, cp, kp, foo }
+uniform ivec4						numParams;			// { degree, cp, texWidth, texHeight }
+uniform vec2						fltParams;			// { start, step }
 
 
 /*************************************************************************/
@@ -60,10 +60,13 @@ vec4 CalcDegree3(float u) {
 
 
 void main(void) {
-	//Get basic vertex info
-	vec4 inVert = texture2DRect(verts, floor(gl_FragCoord.xy));
-	if (numParams.x == 2)	gl_FragColor = CalcDegree2(inVert.x);
-	else					gl_FragColor = CalcDegree3(inVert.x);
+	//Calculate u value
+	vec2 inPos = floor(gl_FragCoord.xy);
+	float u = fltParams.x + inPos.x * fltParams.y;
+
+	//Calculate the output value
+	if (numParams.x == 2)	gl_FragColor = CalcDegree2(u);
+	else					gl_FragColor = CalcDegree3(u);
 }
 
 

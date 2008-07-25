@@ -115,15 +115,6 @@ void WCGeometryContext::StartCurve(void) {
 			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);					
 			glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, this->_ncMaxTexSize, 1, 0, GL_RGBA, GL_FLOAT, NULL);
-			//Setup input texture
-			glGenTextures(1, &(this->_ncInTex));
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_ncInTex);
-			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);		
-			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);					
-			glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, this->_ncMaxTexSize, 1, 0, GL_RGBA, GL_FLOAT, NULL);
 			//Setup output texture				
 			glGenTextures(1, &(this->_ncOutTex));
 			glActiveTexture(GL_TEXTURE0);
@@ -157,7 +148,7 @@ void WCGeometryContext::StartCurve(void) {
 	//Setup locations for all programs
 	if (this->_ncPerfLevel != NURBSCURVE_PERFLEVEL_LOW) {		
 		//Allocate space for locations
-		this->_ncLocations = new GLint[9];
+		this->_ncLocations = new GLint[16];
 		//Set the locations of each control point variable
 		this->_ncLocations[NURBSCURVE_LOC_CP_DEFAULT] = glGetUniformLocation(this->_ncDefault, "controlPoints");
 		this->_ncLocations[NURBSCURVE_LOC_CP_DEFAULT23] = glGetUniformLocation(this->_ncDefault23, "controlPoints");
@@ -191,17 +182,17 @@ void WCGeometryContext::StartCurve(void) {
 	else if (this->_ncPerfLevel == NURBSCURVE_PERFLEVEL_MEDIUM) {
 		//Set uniform values for Default program
 		glUseProgram(this->_ncDefault);
-		glUniform1i(glGetUniformLocation(this->_ncDefault, "verts"), 0);
+		this->_ncLocations[NURBSCURVE_LOC_PARAMS2_DEFAULT] = glGetUniformLocation(this->_ncDefault, "fltParams");
 		glUniform1i(this->_ncLocations[NURBSCURVE_LOC_CP_DEFAULT], 1);
 		glUniform1i(this->_ncLocations[NURBSCURVE_LOC_KP_DEFAULT], 2);
 		//Set uniform values for Default23 program
 		glUseProgram(this->_ncDefault23);
-		glUniform1i(glGetUniformLocation(this->_ncDefault23, "verts"), 0);
+		this->_ncLocations[NURBSCURVE_LOC_PARAMS2_DEFAULT23] = glGetUniformLocation(this->_ncDefault23, "fltParams");
 		glUniform1i(this->_ncLocations[NURBSCURVE_LOC_CP_DEFAULT23], 1);
 		glUniform1i(this->_ncLocations[NURBSCURVE_LOC_KP_DEFAULT23], 2);
 		//Set uniform values for Bezier23 program
 		glUseProgram(this->_ncBezier23);
-		glUniform1i(glGetUniformLocation(this->_ncBezier23, "verts"), 0);
+		this->_ncLocations[NURBSCURVE_LOC_PARAMS2_BEZIER23] = glGetUniformLocation(this->_ncBezier23, "fltParams");
 		glUniform1i(this->_ncLocations[NURBSCURVE_LOC_CP_BEZIER23], 1);
 		glUniform1i(this->_ncLocations[NURBSCURVE_LOC_KP_BEZIER23], 2);
 		//Stop using any programs
@@ -227,7 +218,6 @@ void WCGeometryContext::StopCurve(void) {
 		//Delete CP and KP textures
 		glDeleteTextures(1, &(this->_ncCPTex));
 		glDeleteTextures(1, &(this->_ncKPTex));
-		glDeleteTextures(1, &(this->_ncInTex));
 		glDeleteTextures(1, &(this->_ncOutTex));
 		//Delete framebuffer
 		glDeleteFramebuffersEXT(1, &(this->_ncFramebuffer));
@@ -436,17 +426,14 @@ void WCGeometryContext::StartSurface(void) {
 
 		//Set up more stuff
 		glUseProgram(this->_nsDefault);
-//		glUniform1i(glGetUniformLocation(this->_nsDefault, "verts"), 0);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_CP_DEFAULT], 1);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_KPU_DEFAULT], 2);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_KPV_DEFAULT], 3);
 		glUseProgram(this->_nsDefault23);
-//		glUniform1i(glGetUniformLocation(this->_nsDefault23, "verts"), 0);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_CP_DEFAULT23], 1);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_KPU_DEFAULT23], 2);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_KPV_DEFAULT23], 3);
 		glUseProgram(this->_nsBezier23);
-//		glUniform1i(glGetUniformLocation(this->_nsBezier23, "verts"), 0);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_CP_BEZIER23], 1);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_KPU_BEZIER23], 2);
 		glUniform1i(this->_nsLocations[NURBSSURFACE_LOC_KPV_BEZIER23], 3);
@@ -731,7 +718,6 @@ std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCGeome
 	out << "\tKP Buffer: " << context._ncKPBuffer << std::endl;
 	out << "\tCP Texture: " << context._ncCPTex << std::endl;
 	out << "\tKP Texture: " << context._ncKPTex << std::endl;
-	out << "\tInput Texture: " << context._ncInTex << std::endl;
 	out << "\tOutput Texture: " << context._ncOutTex << std::endl;
 	out << "\tMaximum Texture Size: " << context._ncMaxTexSize << std::endl;
 	out << "\tFramebuffer: " << context._ncFramebuffer << std::endl;

@@ -62,7 +62,7 @@ private:
 	int											_ncMinCPBufferSize, _ncMinKPBufferSize;				//!< Values for the buffer sizes of CP and KP in shaders
 	GLint										_ncVertsPerBatch;									//!< Number of vertices per batch
 	GLuint										_ncCPBuffer, _ncKPBuffer;							//!< High uniform buffers for generation
-	GLuint										_ncCPTex, _ncKPTex, _ncInTex, _ncOutTex;			//!< Medium textures for generation
+	GLuint										_ncCPTex, _ncKPTex, _ncOutTex;						//!< Medium textures for generation
 	GLint										_ncMaxTexSize;										//!< Medium maxium texture size
 	GLuint										_ncFramebuffer;										//!< Framebuffer for medium generate use
 
@@ -128,7 +128,6 @@ public:
 	inline GLuint CurveKPBuffer(void) const				{ return this->_ncKPBuffer; }				//!< Get curve kp buffer
 	inline GLuint CurveCPTex(void) const				{ return this->_ncCPTex; }					//!< Get curve cp texture
 	inline GLuint CurveKPTex(void) const				{ return this->_ncKPTex; }					//!< Get curve kp texture
-	inline GLuint CurveInTex(void) const				{ return this->_ncInTex; }					//!< Get curve input texture
 	inline GLuint CurveOutTex(void) const				{ return this->_ncOutTex; }					//!< Get curve output texture
 	inline GLint CurveMaxTextureSize(void) const		{ return this->_ncMaxTexSize; }				//!< Get curve maximum texture size
 	inline GLuint CurveFramebuffer(void) const			{ return this->_ncFramebuffer; }			//!< Get curve framebuffer

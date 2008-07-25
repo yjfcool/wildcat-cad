@@ -361,30 +361,25 @@ WCNurbsSurface::GenerateSurfaceHigh(const WPUInt &lodU, const WPUInt &lodV, cons
 std::vector<GLfloat*>
 WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, const bool &server, std::vector<GLuint> &buffers) {
 	WPUInt numVerts = lodU * lodV;
-
-	/*** Setup programs and texture locations ***/
-	
+	GLfloat uStep = 1.0 / (GLfloat)(lodU - 1);
+	GLfloat vStep = 1.0 / (GLfloat)(lodV - 1);
+	//Determine proper program and setup
 	if ((this->_degreeU <= 3) && (this->_degreeV <= 3)) {
 		//Degree 2 & 3 Bezier
 		if ((this->_modeU == WCNurbsMode::Bezier()) && (this->_modeV == WCNurbsMode::Bezier())) {
-//			std::cout << "Using Bezier23\n";
 			glUseProgram(this->_context->SurfaceBezier23Program());
 			glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSU_BEZIER23], this->_degreeU, this->_cpU, this->_kpU, 0);
 			glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSV_BEZIER23], this->_degreeV, this->_cpV, this->_kpV, 0);			
 		}
 		//Degree 2 & 3 Default and Custom
 		else {
-//			std::cout << "Using Default23\n";
 			glUseProgram(this->_context->SurfaceDefault23Program());
 			glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSU_DEFAULT23], this->_degreeU, this->_cpU, this->_kpU, 0);
 			glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSV_DEFAULT23], this->_degreeV, this->_cpV, this->_kpV, 0);
-			GLfloat uStep = 1.0 / (GLfloat)(lodU - 1);
-			GLfloat vStep = 1.0 / (GLfloat)(lodV - 1);
 			glUniform4f(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMS_DEFAULT23], 0.0, uStep, 0.0, vStep);
 		}
 	//Otherwise use the default case
 	} else {
-//		std::cout << "Using Default\n";
 		glUseProgram(this->_context->SurfaceDefaultProgram());
 		glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSU_DEFAULT], this->_degreeU, this->_cpU, this->_kpU, 0);		
 		glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSV_DEFAULT], this->_degreeV, this->_cpV, this->_kpV, 0);								
@@ -402,13 +397,6 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, co
 	//Setup draw buffers
 	GLenum genBuffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT };
 	glDrawBuffers(3, genBuffers);
-	//Check to make sure the framebuffer is ready
-	GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-	//Check the status of the framebuffer object
-	if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) { 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateCurveMedium - Framebuffer is not complete."); 
-		return std::vector<GLfloat*>();
-	}	
 	
 	/*** Setup and render ***/
 
@@ -431,104 +419,75 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, co
 	//Re-enable some settings
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);	
-	//Do some error checking
-	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceMedium - At Render.");
 
-	/*** Save output textures into vertex VBO and normal VBO using simple memory read ***/
-
-	//Read the vertex data
-	GLfloat *vertData = new GLfloat[numVerts * 4];
-	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
-	glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, vertData);
-	//Read the normal data
-	GLfloat *normData = new GLfloat[numVerts * 4];
-	glReadBuffer(GL_COLOR_ATTACHMENT1_EXT);
-	glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, normData);
-	//Read the tex coord data
-	GLfloat *tmpUV = new GLfloat[numVerts * 4];
-	GLfloat *uvData = new GLfloat[numVerts * 2];
-	glReadBuffer(GL_COLOR_ATTACHMENT2_EXT);
-	glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, tmpUV);
-	//Need to convert from 4-component to 2 component
-	for (WPUInt i=0; i<numVerts; i++) memcpy(&uvData[i*2], &tmpUV[i*4], 2 * sizeof(GLfloat));
-	//Delete tmpUV
-	delete tmpUV;
-	
+	GLfloat *vertData = NULL;
+	GLfloat *normData = NULL;
+	GLfloat *uvData = NULL;
 	//See if server or client
 	if (server) {
 		GLuint tmpBuffer;
-		//Bind the vertex buffer and load it up
+		//Setup all of the buffers if necessary
 		if (buffers.at(NURBSSURFACE_VERTEX_BUFFER) == 0) { glGenBuffers(1, &tmpBuffer); buffers.at(NURBSSURFACE_VERTEX_BUFFER) = tmpBuffer; }
-		glBindBuffer(GL_ARRAY_BUFFER, buffers.at(NURBSSURFACE_VERTEX_BUFFER));
-		glBufferData(GL_ARRAY_BUFFER, numVerts * 4 * sizeof(GLfloat), vertData, GL_STATIC_DRAW);
-		//Delete the vert data
-		delete vertData;
-		vertData = NULL;
-		//Bind the normal buffer and load it up
 		if (buffers.at(NURBSSURFACE_NORMAL_BUFFER) == 0) { glGenBuffers(1, &tmpBuffer); buffers.at(NURBSSURFACE_NORMAL_BUFFER) = tmpBuffer; }
-		glBindBuffer(GL_ARRAY_BUFFER, buffers.at(NURBSSURFACE_NORMAL_BUFFER));
-		glBufferData(GL_ARRAY_BUFFER, numVerts * 4 * sizeof(GLfloat), normData, GL_STATIC_DRAW);
-		//Delete normal data
-		delete normData;
-		normData = NULL;
-		//Bind the tex coord buffer and load it up
 		if (buffers.at(NURBSSURFACE_TEXCOORD_BUFFER) == 0) { glGenBuffers(1, &tmpBuffer); buffers.at(NURBSSURFACE_TEXCOORD_BUFFER) = tmpBuffer; }
-		//Copy data into TexCoord Buffer
+
+		//Read the vertex texture
+		glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
+		glBindBuffer(GL_PIXEL_PACK_BUFFER, buffers.at(NURBSSURFACE_VERTEX_BUFFER));
+		glBufferData(GL_PIXEL_PACK_BUFFER, numVerts * 4 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+		glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, NULL);
+		//Read the normal texture
+		glReadBuffer(GL_COLOR_ATTACHMENT1_EXT);
+		glBindBuffer(GL_PIXEL_PACK_BUFFER, buffers.at(NURBSSURFACE_NORMAL_BUFFER));
+		glBufferData(GL_PIXEL_PACK_BUFFER, numVerts * 4 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+		glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, NULL);
+
+		//Read the tex coord data
+		GLfloat *tmpUV = new GLfloat[numVerts * 4];
+		uvData = new GLfloat[numVerts * 2];
+		glReadBuffer(GL_COLOR_ATTACHMENT2_EXT);
+		glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, tmpUV);
+		//Need to convert from 4-component to 2 component
+		for (WPUInt i=0; i<numVerts; i++) memcpy(&uvData[i*2], &tmpUV[i*4], 2 * sizeof(GLfloat));
+		//Clean up the PBO
+		 glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+		 glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
+		//Upload texCoords into vbo
 		glBindBuffer(GL_ARRAY_BUFFER, buffers.at(NURBSSURFACE_TEXCOORD_BUFFER));
 		glBufferData(GL_ARRAY_BUFFER, numVerts * 2 * sizeof(GLfloat), uvData, GL_STATIC_DRAW);
-		//Delete tex coord data
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//Delete temp array and set to NULL
 		delete uvData;
 		uvData = NULL;
 	}
-	
-	/*** Save output textures into vertex and normal VBOs using a PBO ***
-
-	//Read the vertex texture
-	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
-	glBindBuffer(GL_PIXEL_PACK_BUFFER, this->_buffers[NURBSSURFACE_VERTEX_BUFFER]);
-	glBufferData(GL_PIXEL_PACK_BUFFER, this->_numVerts * 4 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
-	glReadPixels(0, 0, this->_lodU, this->_lodV, GL_RGBA, GL_FLOAT, NULL);
-	//Read the normal texture
-	glReadBuffer(GL_COLOR_ATTACHMENT1_EXT);
-	glBindBuffer(GL_PIXEL_PACK_BUFFER, this->_buffers[NURBSSURFACE_NORMAL_BUFFER]);
-	glBufferData(GL_PIXEL_PACK_BUFFER, this->_numVerts * 4 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
-	glReadPixels(0, 0, this->_lodU, this->_lodV, GL_RGBA, GL_FLOAT, NULL);
-	 //Read the texCoord texture
-	 glReadBuffer(GL_COLOR_ATTACHMENT2_EXT);
-	 glBindBuffer(GL_PIXEL_PACK_BUFFER, this->_buffers[NURBSSURFACE_TEXCOORD_BUFFER]);
-	 glBufferData(GL_PIXEL_PACK_BUFFER, this->_numVerts * 4 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
-	 glReadPixels(0, 0, this->_lodU, this->_lodV, GL_RGBA, GL_FLOAT, NULL);
-	 //Need to convert four element to two element
-	 //...
-	 //Clean up the PBO
-	glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
-	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
-//	if (glGetError() != GL_NO_ERROR) std::cout << "WCNurbsSurface::GenerateSurfaceMedium Error - FBO -> PBO -> VBO.\n";
-	
-	/*** Restore the framebuffer ***/
-		
+	//Must be client
+	else {
+		//Read the vertex data
+		vertData = new GLfloat[numVerts * 4];
+		glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
+		glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, vertData);
+		//Read the normal data
+		normData = new GLfloat[numVerts * 4];
+		glReadBuffer(GL_COLOR_ATTACHMENT1_EXT);
+		glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, normData);
+		//Read the tex coord data
+		GLfloat *tmpUV = new GLfloat[numVerts * 4];
+		uvData = new GLfloat[numVerts * 2];
+		glReadBuffer(GL_COLOR_ATTACHMENT2_EXT);
+		glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, tmpUV);
+		//Need to convert from 4-component to 2 component
+		for (WPUInt i=0; i<numVerts; i++) memcpy(&uvData[i*2], &tmpUV[i*4], 2 * sizeof(GLfloat));
+		//Delete tmpUV
+		delete tmpUV;
+/*** Debug ***
+		std::cout << "Medium Generation Verts (client): " << lodU << ", " << lodV << std::endl;
+		for (int i=0; i<numVerts; i++) printf("\t%d: %f %f %f %f\n", i, vertData[i*4], vertData[i*4+1], vertData[i*4+2], vertData[i*4+3]);
+		for (int i=0; i<numVerts; i++) printf("\t%d: %f %f %f %f\n", i, normData[i*4], normData[i*4+1], normData[i*4+2], normData[i*4+3]);
+		for (int i=0; i<numVerts; i++) printf("\t%d: %f %f\n", i, uvData[i*2], uvData[i*2+1]);
+/*** Debug ***/
+	}
 	//Clean up the framebuffer object
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-/*** Debug ***
-	std::cout << "Medium Generation Verts: " << lodU << ", " << lodV << std::endl;
-	//Show Vertex Data
-//	glBindBuffer(GL_ARRAY_BUFFER, this->_buffers[NURBSSURFACE_VERTEX_BUFFER]);
-//	GLfloat *data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-	for (int i=0; i<numVerts; i++) printf("\t%d: %f %f %f %f\n", i, vertData[i*4], vertData[i*4+1], vertData[i*4+2], vertData[i*4+3]);
-//	glUnmapBuffer(GL_ARRAY_BUFFER);
-//	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	//Show Normal Data
-//	glBindBuffer(GL_ARRAY_BUFFER, this->_buffers[NURBSSURFACE_NORMAL_BUFFER]);
-//	data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-	for (int i=0; i<numVerts; i++) printf("\t%d: %f %f %f %f\n", i, normData[i*4], normData[i*4+1], normData[i*4+2], normData[i*4+3]);
-//	glUnmapBuffer(GL_ARRAY_BUFFER);
-	//Show TexCoord Data
-//	glBindBuffer(GL_ARRAY_BUFFER, this->_buffers[NURBSSURFACE_TEXCOORD_BUFFER]);
-//	data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-	for (int i=0; i<numVerts; i++) printf("\t%d: %f %f\n", i, uvData[i*2], uvData[i*2+1]);
-//	glUnmapBuffer(GL_ARRAY_BUFFER);
-//	glBindBuffer(GL_ARRAY_BUFFER, 0);
-/*** Debug ***/
 	//Should check for errors here
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceMedium - At Cleanup.");
 	//Return client buffers
