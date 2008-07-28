@@ -384,41 +384,31 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, co
 		glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSU_DEFAULT], this->_degreeU, this->_cpU, this->_kpU, 0);		
 		glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSV_DEFAULT], this->_degreeV, this->_cpV, this->_kpV, 0);								
 	}
-	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateCurveMedium - Programs did not initialize.");
+
+	//Save the viewport and polygon mode bits
+	glPushAttrib(GL_VIEWPORT_BIT | GL_POLYGON_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
+	glPushClientAttrib(GL_CLIENT_VERTEX_ARRAY_BIT);
+	//Set some GL state settings
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	glEnableClientState(GL_VERTEX_ARRAY);
 	//Now generate the control points texture
 	this->GenerateControlPointsTexture();
 	//Create a knotpoint texture
 	this->GenerateKnotPointsTextures();
-
-	/*** Setup framebuffer object ***/
-
 	//Bind to framebuffer
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_context->SurfaceFramebuffer());
 	//Setup draw buffers
 	GLenum genBuffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT };
 	glDrawBuffers(3, genBuffers);
-	
-	/*** Setup and render ***/
-
-	//Save the viewport and polygon mode bits
-	glPushAttrib(GL_VIEWPORT_BIT | GL_POLYGON_BIT);
-	//Disable some settings
-	glDisable(GL_BLEND);
-	glDisable(GL_DEPTH_TEST);
 	//Set up the viewport and polygon mode
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glViewport(0, 0, lodU, lodV);
+	//Ready the input quad
 	GLfloat quad[] = { -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0 };
-	//Turn on vertex arrays
-	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(2, GL_FLOAT, 0, quad);
+	//Render the quad
 	glDrawArrays(GL_QUADS, 0, 4);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	//Restore the viewport and polygon mode
-	glPopAttrib();
-	//Re-enable some settings
-	glEnable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);	
 
 	GLfloat *vertData = NULL;
 	GLfloat *normData = NULL;
@@ -431,32 +421,33 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, co
 		if (buffers.at(NURBSSURFACE_NORMAL_BUFFER) == 0) { glGenBuffers(1, &tmpBuffer); buffers.at(NURBSSURFACE_NORMAL_BUFFER) = tmpBuffer; }
 		if (buffers.at(NURBSSURFACE_TEXCOORD_BUFFER) == 0) { glGenBuffers(1, &tmpBuffer); buffers.at(NURBSSURFACE_TEXCOORD_BUFFER) = tmpBuffer; }
 
-		//Read the vertex texture
+		//Read the vertex texture (using PBO)
 		glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 		glBindBuffer(GL_PIXEL_PACK_BUFFER, buffers.at(NURBSSURFACE_VERTEX_BUFFER));
 		glBufferData(GL_PIXEL_PACK_BUFFER, numVerts * 4 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 		glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, NULL);
-		//Read the normal texture
+		//Read the normal texture (using PBO)
 		glReadBuffer(GL_COLOR_ATTACHMENT1_EXT);
 		glBindBuffer(GL_PIXEL_PACK_BUFFER, buffers.at(NURBSSURFACE_NORMAL_BUFFER));
 		glBufferData(GL_PIXEL_PACK_BUFFER, numVerts * 4 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 		glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, NULL);
+		//Clean up the PBO
+		glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 
-		//Read the tex coord data
+		//Read the tex coord data (using basic glReadPixels)
 		GLfloat *tmpUV = new GLfloat[numVerts * 4];
 		uvData = new GLfloat[numVerts * 2];
 		glReadBuffer(GL_COLOR_ATTACHMENT2_EXT);
 		glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, tmpUV);
 		//Need to convert from 4-component to 2 component
 		for (WPUInt i=0; i<numVerts; i++) memcpy(&uvData[i*2], &tmpUV[i*4], 2 * sizeof(GLfloat));
-		//Clean up the PBO
-		 glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
-		 glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 		//Upload texCoords into vbo
 		glBindBuffer(GL_ARRAY_BUFFER, buffers.at(NURBSSURFACE_TEXCOORD_BUFFER));
 		glBufferData(GL_ARRAY_BUFFER, numVerts * 2 * sizeof(GLfloat), uvData, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 		//Delete temp array and set to NULL
+		glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 		delete uvData;
 		uvData = NULL;
 	}
@@ -486,10 +477,13 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, co
 		for (int i=0; i<numVerts; i++) printf("\t%d: %f %f\n", i, uvData[i*2], uvData[i*2+1]);
 /*** Debug ***/
 	}
-	//Clean up the framebuffer object
+	//Clean up the GL state
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glPopAttrib();
+	glPopClientAttrib();
 	//Should check for errors here
-	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceMedium - At Cleanup.");
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceMedium - At Cleanup:" << err);
 	//Return client buffers
 	std::vector<GLfloat*> retVals;
 	retVals.push_back(vertData);			// Must be first

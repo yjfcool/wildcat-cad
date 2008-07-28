@@ -98,8 +98,10 @@ private:
 	void LoadKnotPoints(const std::vector<WPFloat> &knotPoints=std::vector<WPFloat>());				//!< Create all knot point structures
 	//Curve Generation Methods
 	GLfloat* GenerateCurveHigh(const WPUInt &lod, const bool &server, GLuint &buffer);				//!< Generate GL using High perf level
-	GLfloat* GenerateCurveMedium(const WPUInt &lod, const bool &server, GLuint &buffer);			//!< Generate GL using Medium perf level
-	GLfloat* GenerateCurveLow(const WPUInt &lod, const bool &server, GLuint &buffer);				//!< Generate GL using Low perf level		
+	GLfloat* GenerateCurveMedium(const WPFloat &start, const WPFloat &stop, const WPUInt &lod,		//!< Generate GL using Medium perf level
+												const bool &server, GLuint &buffer);
+	GLfloat* GenerateCurveLow(const WPFloat &start, const WPFloat &stop, const WPUInt &lod,			//!< Generate GL using Low perf level
+							  const bool &server, GLuint &buffer);
 	GLfloat* GenerateCurveOne(const bool &server, GLuint &buffer);									//!< For 1st degree curves
 	//Hidden Constructors
 	WCNurbsCurve();																					//!< Deny access to default constructor
@@ -135,9 +137,11 @@ public:
 	void ReceiveNotice(WCObjectMsg msg, WCObject *sender);											//!< Receive messages from other objects
 
 	//Original Member Methods
-	GLfloat* GenerateClientBuffer(WPUInt &lod, const bool &managed);								//!< Generate up to LOD vert - put in RAM
+	GLfloat* GenerateClientBuffer(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lod, 		//!< Generate up to LOD vert - put in RAM
+												const bool &managed);
 	void ReleaseBuffer(GLfloat* buffer);															//!< Manage the release of buffer resources
-	void GenerateServerBuffer(WPUInt &lod, GLuint &buffer, const bool &managed);					//!< Generate up to LOD vert - put in VRAM
+	void GenerateServerBuffer(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lod,				//!< Generate up to LOD vert - put in VRAM
+												GLuint &buffer, const bool &managed);
 	void ReleaseBuffer(GLuint &buffer);																//!< Manage the release of buffer resources
 	WCVector4 Derivative(const WPFloat &u, const WPUInt &der);										//!< Evaluate the derivative at a specific point
 	WCRay Tangent(const WPFloat &u);																//!< Get the tangent to the curve at U
