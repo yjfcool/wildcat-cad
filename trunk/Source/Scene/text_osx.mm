@@ -138,7 +138,7 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 		GLfloat texData[8] = {0.0, this->_texHeight, 0.0, 0.0, this->_texWidth, 0.0, this->_texWidth, this->_texHeight };
 
 		//Enable the texture for use
-		glEnable(GL_TEXTURE_RECTANGLE_ARB);	
+		glEnable(GL_TEXTURE_RECTANGLE_ARB);
 		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_texture);
 		//Setup vertex array
 		glEnableClientState(GL_VERTEX_ARRAY);
@@ -149,7 +149,9 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 
 		//Draw textured quad
 		glColor4f(1.0, 1.0, 1.0, 1.0);
+		glDisable(GL_DEPTH_TEST);
 		glDrawArrays(GL_QUADS, 0, 4);
+		glEnable(GL_DEPTH_TEST);
 
 		//Make sure that vertex and normal arrays are disabled
 		glDisableClientState(GL_VERTEX_ARRAY);

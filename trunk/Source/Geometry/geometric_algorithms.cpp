@@ -572,7 +572,7 @@ void __WILDCAT_NAMESPACE__::BuildBoundaryList(std::list<std::pair<WCGeometricCur
 				if (detailed) {
 					//Need to determine best LOD
 					WPUInt lod = 256; //(WPUInt)(nurb->Length(tolerance) / tolerance);
-					GLfloat* data = nurb->GenerateClientBuffer(lod, true);
+					GLfloat* data = nurb->GenerateClientBuffer(0.0, 1.0, lod, true);
 					//Process forwards
 					if ((*curveIter).second) {
 						for (WPUInt i=1; i<lod; i++) {

@@ -59,7 +59,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 
 	//Determine estimated length of curve and LOD
 	WPUInt lod = STDMIN((WPUInt)(left->EstimateLength() / tol), (WPUInt)WCAdapter::GetMax2DTextureSize());
-	GLfloat *data = left->GenerateClientBuffer(lod, true);
+	GLfloat *data = left->GenerateClientBuffer(0.0, 1.0, lod, true);
 
 	//Initialize the p0 vector and other variables
 	WCVector4 p0((WPFloat)data[0], (WPFloat)data[1], (WPFloat)data[2], 1.0);
@@ -133,7 +133,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	WPUInt lod = STDMIN((WPUInt)(left->EstimateLength() / tol), (WPUInt)WCAdapter::GetMax2DTextureSize());
 	WPFloat paraFactor = 1.0 / lod, mua, mub;
 	WCVector4 point;
-	GLfloat *leftData = left->GenerateClientBuffer(lod, true);
+	GLfloat *leftData = left->GenerateClientBuffer(0.0, 1.0, lod, true);
 
 	//Set program values
 	glUseProgram(left->Context()->CurveLineProgram());
@@ -438,8 +438,8 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	WPUInt lod = STDMIN((WPUInt)(length / tol), (WPUInt)WCAdapter::GetMax2DTextureSize());
 	WPFloat paraFactor = 1.0 / lod, mua, mub;
 	WCVector4 point;
-	GLfloat *leftData = left->GenerateClientBuffer(lod, true);
-	GLfloat *rightData = right->GenerateClientBuffer(lod, true);
+	GLfloat *leftData = left->GenerateClientBuffer(0.0, 1.0, lod, true);
+	GLfloat *rightData = right->GenerateClientBuffer(0.0, 1.0, lod, true);
 	//Set program values
 	glUseProgram(left->Context()->CurveCurveProgram());
 	glUniform2f(left->Context()->IntersectionLocations()[INTERSECTION_CCI_PARAMS], (GLfloat)lod, (GLfloat)tol);

@@ -154,10 +154,10 @@ void WCNurbsCurve::GenerateControlPointsTexture(void) {
 	//Set up some parameters
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	//Set up texture
-	glActiveTexture(GL_TEXTURE1);	
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_context->CurveCPTex());	
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_context->CurveCPTex());
 	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, this->_cp, 1, GL_RGBA, GL_FLOAT, data);
-	if (glGetError() != GL_NO_ERROR) 
+	if (glGetError() != GL_NO_ERROR)
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateControlPointsTexture Error - Texture Setup.");
 	//Delete data array
 	delete data;
@@ -308,51 +308,45 @@ GLfloat* WCNurbsCurve::GenerateCurveHigh(const WPUInt &lod, const bool &server, 
 }
 
 
-GLfloat* WCNurbsCurve::GenerateCurveMedium(const WPUInt &lod, const bool &server, GLuint &buffer) {
-	GLfloat step = 1.0 / (GLfloat)(lod - 1);
+GLfloat* WCNurbsCurve::GenerateCurveMedium(const WPFloat &start, const WPFloat &stop, const WPUInt &lod, const bool &server, GLuint &buffer) {
+	//Determine generation step size
+	GLfloat step = (GLfloat)(stop - start) / (GLfloat)(lod - 1);
 	//Default and custom case
 	switch (this->_degree) {
 		case 2: case 3:
 			glUseProgram(this->_context->CurveDefault23Program());
 			glUniform4i(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS_DEFAULT23], this->_degree, this->_cp, lod, 1);
-			glUniform2f(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS2_DEFAULT23], 0.0, step);
+			glUniform2f(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS2_DEFAULT23], start, step);
 			break;
 		default:
 			//Degree > 3 Default, Custom, and Bezier
 			glUseProgram(this->_context->CurveDefaultProgram());
 			glUniform4i(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS_DEFAULT], this->_degree, this->_cp, lod, 1);
-			glUniform2f(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS2_DEFAULT], 0.0, step);
+			glUniform2f(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS2_DEFAULT], start, step);
 			break;
 	}
 
+	//Save the GL state
+	glPushAttrib(GL_VIEWPORT_BIT | GL_POLYGON_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
+	glPushClientAttrib(GL_CLIENT_VERTEX_ARRAY_BIT);
+	//Set some GL settings
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	glEnableClientState(GL_VERTEX_ARRAY);
 	//Now generate the control points texture
 	this->GenerateControlPointsTexture();
 	//Create a knotpoint texture
 	this->GenerateKnotPointsTexture();
 	//Bind to framebuffer object
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_context->CurveFramebuffer());
-
-	/*** Setup Viewport and Render***/
-
-	//Save the viewport setting
-	glPushAttrib(GL_VIEWPORT_BIT);
-	//Disable some settings
-	glDisable(GL_BLEND);
-	glDisable(GL_DEPTH_TEST);
-	//Set the viewport
+	//Set up the viewport and polygon mode
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glViewport(0, 0, lod, 1);
-	//Draw into the framebuffer
+	//Ready the input quad
 	GLfloat quad[] = { -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0 };
-	//Turn on vertex arrays
-	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(2, GL_FLOAT, 0, quad);
+	//Render the quad
 	glDrawArrays(GL_QUADS, 0, 4);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	//Restore the viewport setting
-	glPopAttrib();
-	//Re-enable some settings
-	glEnable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
 
 	GLfloat *vertData = NULL;
 	//See if server or client
@@ -363,8 +357,6 @@ GLfloat* WCNurbsCurve::GenerateCurveMedium(const WPUInt &lod, const bool &server
 		glBufferData(GL_PIXEL_PACK_BUFFER, lod * NURBSCURVE_FLOATS_PER_VERTEX * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 		glReadPixels(0, 0, lod, 1, GL_RGBA, GL_FLOAT, NULL);
 		glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
-		//Clean up and check for errors
-//		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Cleanup.");
 	}
 	//Must be client
 	else {
@@ -378,17 +370,23 @@ GLfloat* WCNurbsCurve::GenerateCurveMedium(const WPUInt &lod, const bool &server
 		 CLOGGER_DEBUG(WCLogManager::RootLogger(), i << ": " << vertData[i*4] << ", " << vertData[i*4+1] << ", " << vertData[i*4+2] << ", " << vertData[i*4+3]);
  /*** Debug ***/
 	}
-	//Clean up the framebuffer object and cp/kp textures
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);	
+	//Clean up the GL state
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glPopAttrib();
+	glPopClientAttrib();
+	//Clean up and check for errors
+	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Cleanup.");
 	//Return client buffer
 	return vertData;
 }
 	
 
-GLfloat* WCNurbsCurve::GenerateCurveLow(const WPUInt &lod, const bool &server, GLuint &buffer) {
+GLfloat* WCNurbsCurve::GenerateCurveLow(const WPFloat &start, const WPFloat &stop, const WPUInt &lod, const bool &server, GLuint &buffer) {
 	//Setup some variables
-	WPFloat u = this->_knotPoints[0];
-	WPFloat range = this->_knotPoints[this->_kp-1] - this->_knotPoints[0];
+//	WPFloat u = this->_knotPoints[0];
+	WPFloat u = start;
+//	WPFloat range = this->_knotPoints[this->_kp-1] - this->_knotPoints[0];
+	GLfloat range = (GLfloat)(stop - start);
 	WPFloat du = range / ((GLfloat)(lod-1));
 	WCVector4 pt;
 	GLuint size = lod * NURBSCURVE_FLOATS_PER_VERTEX;
@@ -419,8 +417,7 @@ GLfloat* WCNurbsCurve::GenerateCurveLow(const WPUInt &lod, const bool &server, G
 		//Clean up and check for errors
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		//Check for errors
-		if (glGetError() != GL_NO_ERROR)
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveLow - GL error at Cleanup.");	
+		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveLow - GL error at Cleanup.");
 	}
 	//Return client buffer
 	return data;
@@ -716,7 +713,7 @@ void WCNurbsCurve::Render(const GLuint &defaultProg, const WCColor &color, const
 	}
 	//Check to see if curve needs to be generated
 	if (this->IsVisualDirty()) {
-		this->GenerateServerBuffer(this->_lod, this->_buffer, true);
+		this->GenerateServerBuffer(0.0, 1.0, this->_lod, this->_buffer, true);
 		//Mark as clean
 		this->IsVisualDirty(false);
 	}
@@ -775,7 +772,7 @@ WPFloat WCNurbsCurve::Length(const WPFloat &tolerance) {
 		WPFloat length = WCNurbs::EstimateLength(this->_controlPoints);
 		WPUInt lod = (WPUInt)(length / tolerance);
 		//Get client buffer of vertex data
-		GLfloat *verts = this->GenerateClientBuffer(lod, true);
+		GLfloat *verts = this->GenerateClientBuffer(0.0, 1.0, lod, true);
 		//Set up points
 		WCVector4 p0(verts[0], verts[1], verts[2], verts[3]), p1;
 		//Loop through the vertex data
@@ -1110,7 +1107,7 @@ std::pair<WCVector4,WPFloat> WCNurbsCurve::PointInversion(const WCVector4 &point
 }
 
 
-GLfloat* WCNurbsCurve::GenerateClientBuffer(WPUInt &lod, const bool &managed) {
+GLfloat* WCNurbsCurve::GenerateClientBuffer(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lod, const bool &managed) {
 	GLuint dummy;
 	GLfloat* buffer;
 	//Make sure LOD >= 2
@@ -1127,12 +1124,12 @@ GLfloat* WCNurbsCurve::GenerateClientBuffer(WPUInt &lod, const bool &managed) {
 	else if ((lod > (WPUInt)this->_context->CurveMaxTextureSize()) ||
 			 (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_LOW)) {
 		//Generate the buffer of data using low method
-		buffer = this->GenerateCurveLow(lod, false, dummy);
+		buffer = this->GenerateCurveLow(0.0, 1.0, lod, false, dummy);
 	}
 	//Medium generation only if PerfLevel == Med
 	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_MEDIUM) {
 		//Generate the buffer of data using medium method
-		buffer = this->GenerateCurveMedium(lod, false, dummy);
+		buffer = this->GenerateCurveMedium(0.0, 1.0, lod, false, dummy);
 	}
 	//High generation only if perf level == High
 	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_HIGH) {
@@ -1155,7 +1152,7 @@ void WCNurbsCurve::ReleaseBuffer(GLfloat* buffer) {
 }
 
 
-void WCNurbsCurve::GenerateServerBuffer(WPUInt &lod, GLuint &buffer, const bool &managed) {
+void WCNurbsCurve::GenerateServerBuffer(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lod, GLuint &buffer, const bool &managed) {
 	//Make sure LOD >= 2
 	if (lod < 2) lod = 2;
 
@@ -1170,12 +1167,12 @@ void WCNurbsCurve::GenerateServerBuffer(WPUInt &lod, GLuint &buffer, const bool 
 	else if ((lod > (WPUInt)this->_context->CurveMaxTextureSize()) ||
 		(this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_LOW)) {
 		//Generate the buffer of data using low method
-		this->GenerateCurveLow(lod, true, buffer);
+		this->GenerateCurveLow(0.0, 1.0, lod, true, buffer);
 	}
 	//Medium generation only if PerfLevel == Med
 	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_MEDIUM) {
 		//Generate the buffer of data using medium method
-		this->GenerateCurveMedium(lod, true, buffer);
+		this->GenerateCurveMedium(0.0, 1.0, lod, true, buffer);
 	}
 	//High generation only if perf level == High
 	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_HIGH) {
