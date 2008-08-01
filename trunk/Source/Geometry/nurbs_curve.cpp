@@ -1168,7 +1168,7 @@ GLfloat* WCNurbsCurve::GenerateClientBuffer(const WPFloat &uStart, const WPFloat
 	}
 	//Error path
 	else {
-		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateServerBuffer - Unknown generation path.");
+		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateClientBuffer - Unknown generation path.");
 		//throw error
 	}
 	//Return the buffer

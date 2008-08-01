@@ -288,7 +288,7 @@ void WCPartPad::GenerateCurves(std::list<std::list<WCTrimProfile> > &topTrims, s
 			tmpUse = tmpSideUses.front();
 			tmpSideUses.push_back(tmpUse);
 			//Copy [1,N] tmpSide uses into sideUses
-			for (int i=1; i<tmpSideUses.size(); i++)
+			for (int i=1; i<(int)tmpSideUses.size(); i++)
 				sideUses.push_back(tmpSideUses.at(i));
 			//Make sure to clear tmpSideUses
 			tmpSideUses.clear();
@@ -484,7 +484,7 @@ void _ConfigureTopEdgeUses(WSLoopUse *loopUse, WPUInt &index, const WPUInt &coun
 	std::list<WSVertexUse*> &vuList) {
 	WSEdgeUse *edgeUse, *prevEU = NULL, *firstEU = NULL, *lastEU = NULL;
 	//Loop through edgeUses in top list
-	for (int i=index; i<index+count; i++) {
+	for (int i=(int)index; i<(int)(index+count); i++) {
 		//Get the edgeUse and set the loop
 		edgeUse = edgeUseList.at(i);
 		edgeUse->loop = loopUse;
@@ -571,7 +571,7 @@ void _ConfigureBottomEdgeUses(WSLoopUse *loopUse, WPUInt &index, const WPUInt &c
 	std::list<WSVertexUse*> &vuList) {
 	WSEdgeUse *edgeUse, *prevEU = NULL, *firstEU = NULL, *lastEU = NULL;
 	//Loop through edgeUses in top list
-	for (int i=index; i<index+count; i++) {
+	for (int i=(int)index; i<(int)(index+count); i++) {
 		//Get the edgeUse and set the loop
 		edgeUse = edgeUseList.at(i);
 		edgeUse->loop = loopUse;
