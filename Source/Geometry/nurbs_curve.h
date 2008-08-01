@@ -143,6 +143,9 @@ public:
 	void GenerateServerBuffer(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lod,				//!< Generate up to LOD vert - put in VRAM
 												GLuint &buffer, const bool &managed);
 	void ReleaseBuffer(GLuint &buffer);																//!< Manage the release of buffer resources
+	GLuint GenerateTextureBuffer(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lod,			//!< Generate up to LOD vert - put in texture
+												const bool &managed);
+	void ReleaseTexture(GLuint &texture);															//!< Manage the release of texture resources
 	WCVector4 Derivative(const WPFloat &u, const WPUInt &der);										//!< Evaluate the derivative at a specific point
 	WCRay Tangent(const WPFloat &u);																//!< Get the tangent to the curve at U
 	std::pair<WCVector4,WPFloat> PointInversion(const WCVector4 &point);							//!< Get the closest point on the curve from the given point

@@ -445,7 +445,6 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, co
 		glBindBuffer(GL_ARRAY_BUFFER, buffers.at(NURBSSURFACE_TEXCOORD_BUFFER));
 		glBufferData(GL_ARRAY_BUFFER, numVerts * 2 * sizeof(GLfloat), uvData, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 		//Delete temp array and set to NULL
 		glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 		delete uvData;
@@ -469,6 +468,7 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, co
 		//Need to convert from 4-component to 2 component
 		for (WPUInt i=0; i<numVerts; i++) memcpy(&uvData[i*2], &tmpUV[i*4], 2 * sizeof(GLfloat));
 		//Delete tmpUV
+		glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 		delete tmpUV;
 /*** Debug ***
 		std::cout << "Medium Generation Verts (client): " << lodU << ", " << lodV << std::endl;
@@ -863,6 +863,14 @@ WCNurbsSurface::WCNurbsSurface(const WCNurbsSurface &surf) : ::WCGeometricSurfac
 	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface:: Copy Constructor - Not yet implemented.");
 	//Establish aligned bounding box
 	this->_bounds = new WCAlignedBoundingBox(this->_controlPoints);	
+}
+
+
+WCNurbsSurface::WCNurbsSurface(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
+	::WCGeometricSurface( WCSerializeableObject::ElementFromName(element,"GeometricSurface"), dictionary ),
+	_context(NULL), _degreeU(0), _degreeV(0), _modeU(WCNurbsMode::Default()), _modeV(WCNurbsMode::Default()), _cpU(0), _cpV(0),
+	_controlPoints(), _kpU(0), _kpV(0), _knotPointsU(NULL), _knotPointsV(NULL), _lengthU(0.0), _lengthV(0.0), _buffers(), _altBuffers() {
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::WCNurbsSurface - Restore from XML is not implemented.");
 }
 
 
