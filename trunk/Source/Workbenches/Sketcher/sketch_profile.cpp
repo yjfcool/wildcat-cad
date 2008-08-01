@@ -421,7 +421,7 @@ WPUInt WCSketchProfile::IsInside(const WCVector4 &point) {
 	//Delete the line
 	delete line;
 	//Return the count
-	return (WPUInt)count;
+	return (WPUInt)ceil(count);
 }
 
 

@@ -347,14 +347,18 @@ GLfloat* WCNurbsCurve::GenerateCurveMedium(const WPFloat &start, const WPFloat &
 	glVertexPointer(2, GL_FLOAT, 0, quad);
 	//Render the quad
 	glDrawArrays(GL_QUADS, 0, 4);
+	//Reset the program
+	glUseProgram(0);
 
 	GLfloat *vertData = NULL;
-	//See if server or client
+	//See if server buffer is desired
 	if (server) {
 		//If the buffer is not already present, gen it
 		if (!buffer) glGenBuffers(1, &buffer);
+		//Bind to the PBO
 		glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
 		glBufferData(GL_PIXEL_PACK_BUFFER, lod * NURBSCURVE_FLOATS_PER_VERTEX * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+		//Read the pixel data
 		glReadPixels(0, 0, lod, 1, GL_RGBA, GL_FLOAT, NULL);
 		glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 	}
@@ -362,13 +366,39 @@ GLfloat* WCNurbsCurve::GenerateCurveMedium(const WPFloat &start, const WPFloat &
 	else {
 		//Save output texture into vertex VBO using simple memory read
 		vertData = new GLfloat[lod * NURBSCURVE_FLOATS_PER_VERTEX];
-		glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 		glReadPixels(0, 0, lod, 1, GL_RGBA, GL_FLOAT, vertData);
 /*** Debug ***
-		 CLOGGER_DEBUG(WCLogManager::RootLogger(), "Medium Generation Vertices (Client): " << lod);
-		 for (WPUInt i=0; i<lod; i++) 
-		 CLOGGER_DEBUG(WCLogManager::RootLogger(), i << ": " << vertData[i*4] << ", " << vertData[i*4+1] << ", " << vertData[i*4+2] << ", " << vertData[i*4+3]);
+		CLOGGER_DEBUG(WCLogManager::RootLogger(), "Medium Generation Vertices (Client): " << lod);
+		for (WPUInt i=0; i<lod; i++) 
+			CLOGGER_DEBUG(WCLogManager::RootLogger(), i << ": " << vertData[i*4] << ", " << vertData[i*4+1] << ", " << vertData[i*4+2] << ", " << vertData[i*4+3]);
  /*** Debug ***/
+		//See if texture should be sent back
+		if (buffer) {
+			glFlush();
+			//Bind to the texture
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_RECTANGLE_ARB, buffer);
+			//Set its parameters
+			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);		
+			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);	
+			//Copy the texture
+			glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, lod, 1, 0, GL_RGBA, GL_FLOAT, vertData);
+			delete vertData;
+			vertData = NULL;
+/*** DEBUG ***
+			 GLfloat pixels[lod * 4];
+			 glGetTexImage(GL_TEXTURE_RECTANGLE_ARB, 0, GL_FLOAT, GL_RGBA32F_ARB, pixels);
+			 CLOGGER_DEBUG(WCLogManager::RootLogger(), "Medium Generation Vertices (Texture): " << lod);
+			 for (WPUInt i=0; i<lod; i++) 
+			 CLOGGER_DEBUG(WCLogManager::RootLogger(), i << ": " << pixels[i*4] << ", " << pixels[i*4+1] << ", " << pixels[i*4+2] << ", " << pixels[i*4+3]);
+/*** DEBUG ***/
+			//Unbind from the texture
+			glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+			if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Tex Copy.");
+			glFlush();
+		}
 	}
 	//Clean up the GL state
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
@@ -1108,7 +1138,7 @@ std::pair<WCVector4,WPFloat> WCNurbsCurve::PointInversion(const WCVector4 &point
 
 
 GLfloat* WCNurbsCurve::GenerateClientBuffer(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lod, const bool &managed) {
-	GLuint dummy;
+	GLuint dummy = 0;
 	GLfloat* buffer;
 	//Make sure LOD >= 2
 	if (lod < 2) lod = 2;
@@ -1190,6 +1220,23 @@ void WCNurbsCurve::GenerateServerBuffer(const WPFloat &uStart, const WPFloat &uS
 void WCNurbsCurve::ReleaseBuffer(GLuint &buffer) {
 	//For now just delete the buffer
 	if (buffer) glDeleteBuffers(1, &buffer);
+}
+
+
+GLuint WCNurbsCurve::GenerateTextureBuffer(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lod, const bool &managed) {
+	GLuint retVal = 0;
+	//Generate the texture
+	glGenTextures(1, &retVal);
+	//Render into this texture
+	this->GenerateCurveMedium(0.0, 1.0, lod, false, retVal);
+	//Return the texture
+	return retVal;
+}
+
+
+void WCNurbsCurve::ReleaseTexture(GLuint &texture) {
+	//For now just delete the texture
+	if (texture) glDeleteTextures(1, &texture);
 }
 
 

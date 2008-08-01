@@ -133,7 +133,8 @@ GLfloat* WCTrimmedNurbsSurface::PointInversionHigh(std::list<WCVector4> &boundar
 	 /*** Setup and render ***/
 	
 	//Save the viewport and polygon mode bits
-	glPushAttrib(GL_VIEWPORT_BIT | GL_POLYGON_BIT);
+	glPushAttrib(GL_VIEWPORT_BIT | GL_POLYGON_BIT | GL_TEXTURE_BIT | GL_ENABLE_BIT);
+	glPushClientAttrib(GL_ALL_ATTRIB_BITS);
 	//Disable some settings
 	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
@@ -150,14 +151,9 @@ GLfloat* WCTrimmedNurbsSurface::PointInversionHigh(std::list<WCVector4> &boundar
 	glTexCoordPointer(2, GL_FLOAT, 0, texData);
 	//--- Draw ---
 	glDrawArrays(GL_QUADS, 0, 4);
-	//Clean up
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	//Restore the viewport and polygon mode
 	glPopAttrib();
-	//Re-enable some settings
-	glEnable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);	
+	glPopClientAttrib();
 	//Do some error checking
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceMedium - At Render.");
 	
@@ -369,34 +365,28 @@ WCTrimmedNurbsSurface::WCTrimmedNurbsSurface(WCGeometryContext *context, const s
 	const WPUInt &degreeU, const WPUInt &degreeV, const WPUInt &cpU, const WPUInt &cpV, 
 	const std::vector<WCVector4> &controlPoints, const WCNurbsMode &modeU, const WCNurbsMode &modeV,
 	const std::vector<WPFloat> &kpU, const std::vector<WPFloat> &kpV) : 
-	:: WCNurbsSurface(context, degreeU, degreeV, cpU, cpV, controlPoints, modeU, modeV, kpU, kpV), _context(context),
-	_profileList(profileList), _isTextureDirty(false), _trimMatrix(), _invTrimMatrix(),
-	_trimTexture(0),  _texWidth(0), _texHeight(0) {
+	:: WCNurbsSurface(context, degreeU, degreeV, cpU, cpV, controlPoints, modeU, modeV, kpU, kpV),
+	_profileList(profileList), _isTextureDirty(true), _trimTexture(0),  _texWidth(0), _texHeight(0) {
 	//Make sure there are some profiles
 	if (this->_profileList.size() == 0) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::WCTrimmedNurbsSurface - No profiles attached.");
 		//throw error
 		return;
 	}
-	//Determine orientation matrix and aspect ratio
-	WCVector4 base = this->_controlPoints.at(0);
-	WCVector4 xAxis = this->_controlPoints.at(this->_cpU-1) - base;
-	WCVector4 yAxis = this->_controlPoints.at(this->_controlPoints.size() - this->_cpU) - base;
-	WCVector4 zAxis = xAxis.CrossProduct(yAxis);
-//	this->_width = xAxis.Magnitude();
-//	this->_height = yAxis.Magnitude();
-//	WPFloat aspectRatio = this->_height / this->_width;
-//	this->_texHeight = (WPUInt)(this->_texWidth * aspectRatio);
-	xAxis.Normalize(true);
-	yAxis.Normalize(true);
-	zAxis.Normalize(true);
-	//Determine the trim matrix and inverse trim matrix
-	this->_invTrimMatrix = WCMatrix4(xAxis.I(), yAxis.I(), zAxis.I(), base.I(),
-								  xAxis.J(), yAxis.J(), zAxis.J(), base.J(),
-								  xAxis.K(), yAxis.K(), zAxis.K(), base.K(),
-								  0.0, 0.0, 0.0, 1.0);
-	this->_trimMatrix = this->_invTrimMatrix.Inverse();
 }
+
+
+WCTrimmedNurbsSurface::WCTrimmedNurbsSurface(const WCTrimmedNurbsSurface &surf) : ::WCNurbsSurface(surf),
+	_profileList(surf._profileList), _isTextureDirty(true), _trimTexture(0),  _texWidth(0), _texHeight(0) {
+}
+
+
+WCTrimmedNurbsSurface::WCTrimmedNurbsSurface(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
+	::WCNurbsSurface( WCSerializeableObject::ElementFromName(element,"NurbsSurface"), dictionary ),
+	_profileList(), _isTextureDirty(true), _trimTexture(0), _texWidth(0), _texHeight(0) {
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::WCTrimmedNurbsSurface - Restore from XML is not implemented.");
+}
+
 
 WCTrimmedNurbsSurface::~WCTrimmedNurbsSurface() {
 	//Release texture
@@ -476,16 +466,14 @@ void WCTrimmedNurbsSurface::Render(const GLuint &defaultProg, const WCColor &col
 	factorV = (WPFloat)this->_texHeight / (WPFloat)texV;
 	//Check to see if trim texture is dirty
 	if ((factorU < TRIMSURFACE_RENDER_LOWER) || (factorU > TRIMSURFACE_RENDER_UPPER) ||
-		(factorV < TRIMSURFACE_RENDER_LOWER) || (factorV > TRIMSURFACE_RENDER_UPPER) ||
-		this->IsTextureDirty()) {
-//		std::cout << "TexU: " << texU << ", TexV: " << texV << std::endl;
+		(factorV < TRIMSURFACE_RENDER_LOWER) || (factorV > TRIMSURFACE_RENDER_UPPER) || this->IsTextureDirty()) {
 		//Set the new texture sizes
 		this->_texWidth = texU;
 		this->_texHeight = texV;
 		//Generate the trim texture
-		this->GenerateTrimTexture(this->_texWidth, this->_texHeight, this->_trimTexture, true);		
+		this->GenerateTrimTexture(this->_texWidth, this->_texHeight, this->_trimTexture, true);
 		//Mark as clean
-		this->IsTextureDirty(false);
+		this->_isTextureDirty = false;
 	}
 	//Set the rendering program
 	if (this->_renderProg != 0) {
@@ -493,23 +481,24 @@ void WCTrimmedNurbsSurface::Render(const GLuint &defaultProg, const WCColor &col
 	}
 	else if (defaultProg != 0)glUseProgram(defaultProg);
 	
+	//Save the client state
+	glPushClientAttrib(GL_ALL_ATTRIB_BITS);
 	//Make sure that vertex, index, normal, and texcoord arrays are enabled
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffers[NURBSSURFACE_VERTEX_BUFFER]);
 	glVertexPointer(4, GL_FLOAT, 4 * sizeof(GLfloat), 0);
-	
+	//Enable index arrays
 	glEnableClientState(GL_INDEX_ARRAY);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_buffers[NURBSSURFACE_INDEX_BUFFER]);
 	glIndexPointer(GL_INT, sizeof(GLint), 0);
-
+	//Enable normal arrays
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffers[NURBSSURFACE_NORMAL_BUFFER]);
 	glNormalPointer(GL_FLOAT, 4 * sizeof(GLfloat), 0);
-	
+	//Enable texture coord arrays
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, this->_buffers[NURBSSURFACE_TEXCOORD_BUFFER]);
 	glTexCoordPointer(2, GL_FLOAT, 2 * sizeof(GLfloat), 0);
-
 	//Set color appropriately
 	if (color == WCColor::Default()) {
 		this->_color.Enable();
@@ -526,7 +515,6 @@ void WCTrimmedNurbsSurface::Render(const GLuint &defaultProg, const WCColor &col
 	glUniform1i(loc, 0);
 	loc = glGetUniformLocation(this->_renderProg, "texSize");
 	glUniform2f(loc, (GLfloat)this->_texWidth, (GLfloat)this->_texHeight);
-
 	//Draw elements (*2 for each triangle in a lod box, *3 for each vertex in a triangle)
 	glDrawElements(GL_TRIANGLES, (this->_lodU-1)*(this->_lodV-1)*2*3, GL_UNSIGNED_INT, 0);
 	
@@ -537,14 +525,12 @@ void WCTrimmedNurbsSurface::Render(const GLuint &defaultProg, const WCColor &col
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
 	//Make sure that vertex and normal arrays are disabled
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_INDEX_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glPopClientAttrib();
 	//Restore the default prog
 	if (this->_renderProg != 0) glUseProgram(defaultProg);
 	//Report them errors
-	if (glGetError() != GL_NO_ERROR) std::cout << "WCTrimmedNurbsSurface::Render Error - Unspecified error.\n";
+	if (glGetError() != GL_NO_ERROR)
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::Render Error - Unspecified error.");
 }
 	
 
@@ -558,12 +544,20 @@ void WCTrimmedNurbsSurface::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 
 
 void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHeight, GLuint &texture, const bool &managed) {
-	//Generate all of the tessellated trim profiles
+	//Try to generate all of the tessellated trim profiles
 	std::list<WCTrimTriangulation> triList;
-	this->GenerateTriangulations(triList);
+	try {
+		//Generate the triangulations
+		this->GenerateTriangulations(triList);
+	}
+	//Handle the error
+	catch (...) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::GenerateTrimTexture - Exception caught in GenerateTriangulations.");
+		return;
+	}
 
-	//Make sure no programs are active
-	glUseProgram(0);
+	/*** Setup output texture and framebuffer ***/
+
 	//Generate texture if needed
 	if (texture == 0) glGenTextures(1, &texture);
 	//Setup output texture
@@ -572,75 +566,54 @@ void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHei
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, texture);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_FLOAT, NULL);
 	//Make sure to unbind from the texture
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
-	
-	/*** Setup framebuffer ***/
-	
-	//Create framebuffer
-	//Bind to the custom framebuffer
+	//Create and bind to the framebuffer
 	GLuint framebuffer;
 	glGenFramebuffersEXT(1, &framebuffer);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer);
-	//Bind the output texture to the framebuffer object
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, texture, 0);
-	//Check to make sure the framebuffer is ready
-	GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-	//Check the status of the framebuffer object
-	if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) { 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::GenerateTexture - Framebuffer is not complete: " << retVal); 
-		return;
-	}
-	
-	/*** Setup viewport and matrices and render state ***/
-	
-	//Get the current viewport
-	GLint viewport[4];
-	glGetIntegerv(GL_VIEWPORT, viewport);
-	//Set up the viewport
+	//Clear the framebuffer
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	/*** Setup GL Environment ***/
+
+	//Make sure no programs are active
+	glUseProgram(0);
+	//Save the viewport and polygon mode bits
+	glPushAttrib(GL_VIEWPORT_BIT | GL_POLYGON_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
+	glPushClientAttrib(GL_CLIENT_ALL_ATTRIB_BITS);
+	//Set some GL state settings
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_INDEX_ARRAY);
+	//Set up the viewport and polygon mode
+	glPolygonMode(GL_FRONT, GL_FILL);
 	glViewport(0, 0, texWidth, texHeight);
-	
-	//Push and setup the projection and modelview matrices
+	//Push and clear the projection and modelview matrices
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
-	//Just clear the projection matrix
 	glLoadIdentity();
 	glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
-	//Load the trim matrix for modelview
 	glLoadIdentity();
-	
-	//Set render state
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_INDEX_ARRAY);
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
-	
-	//Clear the framebuffer
-	glClear(GL_COLOR_BUFFER_BIT);
 	
 	/*** Draw all of the trim triangulations ***/
 	
-	std::list<WCTrimTriangulation>::iterator triIter = triList.begin();
-	//Set the color to fill ones
-	glColor3f(1.0, 0.0, 0.0);
-	//Setup vertex buffer
-	glBindBuffer(GL_ARRAY_BUFFER, (*triIter).vertexBuffer );
-	glVertexPointer(4, GL_FLOAT, 0, NULL);
-	//Set up index buffer
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*triIter).indexBuffer );
-	glIndexPointer(GL_INT, 0, NULL);
-	//Draw the trim
-	glDrawElements(GL_TRIANGLES, (*triIter).numTriangles*3 , GL_UNSIGNED_INT, 0);
-
-	//Loop through each (starting with second tri)
-	for(triIter++; triIter != triList.end(); triIter++) {
-		//Set the color to fill zeros
-		glColor3f(0.0, 0.0, 0.0);
+	//Loop through each triangulation
+	bool first = true;
+	std::list<WCTrimTriangulation>::iterator triIter;
+	for(triIter = triList.begin(); triIter != triList.end(); triIter++) {
+		//Set color based on iteration (first gets fill to red)
+		if (first) {
+			first = false;
+			glColor3f(1.0, 0.0, 0.0);
+		}
+		//Not first gets fill to black
+		else glColor3f(0.0, 0.0, 0.0);
 		//Setup vertex buffer
 		glBindBuffer(GL_ARRAY_BUFFER, (*triIter).vertexBuffer );
 		glVertexPointer(4, GL_FLOAT, 0, NULL);
@@ -651,30 +624,20 @@ void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHei
 		glDrawElements(GL_TRIANGLES, (*triIter).numTriangles*3 , GL_UNSIGNED_INT, 0);
 	}
 	
-	/*** Restore the viewport matrices and render state ***/
+	/*** Restore the GL state ***/
 	
-	//Restore render state
-	glEnable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_INDEX_ARRAY);
+	//Clean up the GL state
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glDeleteFramebuffersEXT(1, &framebuffer);
+	glPopAttrib();
+	glPopClientAttrib();
 	//Bind back to nothing
 	glBindBuffer(GL_ARRAY_BUFFER, 0);	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	
 	//Pop projection and modelview matrices
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
-	
-	//Restore viewport and polygon mode
-	glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
-	
-	/*** Clean up framebuffer and textures ***/
-	
-	//Unbind the framebuffer
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-	glDeleteFramebuffersEXT(1, &framebuffer);
 	//Check for errors
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {

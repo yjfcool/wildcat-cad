@@ -127,13 +127,11 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	//See if line intersects curve bounding box
 	if (left->BoundingBox().Intersection(right->BoundingBox())) return results;
 
-	/*** Setup programs and texture locations ***/
-	
 	//LOD is smaller of length/tolerance and maximum texture size
-	WPUInt lod = STDMIN((WPUInt)(left->EstimateLength() / tol), (WPUInt)WCAdapter::GetMax2DTextureSize());
-	WPFloat paraFactor = 1.0 / lod, mua, mub;
-	WCVector4 point;
-	GLfloat *leftData = left->GenerateClientBuffer(0.0, 1.0, lod, true);
+//	WPUInt lod = STDMIN((WPUInt)(left->EstimateLength() / tol), (WPUInt)WCAdapter::GetMax2DTextureSize());
+	WPUInt lod = STDMIN((WPUInt)(left->EstimateLength() / tol), (WPUInt)512);
+	//Setup the left texture
+	GLuint leftTex = left->GenerateTextureBuffer(0.0, 1.0, lod, true);
 
 	//Set program values
 	glUseProgram(left->Context()->CurveLineProgram());
@@ -142,76 +140,55 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 				(GLfloat)right->Begin().I(), (GLfloat)right->Begin().J(), (GLfloat)right->Begin().K(), 1.0);
 	glUniform4f(left->Context()->IntersectionLocations()[INTERSECTION_CLI_LEND],
 				(GLfloat)right->End().I(), (GLfloat)right->End().J(), (GLfloat)right->End().K(), 1.0);
-	
-	/*** Bind to framebuffer object ***/
-	
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, left->Context()->CurveCurveFramebuffer());
-	//Check to make sure the framebuffer is ready
-	GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-	//Check the status of the framebuffer object
-	if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) { 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveLine Intersection - Framebuffer is not complete.");
-		return results;
-	}
 
-	/*** Setup Left texture ***/
-	
-	//Setup and copy the data into the texture
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	//Set up texture
-	glActiveTexture(GL_TEXTURE0);	
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, left->Context()->CCILeftTex());	
-	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, lod, 1, GL_RGBA, GL_FLOAT, leftData);
-
-	/*** Setup Viewport and Render***/
-	
 	//Save the viewport setting
-	glPushAttrib(GL_VIEWPORT_BIT);
-	//Disable some settings
+	glPushAttrib(GL_VIEWPORT_BIT | GL_POLYGON_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
+	glPushClientAttrib(GL_CLIENT_VERTEX_ARRAY_BIT);
+	//Set some GL settings
 	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
-	//Set the viewport
-	glViewport(0, 0, lod, 1);
-	//Draw into the framebuffer
-	GLfloat vertData[] = { -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0 };
-	//Turn on vertex arrays
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(2, GL_FLOAT, 0, vertData);
-	//--- Draw ---
+	//Setup left texture
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, leftTex);
+	//Bind to the framebuffer
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, left->Context()->CurveCurveFramebuffer());
+	//Set up the viewport and polygon mode
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//Ready the input quad
+	GLfloat quad[] = { -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0 };
+	glVertexPointer(2, GL_FLOAT, 0, quad);
+	//Render the quad
 	glDrawArrays(GL_QUADS, 0, 4);
-	//Clean up
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glPopAttrib();
-	//Re-enable some settings
-	glEnable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
 	//Check for errors
 	if (glGetError() != GL_NO_ERROR)
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveLine Intersection - Render.");
 
-	/*** Save output texture into array using simple memory read ***/
-	
+	//Read the results from the framebuffer
 	GLfloat *cciData = new GLfloat[lod * 4];
 	glReadPixels(0, 0, lod, 1, GL_RGBA, GL_FLOAT, cciData);
-	//Clean up the framebuffer object and cp/kp textures
+	//Clean up the GL state
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-	//Stop using a program
-	glUseProgram(0);
+	//Delete data array
+	left->ReleaseTexture(leftTex);	
+	glPopAttrib();
+	glPopClientAttrib();
 	//Check for errors
 	if (glGetError() != GL_NO_ERROR)
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveLine Intersection - Clean up.");
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "_CurveLine Intersection - GL Clean up.");
 /*** DEBUG ***
-//	std::cout << "Debug output for CLI\n";
+	std::cout << "Debug output for CLI\n";
 	for (int i=0; i<lod; i++) {
 		 if (cciData[i*4] != -1.0) {
-			 std::cout << i << ": " << leftData[i*4] << ", " << leftData[i*4+1] << ", " << leftData[i*4+2] << ", " << leftData[i*4+3] << std::endl;
 			 std::cout << i << ": " << cciData[i*4] << ", " << cciData[i*4+1] << ", " << cciData[i*4+2] << ", " << cciData[i*4+3] << std::endl;
 		 }
 	}
 /*** DEBUG ***/
 
 	/*** Scan output for intersection results ***/
-	
+
+	WPFloat paraFactor = 1.0 / lod, mua, mub;
+	WCVector4 point;	
 	WCIntersectionResult hit;
 	WPUInt lookAhead, diff;
 	std::vector<WCVector4> curvePoints;
@@ -305,8 +282,6 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 			i = lookAhead;
 		}
 	}
-	//Delete data array
-	left->ReleaseBuffer(leftData);
 	//Delete the data buffer
 	delete cciData;
 	//Return the results

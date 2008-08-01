@@ -70,10 +70,8 @@ typedef std::list<std::pair<WCGeometricCurve*,bool> > WCTrimProfile;
 
 class WCTrimmedNurbsSurface : public WCNurbsSurface {
 protected:
-	WCGeometryContext							*_context;											//!< Geometry context object
 	std::list<WCTrimProfile>					_profileList;										//!< List of profiles
 	bool										_isTextureDirty;									//!< Texture dirty flag
-	WCMatrix4									_trimMatrix, _invTrimMatrix;						//!< Orientation matrices
 	GLuint										_trimTexture;										//!< Trim texture
 	GLuint										_texWidth, _texHeight;								//!< Trim texture width and height
 
@@ -98,8 +96,8 @@ public:
 	virtual ~WCTrimmedNurbsSurface();																//!< Default destructor
 
 	//General Access Methods
-	inline bool IsTextureDirty(void)			{ return this->_isTextureDirty; }					//!< Get the texture dirty state
-	inline void IsTextureDirty(const bool &flg) { this->_isTextureDirty = flg; }					//!< Set the texture dirty state
+	inline bool IsTextureDirty(void)			{ return this->_isTextureDirty; }					//!< Get the texture dirty flag
+	inline void MarkTextureDirty(void)			{ this->_isTextureDirty = true; }					//!< Mark the texture as dirty
 
 	//Inherited Member Methods
 	virtual WPFloat Area(const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON);					//!< Return the area of the surface
