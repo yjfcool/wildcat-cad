@@ -3778,6 +3778,34 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="Converters"
+			>
+			<Filter
+				Name="STLExport"
+				>
+				<Filter
+					Name="Headers"
+					>
+					<File
+						RelativePath="..\..\Source\Converters\converter.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Source\Converters\converter_stl.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Source"
+					>
+					<File
+						RelativePath="..\..\Source\Converters\converter_stl.cpp"
+						>
+					</File>
+				</Filter>
+			</Filter>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

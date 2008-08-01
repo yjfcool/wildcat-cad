@@ -239,10 +239,14 @@ void WCGeometryContext::StartSurface(void) {
 //		this->_nsPerfLevel = NURBSSURFACE_PERFLEVEL_HIGH;
 //		CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - Performance set to High.");
 //	}
-//	else 
+//	else
 	if (WCAdapter::HasGLARBFragmentShader() && WCAdapter::HasGLARBShadingLanguage100() &&
-			 WCAdapter::HasGLARBTextureRectangle() && WCAdapter::HasGLEXTTextureFloat() &&
-			 WCAdapter::HasGLARBPixelBufferObject() && WCAdapter::HasGLEXTFramebufferObject()) {
+		WCAdapter::HasGLARBTextureRectangle() && WCAdapter::HasGLEXTTextureFloat() &&
+		WCAdapter::HasGLEXTGPUShader4() && 
+		WCAdapter::HasGLEXTFramebufferObject()) {
+//	if (WCAdapter::HasGLARBFragmentShader() && WCAdapter::HasGLARBShadingLanguage100() &&
+//			 WCAdapter::HasGLARBTextureRectangle() && WCAdapter::HasGLEXTTextureFloat() &&
+//			 WCAdapter::HasGLARBPixelBufferObject() && WCAdapter::HasGLEXTFramebufferObject()) {
 		//All criteria met for medium performance
 		this->_nsPerfLevel = NURBSSURFACE_PERFLEVEL_MEDIUM;
 //		CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - Performance set to Medium.");

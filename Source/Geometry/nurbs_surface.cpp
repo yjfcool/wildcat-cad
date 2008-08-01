@@ -1280,18 +1280,18 @@ std::vector<GLfloat*> WCNurbsSurface::GenerateClientBuffers(WPUInt &lodU, WPUInt
 		buffers = this->GenerateSurfaceLow(lodU, lodV, false, dummy);
 	}
 	//Medium generation only if PerfLevel == Med
-	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_MEDIUM) {
+	else if (this->_context->SurfacePerformanceLevel() == NURBSSURFACE_PERFLEVEL_MEDIUM) {
 		//Generate the buffer of data using medium method
 		buffers = this->GenerateSurfaceMedium(lodU, lodV, false, dummy);
 	}
 	//High generation only if perf level == High
-	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_HIGH) {
+	else if (this->_context->SurfacePerformanceLevel() == NURBSSURFACE_PERFLEVEL_HIGH) {
 		//Generate the buffer of data using high method
 		buffers = this->GenerateSurfaceHigh(lodU, lodV, false, dummy);
 	}
 	//Error path
 	else {
-		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateServerBuffer - Unknown generation path.");
+		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateClientBuffer - Unknown generation path.");
 		//throw error
 	}
 	//Generate index buffer
@@ -1348,18 +1348,18 @@ void WCNurbsSurface::GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vect
 		this->GenerateSurfaceLow(lodU, lodV, true, buffers);
 	}
 	//Medium generation only if PerfLevel == Med
-	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_MEDIUM) {
+	else if (this->_context->SurfacePerformanceLevel() == NURBSSURFACE_PERFLEVEL_MEDIUM) {
 		//Generate the buffer of data using medium method
 		this->GenerateSurfaceMedium(lodU, lodV, true, buffers);
 	}
 	//High generation only if perf level == High
-	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_HIGH) {
+	else if (this->_context->SurfacePerformanceLevel() == NURBSSURFACE_PERFLEVEL_HIGH) {
 		//Generate the buffer of data using high method
 		this->GenerateSurfaceHigh(lodU, lodV, true, buffers);
 	}
 	//Error path
 	else {
-		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateServerBuffer - Unknown generation path.");
+		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateServerBuffer - Unknown generation path.");
 		//throw error
 	}
 	//Generate index buffer
