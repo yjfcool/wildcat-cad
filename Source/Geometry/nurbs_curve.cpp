@@ -316,13 +316,13 @@ GLfloat* WCNurbsCurve::GenerateCurveMedium(const WPFloat &start, const WPFloat &
 		case 2: case 3:
 			glUseProgram(this->_context->CurveDefault23Program());
 			glUniform4i(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS_DEFAULT23], this->_degree, this->_cp, lod, 1);
-			glUniform2f(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS2_DEFAULT23], start, step);
+			glUniform2f(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS2_DEFAULT23], (GLfloat)start, (GLfloat)step);
 			break;
 		default:
 			//Degree > 3 Default, Custom, and Bezier
 			glUseProgram(this->_context->CurveDefaultProgram());
 			glUniform4i(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS_DEFAULT], this->_degree, this->_cp, lod, 1);
-			glUniform2f(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS2_DEFAULT], start, step);
+			glUniform2f(this->_context->CurveLocations()[NURBSCURVE_LOC_PARAMS2_DEFAULT], (GLfloat)start, (GLfloat)step);
 			break;
 	}
 
@@ -1021,7 +1021,7 @@ std::pair<WCVector4,WPFloat> WCNurbsCurve::PointInversion(const WCVector4 &point
 	}
 
 	//Check to see if curve needs to be generated
-	if (this->IsVisualDirty()) switch (this->_context->CurvePerformanceLevel()) {
+	if (this->IsVisualDirty())	switch (this->_context->CurvePerformanceLevel()) {
 		//Switch on performance level
 //		case NURBSCURVE_PERFLEVEL_HIGH:		this->GenerateCurveHigh(); break;
 //		case NURBSCURVE_PERFLEVEL_MEDIUM:	this->GenerateCurveMedium(); break;
