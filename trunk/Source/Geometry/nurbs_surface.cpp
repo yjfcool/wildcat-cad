@@ -361,8 +361,8 @@ WCNurbsSurface::GenerateSurfaceHigh(const WPUInt &lodU, const WPUInt &lodV, cons
 std::vector<GLfloat*>
 WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, const bool &server, std::vector<GLuint> &buffers) {
 	WPUInt numVerts = lodU * lodV;
-	GLfloat uStep = 1.0 / (GLfloat)(lodU - 1);
-	GLfloat vStep = 1.0 / (GLfloat)(lodV - 1);
+	GLfloat uStep = (GLfloat)1.0 / (GLfloat)(lodU - 1);
+	GLfloat vStep = (GLfloat)1.0 / (GLfloat)(lodV - 1);
 	//Determine proper program and setup
 	if ((this->_degreeU <= 3) && (this->_degreeV <= 3)) {
 		//Degree 2 & 3 Bezier
