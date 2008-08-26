@@ -55,13 +55,6 @@ namespace __WILDCAT_NAMESPACE__ {
 /***********************************************~***************************************************/
 
 
-struct WCTrimTriangulation {
-	GLuint numTriangles;
-	GLuint vertexBuffer;
-	GLuint indexBuffer;
-};
-
-
 typedef std::list<std::pair<WCGeometricCurve*,bool> > WCTrimProfile;
 
 
@@ -77,11 +70,10 @@ protected:
 
 private:
 	//Private Methods
-	void ClearTriangulations(std::list<WCTrimTriangulation> &triList);								//!< Clear all triangulations (GL buffers)
 	void GeneratePISurfaceTexture(const GLfloat* buffer, const WPUInt &lodU, const WPUInt &lodV);	//!< Setup PI surface texture
-	GLfloat* PointInversionHigh(std::list<WCVector4> &boundaryList);								//!< Invert list of points - GPU-based method
-	GLfloat* PointInversionLow(std::list<WCVector4> &boundaryList);									//!< Invert list of points - CPU-based method
-	void GenerateTriangulations(std::list<WCTrimTriangulation> &triList);							//!< Generate triangulation list
+	GLuint PointInversionHigh(std::list<WCVector4> &boundaryList);									//!< Invert list of points - GPU-based method
+	GLuint PointInversionLow(std::list<WCVector4> &boundaryList);									//!< Invert list of points - CPU-based method
+	GLuint GenerateTriangulations(std::list<GLuint> &triList);										//!< Generate vertex list
 	//Hidden Constructors
 	WCTrimmedNurbsSurface();																		//!< Deny access to default constructor
 public:
