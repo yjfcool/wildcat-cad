@@ -49,18 +49,6 @@
 /***********************************************~***************************************************/
 
 
-void WCTrimmedNurbsSurface::ClearTriangulations(std::list<WCTrimTriangulation> &triList) {
-	std::list<WCTrimTriangulation>::iterator triIter;
-	//Loop through all triangulations
-	for (triIter = triList.begin(); triIter != triList.end(); triIter++) {
-		glDeleteBuffers(1, &((*triIter).vertexBuffer));
-		glDeleteBuffers(1, &((*triIter).indexBuffer));
-	}
-	//Clear the list
-	triList.clear();
-}
-
-
 void WCTrimmedNurbsSurface::GeneratePISurfaceTexture(const GLfloat* buffer, const WPUInt &lodU, const WPUInt &lodV) {
 	//Set up some parameters
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -75,7 +63,7 @@ void WCTrimmedNurbsSurface::GeneratePISurfaceTexture(const GLfloat* buffer, cons
 
 
 
-GLfloat* WCTrimmedNurbsSurface::PointInversionHigh(std::list<WCVector4> &boundaryList) {
+GLuint WCTrimmedNurbsSurface::PointInversionHigh(std::list<WCVector4> &boundaryList) {
 	GLuint numVerts = (GLuint)boundaryList.size();
 	//Get the surface data
 	WPUInt lodU=TRIMSURFACE_PI_TEX_SIZE, lodV=TRIMSURFACE_PI_TEX_SIZE;
@@ -157,13 +145,16 @@ GLfloat* WCTrimmedNurbsSurface::PointInversionHigh(std::list<WCVector4> &boundar
 	//Do some error checking
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceMedium - At Render.");
 	
-	/*** Save output textures into vertex VBO and normal VBO using simple memory read ***/
-	
-	//Read the vertex data
-	GLfloat *inverseData = new GLfloat[texHeight * texWidth * 4];
-	glReadPixels(0, 0, texWidth, texHeight, GL_RGBA, GL_FLOAT, inverseData);
-	//Do some error checking
-	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceMedium - At Read Data.");
+	/*** Save output textures into a VBO using PBO ***/
+
+	GLuint buffer;
+	glGenBuffers(1, &buffer);
+	//Bind to the PBO
+	glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
+	glBufferData(GL_PIXEL_PACK_BUFFER, texHeight * texWidth * 4 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+	//Read the pixel data
+	glReadPixels(0, 0, texWidth, texHeight, GL_RGBA, GL_FLOAT, NULL);
+	glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 
 	/*** Restore the framebuffer ***/
 
@@ -171,17 +162,12 @@ GLfloat* WCTrimmedNurbsSurface::PointInversionHigh(std::list<WCVector4> &boundar
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	//Should check for errors here
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::PointInversionHigh - At Cleanup.");
-/*** Debug ***
-	 CLOGGER_DEBUG(WCLogManager::RootLogger(), "PointInversion High: " << numVerts);
-	 for (int i=0; i<numVerts; i++)
-		 printf("\t%d: %f %f %f %f\n", i, inverseData[i*4], inverseData[i*4+1], inverseData[i*4+2], inverseData[i*4+3]);
-/*** Debug ***/
 	//Return the array of inverted data
-	return inverseData;
+	return buffer;
 }
 
 
-GLfloat* WCTrimmedNurbsSurface::PointInversionLow(std::list<WCVector4> &boundaryList) {
+GLuint WCTrimmedNurbsSurface::PointInversionLow(std::list<WCVector4> &boundaryList) {
 	//Setup a whole lot of variables
 	unsigned int numPoints = boundaryList.size();
 	GLint tmpVal = TRIMSURFACE_PI_TEX_SIZE * 4;
@@ -278,83 +264,55 @@ GLfloat* WCTrimmedNurbsSurface::PointInversionLow(std::list<WCVector4> &boundary
 	//Release the surface buffers
 	this->ReleaseBuffers(buffers);
 /*** DEBUG ***
-	for (int i=0; i<numPoints; i++)
-		std::cout << i << ": " << buffer[i*4] << ", " << buffer[i*4+1] << std::endl;
+	 for (int i=0; i<numPoints; i++)
+	 std::cout << i << ": " << buffer[i*4] << ", " << buffer[i*4+1] << std::endl;
 /*** DEBUG ***/
-	//Return the buffer
-	return buffer;
+
+	//Buffer the data into the VBO
+	GLuint vbo;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * numPoints * 4, buffer, GL_STATIC_DRAW);
+	//Return the vbo
+	return vbo;
 }
 
 
-void WCTrimmedNurbsSurface::GenerateTriangulations(std::list<WCTrimTriangulation> &triList) {
+GLuint WCTrimmedNurbsSurface::GenerateTriangulations(std::list<GLuint> &triList) {
 	//Only perform is there are trim profiles
-	if (this->_profileList.size() == 0) return;
+	if (this->_profileList.size() == 0) return 0;
 	//Make sure there are not current items in the list
-	if (!triList.empty()) this->ClearTriangulations(triList);
+	triList.clear();
 	
 	std::list<WCTrimProfile>::iterator profileIter;
-	std::list<WCVector4> boundaryList;
+	std::list<WCVector4> boundaryList, fullList;
 	std::list<WCVector4>::iterator boundaryIter;
-	GLfloat *vertData;
-	WCTrimTriangulation triangulation;
-	GLint *indexData, numVerts;
-	GLuint vertexBuffer, indexBuffer;
+	GLuint numVerts;//, *indexData;
 
 	//Go through each profile
 	for (profileIter = this->_profileList.begin(); profileIter != this->_profileList.end(); profileIter++) {
-		//Generate complete boundary list
+		//Generate complete boundary list for that profile
 		BuildBoundaryList( *profileIter, boundaryList, true );
 		numVerts = (GLint)boundaryList.size();
-
-		//Invert all of the points (only u,v values)
-		if ((boundaryList.size() > 32) && (boundaryList.size() < 262144))
-			vertData = this->PointInversionHigh(boundaryList);
-		else
-			vertData = this->PointInversionLow(boundaryList);
-		//Triangulate (expects verts in CW order, outputs triangles in CW order)
-		indexData = TriangulatePolygon(vertData, numVerts);
-
-		//Put vertices and index array into VBOs
-		glGenBuffers(1, &vertexBuffer);
-		glGenBuffers(1, &indexBuffer);
-		//Create WCTrimTriangulation
-		triangulation.numTriangles = numVerts - 2;
-		triangulation.vertexBuffer = vertexBuffer;
-		triangulation.indexBuffer = indexBuffer;		
-		//Add to triList
-		triList.push_back(triangulation);
-		
-		//Load vertex buffer
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * numVerts, vertData, GL_STATIC_DRAW);
-		//Load index buffer
-		glBindBuffer(GL_ARRAY_BUFFER, indexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(GLint) * 3 * triangulation.numTriangles, indexData, GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		//Make sure to delete the vert and index arrays
-		delete indexData;
-		delete vertData;
-/*** DEBUG ***
-		std::cout << "Triangulate Verts(" << vertexBuffer << "): " << numVerts << std::endl;
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);	
-		GLfloat *data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-		for (int i=0; i<numVerts; i++) printf("\t%d V: %f %f\n", i, data2[i*2], data2[i*2+1]);
-		glUnmapBuffer(GL_ARRAY_BUFFER);
-		std::cout << "Triangulate Index(" << indexBuffer << "): " << numVerts-2 << std::endl;
-		glBindBuffer(GL_ARRAY_BUFFER, indexBuffer);	
-		GLint *data3 = (GLint*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-		for (int i=0; i<numVerts-2; i++) printf("\t%d I: %d %d %d\n", i, data3[i*3], data3[i*3+1], data3[i*3+2]);
-		glUnmapBuffer(GL_ARRAY_BUFFER);
-/*** DEBUG ***/
+		//Concatenate boundaryList to fullList
+		fullList.splice(fullList.end(), boundaryList);
+		//NumVerts is number of vertices from BuildBoundaryList
+		triList.push_back(numVerts);
 	}
-	
-	/*** Clean Up ***/
+	//Invert all of the points (only u,v values)
+	GLuint vertBuffer;
+	if ((fullList.size() > 32) && (fullList.size() < 262144))
+		vertBuffer = this->PointInversionHigh(fullList);
+	else
+		vertBuffer = this->PointInversionLow(fullList);
 	
 	//Check for errors here
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::GenerateTrimList - GL Error at cleanup: " << error);
 	}
+	//Return the buffer of vertices
+	return vertBuffer;
 }
 
 
@@ -545,10 +503,11 @@ void WCTrimmedNurbsSurface::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 
 void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHeight, GLuint &texture, const bool &managed) {
 	//Try to generate all of the tessellated trim profiles
-	std::list<WCTrimTriangulation> triList;
+	std::list<GLuint> triList;
+	GLuint buffer;
 	try {
 		//Generate the triangulations
-		this->GenerateTriangulations(triList);
+		buffer = this->GenerateTriangulations(triList);
 	}
 	//Handle the error
 	catch (...) {
@@ -572,12 +531,25 @@ void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHei
 	//Make sure to unbind from the texture
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
 	//Create and bind to the framebuffer
-	GLuint framebuffer;
+	GLuint framebuffer, stencilRB;
 	glGenFramebuffersEXT(1, &framebuffer);
+	glGenRenderbuffersEXT(1, &stencilRB);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, texture, 0);
-	//Clear the framebuffer
-	glClear(GL_COLOR_BUFFER_BIT);
+	//Initialize stencil renderbuffer
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, stencilRB);
+	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_STENCIL_EXT, texWidth, texHeight);
+	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, stencilRB);
+	//Check status of framebuffer
+	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if (status != GL_FRAMEBUFFER_COMPLETE_EXT) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::GenerateTrimTexture - Framebuffer is not complete: " << status);
+		//throw error
+		return;
+	} 
+	//Clear the framebuffer and stencil renderbuffer
+	glClearStencil(0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	/*** Setup GL Environment ***/
 
@@ -588,9 +560,14 @@ void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHei
 	glPushClientAttrib(GL_CLIENT_ALL_ATTRIB_BITS);
 	//Set some GL state settings
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_INDEX_ARRAY);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_STENCIL_TEST);
+	glStencilFunc(GL_ALWAYS, 1, 1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_INVERT);
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 	//Set up the viewport and polygon mode
-	glPolygonMode(GL_FRONT, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glViewport(0, 0, texWidth, texHeight);
 	//Push and clear the projection and modelview matrices
 	glMatrixMode(GL_PROJECTION);
@@ -604,36 +581,41 @@ void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHei
 	/*** Draw all of the trim triangulations ***/
 	
 	//Loop through each triangulation
-	bool first = true;
-	std::list<WCTrimTriangulation>::iterator triIter;
+	GLuint index = 0;
+	std::list<GLuint>::iterator triIter;
 	for(triIter = triList.begin(); triIter != triList.end(); triIter++) {
-		//Set color based on iteration (first gets fill to red)
-		if (first) {
-			first = false;
-			glColor3f(1.0, 0.0, 0.0);
-		}
-		//Not first gets fill to black
-		else glColor3f(0.0, 0.0, 0.0);
 		//Setup vertex buffer
-		glBindBuffer(GL_ARRAY_BUFFER, (*triIter).vertexBuffer );
+		glBindBuffer(GL_ARRAY_BUFFER, buffer );
 		glVertexPointer(4, GL_FLOAT, 0, NULL);
-		//Set up index buffer
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*triIter).indexBuffer );
-		glIndexPointer(GL_INT, 0, NULL);
 		//Draw the trim
-		glDrawElements(GL_TRIANGLES, (*triIter).numTriangles*3 , GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLE_FAN, index, *triIter );
+		//Increment the index
+		index += *triIter;
 	}
-	
+	//Bind back to nothing
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	/*** Draw a covering rectangle ***/
+
+	//Prepare to draw into color buffers
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glColor4f(1.0, 1.0, 1.0, 1.0);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	glStencilFunc(GL_NOTEQUAL, 0, 1);
+	GLfloat vertData[] = { -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0 };
+	//Turn on vertex arrays
+	glVertexPointer(2, GL_FLOAT, 0, vertData);
+	//--- Draw ---
+	glDrawArrays(GL_QUADS, 0, 4);
+
 	/*** Restore the GL state ***/
 	
 	//Clean up the GL state
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	glDeleteFramebuffersEXT(1, &framebuffer);
+	glDeleteRenderbuffersEXT(1, &stencilRB);
 	glPopAttrib();
 	glPopClientAttrib();
-	//Bind back to nothing
-	glBindBuffer(GL_ARRAY_BUFFER, 0);	
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	//Pop projection and modelview matrices
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
