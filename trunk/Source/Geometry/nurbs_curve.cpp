@@ -208,7 +208,7 @@ void WCNurbsCurve::LoadKnotPoints(const std::vector<WPFloat> &knotPoints) {
 }
 
 
-GLfloat* WCNurbsCurve::GenerateCurveHigh(const WPUInt &lod, const bool &server, GLuint &buffer) {
+GLfloat* WCNurbsCurve::GenerateCurveHigh(const WPFloat &start, const WPFloat &stop, const WPUInt &lod, const bool &server, GLuint &buffer) {
 //Conditional compilation as long as transform feedback is included
 #ifdef GL_EXT_transform_feedback
 	/*** Setup programs and bindable uniforms ***/		
@@ -364,40 +364,21 @@ GLfloat* WCNurbsCurve::GenerateCurveMedium(const WPFloat &start, const WPFloat &
 	}
 	//Must be client
 	else {
-		//Save output texture into vertex VBO using simple memory read
-		vertData = new GLfloat[lod * NURBSCURVE_FLOATS_PER_VERTEX];
-		glReadPixels(0, 0, lod, 1, GL_RGBA, GL_FLOAT, vertData);
-/*** Debug ***
-		CLOGGER_DEBUG(WCLogManager::RootLogger(), "Medium Generation Vertices (Client): " << lod);
-		for (WPUInt i=0; i<lod; i++) 
-			CLOGGER_DEBUG(WCLogManager::RootLogger(), i << ": " << vertData[i*4] << ", " << vertData[i*4+1] << ", " << vertData[i*4+2] << ", " << vertData[i*4+3]);
- /*** Debug ***/
-		//See if texture should be sent back
+		//Do we need to restore the default FBO state?
 		if (buffer) {
-			glFlush();
-			//Bind to the texture
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_RECTANGLE_ARB, buffer);
-			//Set its parameters
-			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);		
-			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);	
-			//Copy the texture
-			glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, lod, 1, 0, GL_RGBA, GL_FLOAT, vertData);
-			delete vertData;
-			vertData = NULL;
-/*** DEBUG ***
-			 GLfloat pixels[lod * 4];
-			 glGetTexImage(GL_TEXTURE_RECTANGLE_ARB, 0, GL_FLOAT, GL_RGBA32F_ARB, pixels);
-			 CLOGGER_DEBUG(WCLogManager::RootLogger(), "Medium Generation Vertices (Texture): " << lod);
-			 for (WPUInt i=0; i<lod; i++) 
-			 CLOGGER_DEBUG(WCLogManager::RootLogger(), i << ": " << pixels[i*4] << ", " << pixels[i*4+1] << ", " << pixels[i*4+2] << ", " << pixels[i*4+3]);
-/*** DEBUG ***/
-			//Unbind from the texture
-			glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
-			if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveMedium - Tex Copy.");
-			glFlush();
+			//Attach default texture to FBO
+			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_context->CurveOutTex(), 0);
+		}
+		//Just copy data out to GLfloat array
+		else {
+			//Save output texture into vertex VBO using simple memory read
+			vertData = new GLfloat[lod * NURBSCURVE_FLOATS_PER_VERTEX];
+			glReadPixels(0, 0, lod, 1, GL_RGBA, GL_FLOAT, vertData);
+/*** Debug ***
+			CLOGGER_DEBUG(WCLogManager::RootLogger(), "Medium Generation Vertices (Client): " << lod);
+			for (WPUInt i=0; i<lod; i++) 
+				CLOGGER_DEBUG(WCLogManager::RootLogger(), i << ": " << vertData[i*4] << ", " << vertData[i*4+1] << ", " << vertData[i*4+2] << ", " << vertData[i*4+3]);
+ /*** Debug ***/
 		}
 	}
 	//Clean up the GL state
@@ -449,6 +430,25 @@ GLfloat* WCNurbsCurve::GenerateCurveLow(const WPFloat &start, const WPFloat &sto
 		//Check for errors
 		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveLow - GL error at Cleanup.");
 	}
+	//Check to see if texture buffer is desired
+	else if (buffer) {
+		//Bind to the texture
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, buffer);
+		//Set its parameters
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, lod, 1, 0, GL_RGBA, GL_FLOAT, data);
+		//Unbind from the texture
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+		//Delete the data array
+		delete data;
+		data = NULL;
+		//Clean up and check for errors
+		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveLow - At Server Cleanup.");
+	}
 	//Return client buffer
 	return data;
 }
@@ -483,7 +483,26 @@ GLfloat* WCNurbsCurve::GenerateCurveOne(const bool &server, GLuint &buffer) {
 		delete data;
 		data = NULL;
 		//Clean up and check for errors
-		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveOne - GL error at Cleanup.");
+		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveOne - At Server Cleanup.");
+	}
+	//Check to see if texture buffer is desired
+	else if (buffer) {
+		//Bind to the texture
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, buffer);
+		//Set its parameters
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, this->_cp, 1, 0, GL_RGBA, GL_FLOAT, data);
+		//Unbind from the texture
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+		//Delete the data array
+		delete data;
+		data = NULL;
+		//Clean up and check for errors
+		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateCurveOne - At Server Cleanup.");
 	}
 	//Return client buffer (should be set to NULL if server)
 	return data;
@@ -1164,7 +1183,7 @@ GLfloat* WCNurbsCurve::GenerateClientBuffer(const WPFloat &uStart, const WPFloat
 	//High generation only if perf level == High
 	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_HIGH) {
 		//Generate the buffer of data using high method
-		buffer = this->GenerateCurveHigh(lod, false, dummy);
+		buffer = this->GenerateCurveHigh(0.0, 1.0, lod, false, dummy);
 	}
 	//Error path
 	else {
@@ -1207,12 +1226,7 @@ void WCNurbsCurve::GenerateServerBuffer(const WPFloat &uStart, const WPFloat &uS
 	//High generation only if perf level == High
 	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_HIGH) {
 		//Generate the buffer of data using high method
-		this->GenerateCurveHigh(lod, true, buffer);
-	}
-	//Error path
-	else {
-		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsCurve::GenerateServerBuffer - Unknown generation path.");
-		//throw error
+		this->GenerateCurveHigh(0.0, 1.0, lod, true, buffer);
 	}
 }
 
@@ -1224,13 +1238,54 @@ void WCNurbsCurve::ReleaseBuffer(GLuint &buffer) {
 
 
 GLuint WCNurbsCurve::GenerateTextureBuffer(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lod, const bool &managed) {
-	GLuint retVal = 0;
+	GLuint texture = 0;
 	//Generate the texture
-	glGenTextures(1, &retVal);
-	//Render into this texture
-	this->GenerateCurveMedium(0.0, 1.0, lod, false, retVal);
+	glGenTextures(1, &texture);
+	//Make sure LOD >= 2
+	if (lod < 2) lod = 2;
+	
+	//Check for special generation cases - degree 1 curves
+	if (this->_degree == 1) {
+		//Generate the buffer of data
+		this->GenerateCurveOne(false, texture);
+		//Set LOD to numCP
+		lod = this->_cp;
+	}
+	//Low generation only on LOD > MaxTextureSize || PerfLevel == Low
+	else if ((lod > (WPUInt)this->_context->CurveMaxTextureSize()) ||
+			 (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_LOW)) {
+		//Generate the buffer of data using low method
+		this->GenerateCurveLow(0.0, 1.0, lod, false, texture);
+	}
+	//Medium generation only if PerfLevel == Med
+	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_MEDIUM) {
+		//Bind to framebuffer object
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_context->CurveFramebuffer());
+		//Bind to the texture
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, texture);
+		//Set its parameters
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, lod, 1, 0, GL_RGBA, GL_FLOAT, NULL);
+		//Attach texture to framebuffer
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, texture, 0);
+		//Unbind from the texture
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+		//Render into this texture
+		this->GenerateCurveMedium(0.0, 1.0, lod, false, texture);
+	}
+	//High generation only if perf level == High
+	else if (this->_context->CurvePerformanceLevel() == NURBSCURVE_PERFLEVEL_HIGH) {
+		std::cout << "-------- GenerateTextureBuffer with CurveHigh\n";
+		exit(0);
+		//Generate the buffer of data using high method
+		this->GenerateCurveHigh(0.0, 1.0, lod, false, texture);
+	}
 	//Return the texture
-	return retVal;
+	return texture;
 }
 
 

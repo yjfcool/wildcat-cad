@@ -81,8 +81,8 @@ void main(void) {
 	float uValue = (paraU * float(markU)) + (uDot * paraU * hSign);
 	float vValue = (paraV * float(markV)) + (vDot * paraV * vSign);
 	//Bound u and v in [0,1]
-	uValue = max(0.0, min(1.0, uValue));
-	vValue = max(0.0, min(1.0, vValue));
+	uValue = 1.0 - max(0.0, min(1.0, uValue));
+	vValue = 1.0 - max(0.0, min(1.0, vValue));
 	//Record [u,v] value into output texture
 	gl_FragColor = vec4(uValue, vValue, 0.0, 1.0);
 }

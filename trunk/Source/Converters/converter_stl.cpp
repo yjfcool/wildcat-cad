@@ -70,7 +70,7 @@ bool WCConverterSTL::ExecuteExport(const std::string &filename, WSTopologyShell 
 			//Cast to a NURBS surface
 			nurbs = dynamic_cast<WCNurbsSurface*> (nextFace->surface);
 			//Generate a client-side bufferes of the surface
-			std::vector<GLfloat*> bufferList = nurbs->GenerateClientBuffers(lodU, lodV, true);
+			std::vector<GLfloat*> bufferList = nurbs->GenerateClientBuffers(0.0, 1.0, lodU, 0.0, 1.0, lodV, true);
 			vertexBuffer = bufferList.at(0);
 			indexBuffer = (GLint*) bufferList.at(3);
 			//Determine number of triangles

@@ -97,7 +97,8 @@ private:
 	void GenerateControlPointsTexture(void);														//!< Generate the knot points texture
 	void LoadKnotPoints(const std::vector<WPFloat> &knotPoints=std::vector<WPFloat>());				//!< Create all knot point structures
 	//Curve Generation Methods
-	GLfloat* GenerateCurveHigh(const WPUInt &lod, const bool &server, GLuint &buffer);				//!< Generate GL using High perf level
+	GLfloat* GenerateCurveHigh(const WPFloat &start, const WPFloat &stop, const WPUInt &lod,		//!< Generate GL using High perf level
+												const bool &server, GLuint &buffer);
 	GLfloat* GenerateCurveMedium(const WPFloat &start, const WPFloat &stop, const WPUInt &lod,		//!< Generate GL using Medium perf level
 												const bool &server, GLuint &buffer);
 	GLfloat* GenerateCurveLow(const WPFloat &start, const WPFloat &stop, const WPUInt &lod,			//!< Generate GL using Low perf level

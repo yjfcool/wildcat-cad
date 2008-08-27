@@ -67,29 +67,16 @@ GLuint WCTrimmedNurbsSurface::PointInversionHigh(std::list<WCVector4> &boundaryL
 	GLuint numVerts = (GLuint)boundaryList.size();
 	//Get the surface data
 	WPUInt lodU=TRIMSURFACE_PI_TEX_SIZE, lodV=TRIMSURFACE_PI_TEX_SIZE;
-	std::vector<GLfloat*> buffers = this->WCNurbsSurface::GenerateClientBuffers(lodU, lodV, true);
+	std::vector<GLuint> buffers;
+	this->WCNurbsSurface::GenerateTextureBuffers(0.0, 1.0, lodU, 0.0, 1.0, lodV, buffers, true);
 	if ((lodU != TRIMSURFACE_PI_TEX_SIZE) || (lodV != TRIMSURFACE_PI_TEX_SIZE))
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::PointInversionHigh - Altered LOD.");
-
 	//Setup program, parameters, and surface texture
 	glUseProgram(this->_context->TrimInversionProgram());
 	glUniform2i(this->_context->TrimLocations()[TRIMSURFACE_LOC_PI_PARAMS], lodU, lodV);
-	//Copy surface data into a texture
-	this->GeneratePISurfaceTexture(buffers[0], lodU, lodV);
-	//Release the surface buffers
-	this->ReleaseBuffers(buffers);
-
-	/*** Setup framebuffer object ***/
-	
-	//Bind to framebuffer
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_context->TrimFramebuffer());
-	//Check to make sure the framebuffer is ready
-	GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-	//Check the status of the framebuffer object
-	if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) { 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::PointInversionHigh - Framebuffer is not complete: " << retVal); 
-		return NULL;
-	}
+	//Set up texture
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, buffers.at(NURBSSURFACE_VERTEX_BUFFER));
 
 	/*** Setup input texture ***/
 	
@@ -126,17 +113,15 @@ GLuint WCTrimmedNurbsSurface::PointInversionHigh(std::list<WCVector4> &boundaryL
 	//Disable some settings
 	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
+	//Bind to framebuffer
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_context->TrimFramebuffer());
 	//Set up the viewport and polygon mode
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glViewport(0, 0, texWidth, texHeight);
 	GLfloat vertData[] = { -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0 };
-	GLfloat texData[] = { -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0 };
 	//Turn on vertex arrays
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(2, GL_FLOAT, 0, vertData);
-	//Turn on texturing
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glTexCoordPointer(2, GL_FLOAT, 0, texData);
 	//--- Draw ---
 	glDrawArrays(GL_QUADS, 0, 4);
 	//Restore the viewport and polygon mode
@@ -156,10 +141,23 @@ GLuint WCTrimmedNurbsSurface::PointInversionHigh(std::list<WCVector4> &boundaryL
 	glReadPixels(0, 0, texWidth, texHeight, GL_RGBA, GL_FLOAT, NULL);
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 
-	/*** Restore the framebuffer ***/
+	/*** Restore the framebuffer and cleanup ***/
 
 	//Clean up the framebuffer object
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	//Release the surface buffers
+	this->ReleaseTextures(buffers);
+	//Bind back to no textures
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+/*** DEBUG ***
+	std::cout << "Point Inversion High: " << boundaryList.size() << std::endl;	
+	glBindBuffer(GL_ARRAY_BUFFER, buffer);
+	GLfloat *data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+	for (int i=0; i<boundaryList.size(); i++) printf("\t%d: %f %f %f %f\n", i, data2[i*4], data2[i*4+1], data2[i*4+2], data2[i*4+3]);
+	glUnmapBuffer(GL_ARRAY_BUFFER);	
+/*** DEBUG ***/
 	//Should check for errors here
 	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::PointInversionHigh - At Cleanup.");
 	//Return the array of inverted data
@@ -174,7 +172,7 @@ GLuint WCTrimmedNurbsSurface::PointInversionLow(std::list<WCVector4> &boundaryLi
 	GLfloat minDist, dist, leftDist, rightDist, topDist, bottomDist, hSign, vSign, vValue, uValue, uDot, vDot, hDirMag, vDirMag;
 	WPUInt lodU=TRIMSURFACE_PI_TEX_SIZE, lodV=TRIMSURFACE_PI_TEX_SIZE;
 	//Get the surface data
-	std::vector<GLfloat*> buffers = this->WCNurbsSurface::GenerateClientBuffers(lodU, lodV, true);
+	std::vector<GLfloat*> buffers = this->WCNurbsSurface::GenerateClientBuffers(0.0, 1.0, lodU, 0.0, 1.0, lodV, true);
 	if ((lodU != TRIMSURFACE_PI_TEX_SIZE) || (lodV != TRIMSURFACE_PI_TEX_SIZE))
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::PointInversionLow - Altered LOD.");
 	GLfloat paraU = (GLfloat)(1.0 / (lodU - 1.0));
@@ -301,7 +299,7 @@ GLuint WCTrimmedNurbsSurface::GenerateTriangulations(std::list<GLuint> &triList)
 	}
 	//Invert all of the points (only u,v values)
 	GLuint vertBuffer;
-	if ((fullList.size() > 32) && (fullList.size() < 262144))
+	if ((fullList.size() > 1) && (fullList.size() < 262144))
 		vertBuffer = this->PointInversionHigh(fullList);
 	else
 		vertBuffer = this->PointInversionLow(fullList);
@@ -411,7 +409,7 @@ void WCTrimmedNurbsSurface::Render(const GLuint &defaultProg, const WCColor &col
 		this->_lodU = lodU;
 		this->_lodV = lodV;
 		//Generate the server buffer of data
-		this->GenerateServerBuffers(this->_lodU, this->_lodV, this->_buffers, true);
+		this->GenerateServerBuffers(0.0, 1.0, this->_lodU, 0.0, 1.0, this->_lodV, this->_buffers, true);
 		//Mark as clean
 		this->IsVisualDirty(false);
 	}
@@ -504,10 +502,10 @@ void WCTrimmedNurbsSurface::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHeight, GLuint &texture, const bool &managed) {
 	//Try to generate all of the tessellated trim profiles
 	std::list<GLuint> triList;
-	GLuint buffer;
+	GLuint vertBuffer;
 	try {
 		//Generate the triangulations
-		buffer = this->GenerateTriangulations(triList);
+		vertBuffer = this->GenerateTriangulations(triList);
 	}
 	//Handle the error
 	catch (...) {
@@ -541,12 +539,12 @@ void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHei
 	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_STENCIL_EXT, texWidth, texHeight);
 	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, stencilRB);
 	//Check status of framebuffer
-	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-	if (status != GL_FRAMEBUFFER_COMPLETE_EXT) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::GenerateTrimTexture - Framebuffer is not complete: " << status);
-		//throw error
-		return;
-	} 
+//	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+//	if (status != GL_FRAMEBUFFER_COMPLETE_EXT) {
+//		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::GenerateTrimTexture - Framebuffer is not complete: " << status);
+//		//throw error
+//		return;
+//	} 
 	//Clear the framebuffer and stencil renderbuffer
 	glClearStencil(0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -585,7 +583,7 @@ void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHei
 	std::list<GLuint>::iterator triIter;
 	for(triIter = triList.begin(); triIter != triList.end(); triIter++) {
 		//Setup vertex buffer
-		glBindBuffer(GL_ARRAY_BUFFER, buffer );
+		glBindBuffer(GL_ARRAY_BUFFER, vertBuffer );
 		glVertexPointer(4, GL_FLOAT, 0, NULL);
 		//Draw the trim
 		glDrawArrays(GL_TRIANGLE_FAN, index, *triIter );
@@ -594,6 +592,8 @@ void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHei
 	}
 	//Bind back to nothing
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//Delete the vertex buffer
+	glDeleteBuffers(1, &vertBuffer);
 
 	/*** Draw a covering rectangle ***/
 
