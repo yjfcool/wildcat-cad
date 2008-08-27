@@ -225,7 +225,8 @@ void WCNurbsSurface::LoadKnotPoints(const std::vector<WPFloat> &uKP, const std::
 
 
 std::vector<GLfloat*>
-WCNurbsSurface::GenerateSurfaceHigh(const WPUInt &lodU, const WPUInt &lodV, const bool &server, std::vector<GLuint> &buffers) {
+WCNurbsSurface::GenerateSurfaceHigh(const WPFloat &uStart, const WPFloat &uStop, const WPUInt &lodU, 
+	const WPFloat &vStart, const WPFloat &vStop, const WPUInt &lodV, const bool &server, std::vector<GLuint> &buffers) {
 //Conditional compilation as long as transform feedback is present
 #ifdef GL_EXT_transform_feedback
 	/*** Setup programs and bindable uniforms ***/
@@ -359,7 +360,8 @@ WCNurbsSurface::GenerateSurfaceHigh(const WPUInt &lodU, const WPUInt &lodV, cons
 
 
 std::vector<GLfloat*>
-WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, const bool &server, std::vector<GLuint> &buffers) {
+WCNurbsSurface::GenerateSurfaceMedium(const WPFloat &uStart, const WPFloat &uStop, const WPUInt &lodU,
+	const WPFloat &vStart, const WPFloat &vStop, const WPUInt &lodV, const bool &server, std::vector<GLuint> &buffers) {
 	WPUInt numVerts = lodU * lodV;
 	GLfloat uStep = (GLfloat)1.0 / (GLfloat)(lodU - 1);
 	GLfloat vStep = (GLfloat)1.0 / (GLfloat)(lodV - 1);
@@ -385,6 +387,13 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, co
 		glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSV_DEFAULT], this->_degreeV, this->_cpV, this->_kpV, 0);								
 	}
 
+	//Bind to framebuffer
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_context->SurfaceFramebuffer());
+	//Is this generation going to texture buffers
+	if (!server && !buffers.empty()) {
+
+	}
+
 	//Save the viewport and polygon mode bits
 	glPushAttrib(GL_VIEWPORT_BIT | GL_POLYGON_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
 	glPushClientAttrib(GL_CLIENT_VERTEX_ARRAY_BIT);
@@ -396,8 +405,6 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, co
 	this->GenerateControlPointsTexture();
 	//Create a knotpoint texture
 	this->GenerateKnotPointsTextures();
-	//Bind to framebuffer
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_context->SurfaceFramebuffer());
 	//Setup draw buffers
 	GLenum genBuffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT };
 	glDrawBuffers(3, genBuffers);
@@ -452,30 +459,40 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, co
 	}
 	//Must be client
 	else {
-		//Read the vertex data
-		vertData = new GLfloat[numVerts * 4];
-		glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
-		glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, vertData);
-		//Read the normal data
-		normData = new GLfloat[numVerts * 4];
-		glReadBuffer(GL_COLOR_ATTACHMENT1_EXT);
-		glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, normData);
-		//Read the tex coord data
-		GLfloat *tmpUV = new GLfloat[numVerts * 4];
-		uvData = new GLfloat[numVerts * 2];
-		glReadBuffer(GL_COLOR_ATTACHMENT2_EXT);
-		glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, tmpUV);
-		//Need to convert from 4-component to 2 component
-		for (WPUInt i=0; i<numVerts; i++) memcpy(&uvData[i*2], &tmpUV[i*4], 2 * sizeof(GLfloat));
-		//Delete tmpUV
-		glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
-		delete tmpUV;
+		//Do we need to restore the default FBO state
+		if (!buffers.empty()) {
+			//Attach default texture to FBO
+			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_context->SurfaceVerticesTex(), 0);
+			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_context->SurfaceNormTex(), 0);
+			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT2_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_context->SurfaceTexCoorTex(), 0);
+		}
+		//Just copy data out to GLfloat arrays
+		else {
+			//Read the vertex data
+			vertData = new GLfloat[numVerts * 4];
+			glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
+			glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, vertData);
+			//Read the normal data
+			normData = new GLfloat[numVerts * 4];
+			glReadBuffer(GL_COLOR_ATTACHMENT1_EXT);
+			glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, normData);
+			//Read the tex coord data
+			GLfloat *tmpUV = new GLfloat[numVerts * 4];
+			uvData = new GLfloat[numVerts * 2];
+			glReadBuffer(GL_COLOR_ATTACHMENT2_EXT);
+			glReadPixels(0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, tmpUV);
+			//Need to convert from 4-component to 2 component
+			for (WPUInt i=0; i<numVerts; i++) memcpy(&uvData[i*2], &tmpUV[i*4], 2 * sizeof(GLfloat));
+			//Delete tmpUV
+			glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
+			delete tmpUV;
 /*** Debug ***
-		std::cout << "Medium Generation Verts (client): " << lodU << ", " << lodV << std::endl;
-		for (int i=0; i<numVerts; i++) printf("\t%d: %f %f %f %f\n", i, vertData[i*4], vertData[i*4+1], vertData[i*4+2], vertData[i*4+3]);
-		for (int i=0; i<numVerts; i++) printf("\t%d: %f %f %f %f\n", i, normData[i*4], normData[i*4+1], normData[i*4+2], normData[i*4+3]);
-		for (int i=0; i<numVerts; i++) printf("\t%d: %f %f\n", i, uvData[i*2], uvData[i*2+1]);
+			std::cout << "Medium Generation Verts (client): " << lodU << ", " << lodV << std::endl;
+			for (int i=0; i<numVerts; i++) printf("\t%d: %f %f %f %f\n", i, vertData[i*4], vertData[i*4+1], vertData[i*4+2], vertData[i*4+3]);
+			for (int i=0; i<numVerts; i++) printf("\t%d: %f %f %f %f\n", i, normData[i*4], normData[i*4+1], normData[i*4+2], normData[i*4+3]);
+			for (int i=0; i<numVerts; i++) printf("\t%d: %f %f\n", i, uvData[i*2], uvData[i*2+1]);
 /*** Debug ***/
+		}
 	}
 	//Clean up the GL state
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
@@ -494,7 +511,8 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV, co
 
 
 std::vector<GLfloat*>
-WCNurbsSurface::GenerateSurfaceLow(const WPUInt &lodU, const WPUInt &lodV, const bool &server, std::vector<GLuint> &buffers) {
+WCNurbsSurface::GenerateSurfaceLow(const WPFloat &uStart, const WPFloat &uStop, const WPUInt &lodU,
+	const WPFloat &vStart, const WPFloat &vStop, const WPUInt &lodV, const bool &server, std::vector<GLuint> &buffers) {
 	int vIndex, nIndex, tIndex, index;
 	WPFloat u = this->_knotPointsU[0];
 	WPFloat v = this->_knotPointsV[0];
@@ -627,7 +645,8 @@ WCNurbsSurface::GenerateSurfaceLow(const WPUInt &lodU, const WPUInt &lodV, const
 
 
 std::vector<GLfloat*>
-WCNurbsSurface::GenerateSurfaceSize4(const WPUInt &lodU, const WPUInt &lodV, const bool &server, std::vector<GLuint> &buffers) {
+WCNurbsSurface::GenerateSurfaceSize4(const WPFloat &uStart, const WPFloat &uStop, const WPUInt &lodU,
+	const WPFloat &vStart, const WPFloat &vStop, const WPUInt &lodV, const bool &server, std::vector<GLuint> &buffers) {
 	//Get the four corners
 	WCVector4 p0 = this->_controlPoints.at(0);
 	WCVector4 p1 = this->_controlPoints.at(1);
@@ -698,27 +717,37 @@ WCNurbsSurface::GenerateSurfaceSize4(const WPUInt &lodU, const WPUInt &lodV, con
 		if (buffers.at(NURBSSURFACE_TEXCOORD_BUFFER) == 0) { glGenBuffers(1, &tmpBuffer); buffers.at(NURBSSURFACE_TEXCOORD_BUFFER) = tmpBuffer; }
 		glBindBuffer(GL_ARRAY_BUFFER, buffers.at(NURBSSURFACE_TEXCOORD_BUFFER));
 		glBufferData(GL_ARRAY_BUFFER, numVerts * NURBSSURFACE_FLOATS_PER_TEXCOORD * sizeof(GLfloat), tData, GL_STATIC_DRAW);
-/*** Debug ***
-		std::cout << "Generate Size4 Verts: " << numVerts << std::endl;
-		glBindBuffer(GL_ARRAY_BUFFER, buffers.at(NURBSSURFACE_VERTEX_BUFFER));	
-		GLfloat *data2= (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-		for (int i=0; i<numVerts; i++) printf("\t%d V: %f %f %f %f\n", i, data2[i*4], data2[i*4+1], data2[i*4+2], data2[i*4+3]);
-		glUnmapBuffer(GL_ARRAY_BUFFER);
-		//Show Normal Data
-		glBindBuffer(GL_ARRAY_BUFFER, buffers.at(NURBSSURFACE_NORMAL_BUFFER));
-		data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-		for (int i=0; i<numVerts; i++) printf("\t%d: %f %f %f\n", i, data2[i*4], data2[i*4+1], data2[i*4+2]);
-		glUnmapBuffer(GL_ARRAY_BUFFER);
-		//Show TexCoord Data
-		glBindBuffer(GL_ARRAY_BUFFER, buffers.at(NURBSSURFACE_TEXCOORD_BUFFER));
-		data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-		for (int i=0; i<numVerts; i++) printf("\t%d: %f %f\n", i, data2[i*2], data2[i*2+1]);
-		glUnmapBuffer(GL_ARRAY_BUFFER);
-/*** Debug ***/
 		//Clean up and report errors
 		glBindBuffer(GL_ARRAY_BUFFER, 0);	
 		if (glGetError() != GL_NO_ERROR)
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceSize4 - Error buffering data.");
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceSize4 - Error buffering server data.");
+		//Delete arrays
+		delete vData;
+		delete nData;
+		delete tData;
+		//Return nothing
+		return std::vector<GLfloat*>();
+	}
+	//See if texture buffers
+	else if (!buffers.empty()) {
+/*** DEBUG ***
+		std::cout << "Debug for Surface Texture Buffers: " << lodU * lodV << std::endl;
+		for (int i=0; i<lodV*lodU; i++)
+			printf("%d: %f %f %f %f\n", i, vData[i*4], vData[i*4+1], vData[i*4+2], vData[i*4+3]);
+/*** DEBUG ***/
+		//Bind to the vertices texture
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, buffers.at(NURBSSURFACE_VERTEX_BUFFER));
+		glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, vData);
+		//Bind to the normals texture
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, buffers.at(NURBSSURFACE_NORMAL_BUFFER));
+		glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, nData);
+		//Bind to the texCoords texture
+//		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, buffers.at(NURBSSURFACE_TEXCOORD_BUFFER));
+//		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, lodU, lodV, 0, GL_RGBA, GL_FLOAT, tData);
+		//Clean up and report errors
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);	
+		if (glGetError() != GL_NO_ERROR)
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceSize4 - Error buffering texture data.");
 		//Delete arrays
 		delete vData;
 		delete nData;
@@ -735,7 +764,8 @@ WCNurbsSurface::GenerateSurfaceSize4(const WPUInt &lodU, const WPUInt &lodV, con
 }
 
 
-GLuint* WCNurbsSurface::GenerateIndex(const WPUInt &lodU, const WPUInt &lodV, const bool &server, GLuint &buffer) {
+GLuint* WCNurbsSurface::GenerateIndex(const WPFloat &uStart, const WPFloat &uStop, const WPUInt &lodU,
+	const WPFloat &vStart, const WPFloat &vStop, const WPUInt &lodV, const bool &server, GLuint &buffer) {
 	//Allocate space for local array of data
 	GLuint size = (lodU - 1) * (lodV - 1) * 2 * 3;  //Two triangles per lod, 3 verts per triangle
 	GLuint *data = new GLuint[size];			
@@ -985,7 +1015,7 @@ void WCNurbsSurface::Render(const GLuint &defaultProg, const WCColor &color, con
 	//Check to see if surface needs to be generated
 	if (this->IsVisualDirty()) {
 		//Generate the server buffer of data
-		this->GenerateServerBuffers(this->_lodU, this->_lodV, this->_buffers, true);
+		this->GenerateServerBuffers(0.0, 1.0, this->_lodU, 0.0, 1.0, this->_lodV, this->_buffers, true);
 		//Mark as clean
 		this->IsVisualDirty(false);
 	}
@@ -1260,7 +1290,9 @@ std::pair<WCVector4,WCVector4> WCNurbsSurface::PointInversion(const WCVector4 &p
 }
 
 
-std::vector<GLfloat*> WCNurbsSurface::GenerateClientBuffers(WPUInt &lodU, WPUInt &lodV, const bool &managed) {
+std::vector<GLfloat*>
+WCNurbsSurface::GenerateClientBuffers(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lodU,
+	const WPFloat &vStart, const WPFloat &vStop, WPUInt &lodV, const bool &managed) {
 	//Make sure LOD >= 2
 	lodU = STDMAX(lodU, (WPUInt)2);
 	lodV = STDMAX(lodV, (WPUInt)2);
@@ -1270,24 +1302,24 @@ std::vector<GLfloat*> WCNurbsSurface::GenerateClientBuffers(WPUInt &lodU, WPUInt
 	//See if numVerts < NURBSSURFACE_SIZE4_CUTOFF
 	if (lodU * lodV < NURBSSURFACE_SIZE4_CUTOFF) {
 		//Generate the buffers of data using size4 method
-		buffers = this->GenerateSurfaceSize4(lodU, lodV, false, dummy);
+		buffers = this->GenerateSurfaceSize4(0.0, 1.0, lodU, 0.0, 1.0, lodV, false, dummy);
 	}
 	//Low generation only on LOD > MaxTextureSize || PerfLevel == Low
 	else if ( (lodU > (WPUInt)this->_context->CurveMaxTextureSize()) ||
 			 (lodV > (WPUInt)this->_context->CurveMaxTextureSize()) ||
 			 (this->_context->SurfacePerformanceLevel() == NURBSSURFACE_PERFLEVEL_LOW) ) {
 		//Generate the buffers of data using low method
-		buffers = this->GenerateSurfaceLow(lodU, lodV, false, dummy);
+		buffers = this->GenerateSurfaceLow(0.0, 1.0, lodU, 0.0, 1.0, lodV, false, dummy);
 	}
 	//Medium generation only if PerfLevel == Med
 	else if (this->_context->SurfacePerformanceLevel() == NURBSSURFACE_PERFLEVEL_MEDIUM) {
 		//Generate the buffer of data using medium method
-		buffers = this->GenerateSurfaceMedium(lodU, lodV, false, dummy);
+		buffers = this->GenerateSurfaceMedium(0.0, 1.0, lodU, 0.0, 1.0, lodV, false, dummy);
 	}
 	//High generation only if perf level == High
 	else if (this->_context->SurfacePerformanceLevel() == NURBSSURFACE_PERFLEVEL_HIGH) {
 		//Generate the buffer of data using high method
-		buffers = this->GenerateSurfaceHigh(lodU, lodV, false, dummy);
+		buffers = this->GenerateSurfaceHigh(0.0, 1.0, lodU, 0.0, 1.0, lodV, false, dummy);
 	}
 	//Error path
 	else {
@@ -1296,7 +1328,7 @@ std::vector<GLfloat*> WCNurbsSurface::GenerateClientBuffers(WPUInt &lodU, WPUInt
 	}
 	//Generate index buffer
 	GLuint buffer = 0;
-	GLuint *indexBuffer = GenerateIndex(lodU, lodV, false, buffer);
+	GLuint *indexBuffer = GenerateIndex(0.0, 1.0, lodU, 0.0, 1.0, lodV, false, buffer);
 	buffers.push_back((GLfloat*)indexBuffer);
 /*** Debug ***
 	 std::cout << "Generate Client Buffers (" << lodU << " x " << lodV << ")\n";
@@ -1312,7 +1344,7 @@ std::vector<GLfloat*> WCNurbsSurface::GenerateClientBuffers(WPUInt &lodU, WPUInt
 
 void WCNurbsSurface::ReleaseBuffers(std::vector<GLfloat*> &buffers) {
 	//Make sure there are atleast 4 to delete
-	if (this->_altBuffers.size() >= 4) {
+	if (buffers.size() >= 4) {
 		delete buffers.at(NURBSSURFACE_VERTEX_BUFFER);
 		delete buffers.at(NURBSSURFACE_INDEX_BUFFER);
 		delete buffers.at(NURBSSURFACE_NORMAL_BUFFER);
@@ -1323,7 +1355,8 @@ void WCNurbsSurface::ReleaseBuffers(std::vector<GLfloat*> &buffers) {
 }
 
 
-void WCNurbsSurface::GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vector<GLuint> &buffers, const bool &managed) {
+void WCNurbsSurface::GenerateServerBuffers(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lodU,
+	const WPFloat &vStart, const WPFloat &vStop, WPUInt &lodV, std::vector<GLuint> &buffers, const bool &managed) {
 	//Make sure LOD >= 2
 	lodU = STDMAX(lodU, (WPUInt)2);
 	lodV = STDMAX(lodV, (WPUInt)2);
@@ -1338,24 +1371,24 @@ void WCNurbsSurface::GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vect
 	//See if numVerts < NURBSSURFACE_SIZE4_CUTOFF or degree 1
 	if ((lodU * lodV < NURBSSURFACE_SIZE4_CUTOFF) || (this->_degreeU == 1) || (this->_degreeV == 1)) {
 		//Generate the buffers of data using size4 method
-		this->GenerateSurfaceSize4(lodU, lodV, true, buffers);
+		this->GenerateSurfaceSize4(0.0, 1.0, lodU, 0.0, 1.0, lodV, true, buffers);
 	}
 	//Low generation only on LOD > MaxTextureSize || PerfLevel == Low
 	else if ( (lodU > (WPUInt)this->_context->CurveMaxTextureSize()) ||
 			  (lodV > (WPUInt)this->_context->CurveMaxTextureSize()) ||
 			  (this->_context->SurfacePerformanceLevel() == NURBSSURFACE_PERFLEVEL_LOW) ) {
 		//Generate the buffers of data using low method
-		this->GenerateSurfaceLow(lodU, lodV, true, buffers);
+		this->GenerateSurfaceLow(0.0, 1.0, lodU, 0.0, 1.0, lodV, true, buffers);
 	}
 	//Medium generation only if PerfLevel == Med
 	else if (this->_context->SurfacePerformanceLevel() == NURBSSURFACE_PERFLEVEL_MEDIUM) {
 		//Generate the buffer of data using medium method
-		this->GenerateSurfaceMedium(lodU, lodV, true, buffers);
+		this->GenerateSurfaceMedium(0.0, 1.0, lodU, 0.0, 1.0, lodV, true, buffers);
 	}
 	//High generation only if perf level == High
 	else if (this->_context->SurfacePerformanceLevel() == NURBSSURFACE_PERFLEVEL_HIGH) {
 		//Generate the buffer of data using high method
-		this->GenerateSurfaceHigh(lodU, lodV, true, buffers);
+		this->GenerateSurfaceHigh(0.0, 1.0, lodU, 0.0, 1.0, lodV, true, buffers);
 	}
 	//Error path
 	else {
@@ -1364,19 +1397,126 @@ void WCNurbsSurface::GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vect
 	}
 	//Generate index buffer
 	GLuint buffer = 0;
-	GenerateIndex(lodU, lodV, true, buffer);
+	GenerateIndex(0.0, 1.0, lodU, 0.0, 1.0, lodV, true, buffer);
 	buffers.at(NURBSSURFACE_INDEX_BUFFER) = buffer;
 }
 
 
 void WCNurbsSurface::ReleaseBuffers(std::vector<GLuint> &buffers) {
 	//Make sure there are some values
-	if (this->_buffers.size() >= 4) {
+	if (buffers.size() >= 4) {
 		glDeleteBuffers(1, &(buffers.at(NURBSSURFACE_VERTEX_BUFFER)));
 		glDeleteBuffers(1, &(buffers.at(NURBSSURFACE_INDEX_BUFFER)));
 		glDeleteBuffers(1, &(buffers.at(NURBSSURFACE_NORMAL_BUFFER)));
 		glDeleteBuffers(1, &(buffers.at(NURBSSURFACE_TEXCOORD_BUFFER)));
-	}	
+	}
+	//Clear the buffers
+	buffers.clear();
+}
+
+
+void WCNurbsSurface::GenerateTextureBuffers(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lodU,
+	const WPFloat &vStart, const WPFloat &vStop, WPUInt &lodV, std::vector<GLuint> &textures, const bool &managed) {
+	//Make sure LOD >= 2
+	lodU = STDMAX(lodU, (WPUInt)2);
+	lodV = STDMAX(lodV, (WPUInt)2);
+	//Make sure textures has 4 elements
+	if (textures.size() < 4) {
+		//Clear the texture
+		textures.clear();
+		//Put in four 0 elements
+		textures = std::vector<GLuint>(4, 0);
+	}
+
+	//Bind to the texture for vertices
+	GLuint tmpBuffer;
+	glActiveTexture(GL_TEXTURE0);
+	if (textures.at(NURBSSURFACE_VERTEX_BUFFER) == 0) glGenTextures(1, &tmpBuffer); textures.at(NURBSSURFACE_VERTEX_BUFFER) = tmpBuffer;
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textures.at(NURBSSURFACE_VERTEX_BUFFER));
+	//Set its parameters
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, lodU, lodV, 0, GL_RGBA, GL_FLOAT, NULL);
+	//Bind to the texture for normals
+	if (textures.at(NURBSSURFACE_NORMAL_BUFFER) == 0) glGenTextures(1, &tmpBuffer); textures.at(NURBSSURFACE_NORMAL_BUFFER) = tmpBuffer;
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textures.at(NURBSSURFACE_NORMAL_BUFFER));
+	//Set its parameters
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, lodU, lodV, 0, GL_RGBA, GL_FLOAT, NULL);
+	//Bind to the texture for texcoords
+	if (textures.at(NURBSSURFACE_TEXCOORD_BUFFER) == 0) glGenTextures(1, &tmpBuffer); textures.at(NURBSSURFACE_TEXCOORD_BUFFER) = tmpBuffer;
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textures.at(NURBSSURFACE_TEXCOORD_BUFFER));
+	//Set its parameters
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F_ARB, lodU, lodV, 0, GL_RGBA, GL_FLOAT, NULL);
+	//Bind back to no texture
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+	
+	//See if numVerts < NURBSSURFACE_SIZE4_CUTOFF or degree 1
+	if ((lodU * lodV < NURBSSURFACE_SIZE4_CUTOFF) || (this->_degreeU == 1) || (this->_degreeV == 1)) {
+		//Generate the textures of data using size4 method
+		this->GenerateSurfaceSize4(0.0, 1.0, lodU, 0.0, 1.0, lodV, false, textures);
+	}
+	//Low generation only on LOD > MaxTextureSize || PerfLevel == Low
+	else if ( (lodU > (WPUInt)this->_context->CurveMaxTextureSize()) ||
+			 (lodV > (WPUInt)this->_context->CurveMaxTextureSize()) ||
+			 (this->_context->SurfacePerformanceLevel() == NURBSSURFACE_PERFLEVEL_LOW) ) {
+		//Generate the textures of data using low method
+		this->GenerateSurfaceLow(0.0, 1.0, lodU, 0.0, 1.0, lodV, false, textures);
+	}
+	//Medium generation only if PerfLevel == Med
+	else if (this->_context->SurfacePerformanceLevel() == NURBSSURFACE_PERFLEVEL_MEDIUM) {	
+		//Attach texture to framebuffer
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, textures.at(NURBSSURFACE_VERTEX_BUFFER), 0);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_RECTANGLE_ARB, textures.at(NURBSSURFACE_NORMAL_BUFFER), 0);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT2_EXT, GL_TEXTURE_RECTANGLE_ARB, textures.at(NURBSSURFACE_TEXCOORD_BUFFER), 0);
+		//Bind back to no texture
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+		GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+		//Check for errors
+		if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) 
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateTextureBuffers - Framebuffer is not complete.");
+		//Generate the textures of data using medium method
+		this->GenerateSurfaceMedium(0.0, 1.0, lodU, 0.0, 1.0, lodV, false, textures);
+	}
+	//High generation only if perf level == High
+	else if (this->_context->SurfacePerformanceLevel() == NURBSSURFACE_PERFLEVEL_HIGH) {
+		std::cout << "SurfaceGenerateTexture-High no workie!\n";
+		exit(0);
+		//Generate the textures of data using high method
+		this->GenerateSurfaceHigh(0.0, 1.0, lodU, 0.0, 1.0, lodV, false, textures);
+	}
+	//Error path
+	else {
+		CLOGGER_WARN(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateServerBuffer - Unknown generation path.");
+		//throw error
+	}
+	//Generate index buffer
+	GLuint tex = 0;
+	GenerateIndex(0.0, 1.0, lodU, 0.0, 1.0, lodV, false, tex);
+	textures.at(NURBSSURFACE_INDEX_BUFFER) = tex;
+}
+
+
+void WCNurbsSurface::ReleaseTextures(std::vector<GLuint> &textures) {
+	//Make sure there are some values
+	if (textures.size() >= 4) {
+		glDeleteTextures(1, &(textures.at(NURBSSURFACE_VERTEX_BUFFER)));
+		glDeleteTextures(1, &(textures.at(NURBSSURFACE_INDEX_BUFFER)));
+		glDeleteTextures(1, &(textures.at(NURBSSURFACE_NORMAL_BUFFER)));
+		glDeleteTextures(1, &(textures.at(NURBSSURFACE_TEXCOORD_BUFFER)));
+	}
+	//Clear the textures
+	textures.clear();
+
 }
 
 

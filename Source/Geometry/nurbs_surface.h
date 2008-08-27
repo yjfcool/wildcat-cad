@@ -113,15 +113,21 @@ private:
 	void LoadKnotPoints(const std::vector<WPFloat> &uKP=std::vector<WPFloat>(),						//!< Create all knot point structures
 												const std::vector<WPFloat> &vKP=std::vector<WPFloat>());
 	//Surface Generation Methods
-	std::vector<GLfloat*> GenerateSurfaceHigh(const WPUInt &lodU, const WPUInt &lodV,				//!< Generate GL using High perf level
+	std::vector<GLfloat*> GenerateSurfaceHigh(const WPFloat &uStart, const WPFloat &uStop, const WPUInt &lodU,		//!< Generate GL using High perf level
+												const WPFloat &vStart, const WPFloat &vStop, const WPUInt &lodV,
 												const bool &server, std::vector<GLuint> &buffers);
-	std::vector<GLfloat*> GenerateSurfaceMedium(const WPUInt &lodU, const WPUInt &lodV,				//!< Generate GL using Medium perf level
+	std::vector<GLfloat*> GenerateSurfaceMedium(const WPFloat &uStart, const WPFloat &uStop, const WPUInt &lodU,	//!< Generate GL using Medium perf level
+												const WPFloat &vStart, const WPFloat &vStop, const WPUInt &lodV,
 												const bool &server, std::vector<GLuint> &buffers);
-	std::vector<GLfloat*> GenerateSurfaceLow(const WPUInt &lodU, const WPUInt &lodV,				//!< Generate GL using Low perf level
+	std::vector<GLfloat*> GenerateSurfaceLow(const WPFloat &uStart, const WPFloat &uStop, const WPUInt &lodU,		//!< Generate GL using Low perf level
+											 const WPFloat &vStart, const WPFloat &vStop, const WPUInt &lodV,
 												const bool &server, std::vector<GLuint> &buffers);
-	std::vector<GLfloat*> GenerateSurfaceSize4(const WPUInt &lodU, const WPUInt &lodV,				//!< Generate GL for surf w/ 4 cp
+	std::vector<GLfloat*> GenerateSurfaceSize4(const WPFloat &uStart, const WPFloat &uStop, const WPUInt &lodU,		//!< Generate GL for surf w/ 4 cp
+											   const WPFloat &vStart, const WPFloat &vStop, const WPUInt &lodV,
 												const bool &server, std::vector<GLuint> &buffers);
-	GLuint* GenerateIndex(const WPUInt &lodU, const WPUInt &lodV, const bool &server, GLuint &buffer);	//!< Generate GL array index data
+	GLuint* GenerateIndex(const WPFloat &uStart, const WPFloat &uStop, const WPUInt &lodU,			//!< Generate GL array index data
+												const WPFloat &vStart, const WPFloat &vStop, const WPUInt &lodV, 
+												const bool &server, GLuint &buffer);
 	//Hidden Constructors
 	WCNurbsSurface();																				//!< Deny access to default constructor
 public:
@@ -165,12 +171,20 @@ public:
 	virtual void Render(const GLuint &defaultProg, const WCColor &color, const WPFloat &zoom);		//!< Render the object
 	virtual void ReceiveNotice(WCObjectMsg msg, WCObject *sender);									//!< Receive messages from other objects
 
-	//Original Member Methods
-	std::vector<GLfloat*> GenerateClientBuffers(WPUInt &lodU, WPUInt &lodV,	const bool &managed);	//!< Generate uo to LOD (vert, tex, norm, index) - put in RAM
+	//Buffer Generation Methods
+	std::vector<GLfloat*> GenerateClientBuffers(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lodU,	//!< Generate uo to LOD (vert, tex, norm, index) - put in RAM
+												const WPFloat &vStart, const WPFloat &vStop, WPUInt &lodV, const bool &managed);
 	void ReleaseBuffers(std::vector<GLfloat*> &buffers);											//!< Manage the release of buffer resources
-	void GenerateServerBuffers(WPUInt &lodU, WPUInt &lodV, std::vector<GLuint> &buffers,			//!< Generate uo to LOD (vert, tex, norm, index) - put in VRAM
-													const bool &managed);
+	void GenerateServerBuffers(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lodU,			//!< Generate uo to LOD (vert, tex, norm, index) - put in VRAM
+													const WPFloat &vStart, const WPFloat &vStop, WPUInt &lodV,
+													std::vector<GLuint> &buffers, const bool &managed);
 	void ReleaseBuffers(std::vector<GLuint> &buffers);												//!< Manage the release of buffer resources
+	void GenerateTextureBuffers(const WPFloat &uStart, const WPFloat &uStop, WPUInt &lodU,			//!< Generate a texture buffer of the surface
+													const WPFloat &vStart, const WPFloat &vStop, WPUInt &lodV,
+													std::vector<GLuint> &textures, const bool &managed);
+	void ReleaseTextures(std::vector<GLuint> &buffers);												//!< Manage the release of texture buffer resource
+
+	//Original Member Methods
 	void InsertKnotU(const WPFloat &u, const WPUInt &multiplicity=1);								//!< Insert a knot a parametric value u
 	void InsertKnotV(const WPFloat &v, const WPUInt &multiplicity=1);								//!< Insert a knot a parametric value v	
 	void RefineKnot(void);																			//!< Refine the curve with multiple knot insertions
