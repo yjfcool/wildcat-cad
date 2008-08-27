@@ -318,6 +318,8 @@
 		588D9CA20DAFDE8D00BDDE8D /* render_window.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B80D68B69D00673AE6 /* render_window.mm */; };
 		588D9CA40DAFDE9800BDDE8D /* vis_document.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5849B6270DA28D6C0031E7CC /* vis_document.mm */; };
 		588D9CA50DAFDE9800BDDE8D /* part_document.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B60D68B69D00673AE6 /* part_document.mm */; };
+		5890DC3A0E65C8030038BBC4 /* part_pad_dialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5890DC390E65C8030038BBC4 /* part_pad_dialog.xib */; };
+		5890DC3E0E65CD7C0038BBC4 /* part_pad_dialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5890DC3D0E65CD7C0038BBC4 /* part_pad_dialog.mm */; };
 		589AC2190D73404F001725D0 /* constraint_coincidence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361C0D68B4B700673AE6 /* constraint_coincidence.cpp */; };
 		589AC2330D734343001725D0 /* constraint_coincidence_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361E0D68B4B700673AE6 /* constraint_coincidence_actions.cpp */; };
 		58AD01F20DF98A3000ED713F /* geometric_intersection_point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58AD01F10DF98A3000ED713F /* geometric_intersection_point.cpp */; };
@@ -906,6 +908,9 @@
 		586BA53E0DABDE8F00E2DF91 /* dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = dialog.mm; path = ../../Source/Application/MacOS/dialog.mm; sourceTree = SOURCE_ROOT; };
 		587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_arc_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_arc_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		588D973F0DAFA99800BDDE8D /* assert_exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = assert_exception.h; path = ../../Source/Utility/assert_exception.h; sourceTree = SOURCE_ROOT; };
+		5890DC390E65C8030038BBC4 /* part_pad_dialog.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = part_pad_dialog.xib; path = ../../Source/Workbenches/PartDesign/MacOS/part_pad_dialog.xib; sourceTree = SOURCE_ROOT; };
+		5890DC3C0E65CD7C0038BBC4 /* part_pad_dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_pad_dialog.h; path = ../../Source/Workbenches/PartDesign/MacOS/part_pad_dialog.h; sourceTree = SOURCE_ROOT; };
+		5890DC3D0E65CD7C0038BBC4 /* part_pad_dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = part_pad_dialog.mm; path = ../../Source/Workbenches/PartDesign/MacOS/part_pad_dialog.mm; sourceTree = SOURCE_ROOT; };
 		5899BE4D0E1407CD00210936 /* trimsurface_triangulate.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = trimsurface_triangulate.fsh; path = ../../Source/Shaders/trimsurface_triangulate.fsh; sourceTree = SOURCE_ROOT; };
 		58AD01DA0DF986E500ED713F /* geometric_intersection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geometric_intersection.h; path = ../../Source/Geometry/geometric_intersection.h; sourceTree = SOURCE_ROOT; };
 		58AD01F10DF98A3000ED713F /* geometric_intersection_point.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_intersection_point.cpp; path = ../../Source/Geometry/geometric_intersection_point.cpp; sourceTree = SOURCE_ROOT; };
@@ -2577,6 +2582,7 @@
 			children = (
 				585F38AD0D68BDAD00673AE6 /* Headers */,
 				585F38AC0D68BDA400673AE6 /* Source */,
+				5890DC380E65C7850038BBC4 /* UI */,
 			);
 			name = Plane;
 			sourceTree = "<group>";
@@ -2586,6 +2592,7 @@
 			children = (
 				585F38AF0D68BDD000673AE6 /* Headers */,
 				585F38AE0D68BDC800673AE6 /* Source */,
+				5890DC370E65C7750038BBC4 /* UI */,
 			);
 			name = Pad;
 			sourceTree = "<group>";
@@ -2986,6 +2993,23 @@
 			name = External;
 			sourceTree = "<group>";
 		};
+		5890DC370E65C7750038BBC4 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				5890DC3C0E65CD7C0038BBC4 /* part_pad_dialog.h */,
+				5890DC3D0E65CD7C0038BBC4 /* part_pad_dialog.mm */,
+				5890DC390E65C8030038BBC4 /* part_pad_dialog.xib */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		5890DC380E65C7850038BBC4 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
 		58DAD6460D69CAF60093679D /* Source */ = {
 			isa = PBXGroup;
 			children = (
@@ -3235,6 +3259,7 @@
 				58DB05790DA6BD7D008FF90E /* docTypeSelector.html in Resources */,
 				58DB05A20DA6BFF8008FF90E /* dialog_manifest.xml in Resources */,
 				58C5E7400DAD250D00089549 /* newListener.html in Resources */,
+				5890DC3A0E65C8030038BBC4 /* part_pad_dialog.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3452,6 +3477,7 @@
 				585027880E08274100BF2CBB /* topology_union.cpp in Sources */,
 				5850278A0E08274F00BF2CBB /* topology_subtract.cpp in Sources */,
 				586257100E379A5C00369675 /* converter_stl.cpp in Sources */,
+				5890DC3E0E65CD7C0038BBC4 /* part_pad_dialog.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

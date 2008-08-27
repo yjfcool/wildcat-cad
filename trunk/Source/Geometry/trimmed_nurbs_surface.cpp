@@ -49,20 +49,6 @@
 /***********************************************~***************************************************/
 
 
-void WCTrimmedNurbsSurface::GeneratePISurfaceTexture(const GLfloat* buffer, const WPUInt &lodU, const WPUInt &lodV) {
-	//Set up some parameters
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	//Set up texture
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_context->TrimSurfTex());
-	glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, 0, 0, lodU, lodV, GL_RGBA, GL_FLOAT, buffer);
-	//Check for GL errors here
-	if (glGetError() != GL_NO_ERROR) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::GeneratePISurfaceTexture Error - Surface Texture Setup.");
-}
-
-
-
 GLuint WCTrimmedNurbsSurface::PointInversionHigh(std::list<WCVector4> &boundaryList) {
 	GLuint numVerts = (GLuint)boundaryList.size();
 	//Get the surface data
@@ -276,7 +262,7 @@ GLuint WCTrimmedNurbsSurface::PointInversionLow(std::list<WCVector4> &boundaryLi
 }
 
 
-GLuint WCTrimmedNurbsSurface::GenerateTriangulations(std::list<GLuint> &triList) {
+GLuint WCTrimmedNurbsSurface::GenerateTriangulation(std::list<GLuint> &triList) {
 	//Only perform is there are trim profiles
 	if (this->_profileList.size() == 0) return 0;
 	//Make sure there are not current items in the list
@@ -505,7 +491,7 @@ void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHei
 	GLuint vertBuffer;
 	try {
 		//Generate the triangulations
-		vertBuffer = this->GenerateTriangulations(triList);
+		vertBuffer = this->GenerateTriangulation(triList);
 	}
 	//Handle the error
 	catch (...) {
@@ -538,13 +524,6 @@ void WCTrimmedNurbsSurface::GenerateTrimTexture(GLuint &texWidth, GLuint &texHei
 	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, stencilRB);
 	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_STENCIL_EXT, texWidth, texHeight);
 	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, stencilRB);
-	//Check status of framebuffer
-//	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-//	if (status != GL_FRAMEBUFFER_COMPLETE_EXT) {
-//		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::GenerateTrimTexture - Framebuffer is not complete: " << status);
-//		//throw error
-//		return;
-//	} 
 	//Clear the framebuffer and stencil renderbuffer
 	glClearStencil(0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

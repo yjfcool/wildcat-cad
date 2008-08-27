@@ -70,10 +70,9 @@ protected:
 
 private:
 	//Private Methods
-	void GeneratePISurfaceTexture(const GLfloat* buffer, const WPUInt &lodU, const WPUInt &lodV);	//!< Setup PI surface texture
 	GLuint PointInversionHigh(std::list<WCVector4> &boundaryList);									//!< Invert list of points - GPU-based method
 	GLuint PointInversionLow(std::list<WCVector4> &boundaryList);									//!< Invert list of points - CPU-based method
-	GLuint GenerateTriangulations(std::list<GLuint> &triList);										//!< Generate vertex list
+	GLuint GenerateTriangulation(std::list<GLuint> &triList);										//!< Generate vertex list
 	//Hidden Constructors
 	WCTrimmedNurbsSurface();																		//!< Deny access to default constructor
 public:

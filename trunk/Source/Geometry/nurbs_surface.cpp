@@ -387,13 +387,6 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPFloat &uStart, const WPFloat &uSto
 		glUniform4i(this->_context->SurfaceLocations()[NURBSSURFACE_LOC_PARAMSV_DEFAULT], this->_degreeV, this->_cpV, this->_kpV, 0);								
 	}
 
-	//Bind to framebuffer
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_context->SurfaceFramebuffer());
-	//Is this generation going to texture buffers
-	if (!server && !buffers.empty()) {
-
-	}
-
 	//Save the viewport and polygon mode bits
 	glPushAttrib(GL_VIEWPORT_BIT | GL_POLYGON_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
 	glPushClientAttrib(GL_CLIENT_VERTEX_ARRAY_BIT);
@@ -405,6 +398,8 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPFloat &uStart, const WPFloat &uSto
 	this->GenerateControlPointsTexture();
 	//Create a knotpoint texture
 	this->GenerateKnotPointsTextures();
+	//Bind to framebuffer
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_context->SurfaceFramebuffer());
 	//Setup draw buffers
 	GLenum genBuffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT };
 	glDrawBuffers(3, genBuffers);
@@ -427,7 +422,6 @@ WCNurbsSurface::GenerateSurfaceMedium(const WPFloat &uStart, const WPFloat &uSto
 		if (buffers.at(NURBSSURFACE_VERTEX_BUFFER) == 0) { glGenBuffers(1, &tmpBuffer); buffers.at(NURBSSURFACE_VERTEX_BUFFER) = tmpBuffer; }
 		if (buffers.at(NURBSSURFACE_NORMAL_BUFFER) == 0) { glGenBuffers(1, &tmpBuffer); buffers.at(NURBSSURFACE_NORMAL_BUFFER) = tmpBuffer; }
 		if (buffers.at(NURBSSURFACE_TEXCOORD_BUFFER) == 0) { glGenBuffers(1, &tmpBuffer); buffers.at(NURBSSURFACE_TEXCOORD_BUFFER) = tmpBuffer; }
-
 		//Read the vertex texture (using PBO)
 		glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 		glBindBuffer(GL_PIXEL_PACK_BUFFER, buffers.at(NURBSSURFACE_VERTEX_BUFFER));
