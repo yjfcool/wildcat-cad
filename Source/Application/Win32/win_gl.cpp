@@ -219,7 +219,7 @@ PFNGLGETUNIFORMOFFSETEXTPROC					glGetUniformOffsetEXT = NULL;
 //EXT_FRAMEBUFFER_OBJECT
 PFNGLISRENDERBUFFEREXTPROC						glIsRenderbufferEXT = NULL;
 PFNGLBINDRENDERBUFFEREXTPROC					glBindRenderbufferEXT = NULL;
-PFNGLDELETERENDERBUFFERSEXTPROC					glDeleteRenderbufferEXT = NULL;
+PFNGLDELETERENDERBUFFERSEXTPROC					glDeleteRenderbuffersEXT = NULL;
 PFNGLGENRENDERBUFFERSEXTPROC					glGenRenderbuffersEXT = NULL;
 PFNGLRENDERBUFFERSTORAGEEXTPROC					glRenderbufferStorageEXT = NULL;
 PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC			glGetRenderbufferParameterivEXT = NULL;
@@ -430,7 +430,7 @@ void InitOpenGL(void) {
 	//Map EXT_FRAMEBUFFER_OBJECT Functions
 	glIsRenderbufferEXT			= (PFNGLISRENDERBUFFEREXTPROC)wglGetProcAddress("glIsRenderbufferEXT");
 	glBindRenderbufferEXT		= (PFNGLBINDRENDERBUFFEREXTPROC)wglGetProcAddress("glBindRenderbufferEXT");
-	glDeleteRenderbufferEXT		= (PFNGLDELETERENDERBUFFERSEXTPROC)wglGetProcAddress("glDeleteRenderbufferEXT");
+	glDeleteRenderbuffersEXT		= (PFNGLDELETERENDERBUFFERSEXTPROC)wglGetProcAddress("glDeleteRenderbufferEXT");
 	glGenRenderbuffersEXT		= (PFNGLGENRENDERBUFFERSEXTPROC)wglGetProcAddress("glGenRenderbuffersEXT");
 	glRenderbufferStorageEXT	= (PFNGLRENDERBUFFERSTORAGEEXTPROC)wglGetProcAddress("glRenderbufferStorageEXT");
 	glGetRenderbufferParameterivEXT = (PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC)wglGetProcAddress("glGetRenderbufferParameterivEXT");
