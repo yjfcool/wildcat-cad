@@ -35,6 +35,62 @@
 
 @implementation WCPartPadDialog
 
+
+- (IBAction)onFirstTypeSelection:(id)sender
+{
+}
+
+
+- (IBAction)onSecondTypeSelection:(id)sender
+{
+}
+
+
+- (IBAction)onFirstLengthAdjust:(id)sender
+{
+}
+
+
+- (IBAction)onSecondLengthAdjust:(id)sender
+{
+}
+
+
+- (IBAction)onFirstLengthEdit:(id)sender
+{
+}
+
+
+- (IBAction)onSecondLengthEdit:(id)sender
+{
+}
+
+
+- (IBAction)onProfileAdd:(id)sender
+{
+}
+
+
+- (IBAction)onProfileRemove:(id)sender
+{
+}
+
+
+- (IBAction)onProfileSelection:(id)sender
+{
+}
+
+
+- (IBAction)onReverseDirection:(id)sender
+{
+}
+
+
+- (IBAction)onMirroredExtent:(id)sender
+{
+}
+
+
 - (IBAction)onOK:(id)sender
 {
 }
@@ -48,6 +104,7 @@
 - (IBAction)onPreview:(id)sender
 {
 }
+
 
 @end
 

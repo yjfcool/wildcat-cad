@@ -39,10 +39,24 @@
 
 @interface WCPartPadDialog : NSObject {
 	IBOutlet NSComboBox* firstType;
-	IBOutlet NSComboBox* firstLimit;
-	IBOutlet NSComboBox* firstOffset;
+	IBOutlet NSComboBox* secondType;
+	IBOutlet NSTextField* firstLength;
+	IBOutlet NSTextField* secondLength;
+	IBOutlet NSTableView* profileSelection;
+	IBOutlet NSButton* mirroredExtent;
 }
 
+- (IBAction)onFirstTypeSelection:(id)sender;
+- (IBAction)onSecondTypeSelection:(id)sender;
+- (IBAction)onFirstLengthAdjust:(id)sender;
+- (IBAction)onSecondLengthAdjust:(id)sender;
+- (IBAction)onFirstLengthEdit:(id)sender;
+- (IBAction)onSecondLengthEdit:(id)sender;
+- (IBAction)onProfileAdd:(id)sender;
+- (IBAction)onProfileRemove:(id)sender;
+- (IBAction)onProfileSelection:(id)sender;
+- (IBAction)onReverseDirection:(id)sender;
+- (IBAction)onMirroredExtent:(id)sender;
 - (IBAction)onOK:(id)sender;
 - (IBAction)onCancel:(id)sender;
 - (IBAction)onPreview:(id)sender;
