@@ -214,11 +214,13 @@ WCSelectionManager::WCSelectionManager(WCScene *scene) : ::WCObject(), _scene(sc
 	//Retain the scene
 	this->_scene->Retain(*this);
 	//Set up generation textures
-	glGenTextures(1, &this->_tex);
-	glGenRenderbuffersEXT(1, &this->_depthRenderBuffer);
-	this->ReadyTexture();
-	//Generate the framebuffer object
-	glGenFramebuffersEXT(1, &(this->_framebuffer));
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		glGenTextures(1, &this->_tex);
+		glGenRenderbuffersEXT(1, &this->_depthRenderBuffer);
+		this->ReadyTexture();
+		//Generate the framebuffer object
+		glGenFramebuffersEXT(1, &(this->_framebuffer));
+	}
 }
 
 
@@ -230,7 +232,10 @@ WCSelectionManager::~WCSelectionManager() {
 
 void WCSelectionManager::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 	//Message must be from scene - reset texture in case of reshape
-	this->ReadyTexture();
+	if(WCAdapter::HasGLEXTFramebufferObject())
+	{
+		this->ReadyTexture();
+	}
 }
 
 
@@ -285,12 +290,13 @@ WPUInt WCSelectionManager::Select(const WPUInt &xMin, const WPUInt &xMax, const 
 	}
 
 	//Bind to framebuffer and bind texture
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_framebuffer);
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_tex, 0);
+	if(glBindFramebufferEXT)glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_framebuffer);
+	if(glFramebufferTexture2DEXT)glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_tex, 0);
 	// initialize depth renderbuffer 
-	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, this->_depthRenderBuffer); 
-	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, this->_depthRenderBuffer);
-	GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if(glBindRenderbufferEXT)glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, this->_depthRenderBuffer); 
+	if(glFramebufferRenderbufferEXT)glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, this->_depthRenderBuffer);
+	GLenum retVal = GL_FRAMEBUFFER_EXT;
+	if(glCheckFramebufferStatusEXT)glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 	if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::WCTreeView - Framebuffer is not complete.");
 		return 0;
@@ -349,8 +355,8 @@ WPUInt WCSelectionManager::Select(const WPUInt &xMin, const WPUInt &xMax, const 
 	}
 
 	//Exit from the framebuffer
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0); 
+	if(glBindFramebufferEXT)glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	if(glBindRenderbufferEXT)glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0); 
 	if (glGetError() != GL_NO_ERROR) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSelectionManager::WCSelectionManager - At clean up.");
 		return 0;

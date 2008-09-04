@@ -113,7 +113,7 @@ void WCVisualLayer::Render(WCRenderState *state) {
 		(*iter)->Render(this->_renderProg, WCColor::Default(), this->_scene->ActiveCamera()->Zoom());
 	}
 	//Return to no program
-	glUseProgram(0);
+	if(glUseProgram)glUseProgram(0);
 
 	//Mark layer as clean
 	this->_isDirty = false;

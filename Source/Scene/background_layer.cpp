@@ -57,9 +57,6 @@ void WCBackgroundLayer::GenerateBuffers(void) {
 	data[13] = (GLfloat)this->_scene->YMin();
 	data[14] = (GLfloat)(SCENE_ZMIN_DEFAULT + 0.01);
 	data[15] = (GLfloat)1.0;
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, 16*sizeof(GLfloat), data, GL_STATIC_DRAW);
 	
 	//Create the color data
 	GLfloat color[16];
@@ -84,17 +81,35 @@ void WCBackgroundLayer::GenerateBuffers(void) {
 	color[14] = (GLfloat)this->_lrColor.B();
 	color[15] = (GLfloat)this->_lrColor.A();
 
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);
-	glBufferData(GL_ARRAY_BUFFER, 16*sizeof(GLfloat), color, GL_STATIC_DRAW);
-/*** Debug ***
-	std::cout << "Background Color:\n";
-	glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);	
-	GLfloat *data2= (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-	for (int i=0; i<4; i++) printf("\t%d V: %f %f %f %f\n", i, data2[i*4], data2[i*4+1], data2[i*4+2], data2[i*4+3]);
-	glUnmapBuffer(GL_ARRAY_BUFFER);
-/*** Debug ***/
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, 16*sizeof(GLfloat), data, GL_STATIC_DRAW);
+
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);
+		glBufferData(GL_ARRAY_BUFFER, 16*sizeof(GLfloat), color, GL_STATIC_DRAW);
+		/*** Debug ***
+		std::cout << "Background Color:\n";
+		glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);	
+		GLfloat *data2= (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+		for (int i=0; i<4; i++) printf("\t%d V: %f %f %f %f\n", i, data2[i*4], data2[i*4+1], data2[i*4+2], data2[i*4+3]);
+		glUnmapBuffer(GL_ARRAY_BUFFER);
+		/*** Debug ***/
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+	else {
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(4, GL_FLOAT, 0, data);
+
+		glEnableClientState(GL_COLOR_ARRAY);
+		glColorPointer(4, GL_FLOAT, 0, color);
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		//Make sure that vertex and normal arrays are disabled
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);
+	}
 }
 
 
@@ -105,8 +120,10 @@ WCBackgroundLayer::WCBackgroundLayer(WCScene *scene) : ::WCLayer(scene, "Backgro
 	_vertexBuffer(0), _colorBuffer(0), _llColor(BACKGROUNDLAYER_BOTTOM_COLOR), _lrColor(BACKGROUNDLAYER_BOTTOM_COLOR), 
 	_ulColor(BACKGROUNDLAYER_TOP_COLOR), _urColor(BACKGROUNDLAYER_TOP_COLOR) {
 	//Set the buffer objects
-	glGenBuffers(1, &this->_vertexBuffer);
-	glGenBuffers(1, &this->_colorBuffer);
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		glGenBuffers(1, &this->_vertexBuffer);
+		glGenBuffers(1, &this->_colorBuffer);
+	}
 	//Nothing to be done for now
 	this->_isShadowPass = false;
 	this->_isSelectionPass = false;
@@ -117,8 +134,10 @@ WCBackgroundLayer::WCBackgroundLayer(WCScene *scene) : ::WCLayer(scene, "Backgro
 
 WCBackgroundLayer::~WCBackgroundLayer() {
 	//Free the buffers
-	glDeleteBuffers(1, &this->_vertexBuffer);
-	glDeleteBuffers(1, &this->_colorBuffer);
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		glDeleteBuffers(1, &this->_vertexBuffer);
+		glDeleteBuffers(1, &this->_colorBuffer);
+	}
 }
 
 
@@ -132,12 +151,7 @@ bool WCBackgroundLayer::OnReshape(const WPFloat width, const WPFloat height) {
 void WCBackgroundLayer::Render(WCRenderState *state) {
 	//Only render if visible
 	if (!this->_isVisible) return;
-	//Check if dirty
-	if (this->_isDirty) {
-		this->GenerateBuffers();
-		//Mark as clean
-		this->_isDirty = false;
-	}	
+
 	//Check the polygon mode
 	if(state->PolygonMode() != GL_FILL) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	//Setup billboarding
@@ -148,22 +162,34 @@ void WCBackgroundLayer::Render(WCRenderState *state) {
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 
-	//Set up state
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
-	glVertexPointer(4, GL_FLOAT, 0, 0);
-	
-	glEnableClientState(GL_COLOR_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);
-	glColorPointer(4, GL_FLOAT, 0, 0);
-	glDrawArrays(GL_QUADS, 0, 4);
-	
-	//Bind back to nothing
-	glBindBuffer(GL_ARRAY_BUFFER, 0);	
-	//Make sure that vertex and normal arrays are disabled
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
-	
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		//Check if dirty
+		if (this->_isDirty) {
+			this->GenerateBuffers();
+			//Mark as clean
+			this->_isDirty = false;
+		}	
+
+		//Set up state
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
+		glVertexPointer(4, GL_FLOAT, 0, 0);
+
+		glEnableClientState(GL_COLOR_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);
+		glColorPointer(4, GL_FLOAT, 0, 0);
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		//Bind back to nothing
+		glBindBuffer(GL_ARRAY_BUFFER, 0);	
+		//Make sure that vertex and normal arrays are disabled
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);
+	}
+	else {
+		GenerateBuffers();
+	}
+
 	//Restore the modelview matrix
 	glPopMatrix();
 	//Restore other stuff

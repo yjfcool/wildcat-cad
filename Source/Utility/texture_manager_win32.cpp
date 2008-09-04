@@ -29,6 +29,7 @@
 /*** Included Header Files ***/
 #include "Utility/texture_manager.h"
 #include "Utility/log_manager.h"
+#include "Utility/adapter.h"
 
 
 /*** Platform Specific Included Headers ***/
@@ -64,12 +65,23 @@ void WCTextureManager::LoadTexture(WSTexture *texObj) {
 	char emsg[1024];
 	TIFFRGBAImage img;
 	TIFFRGBAImageBegin(&img, tif, 1, emsg);
-	size_t npixels = img.width * img.height;
-	uint32 *data = new uint32[npixels];
+	
+	if(WCAdapter::HasGL15()) {
+		texObj->_texture_width = img.width;
+		texObj->_texture_height = img.height;
+	}
+	else {
+		// use pow(2, n) for texture width and height
+		for(texObj->_texture_width = 1; texObj->_texture_width < img.width; texObj->_texture_width *= 2){}
+		for(texObj->_texture_height = 1; texObj->_texture_height < img.height; texObj->_texture_height *= 2){}
+	}
+
 	//Get all of the raster data
-	TIFFReadRGBAImageOriented(tif, img.width, img.height, data, ORIENTATION_TOPLEFT, 0);
+	size_t npixels = texObj->_texture_width * texObj->_texture_height;
+	uint32 *data = new uint32[npixels];
+	TIFFReadRGBAImageOriented(tif, texObj->_texture_width, texObj->_texture_height, data, ORIENTATION_TOPLEFT, 0);
 	TIFFRGBAImageEnd(&img);
- 
+
 	//Enable texturing
 	glEnable(texObj->_target);
 	//Generate a new texture
@@ -78,7 +90,9 @@ void WCTextureManager::LoadTexture(WSTexture *texObj) {
 	//Set the min/mag filters
 	glTexParameteri(texObj->_target, GL_TEXTURE_MIN_FILTER, texObj->_minFilter);
 	glTexParameteri(texObj->_target, GL_TEXTURE_MAG_FILTER, texObj->_magFilter);
-	glTexImage2D(texObj->_target, 0, GL_RGBA, img.width, img.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexParameteri(texObj->_target, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(texObj->_target, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexImage2D(texObj->_target, 0, 4, texObj->_texture_width, texObj->_texture_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	//Clean up
 	glDisable(texObj->_target);
 	//Check for errors

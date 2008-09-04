@@ -37,6 +37,10 @@
 
 
 GLuint CompileGLSLShader(GLenum type, const char* shader) {
+	if(!WCAdapter::HasGL15()){
+		return 0;
+	}
+
 	//Create the shader object
 	GLuint shader_id = glCreateShader(type);
 	//Check to make sure you actually created it

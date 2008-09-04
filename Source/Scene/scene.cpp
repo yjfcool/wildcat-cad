@@ -55,8 +55,13 @@ WCScene::WCScene() : :: WCSerializeableObject(),
 	_frameTickObject(NULL) {
 	
 	std::string resourcesDirectory = _ResourceDirectory();
-	//Start new shader manager
-	this->_shaderManager = new WCShaderManager(WCScene::ShaderManifest, resourcesDirectory, false);
+
+	if(WCAdapter::HasGL15())
+	{
+		//Start new shader manager
+		this->_shaderManager = new WCShaderManager(WCScene::ShaderManifest, resourcesDirectory, false);
+	}
+
 	//Start new texture manager
 	this->_textureManager = new WCTextureManager(WCScene::TextureManifest, resourcesDirectory, false);
 //Platform specific capture of current context

@@ -63,7 +63,7 @@ WCPart::WCPart(std::string name, std::string filename) : ::WCDocument(NULL, name
 	this->_lineLayer->Thickness(PARTFEATURE_LINE_THICKNESS);
 	this->_curveLayer = new WCVisualLayer(this->_scene, "Curves");
 	this->_surfaceLayer = new WCVisualLayer(this->_scene, "Surfaces");
-	this->_surfaceLayer->RenderProgram(this->_scene->ShaderManager()->ProgramFromName("scn_basiclight"));
+	this->_surfaceLayer->RenderProgram(this->_scene->ShaderManager() ? this->_scene->ShaderManager()->ProgramFromName("scn_basiclight") : 0);
 
 	//Register layers
 	this->_scene->RegisterLayer(this->_pointLayer);

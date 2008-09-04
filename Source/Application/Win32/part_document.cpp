@@ -82,7 +82,7 @@ int WCPartDocument::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 		this->_part = new WCPart("", "");
 		this->_document = this->_part;
 		//Set the default surface renderer
-		WCPartFeature::DefaultSurfaceRenderer = this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight");
+		WCPartFeature::DefaultSurfaceRenderer = this->_part->Scene()->ShaderManager() ? this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight") : 0;
 	}
 	//Otherwise, open from file
 	else {

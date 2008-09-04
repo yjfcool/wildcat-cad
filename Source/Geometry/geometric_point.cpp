@@ -217,7 +217,7 @@ void WCGeometricPoint::Render(const GLuint &defaultProg, const WCColor &color, c
 	else color.Enable();
 	//Setup the render program
 	if (this->_renderProg != 0) glUseProgram(this->_renderProg);
-	else glUseProgram(defaultProg);
+	else if(defaultProg != 0)glUseProgram(defaultProg);
 	//Set point size
 	glPointSize((GLfloat)this->_size);
 	GLfloat data[3] = { (GLfloat)this->X(), (GLfloat)this->Y(), (GLfloat)this->Z() };
