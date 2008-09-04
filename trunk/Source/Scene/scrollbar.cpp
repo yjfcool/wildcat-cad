@@ -64,17 +64,20 @@
 
 WCScrollbar::WCScrollbar(WCWidget *parent, WPFloat extent, WPFloat position) : 
 	::WCWidget(parent->Layer()), _parent(parent), _extent(extent), _position(position) {
-	
-	//Generate buffers
-	glGenBuffers(9, this->_vertBuffers);
-	glGenBuffers(9, this->_texBuffers);
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		//Generate buffers
+		glGenBuffers(9, this->_vertBuffers);
+		glGenBuffers(9, this->_texBuffers);
+	}
 }
 
 
 WCScrollbar::~WCScrollbar() {
-	//Delete the buffers
-	glDeleteBuffers(9, this->_vertBuffers);
-	glDeleteBuffers(9, this->_texBuffers);
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		//Delete the buffers
+		glDeleteBuffers(9, this->_vertBuffers);
+		glDeleteBuffers(9, this->_texBuffers);
+	}
 }
 
 
@@ -92,191 +95,424 @@ void WCScrollbar::Extent(const WPFloat extent) {
 
 
 void WCVerticalScrollbar::GenerateBuffers(void) {
-	//Setup arrays for vertex and texCoord data
-	GLfloat verts[8];
-	GLfloat texCoords[8];
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		//Setup arrays for vertex and texCoord data
+		GLfloat verts[8];
+		GLfloat texCoords[8];
 
-	/*** Top of Back ***/
-	verts[0] = (GLfloat)this->_xMin;
-	verts[1] = (GLfloat)(this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J());
-	verts[2] = verts[0];
-	verts[3] = (GLfloat)this->_yMax;
-	verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKTOP].I());
-	verts[5] = verts[3];
-	verts[6] = verts[4];
-	verts[7] = verts[1];	
-	texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].K();
-	texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].L();
-	texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].K();
-	texCoords[3] = 0.0f;
-	texCoords[4] = 0.0f;
-	texCoords[5] = 0.0f;
-	texCoords[6] = 0.0f;
-	texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].L();
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKTOP]);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKTOP]);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
+		/*** Top of Back ***/
+		verts[0] = (GLfloat)this->_xMin;
+		verts[1] = (GLfloat)(this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J());
+		verts[2] = verts[0];
+		verts[3] = (GLfloat)this->_yMax;
+		verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKTOP].I());
+		verts[5] = verts[3];
+		verts[6] = verts[4];
+		verts[7] = verts[1];	
+		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].K();
+		texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].L();
+		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].K();
+		texCoords[3] = 0.0f;
+		texCoords[4] = 0.0f;
+		texCoords[5] = 0.0f;
+		texCoords[6] = 0.0f;
+		texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].L();
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKTOP]);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKTOP]);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
 
-	/*** Middle of Back ***/
-	verts[0] = (GLfloat)this->_xMin;
-	verts[1] = (GLfloat)(this->_yMin + this->_texSizes[VSCROLLER_TEX_BACKUP].J() + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J());
-	verts[2] = verts[0];
-	verts[3] = (GLfloat)(this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J());
-	verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].I());
-	verts[5] = verts[3];
-	verts[6] = verts[4];
-	verts[7] = verts[1];
-	GLfloat height = (GLfloat)((verts[3] - verts[1]) / SCREEN_PIXEL_WIDTH);
-	texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].K();
-	texCoords[1] = (GLfloat)height;
-	texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].K();
-	texCoords[3] = 0.0f;
-	texCoords[4] = 0.0f;
-	texCoords[5] = 0.0f;
-	texCoords[6] = 0.0f;
-	texCoords[7] = (GLfloat)height;
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKMIDDLE]);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKMIDDLE]);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
+		/*** Middle of Back ***/
+		verts[0] = (GLfloat)this->_xMin;
+		verts[1] = (GLfloat)(this->_yMin + this->_texSizes[VSCROLLER_TEX_BACKUP].J() + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J());
+		verts[2] = verts[0];
+		verts[3] = (GLfloat)(this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J());
+		verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].I());
+		verts[5] = verts[3];
+		verts[6] = verts[4];
+		verts[7] = verts[1];
+		GLfloat height = (GLfloat)((verts[3] - verts[1]) / SCREEN_PIXEL_WIDTH);
+		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].K();
+		texCoords[1] = (GLfloat)height;
+		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].K();
+		texCoords[3] = 0.0f;
+		texCoords[4] = 0.0f;
+		texCoords[5] = 0.0f;
+		texCoords[6] = 0.0f;
+		texCoords[7] = (GLfloat)height;
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKMIDDLE]);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKMIDDLE]);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
 
-	/*** Up Arrow of Back ***/
-	verts[0] = (GLfloat)this->_xMin;
-	verts[1] = (GLfloat)(this->_yMin + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J());
-	verts[2] = verts[0];
-	verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].J();
-	verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKUP].I());
-	verts[5] = verts[3];
-	verts[6] = verts[4];
-	verts[7] = verts[1];	
-	texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].K();
-	texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].L();
-	texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].K();
-	texCoords[3] = 0.0f;
-	texCoords[4] = 0.0f;
-	texCoords[5] = 0.0f;
-	texCoords[6] = 0.0f;
-	texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].L();
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKUP]);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKUP]);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
+		/*** Up Arrow of Back ***/
+		verts[0] = (GLfloat)this->_xMin;
+		verts[1] = (GLfloat)(this->_yMin + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J());
+		verts[2] = verts[0];
+		verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].J();
+		verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKUP].I());
+		verts[5] = verts[3];
+		verts[6] = verts[4];
+		verts[7] = verts[1];	
+		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].K();
+		texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].L();
+		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].K();
+		texCoords[3] = 0.0f;
+		texCoords[4] = 0.0f;
+		texCoords[5] = 0.0f;
+		texCoords[6] = 0.0f;
+		texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].L();
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKUP]);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKUP]);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
 
-	/*** Down Arrow of Back ***/
-	verts[0] = (GLfloat)this->_xMin;
-	verts[1] = (GLfloat)this->_yMin;
-	verts[2] = verts[0];
-	verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].J();
-	verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKDOWN].I());
-	verts[5] = verts[3];
-	verts[6] = verts[4];
-	verts[7] = verts[1];	
-	texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].K();
-	texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].L();
-	texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].K();
-	texCoords[3] = 0.0f;
-	texCoords[4] = 0.0f;
-	texCoords[5] = 0.0f;
-	texCoords[6] = 0.0f;
-	texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].L();
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKDOWN]);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKDOWN]);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
+		/*** Down Arrow of Back ***/
+		verts[0] = (GLfloat)this->_xMin;
+		verts[1] = (GLfloat)this->_yMin;
+		verts[2] = verts[0];
+		verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].J();
+		verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKDOWN].I());
+		verts[5] = verts[3];
+		verts[6] = verts[4];
+		verts[7] = verts[1];	
+		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].K();
+		texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].L();
+		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].K();
+		texCoords[3] = 0.0f;
+		texCoords[4] = 0.0f;
+		texCoords[5] = 0.0f;
+		texCoords[6] = 0.0f;
+		texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].L();
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKDOWN]);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKDOWN]);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
 
-	/*** Slider Calculations ***/
-	WPFloat offset = 8 * SCREEN_PIXEL_WIDTH;
-	WPFloat scrollHeight = (this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J() + offset) - 
-						   (this->_yMin + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J() + this->_texSizes[VSCROLLER_TEX_BACKUP].J() - offset);
-	WPFloat sliderHeight = this->_extent * scrollHeight;
-	WPFloat sliderDiff = scrollHeight - sliderHeight;
-	WPFloat topOfSlider = this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J() + offset - (sliderDiff * this->_position);
+		/*** Slider Calculations ***/
+		WPFloat offset = 8 * SCREEN_PIXEL_WIDTH;
+		WPFloat scrollHeight = (this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J() + offset) - 
+			(this->_yMin + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J() + this->_texSizes[VSCROLLER_TEX_BACKUP].J() - offset);
+		WPFloat sliderHeight = this->_extent * scrollHeight;
+		WPFloat sliderDiff = scrollHeight - sliderHeight;
+		WPFloat topOfSlider = this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J() + offset - (sliderDiff * this->_position);
 
-	/*** Top of Slider ***/
-	verts[0] = (GLfloat)(this->_xMin + (2.0 *SCREEN_PIXEL_WIDTH));
-	verts[1] = (GLfloat)(topOfSlider - this->_texSizes[VSCROLLER_TEX_KNOBTOP].J());
-	verts[2] = verts[0];
-	verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].J();
-	verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBTOP].I());
-	verts[5] = verts[3];
-	verts[6] = verts[4];
-	verts[7] = verts[1];	
-	texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].K();
-	texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].L();
-	texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].K();
-	texCoords[3] = 0.0f;
-	texCoords[4] = 0.0f;
-	texCoords[5] = 0.0f;
-	texCoords[6] = 0.0f;
-	texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].L();
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBTOP]);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_KNOBTOP]);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
+		/*** Top of Slider ***/
+		verts[0] = (GLfloat)(this->_xMin + (2.0 *SCREEN_PIXEL_WIDTH));
+		verts[1] = (GLfloat)(topOfSlider - this->_texSizes[VSCROLLER_TEX_KNOBTOP].J());
+		verts[2] = verts[0];
+		verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].J();
+		verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBTOP].I());
+		verts[5] = verts[3];
+		verts[6] = verts[4];
+		verts[7] = verts[1];	
+		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].K();
+		texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].L();
+		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].K();
+		texCoords[3] = 0.0f;
+		texCoords[4] = 0.0f;
+		texCoords[5] = 0.0f;
+		texCoords[6] = 0.0f;
+		texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].L();
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBTOP]);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_KNOBTOP]);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
 
-	/*** Middle of Slider ***/
-	verts[0] = (GLfloat)(this->_xMin + (2.0 *SCREEN_PIXEL_WIDTH));
-	verts[1] = (GLfloat)(topOfSlider - sliderHeight + this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].J());
-	verts[2] = verts[0];
-	verts[3] = (GLfloat)(topOfSlider - this->_texSizes[VSCROLLER_TEX_KNOBTOP].J());
-	verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].I());
-	verts[5] = verts[3];
-	verts[6] = verts[4];
-	verts[7] = verts[1];	
-	texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].K();
-	texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].L();
-	texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].K();
-	texCoords[3] = 0.0f;
-	texCoords[4] = 0.0f;
-	texCoords[5] = 0.0f;
-	texCoords[6] = 0.0f;
-	texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].L();
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBMIDDLE]);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_KNOBMIDDLE]);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
+		/*** Middle of Slider ***/
+		verts[0] = (GLfloat)(this->_xMin + (2.0 *SCREEN_PIXEL_WIDTH));
+		verts[1] = (GLfloat)(topOfSlider - sliderHeight + this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].J());
+		verts[2] = verts[0];
+		verts[3] = (GLfloat)(topOfSlider - this->_texSizes[VSCROLLER_TEX_KNOBTOP].J());
+		verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].I());
+		verts[5] = verts[3];
+		verts[6] = verts[4];
+		verts[7] = verts[1];	
+		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].K();
+		texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].L();
+		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].K();
+		texCoords[3] = 0.0f;
+		texCoords[4] = 0.0f;
+		texCoords[5] = 0.0f;
+		texCoords[6] = 0.0f;
+		texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].L();
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBMIDDLE]);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_KNOBMIDDLE]);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
 
-	/*** Bottom of Slider ***/
-	verts[0] = (GLfloat)(this->_xMin + (2.0 *SCREEN_PIXEL_WIDTH));
-	verts[1] = (GLfloat)(topOfSlider - sliderHeight);
-	verts[2] = verts[0];
-	verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].J();
-	verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].I());
-	verts[5] = verts[3];
-	verts[6] = verts[4];
-	verts[7] = verts[1];	
-	texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].K();
-	texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].L();
-	texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].K();
-	texCoords[3] = 0.0f;
-	texCoords[4] = 0.0f;
-	texCoords[5] = 0.0f;
-	texCoords[6] = 0.0f;
-	texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].L();
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBBOTTOM]);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_KNOBBOTTOM]);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
-	
-	/*** Clean Up ***/
+		/*** Bottom of Slider ***/
+		verts[0] = (GLfloat)(this->_xMin + (2.0 *SCREEN_PIXEL_WIDTH));
+		verts[1] = (GLfloat)(topOfSlider - sliderHeight);
+		verts[2] = verts[0];
+		verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].J();
+		verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].I());
+		verts[5] = verts[3];
+		verts[6] = verts[4];
+		verts[7] = verts[1];	
+		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].K();
+		texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].L();
+		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].K();
+		texCoords[3] = 0.0f;
+		texCoords[4] = 0.0f;
+		texCoords[5] = 0.0f;
+		texCoords[6] = 0.0f;
+		texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].L();
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBBOTTOM]);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), verts, GL_STATIC_DRAW);
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_KNOBBOTTOM]);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	this->_isDirty = false;
+		/*** Clean Up ***/
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		this->_isDirty = false;
+	}
+	else {
+		//Setup arrays for vertex and texCoord data
+		GLfloat verts[8];
+		GLfloat texCoords[8];
+
+		/*** Slider Calculations ***/
+		WPFloat offset = 8 * SCREEN_PIXEL_WIDTH;
+		WPFloat scrollHeight = (this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J() + offset) - 
+			(this->_yMin + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J() + this->_texSizes[VSCROLLER_TEX_BACKUP].J() - offset);
+		WPFloat sliderHeight = this->_extent * scrollHeight;
+		WPFloat sliderDiff = scrollHeight - sliderHeight;
+		WPFloat topOfSlider = this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J() + offset - (sliderDiff * this->_position);
+
+		//Set the color
+		glColor4f(1.0, 1.0, 1.0, 1.0);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		/*** Top of Back ***/
+		verts[0] = (GLfloat)this->_xMin;
+		verts[1] = (GLfloat)(this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J());
+		verts[2] = verts[0];
+		verts[3] = (GLfloat)this->_yMax;
+		verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKTOP].I());
+		verts[5] = verts[3];
+		verts[6] = verts[4];
+		verts[7] = verts[1];	
+		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].K()/40.0;
+		texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].L()/40.0;
+		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].K()/40.0;
+		texCoords[3] = 0.0f;
+		texCoords[4] = 0.0f;
+		texCoords[5] = 0.0f;
+		texCoords[6] = 0.0f;
+		texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKTOP].L()/40.0;
+
+		//Enable the texture for use
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, this->_textures[VSCROLLER_TEX_BACKTOP]);
+		//Setup vertex array
+		glVertexPointer(2, GL_FLOAT, 0, verts);
+		//Setup texCoord array
+		glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+		//Draw top of back
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		/*** Middle of Back ***/
+		verts[0] = (GLfloat)this->_xMin;
+		verts[1] = (GLfloat)(this->_yMin + this->_texSizes[VSCROLLER_TEX_BACKUP].J() + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J());
+		verts[2] = verts[0];
+		verts[3] = (GLfloat)(this->_yMax - this->_texSizes[VSCROLLER_TEX_BACKTOP].J());
+		verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].I());
+		verts[5] = verts[3];
+		verts[6] = verts[4];
+		verts[7] = verts[1];
+		GLfloat height = (GLfloat)((verts[3] - verts[1]) / SCREEN_PIXEL_WIDTH);
+		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].K();
+		texCoords[1] = 1.0;
+		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].K();
+		texCoords[3] = 0.0f;
+		texCoords[4] = 0.0f;
+		texCoords[5] = 0.0f;
+		texCoords[6] = 0.0f;
+		texCoords[7] = 10.0;
+
+
+		//Enable the texture for use
+		glBindTexture(GL_TEXTURE_2D, this->_textures[VSCROLLER_TEX_BACKMIDDLE]);
+		//Setup vertex array
+		glVertexPointer(2, GL_FLOAT, 0, verts);
+		//Setup texCoord array
+		glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+		//Draw top of back
+		glColor4ub(255, 255, 255, 255);
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		glBegin(GL_TRIANGLES);
+		glTexCoord2f(0, 0);
+		glVertex3d(0, 0, 0);
+		glTexCoord2f(1.0, 0);
+		glVertex3d(4, 0, 0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3d(4, 4, 0);
+		glEnd();
+
+		/*** Up Arrow of Back ***/
+		verts[0] = (GLfloat)this->_xMin;
+		verts[1] = (GLfloat)(this->_yMin + this->_texSizes[VSCROLLER_TEX_BACKDOWN].J());
+		verts[2] = verts[0];
+		verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].J();
+		verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKUP].I());
+		verts[5] = verts[3];
+		verts[6] = verts[4];
+		verts[7] = verts[1];	
+		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].K();
+		texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].L();
+		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].K();
+		texCoords[3] = 0.0f;
+		texCoords[4] = 0.0f;
+		texCoords[5] = 0.0f;
+		texCoords[6] = 0.0f;
+		texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKUP].L();
+
+		//Enable the texture for use (depends on state of isUpSelected)
+		if (this->_isUpSelected)
+			glBindTexture(GL_TEXTURE_2D, this->_textures[VSCROLLER_TEX_BACKUPSELECTED]);
+		else
+			glBindTexture(GL_TEXTURE_2D, this->_textures[VSCROLLER_TEX_BACKUP]);
+		//Setup vertex array
+		glVertexPointer(2, GL_FLOAT, 0, verts);
+		//Setup texCoord array
+		glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+		//Draw top of back
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		/*** Down Arrow of Back ***/
+		verts[0] = (GLfloat)this->_xMin;
+		verts[1] = (GLfloat)this->_yMin;
+		verts[2] = verts[0];
+		verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].J();
+		verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_BACKDOWN].I());
+		verts[5] = verts[3];
+		verts[6] = verts[4];
+		verts[7] = verts[1];	
+		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].K();
+		texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].L();
+		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].K();
+		texCoords[3] = 0.0f;
+		texCoords[4] = 0.0f;
+		texCoords[5] = 0.0f;
+		texCoords[6] = 0.0f;
+		texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKDOWN].L();
+
+		//Enable the texture for use (depends on state of isDownSelected)
+		if (this->_isDownSelected)
+			glBindTexture(GL_TEXTURE_2D, this->_textures[VSCROLLER_TEX_BACKDOWNSELECTED]);
+		else 
+			glBindTexture(GL_TEXTURE_2D, this->_textures[VSCROLLER_TEX_BACKDOWN]);
+		//Setup vertex array
+		glVertexPointer(2, GL_FLOAT, 0, verts);
+		//Setup texCoord array
+		glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+		//Draw top of back
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		/*** Top of Slider ***/
+		verts[0] = (GLfloat)(this->_xMin + (2.0 *SCREEN_PIXEL_WIDTH));
+		verts[1] = (GLfloat)(topOfSlider - this->_texSizes[VSCROLLER_TEX_KNOBTOP].J());
+		verts[2] = verts[0];
+		verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].J();
+		verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBTOP].I());
+		verts[5] = verts[3];
+		verts[6] = verts[4];
+		verts[7] = verts[1];	
+		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].K();
+		texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].L();
+		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].K();
+		texCoords[3] = 0.0f;
+		texCoords[4] = 0.0f;
+		texCoords[5] = 0.0f;
+		texCoords[6] = 0.0f;
+		texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBTOP].L();
+
+		//Enable the texture for use
+		glBindTexture(GL_TEXTURE_2D, this->_textures[VSCROLLER_TEX_KNOBTOP]);
+		//Setup vertex array
+		glVertexPointer(2, GL_FLOAT, 0, verts);
+		//Setup texCoord array
+		glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+		//Draw top of back
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		/*** Middle of Slider ***/
+		verts[0] = (GLfloat)(this->_xMin + (2.0 *SCREEN_PIXEL_WIDTH));
+		verts[1] = (GLfloat)(topOfSlider - sliderHeight + this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].J());
+		verts[2] = verts[0];
+		verts[3] = (GLfloat)(topOfSlider - this->_texSizes[VSCROLLER_TEX_KNOBTOP].J());
+		verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].I());
+		verts[5] = verts[3];
+		verts[6] = verts[4];
+		verts[7] = verts[1];	
+		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].K();
+		texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].L();
+		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].K();
+		texCoords[3] = 0.0f;
+		texCoords[4] = 0.0f;
+		texCoords[5] = 0.0f;
+		texCoords[6] = 0.0f;
+		texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].L();
+
+		//Enable the texture for use
+		glBindTexture(GL_TEXTURE_2D, this->_textures[VSCROLLER_TEX_KNOBMIDDLE]);
+		//Setup vertex array
+		glVertexPointer(2, GL_FLOAT, 0, verts);
+		//Setup texCoord array
+		glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+		//Draw top of back
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		/*** Bottom of Slider ***/
+		verts[0] = (GLfloat)(this->_xMin + (2.0 *SCREEN_PIXEL_WIDTH));
+		verts[1] = (GLfloat)(topOfSlider - sliderHeight);
+		verts[2] = verts[0];
+		verts[3] = verts[1] + (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].J();
+		verts[4] = (GLfloat)(this->_xMin + this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].I());
+		verts[5] = verts[3];
+		verts[6] = verts[4];
+		verts[7] = verts[1];	
+		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].K();
+		texCoords[1] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].L();
+		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].K();
+		texCoords[3] = 0.0f;
+		texCoords[4] = 0.0f;
+		texCoords[5] = 0.0f;
+		texCoords[6] = 0.0f;
+		texCoords[7] = (GLfloat)this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].L();
+
+		//Enable the texture for use
+		glBindTexture(GL_TEXTURE_2D, this->_textures[VSCROLLER_TEX_KNOBBOTTOM]);
+		//Setup vertex array
+		glVertexPointer(2, GL_FLOAT, 0, verts);
+		//Setup texCoord array
+		glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+		//Draw top of back
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		//Make sure that vertex and normal arrays are disabled
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
+		glDisable(GL_TEXTURE_2D);
+	}
 }
 
 
@@ -285,43 +521,52 @@ void WCVerticalScrollbar::GenerateBuffers(void) {
 
 WCVerticalScrollbar::WCVerticalScrollbar(WCWidget *parent, const WPFloat &extent, const WPFloat &position) : 
 	::WCScrollbar(parent, extent, position), _isSliderSelected(false), _isDownSelected(false), _isUpSelected(false), _mark() {
-	
+
 	//Load Top of Back
 	WSTexture* tex = this->_parent->Layer()->Scene()->TextureManager()->TextureFromName("blkScrollerBackVT");
 	this->_textures[VSCROLLER_TEX_BACKTOP] = tex->_id;
-	this->_texSizes[VSCROLLER_TEX_BACKTOP].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	if(WCAdapter::HasGL15())this->_texSizes[VSCROLLER_TEX_BACKTOP].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	else this->_texSizes[VSCROLLER_TEX_BACKTOP].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width / tex->_texture_width, tex->_height / tex->_texture_height);
 	//Load Middle of Back
 	tex = this->_parent->Layer()->Scene()->TextureManager()->TextureFromName("blkScrollerBackVM");
 	this->_textures[VSCROLLER_TEX_BACKMIDDLE] = tex->_id;
-	this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	if(WCAdapter::HasGL15())this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	else this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width / tex->_texture_width, tex->_height / tex->_texture_height);
 	//Load Back Up
 	tex = this->_parent->Layer()->Scene()->TextureManager()->TextureFromName("blkScrollerBackVBUp");
 	this->_textures[VSCROLLER_TEX_BACKUP] = tex->_id;
-	this->_texSizes[VSCROLLER_TEX_BACKUP].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	if(WCAdapter::HasGL15())this->_texSizes[VSCROLLER_TEX_BACKUP].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	else this->_texSizes[VSCROLLER_TEX_BACKUP].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width / tex->_texture_width, tex->_height / tex->_texture_height);
 	//Load Back Up Selected
 	tex = this->_parent->Layer()->Scene()->TextureManager()->TextureFromName("blkScrollerBackVBUpSelected");
 	this->_textures[VSCROLLER_TEX_BACKUPSELECTED] = tex->_id;
-	this->_texSizes[VSCROLLER_TEX_BACKUPSELECTED].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	if(WCAdapter::HasGL15())this->_texSizes[VSCROLLER_TEX_BACKUPSELECTED].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	else this->_texSizes[VSCROLLER_TEX_BACKUPSELECTED].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width / tex->_texture_width, tex->_height / tex->_texture_height);
 	//Load Back Down
 	tex = this->_parent->Layer()->Scene()->TextureManager()->TextureFromName("blkScrollerBackVBDown");
 	this->_textures[VSCROLLER_TEX_BACKDOWN] = tex->_id;
-	this->_texSizes[VSCROLLER_TEX_BACKDOWN].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	if(WCAdapter::HasGL15())this->_texSizes[VSCROLLER_TEX_BACKDOWN].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	else this->_texSizes[VSCROLLER_TEX_BACKDOWN].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width / tex->_texture_width, tex->_height / tex->_texture_height);
 	//Load Back Down Selected
 	tex = this->_parent->Layer()->Scene()->TextureManager()->TextureFromName("blkScrollerBackVBDownSelected");
 	this->_textures[VSCROLLER_TEX_BACKDOWNSELECTED] = tex->_id;
-	this->_texSizes[VSCROLLER_TEX_BACKDOWNSELECTED].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	if(WCAdapter::HasGL15())this->_texSizes[VSCROLLER_TEX_BACKDOWNSELECTED].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	else this->_texSizes[VSCROLLER_TEX_BACKDOWNSELECTED].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width / tex->_texture_width, tex->_height / tex->_texture_height);
 	//Load Slider Top
 	tex = this->_parent->Layer()->Scene()->TextureManager()->TextureFromName("blkScrollerKnobVT");
 	this->_textures[VSCROLLER_TEX_KNOBTOP] = tex->_id;
-	this->_texSizes[VSCROLLER_TEX_KNOBTOP].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	if(WCAdapter::HasGL15())this->_texSizes[VSCROLLER_TEX_KNOBTOP].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	else this->_texSizes[VSCROLLER_TEX_KNOBTOP].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width / tex->_texture_width, tex->_height / tex->_texture_height);
 	//Load Slider Middle
 	tex = this->_parent->Layer()->Scene()->TextureManager()->TextureFromName("blkScrollerKnobVM");
 	this->_textures[VSCROLLER_TEX_KNOBMIDDLE] = tex->_id;
-	this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	if(WCAdapter::HasGL15())this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	else this->_texSizes[VSCROLLER_TEX_KNOBMIDDLE].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width / tex->_texture_width, tex->_height / tex->_texture_height);
 	//Load Slider Bottom
 	tex = this->_parent->Layer()->Scene()->TextureManager()->TextureFromName("blkScrollerKnobVB");
 	this->_textures[VSCROLLER_TEX_KNOBBOTTOM] = tex->_id;
-	this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	if(WCAdapter::HasGL15())this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width, tex->_height);
+	else this->_texSizes[VSCROLLER_TEX_KNOBBOTTOM].Set(tex->_width * SCREEN_PIXEL_WIDTH, tex->_height * SCREEN_PIXEL_WIDTH, tex->_width / tex->_texture_width, tex->_height / tex->_texture_height);
 }
 
 
@@ -465,112 +710,117 @@ void WCVerticalScrollbar::OnScroll(const WPFloat &x, const WPFloat &y) {
 void WCVerticalScrollbar::Render(void) {
 	//Only render if visible
 	if (!this->_isVisible) return;
-	//Generate buffers if necessary
-	if (this->_isDirty) this->GenerateBuffers();
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		//Generate buffers if necessary
+		if (this->_isDirty) this->GenerateBuffers();
 
-	//Set the color
-	glColor4f(1.0, 1.0, 1.0, 1.0);
-	glEnable(GL_TEXTURE_RECTANGLE_ARB);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		//Set the color
+		glColor4f(1.0, 1.0, 1.0, 1.0);
+		glEnable(GL_TEXTURE_RECTANGLE_ARB);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	/*** Top of Back ***/
-	//Enable the texture for use
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_BACKTOP]);
-	//Setup vertex array
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKTOP]);
-	glVertexPointer(2, GL_FLOAT, 0, 0);
-	//Setup texCoord array
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKTOP]);
-	glTexCoordPointer(2, GL_FLOAT, 0, 0);
-	//Draw top of back
-	glDrawArrays(GL_QUADS, 0, 4);
+		/*** Top of Back ***/
+		//Enable the texture for use
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_BACKTOP]);
+		//Setup vertex array
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKTOP]);
+		glVertexPointer(2, GL_FLOAT, 0, 0);
+		//Setup texCoord array
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKTOP]);
+		glTexCoordPointer(2, GL_FLOAT, 0, 0);
+		//Draw top of back
+		glDrawArrays(GL_QUADS, 0, 4);
 
-	/*** Middle of Back ***/
-	//Enable the texture for use
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_BACKMIDDLE]);
-	//Setup vertex array
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKMIDDLE]);
-	glVertexPointer(2, GL_FLOAT, 0, 0);
-	//Setup texCoord array
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKMIDDLE]);
-	glTexCoordPointer(2, GL_FLOAT, 0, 0);
-	//Draw top of back
-	glDrawArrays(GL_QUADS, 0, 4);
+		/*** Middle of Back ***/
+		//Enable the texture for use
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_BACKMIDDLE]);
+		//Setup vertex array
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKMIDDLE]);
+		glVertexPointer(2, GL_FLOAT, 0, 0);
+		//Setup texCoord array
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKMIDDLE]);
+		glTexCoordPointer(2, GL_FLOAT, 0, 0);
+		//Draw top of back
+		glDrawArrays(GL_QUADS, 0, 4);
 
-	/*** Up Arrow of Back ***/
-	//Enable the texture for use (depends on state of isUpSelected)
-	if (this->_isUpSelected)
-		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_BACKUPSELECTED]);
-	else
-		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_BACKUP]);
-	//Setup vertex array
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKUP]);
-	glVertexPointer(2, GL_FLOAT, 0, 0);
-	//Setup texCoord array
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKUP]);
-	glTexCoordPointer(2, GL_FLOAT, 0, 0);
-	//Draw top of back
-	glDrawArrays(GL_QUADS, 0, 4);
+		/*** Up Arrow of Back ***/
+		//Enable the texture for use (depends on state of isUpSelected)
+		if (this->_isUpSelected)
+			glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_BACKUPSELECTED]);
+		else
+			glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_BACKUP]);
+		//Setup vertex array
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKUP]);
+		glVertexPointer(2, GL_FLOAT, 0, 0);
+		//Setup texCoord array
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKUP]);
+		glTexCoordPointer(2, GL_FLOAT, 0, 0);
+		//Draw top of back
+		glDrawArrays(GL_QUADS, 0, 4);
 
-	/*** Down Arrow of Back ***/
-	//Enable the texture for use (depends on state of isDownSelected)
-	if (this->_isDownSelected)
-		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_BACKDOWNSELECTED]);
-	else 
-		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_BACKDOWN]);
-	//Setup vertex array
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKDOWN]);
-	glVertexPointer(2, GL_FLOAT, 0, 0);
-	//Setup texCoord array
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKDOWN]);
-	glTexCoordPointer(2, GL_FLOAT, 0, 0);
-	//Draw top of back
-	glDrawArrays(GL_QUADS, 0, 4);
+		/*** Down Arrow of Back ***/
+		//Enable the texture for use (depends on state of isDownSelected)
+		if (this->_isDownSelected)
+			glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_BACKDOWNSELECTED]);
+		else 
+			glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_BACKDOWN]);
+		//Setup vertex array
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_BACKDOWN]);
+		glVertexPointer(2, GL_FLOAT, 0, 0);
+		//Setup texCoord array
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_BACKDOWN]);
+		glTexCoordPointer(2, GL_FLOAT, 0, 0);
+		//Draw top of back
+		glDrawArrays(GL_QUADS, 0, 4);
 
-	/*** Top of Slider ***/
-	//Enable the texture for use
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_KNOBTOP]);
-	//Setup vertex array
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBTOP]);
-	glVertexPointer(2, GL_FLOAT, 0, 0);
-	//Setup texCoord array
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_KNOBTOP]);
-	glTexCoordPointer(2, GL_FLOAT, 0, 0);
-	//Draw top of back
-	glDrawArrays(GL_QUADS, 0, 4);
+		/*** Top of Slider ***/
+		//Enable the texture for use
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_KNOBTOP]);
+		//Setup vertex array
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBTOP]);
+		glVertexPointer(2, GL_FLOAT, 0, 0);
+		//Setup texCoord array
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_KNOBTOP]);
+		glTexCoordPointer(2, GL_FLOAT, 0, 0);
+		//Draw top of back
+		glDrawArrays(GL_QUADS, 0, 4);
 
-	/*** Middle of Slider ***/
-	//Enable the texture for use
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_KNOBMIDDLE]);
-	//Setup vertex array
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBMIDDLE]);
-	glVertexPointer(2, GL_FLOAT, 0, 0);
-	//Setup texCoord array
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_KNOBMIDDLE]);
-	glTexCoordPointer(2, GL_FLOAT, 0, 0);
-	//Draw top of back
-	glDrawArrays(GL_QUADS, 0, 4);
+		/*** Middle of Slider ***/
+		//Enable the texture for use
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_KNOBMIDDLE]);
+		//Setup vertex array
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBMIDDLE]);
+		glVertexPointer(2, GL_FLOAT, 0, 0);
+		//Setup texCoord array
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_KNOBMIDDLE]);
+		glTexCoordPointer(2, GL_FLOAT, 0, 0);
+		//Draw top of back
+		glDrawArrays(GL_QUADS, 0, 4);
 
-	/*** Bottom of Slider ***/
-	//Enable the texture for use
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_KNOBBOTTOM]);
-	//Setup vertex array
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBBOTTOM]);
-	glVertexPointer(2, GL_FLOAT, 0, 0);
-	//Setup texCoord array
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_KNOBBOTTOM]);
-	glTexCoordPointer(2, GL_FLOAT, 0, 0);
-	//Draw top of back
-	glDrawArrays(GL_QUADS, 0, 4);
+		/*** Bottom of Slider ***/
+		//Enable the texture for use
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_textures[VSCROLLER_TEX_KNOBBOTTOM]);
+		//Setup vertex array
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertBuffers[VSCROLLER_TEX_KNOBBOTTOM]);
+		glVertexPointer(2, GL_FLOAT, 0, 0);
+		//Setup texCoord array
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texBuffers[VSCROLLER_TEX_KNOBBOTTOM]);
+		glTexCoordPointer(2, GL_FLOAT, 0, 0);
+		//Draw top of back
+		glDrawArrays(GL_QUADS, 0, 4);
 
-	/*** Clean Up ***/
-	//Bind back to nothing
-	glBindBuffer(GL_ARRAY_BUFFER, 0);	
-	//Make sure that vertex and normal arrays are disabled
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
-	glDisable(GL_TEXTURE_RECTANGLE_ARB);
+		/*** Clean Up ***/
+		//Bind back to nothing
+		glBindBuffer(GL_ARRAY_BUFFER, 0);	
+		//Make sure that vertex and normal arrays are disabled
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
+		glDisable(GL_TEXTURE_RECTANGLE_ARB);
+	}
+	else {
+		this->GenerateBuffers();
+	}
 	
 	//Check for errors
 	if (glGetError() != GL_NO_ERROR)

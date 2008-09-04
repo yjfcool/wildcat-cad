@@ -65,14 +65,14 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 	WSFontCharSize *sizes = this->_font->Sizes(); 
 
 	//Enable GL parameters
-	glEnable(GL_TEXTURE_RECTANGLE_ARB);	
+	glEnable(WCAdapter::HasGL15() ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	//Turn on the color
 	this->_color.Enable();
 
 	//Setup some data
-	GLfloat xPos = x, width, height, droop;
+	GLfloat xPos = x, width, height, texture_width, texture_height, droop;
 	GLfloat yPos;
 	GLfloat vertData[8];
 	GLfloat texData[8];
@@ -84,6 +84,9 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 		//Get char width and height
 		width = sizes[ cStr[i] ].width;
 		height = sizes[ cStr[i] ].height;
+		texture_width = sizes[ cStr[i] ].texture_width;
+		texture_height = sizes[ cStr[i] ].texture_height;
+
 		droop = height - sizes[ cStr[i] ].bearing;
 		//Determine tex data
 		texData[0] = 0.0;
@@ -94,6 +97,16 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 		texData[5] = 0.0;
 		texData[6] = width;
 		texData[7] = height;
+		if(!WCAdapter::HasGL15()) {
+			texData[0] = 0.0;
+			texData[1] = height / texture_height;
+			texData[2] = 0.0;
+			texData[3] = 0.0;
+			texData[4] = width / texture_width;
+			texData[5] = 0.0;
+			texData[6] = width / texture_width;
+			texData[7] = height / texture_height;
+		}
 		//Change to screen sizes
 		width *= (GLfloat)SCREEN_PIXEL_WIDTH;
 		height *= (GLfloat)SCREEN_PIXEL_WIDTH;
@@ -108,7 +121,7 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 		vertData[6] = vertData[4];
 		vertData[7] = yPos;
 		//Set texture and pointers
-		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textures[ cStr[i] ]);
+		glBindTexture(WCAdapter::HasGL15() ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D, textures[ cStr[i] ]);
 		glVertexPointer(2, GL_FLOAT, 0, vertData);
 		glTexCoordPointer(2, GL_FLOAT, 0, texData);
 		//Draw textured quad
@@ -121,7 +134,7 @@ void WCText::DrawAtPoint(const GLfloat &x, const GLfloat &y) {
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
 	//Clean up
-	glDisable(GL_TEXTURE_RECTANGLE_ARB);
+	glDisable(WCAdapter::HasGL15() ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D);
 
 	//See about underlined
 	if (this->_isUnderlined) {
@@ -151,7 +164,7 @@ void WCText::DrawAtPoint(const WCVector4 &pt, const WCVector4 &uUnit, const WCVe
 	WSFontCharSize *sizes = this->_font->Sizes(); 
 
 	//Enable GL parameters
-	glEnable(GL_TEXTURE_RECTANGLE_ARB);	
+	glEnable(WCAdapter::HasGL15() ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	//Turn on the color
@@ -207,7 +220,7 @@ void WCText::DrawAtPoint(const WCVector4 &pt, const WCVector4 &uUnit, const WCVe
 		vertData[11] = (GLfloat)lr.K();
 
 		//Set texture and pointers
-		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textures[ cStr[i] ]);
+		glBindTexture(WCAdapter::HasGL15() ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D, textures[ cStr[i] ]);
 		glVertexPointer(3, GL_FLOAT, 0, vertData);
 		glTexCoordPointer(2, GL_FLOAT, 0, texData);
 		//Draw textured quad
@@ -220,7 +233,7 @@ void WCText::DrawAtPoint(const WCVector4 &pt, const WCVector4 &uUnit, const WCVe
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
 	//Clean up
-	glDisable(GL_TEXTURE_RECTANGLE_ARB);
+	glDisable(WCAdapter::HasGL15() ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D);
 }
 /*
 		//Determine size of texture

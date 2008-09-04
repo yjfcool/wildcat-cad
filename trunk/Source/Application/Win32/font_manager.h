@@ -57,6 +57,7 @@ namespace __WILDCAT_NAMESPACE__ {
 
 struct WSFontCharSize {
 	GLfloat										width, height, bearing;
+	int texture_width, texture_height;  // used for when !WCAdapter::HasGL15() and they have to be pow(2, n)
 };
 
 

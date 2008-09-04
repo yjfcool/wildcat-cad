@@ -179,7 +179,7 @@ void WCUserInterfaceLayer::Render(WCRenderState *state) {
 	//Only render if visible
 	if (!this->_isVisible) return;
 	//Set the program to zero
-	glUseProgram(0);
+	if(glUseProgram)glUseProgram(0);
 	//Setup billboarding
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();

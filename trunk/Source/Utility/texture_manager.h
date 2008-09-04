@@ -56,6 +56,7 @@ struct WSTexture {
 	GLenum										_target;											//!< Target of texture
 	GLint										_mipLevel;											//!< Mipmapping levels
 	GLfloat										_width, _height;									//!< Width and height of the texture
+	GLint										_texture_width, _texture_height;					// for use when !WCAdapter::HasGL15(), they must be pow(2, n)
 	GLenum										_internalFormat, _format;							//!< GL_RGBA, GL_RGBA32F_ARB, etc.
 	GLenum										_type;												//!< GL_UNSIGNED_BYTE etc.
 	GLenum										_minFilter, _magFilter;								//!< GL_NEAREST, GL_LINEAR, etc.

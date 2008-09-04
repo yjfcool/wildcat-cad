@@ -769,7 +769,7 @@ void WCNurbsCurve::Render(const GLuint &defaultProg, const WCColor &color, const
 
 	//Set the rendering program
 	if (this->_renderProg != 0) glUseProgram(this->_renderProg);
-	else glUseProgram(defaultProg);
+	else if(defaultProg != 0)glUseProgram(defaultProg);
 	//Set up rendering environment
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();

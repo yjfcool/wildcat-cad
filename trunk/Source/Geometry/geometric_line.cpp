@@ -343,7 +343,7 @@ void WCGeometricLine::Render(const GLuint &defaultProg, const WCColor &color, co
 	if (!this->_isVisible) return;
 	//Set the rendering program
 	if (this->_renderProg != 0) glUseProgram(this->_renderProg);
-	else glUseProgram(defaultProg);
+	else if(defaultProg != 0)glUseProgram(defaultProg);
 	//Set color appropriately
 	if (color == WCColor::Default()) {
 		this->_color.Enable();

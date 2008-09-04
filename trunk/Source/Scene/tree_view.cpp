@@ -370,9 +370,6 @@ void WCTreeElement::Render(WPFloat &x, WPFloat &y, WPUInt depth) {
 
 	//Enable texture coordinates
 	if (this->_icon != NULL) {
-		glEnable(GL_TEXTURE_RECTANGLE_ARB);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glColor4f(1.0, 1.0, 1.0, 1.0);
 		//Icon vertices
 		GLfloat iconVerts[8] = { xLoc, yLoc - iconSize,
 								 xLoc, yLoc, 
@@ -382,8 +379,24 @@ void WCTreeElement::Render(WPFloat &x, WPFloat &y, WPUInt depth) {
 								 3.0, 29.0,
 								 29.0, 29.0,
 								 29.0, 3.0 };
+
+		if(!WCAdapter::HasGL15()) {
+			texCoords[0] = 0.0;
+			texCoords[1] = 0.0;
+			texCoords[2] = 0.0;
+			texCoords[3] = 1.0;
+			texCoords[4] = 1.0;
+			texCoords[5] = 1.0;
+			texCoords[6] = 1.0;
+			texCoords[7] = 0.0;
+		}
+
+		glEnable(WCAdapter::HasGL15() ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glColor4f(1.0, 1.0, 1.0, 1.0);
 		//If there is an icon, enable its texture
-		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_icon->_id);
+		glBindTexture(this->_icon->_target, this->_icon->_id);
 		glVertexPointer(2, GL_FLOAT, 0, iconVerts);
 		glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
 		glDrawArrays(GL_QUADS, 0, 4);
@@ -391,7 +404,7 @@ void WCTreeElement::Render(WPFloat &x, WPFloat &y, WPUInt depth) {
 		//Clean up drawing state
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisable(GL_TEXTURE_RECTANGLE_ARB);
+		glDisable(this->_icon->_target);
 	}
 	
 	//Draw highlight box if mouse is over
@@ -454,28 +467,51 @@ void WCTreeElement::Print(int indent) {
 void WCTreeView::GenerateTexture(void) {
 	//Set up some parameters
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	//Set up texture
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_tex);
-	GLfloat borderColor[] = {0.0, 0.0, 0.0, 0.0};
-	glTexParameterfv(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_BORDER_COLOR, borderColor);
-	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, this->_texWidth, this->_texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-	if (glGetError() != GL_NO_ERROR) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::GenerateTexture - GL error at Create.");
+
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		//Set up texture
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_tex);
+		GLfloat borderColor[] = {0.0, 0.0, 0.0, 0.0};
+		glTexParameterfv(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_BORDER_COLOR, borderColor);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, this->_texWidth, this->_texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+
+		if (glGetError() != GL_NO_ERROR) 
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::GenerateTexture - GL error at Create.");
+	}
+
+	//Store the viewport
+	glPushAttrib(GL_VIEWPORT_BIT);
 
 	//Bind to framebuffer and bind texture
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_framebuffer);
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_tex, 0);
-	GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-	if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::WCTreeView - Framebuffer is not complete.");
-	//Set the viewport
-	glPushAttrib(GL_VIEWPORT_BIT);
-	glViewport(0, 0, this->_texWidth, this->_texHeight);
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_framebuffer);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_tex, 0);
+		GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+		if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) 
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::WCTreeView - Framebuffer is not complete.");
+
+		//Set the viewport
+		glViewport(0, 0, this->_texWidth, this->_texHeight);
+	}
+	else
+	{
+		//Determine upper left tex-coord
+		GLfloat actualPixelHeight = (GLfloat)(this->_height / SCREEN_PIXEL_WIDTH);
+		GLfloat actualPixelWidth = (GLfloat)(this->_width / SCREEN_PIXEL_WIDTH);
+		int scenePixelHeight = this->_layer->Scene()->WindowHeight();
+		GLfloat placementBorder = (GLfloat)(OVERLAY_PLACEMENT_BORDER / SCREEN_PIXEL_WIDTH);;
+		GLfloat upperY = scenePixelHeight - actualPixelHeight - this->_scrollbar->Position() - placementBorder;
+
+		//Set the viewport
+		glViewport(0, upperY, this->_texWidth, this->_texHeight);
+	}
+
 	//Set the projection matrix
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -486,15 +522,18 @@ void WCTreeView::GenerateTexture(void) {
 	glPushMatrix();
 	glLoadIdentity();
 	
-	//Clear the framebuffer
-	glClearColor(1.0, 1.0, 1.0, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT);
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		//Clear the framebuffer
+		glClearColor(1.0, 1.0, 1.0, 0.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+		//Restore clear color
+		glClearColor(0.0, 0.0, 0.0, 1.0);
+	}
+
 	//Render full virtual tree
 	WPFloat xPos = 0.0;
 	WPFloat yPos = this->_virtualHeight;
 	this->_root->Render(xPos, yPos, 0);
-	//Restore clear color
-	glClearColor(0.0, 0.0, 0.0, 1.0);
 
 	//Restore the modelview matrix
 	glPopMatrix();
@@ -505,11 +544,13 @@ void WCTreeView::GenerateTexture(void) {
 	//Restore the viewport
 	glPopAttrib();
 
-	//Unbind the framebuffer
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-	//Check for errors
-	if (glGetError() != GL_NO_ERROR) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::WCTreeView - At clean up.");
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		//Unbind the framebuffer
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		//Check for errors
+		if (glGetError() != GL_NO_ERROR) 
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::WCTreeView - At clean up.");
+	}
 }
 
 
@@ -546,55 +587,61 @@ void WCTreeView::GenerateBuffers(void) {
 		data[7] = (GLfloat)this->_yMin;
 	}
 
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), data, GL_STATIC_DRAW);
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), data, GL_STATIC_DRAW);
 
-/*** DEBUG ***
-	std::cout << "Actual Width: " << this->_width << std::endl;
-	std::cout << "Actual Height: " << this->_height << std::endl;
-	std::cout << "Virtual Width: " << this->_virtualWidth << std::endl;
-	std::cout << "Virtual Height: " << this->_virtualHeight << std::endl;
-	std::cout << "Texture Width: " << this->_texWidth << std::endl;
-	std::cout << "Texture Height: " << this->_texHeight << std::endl;
-	std::cout << "Scrollbar Extent: " << this->_scrollbar->Extent() << std::endl;
-	std::cout << "Scrollbar Position: " << this->_scrollbar->Position() << std::endl;
-/*** DEBUG ***/
+		/*** DEBUG ***
+		std::cout << "Actual Width: " << this->_width << std::endl;
+		std::cout << "Actual Height: " << this->_height << std::endl;
+		std::cout << "Virtual Width: " << this->_virtualWidth << std::endl;
+		std::cout << "Virtual Height: " << this->_virtualHeight << std::endl;
+		std::cout << "Texture Width: " << this->_texWidth << std::endl;
+		std::cout << "Texture Height: " << this->_texHeight << std::endl;
+		std::cout << "Scrollbar Extent: " << this->_scrollbar->Extent() << std::endl;
+		std::cout << "Scrollbar Position: " << this->_scrollbar->Position() << std::endl;
+		/*** DEBUG ***/
 
-	//Determine upper left tex-coord
-	GLfloat actualPixelHeight = (GLfloat)(this->_height / SCREEN_PIXEL_WIDTH);
-	GLfloat actualPixelWidth = (GLfloat)(this->_width / SCREEN_PIXEL_WIDTH);
-	GLfloat upperY = (GLfloat)(this->_texHeight - ((this->_texHeight - actualPixelHeight) * this->_scrollbar->Position()));
-	//Create the color data
-	GLfloat texCoords[8];
-	//Upper left
-	texCoords[2] = 0.0;
-	texCoords[3] = upperY;
-	//Upper right
-	texCoords[4] = actualPixelWidth;
-	texCoords[5] = texCoords[3];
-	//Lower right
-	texCoords[6] = actualPixelWidth;
-	texCoords[7] = texCoords[3] - actualPixelHeight;
-	//Lower left
-	texCoords[0] = 0.0;
-	texCoords[1] = texCoords[7];
+		//Determine upper left tex-coord
+		GLfloat actualPixelHeight = (GLfloat)(this->_height / SCREEN_PIXEL_WIDTH);
+		GLfloat actualPixelWidth = (GLfloat)(this->_width / SCREEN_PIXEL_WIDTH);
+		GLfloat upperY = (GLfloat)(this->_texHeight - ((this->_texHeight - actualPixelHeight) * this->_scrollbar->Position()));
+		//Create the color data
+		GLfloat texCoords[8];
+		//Upper left
+		texCoords[2] = 0.0;
+		texCoords[3] = upperY;
+		//Upper right
+		texCoords[4] = actualPixelWidth;
+		texCoords[5] = texCoords[3];
+		//Lower right
+		texCoords[6] = actualPixelWidth;
+		texCoords[7] = texCoords[3] - actualPixelHeight;
+		//Lower left
+		texCoords[0] = 0.0;
+		texCoords[1] = texCoords[7];
 
-/*** DEBUG ***
-	std::cout << "TC[0] " << texCoords[0] << std::endl;
-	std::cout << "TC[1] " << texCoords[1] << std::endl;
-	std::cout << "TC[2] " << texCoords[2] << std::endl;
-	std::cout << "TC[3] " << texCoords[3] << std::endl;
-	std::cout << "TC[4] " << texCoords[4] << std::endl;
-	std::cout << "TC[5] " << texCoords[5] << std::endl;
-	std::cout << "TC[6] " << texCoords[6] << std::endl;
-	std::cout << "TC[7] " << texCoords[7] << std::endl;
-/*** DEBUG ***/
-	//Copy the data into the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texCoordBuffer);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
-	//Clean up
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+		/*** DEBUG ***
+		std::cout << "TC[0] " << texCoords[0] << std::endl;
+		std::cout << "TC[1] " << texCoords[1] << std::endl;
+		std::cout << "TC[2] " << texCoords[2] << std::endl;
+		std::cout << "TC[3] " << texCoords[3] << std::endl;
+		std::cout << "TC[4] " << texCoords[4] << std::endl;
+		std::cout << "TC[5] " << texCoords[5] << std::endl;
+		std::cout << "TC[6] " << texCoords[6] << std::endl;
+		std::cout << "TC[7] " << texCoords[7] << std::endl;
+		/*** DEBUG ***/
+		//Copy the data into the VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texCoordBuffer);
+		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
+		//Clean up
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+	else {
+		//Render the scrollbar
+		this->_scrollbar->Render();
+	}
 }
 
 
@@ -642,13 +689,17 @@ WCTreeView::WCTreeView(WCUserInterfaceLayer *layer) : ::WCOverlay(layer, false),
 	layer->RegisterWidget(this);
 	//Set up generation texture
 	glGenTextures(1, &this->_tex);
-	//Generate the framebuffer object
-	glGenFramebuffersEXT(1, &(this->_framebuffer));
-	
-	//Generate the buffers
-	glGenBuffers(1, &this->_vertexBuffer);
-	glGenBuffers(1, &this->_texCoordBuffer);
-	this->_isDirty = true;
+
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		//Generate the framebuffer object
+		glGenFramebuffersEXT(1, &(this->_framebuffer));
+
+		//Generate the buffers
+		glGenBuffers(1, &this->_vertexBuffer);
+		glGenBuffers(1, &this->_texCoordBuffer);
+		this->_isDirty = true;
+	}
+
 	//Create the scrollbar
 	this->_scrollbar = new WCVerticalScrollbar(this, 1.0, 0.0);
 	this->_scrollbar->IsVisible(false);
@@ -900,42 +951,52 @@ void WCTreeView::OnArrowKeyPress(const WCArrowKey &key) {
 void WCTreeView::Render(void) {
 	//Make sure is visible and has root element
 	if ((!this->_isVisible) || (this->_root == NULL)) return;
-	//Check to see if tree is dirty
-	if (this->_isDirty) {
+
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
+		//Check to see if tree is dirty
+		if (this->_isDirty) {
+			//Generate the tree texture
+			this->GenerateTexture();
+			//Generate the display buffers
+			this->GenerateBuffers();
+			//Mark as clean
+			this->_isDirty = false;
+		}
+
+		//Render the scrollbar
+		this->_scrollbar->Render();
+
+		//Enable the texture for use
+		glEnable(GL_TEXTURE_RECTANGLE_ARB);	
+		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_tex);
+		//Setup vertex array
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
+		glVertexPointer(2, GL_FLOAT, 0, 0);
+		//Setup texture array
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, this->_texCoordBuffer);
+		glTexCoordPointer(2, GL_FLOAT, 0, 0);
+
+		//Draw
+		glColor4f(1.0, 1.0, 1.0, 1.0);
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		//Bind back to nothing
+		glBindBuffer(GL_ARRAY_BUFFER, 0);	
+		//Make sure that vertex and normal arrays are disabled
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
+		//Clean up
+		glDisable(GL_TEXTURE_RECTANGLE_ARB);
+	}
+	else
+	{
 		//Generate the tree texture
 		this->GenerateTexture();
 		//Generate the display buffers
 		this->GenerateBuffers();
-		//Mark as clean
-		this->_isDirty = false;
 	}
-
-	//Render the scrollbar
-	this->_scrollbar->Render();
-
-	//Enable the texture for use
-	glEnable(GL_TEXTURE_RECTANGLE_ARB);	
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_tex);
-	//Setup vertex array
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
-	glVertexPointer(2, GL_FLOAT, 0, 0);
-	//Setup texture array
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, this->_texCoordBuffer);
-	glTexCoordPointer(2, GL_FLOAT, 0, 0);
-
-	//Draw
-	glColor4f(1.0, 1.0, 1.0, 1.0);
-	glDrawArrays(GL_QUADS, 0, 4);
-	
-	//Bind back to nothing
-	glBindBuffer(GL_ARRAY_BUFFER, 0);	
-	//Make sure that vertex and normal arrays are disabled
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
-	//Clean up
-	glDisable(GL_TEXTURE_RECTANGLE_ARB);
 	
 	//Optionally render tie-in lines
 	if (this->_scrollbar->IsVisible()) {

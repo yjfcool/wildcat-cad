@@ -187,7 +187,7 @@ void WCLineLayer::Render(WCRenderState *state) {
 	}
 	//Set lighting params if needed
 //	if (this->_renderProg != 0) {
-		glUseProgram(this->_renderProg);
+		if(this->_renderProg != 0)glUseProgram(this->_renderProg);
 //		this->_scene->ActiveCamera()->EnableLighting(this->_renderProg);
 //	}
 

@@ -67,11 +67,11 @@ public:
 	static void Terminate(void);																	//!< Static Terminate method
 	
 	//Extension functions
-	inline static bool HasGL13(void)					{ CHKINIT; return (WCAdapter::_version <= 1.3); }
-	inline static bool HasGL14(void)					{ CHKINIT; return (WCAdapter::_version <= 1.4); }
-	inline static bool HasGL15(void)					{ CHKINIT; return (WCAdapter::_version <= 1.5); }
-	inline static bool HasGL20(void)					{ CHKINIT; return (WCAdapter::_version <= 2.0); }
-	inline static bool HasGL21(void)					{ CHKINIT; return (WCAdapter::_version <= 2.1); }
+	inline static bool HasGL13(void)					{ CHKINIT; return (WCAdapter::_version >= 1.3); }
+	inline static bool HasGL14(void)					{ CHKINIT; return (WCAdapter::_version >= 1.4); }
+	inline static bool HasGL15(void)					{ CHKINIT; return (WCAdapter::_version >= 1.5); }
+	inline static bool HasGL20(void)					{ CHKINIT; return (WCAdapter::_version >= 2.0); }
+	inline static bool HasGL21(void)					{ CHKINIT; return (WCAdapter::_version >= 2.1); }
 	inline static bool HasGLARBFragmentShader(void)		{ CHKINIT; return WCAdapter::_extensions[33]; }
 	inline static bool HasGLARBShadingLanguage100(void)	{ CHKINIT; return WCAdapter::_extensions[34]; }
 	inline static bool HasGLARBTextureRectangle(void)	{ CHKINIT; return WCAdapter::_extensions[39]; }
