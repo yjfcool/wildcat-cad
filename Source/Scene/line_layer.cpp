@@ -102,18 +102,37 @@ void WCLineLayer::GenerateBuffers(void) {
 /***********************************************~***************************************************/
 
 
-WCLineLayer::WCLineLayer(WCScene *scene, std::string name) : ::WCLayer(scene, name), _renderProg(0),
-	_numVisible(0), _thickness(LINELAYER_THICKNESS), _vertexBuffer(0), _colorBuffer(0) {
-	//Generate the two buffers
-	glGenBuffers(1, &this->_vertexBuffer);
-	glGenBuffers(1, &this->_colorBuffer);
+WCLineLayer::WCLineLayer(WCScene *scene, std::string name) : ::WCLayer(scene, name),
+	_perfLevel(PerformanceLow), _renderProg(0),	_numVisible(0), _thickness(LINELAYER_THICKNESS),
+	_vertexBuffer(0), _colorBuffer(0), _altVertexBuffer(NULL), _altColorBuffer(NULL) {
+	//Set performance level
+	if(WCAdapter::HasGL15()) {
+		//Set the higher performance level
+		this->_perfLevel = PerformanceMedium;
+		//Generate the two buffers
+		glGenBuffers(1, &this->_vertexBuffer);
+		glGenBuffers(1, &this->_colorBuffer);
+	}
+	//Nothing to be done for now
+	this->_isShadowPass = false;
+	this->_isSelectionPass = false;
+	//Mark as dirty
+	this->_isDirty = true;
 }
 
 
 WCLineLayer::~WCLineLayer() {
-	//Delete the two buffers
-	glDeleteBuffers(1, &this->_vertexBuffer);
-	glDeleteBuffers(1, &this->_colorBuffer);
+	//Free the buffers if appropriate
+	if(this->_perfLevel == PerformanceMedium) {
+		glDeleteBuffers(1, &this->_vertexBuffer);
+		glDeleteBuffers(1, &this->_colorBuffer);
+	}
+	//Otherwise must be low perf
+	else {
+		//See about deleting local buffers
+		if (this->_altVertexBuffer) delete this->_altVertexBuffer;
+		if (this->_altColorBuffer) delete this->_altColorBuffer;
+	}
 }
 
 
@@ -127,8 +146,6 @@ void WCLineLayer::AddLine(WCGeometricLine *line) {
 	this->_lineList.push_back(line);
 	//Retain the line (should be item 0 in retain list)
 	line->Retain(*this);
-	//Set the layer for the line
-//	line->Layer(this);
 	//Mark the layer as dirty
 	this->_isDirty = true;
 }
@@ -144,8 +161,6 @@ void WCLineLayer::RemoveLine(WCGeometricLine *line) {
 	this->_lineList.remove(line);
 	//Release the line (should be item 0 in retain list)
 	line->Release(*this);
-	//Unset the layer for the object
-//	line->Layer(NULL);
 	//Mark the layer as dirty
 	this->_isDirty = true;
 }
@@ -167,8 +182,16 @@ WCAlignedBoundingBox WCLineLayer::BoundingBox(void) {
 		this->GenerateBuffers();
 		this->_isDirty = false;
 	}
-	//Set the box using vertex data
-	box.Set(this->_vertexBuffer, this->_numVisible);
+	//Look at performance level
+	if (this->_perfLevel == PerformanceMedium) {
+		//Set the box using vertex data
+		box.Set(this->_vertexBuffer, this->_numVisible);
+	}
+	//Otherwise, must be local buffers
+	else {
+		//Set the box using local buffer
+		box.Set(this->_altVertexBuffer, this->_numVisible, 4);
+	}
 	//Return the box
 	return box;
 }
@@ -185,11 +208,6 @@ void WCLineLayer::Render(WCRenderState *state) {
 		//Mark as clean
 		this->_isDirty = false;
 	}
-	//Set lighting params if needed
-//	if (this->_renderProg != 0) {
-		if(this->_renderProg != 0)glUseProgram(this->_renderProg);
-//		this->_scene->ActiveCamera()->EnableLighting(this->_renderProg);
-//	}
 
 	//Set up rendering environment
 	glMatrixMode(GL_PROJECTION);
@@ -200,28 +218,39 @@ void WCLineLayer::Render(WCRenderState *state) {
 	glEnable(GL_LINE_SMOOTH);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
-	glLineWidth(LINELAYER_THICKNESS);
-	//Render the lines from the buffers
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
-	glVertexPointer(3, GL_FLOAT, 0, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);
-	glColorPointer(4, GL_FLOAT, 0, 0);
 	glLineWidth((GLfloat)this->_thickness);
-	//Draw the lines
-	glDrawArrays(GL_LINES, 0, this->_numVisible);
-	//Clean up the environment
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//Determine performance level
+	if (this->_perfLevel == PerformanceMedium) {
+		//Set lighting params if needed
+		if (this->_renderProg != 0) {
+			glUseProgram(this->_renderProg);
+//			this->_scene->ActiveCamera()->EnableLighting(this->_renderProg);
+		}
+		//Render the lines from the buffers
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
+		glVertexPointer(3, GL_FLOAT, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);
+		glColorPointer(4, GL_FLOAT, 0, 0);
+		//Draw the lines
+		glDrawArrays(GL_LINES, 0, this->_numVisible);
+		//Clean up the environment
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+	//Otherwise, use local buffers
+	else {
+		//Render the lines from the buffers
+		glVertexPointer(3, GL_FLOAT, 0, this->_altVertexBuffer);
+		glColorPointer(4, GL_FLOAT, 0, this->_altColorBuffer);
+		//Draw the lines
+		glDrawArrays(GL_LINES, 0, this->_numVisible);
+	}
+	//Clean up and move on0
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisable(GL_LINE_SMOOTH);
-
 	//Restore matrix and mode
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
-
-	//Check for errors
-	if (glGetError() != GL_NO_ERROR)
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCLineLayer::Render Error - Unspecified Errors.");
 }
 
 

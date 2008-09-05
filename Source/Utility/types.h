@@ -49,6 +49,14 @@ namespace __WILDCAT_NAMESPACE__ {
 
 /***********************************************~***************************************************/
 
+	
+/*** Gloabl Performance Enums ***/
+enum WCPerformanceLevel	{
+	PerformanceLow,
+	PerformanceMedium,
+	PerformanceHigh
+};
+	
 
 /*** Defined Types ***/
 typedef double									WPFloat;

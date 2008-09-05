@@ -91,8 +91,10 @@ protected:
 	GLfloat										_yMin, _yMax;										//!< Bounds values for y dimension
 	GLfloat										_zMin, _zMax;										//!< Bounds values for y dimension
 	GLuint										_buffer;											//!< Vertex buffer
-	void GenerateVBO(void);																			//!< Generate the vertex buffer
-	
+	GLfloat										*_altBuffer;										//!< Local buffer
+private:
+	//Private Generation Method
+	void GenerateBuffer(void);																		//!< Generate the vertex buffer
 public:
 	//Constructors and Destructors
 	WCAlignedBoundingBox();																			//!< Default constructor
@@ -103,6 +105,7 @@ public:
 	WCAlignedBoundingBox(const std::vector<WCVector4> &vectors);									//!< Alternate vector of vectors constructor
 	WCAlignedBoundingBox(WCVector4 *vectors, const WPUInt &count);									//!< Alternate vector array constructor
 	WCAlignedBoundingBox(const GLuint &buffer, const WPUInt &size);									//!< Alternate VBO constructor
+	WCAlignedBoundingBox(const GLfloat *buffer, const WPUInt &size, const WPUInt &width);			//!< Alternate local buffer constructor
 	~WCAlignedBoundingBox()						{ glDeleteBuffers(1, &this->_buffer); }				//!< Default destructor
 	
 	//Member Access Methods
@@ -127,6 +130,7 @@ public:
 	void Set(const std::vector<WCVector4> &vectors);												//!< Required vector set
 	void Set(WCVector4 *vectors, const WPUInt &size);												//!< Required array set
 	void Set(const GLuint &buffer, const WPUInt &size);												//!< Required VBO set
+	void Set(const GLfloat *buffer, const WPUInt &size, const WPUInt &width);						//!< Required local buffer set
 
 	//Operator Overloads
 	WCAlignedBoundingBox& operator+=(const WCAlignedBoundingBox &obj);								//!< Operator plus equals
