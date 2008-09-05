@@ -36,7 +36,7 @@
 
 void WCBackgroundLayer::GenerateBuffers(void) {
 	//Create the vertex data
-	GLfloat data[16];
+	GLfloat *data = new GLfloat[16];
 	//Lower left
 	data[0] = (GLfloat)this->_scene->XMin();
 	data[1] = (GLfloat)this->_scene->YMin();
@@ -59,7 +59,7 @@ void WCBackgroundLayer::GenerateBuffers(void) {
 	data[15] = (GLfloat)1.0;
 	
 	//Create the color data
-	GLfloat color[16];
+	GLfloat *color = new GLfloat[16];
 	//Lower left
 	color[0] = (GLfloat)this->_llColor.R();
 	color[1] = (GLfloat)this->_llColor.G();
@@ -81,34 +81,27 @@ void WCBackgroundLayer::GenerateBuffers(void) {
 	color[14] = (GLfloat)this->_lrColor.B();
 	color[15] = (GLfloat)this->_lrColor.A();
 
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
+	//Is the VBO path available
+	if(this->_perfLevel == PerformanceMedium) {
 		//Copy the data into the VBO
 		glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
 		glBufferData(GL_ARRAY_BUFFER, 16*sizeof(GLfloat), data, GL_STATIC_DRAW);
-
 		//Copy the data into the VBO
 		glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);
 		glBufferData(GL_ARRAY_BUFFER, 16*sizeof(GLfloat), color, GL_STATIC_DRAW);
-		/*** Debug ***
-		std::cout << "Background Color:\n";
-		glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);	
-		GLfloat *data2= (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-		for (int i=0; i<4; i++) printf("\t%d V: %f %f %f %f\n", i, data2[i*4], data2[i*4+1], data2[i*4+2], data2[i*4+3]);
-		glUnmapBuffer(GL_ARRAY_BUFFER);
-		/*** Debug ***/
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//Delete the temp arrays
+		delete data;
+		delete color;
 	}
+	//No VBO, so just get local buffers ready
 	else {
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glVertexPointer(4, GL_FLOAT, 0, data);
-
-		glEnableClientState(GL_COLOR_ARRAY);
-		glColorPointer(4, GL_FLOAT, 0, color);
-		glDrawArrays(GL_QUADS, 0, 4);
-
-		//Make sure that vertex and normal arrays are disabled
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_COLOR_ARRAY);
+		//Delete existing pointers if present
+		if (this->_altVertexBuffer) delete this->_altVertexBuffer;
+		if (this->_altColorBuffer) delete this->_altColorBuffer;
+		//Set alt buffer pointers
+		this->_altVertexBuffer = data;
+		this->_altColorBuffer = color;
 	}
 }
 
@@ -117,10 +110,14 @@ void WCBackgroundLayer::GenerateBuffers(void) {
 
 
 WCBackgroundLayer::WCBackgroundLayer(WCScene *scene) : ::WCLayer(scene, "Background"),
-	_vertexBuffer(0), _colorBuffer(0), _llColor(BACKGROUNDLAYER_BOTTOM_COLOR), _lrColor(BACKGROUNDLAYER_BOTTOM_COLOR), 
+	_perfLevel(PerformanceLow), _vertexBuffer(0), _colorBuffer(0), _altVertexBuffer(NULL), _altColorBuffer(NULL),
+	_llColor(BACKGROUNDLAYER_BOTTOM_COLOR), _lrColor(BACKGROUNDLAYER_BOTTOM_COLOR), 
 	_ulColor(BACKGROUNDLAYER_TOP_COLOR), _urColor(BACKGROUNDLAYER_TOP_COLOR) {
-	//Set the buffer objects
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
+	//Set performance level
+	if(WCAdapter::HasGL15()) {
+		//Set the higher performance level
+		this->_perfLevel = PerformanceMedium;
+		//If there are VBOs, create them
 		glGenBuffers(1, &this->_vertexBuffer);
 		glGenBuffers(1, &this->_colorBuffer);
 	}
@@ -133,10 +130,16 @@ WCBackgroundLayer::WCBackgroundLayer(WCScene *scene) : ::WCLayer(scene, "Backgro
 
 
 WCBackgroundLayer::~WCBackgroundLayer() {
-	//Free the buffers
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
+	//Free the buffers if appropriate
+	if(this->_perfLevel == PerformanceMedium) {
 		glDeleteBuffers(1, &this->_vertexBuffer);
 		glDeleteBuffers(1, &this->_colorBuffer);
+	}
+	//Otherwise must be low perf
+	else {
+		//See about deleting local buffers
+		if (this->_altVertexBuffer) delete this->_altVertexBuffer;
+		if (this->_altColorBuffer) delete this->_altColorBuffer;
 	}
 }
 
@@ -152,8 +155,6 @@ void WCBackgroundLayer::Render(WCRenderState *state) {
 	//Only render if visible
 	if (!this->_isVisible) return;
 
-	//Check the polygon mode
-	if(state->PolygonMode() != GL_FILL) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	//Setup billboarding
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
@@ -186,8 +187,19 @@ void WCBackgroundLayer::Render(WCRenderState *state) {
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_COLOR_ARRAY);
 	}
+	//No VBOs, so render from local buffers
 	else {
-		GenerateBuffers();
+		//Setup the vertex buffer
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(4, GL_FLOAT, 0, this->_altVertexBuffer);
+		//Setup the color buffer
+		glEnableClientState(GL_COLOR_ARRAY);
+		glColorPointer(4, GL_FLOAT, 0, this->_altColorBuffer);
+		//Draw the array
+		glDrawArrays(GL_QUADS, 0, 4);
+		//Make sure that vertex and color arrays are disabled
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);
 	}
 
 	//Restore the modelview matrix
@@ -195,11 +207,6 @@ void WCBackgroundLayer::Render(WCRenderState *state) {
 	//Restore other stuff
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	//Restore polygon mode
-	if(state->PolygonMode() != GL_FILL) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	
-	//Check for errors
-	if (glGetError() != GL_NO_ERROR)
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCBackgroundLayer::Render - GL error at Cleanup.");
 }
 
 

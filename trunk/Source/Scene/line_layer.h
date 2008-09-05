@@ -52,16 +52,16 @@ class WCGeometricLine;
 
 class WCLineLayer : public WCLayer {
 protected:
+	WCPerformanceLevel							_perfLevel;											//!< Performance level indicator
 	std::list<WCGeometricLine*>					_lineList;											//!< List of all geometric lines
 	GLuint										_renderProg;										//!< Render program for the entire layer
 	WPUInt										_numVisible;										//!< Number of visible lines
 	WPFloat										_thickness;											//!< Line thickness
 	GLuint										_vertexBuffer, _colorBuffer;						//!< Vertex and color buffers
-	
+	GLfloat										*_altVertexBuffer, *_altColorBuffer;				//!< Local vertex and color buffers
 private:
 	//Private Methods
 	void GenerateBuffers(void);																		//!< Generate display buffers
-	
 	//Deny access
 	WCLineLayer();																					//!< Deny access to default constructor
 	WCLineLayer(const WCLineLayer &layer);															//!< Deny access to copy constructor
@@ -73,10 +73,10 @@ public:
 	~WCLineLayer();																					//!< Default destructor
 
 	//Member Access Methods
-	inline void RenderProgram(const GLuint prog) { this->_renderProg = prog; }						//!< Set the rendering prog
-	inline GLuint RenderProgram(void) const	{ return this->_renderProg; }							//!< Get the rendering prog
+	inline void RenderProgram(const GLuint prog){ this->_renderProg = prog; }						//!< Set the rendering prog
+	inline GLuint RenderProgram(void) const		{ return this->_renderProg; }						//!< Get the rendering prog
 	inline WPFloat Thickness(void) const		{ return this->_thickness; }						//!< Get the line thickness
-	inline void Thickness(const WPFloat &thick){ this->_thickness = thick; }						//!< Set the line thickness
+	inline void Thickness(const WPFloat &thick)	{ this->_thickness = thick; }						//!< Set the line thickness
 
 	//Geometric Line Methods
 	void AddLine(WCGeometricLine *line);															//!< Register the line

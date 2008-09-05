@@ -53,11 +53,12 @@ class WCColor;
 
 class WCBackgroundLayer : public WCLayer {
 protected:
-	GLuint										_vertexBuffer, _colorBuffer;						//!< Display buffers
-	WCColor										_llColor, _lrColor, _ulColor, _urColor;
+	WCPerformanceLevel							_perfLevel;											//!< Performance level indicator
+	GLuint										_vertexBuffer, _colorBuffer;						//!< Display buffers - Medium perf
+	GLfloat										*_altVertexBuffer, *_altColorBuffer;				//!< Fallback local buffers - Low perf
+	WCColor										_llColor, _lrColor, _ulColor, _urColor;				//!< Color values
 private:
 	void GenerateBuffers(void);																		//!< Generate the buffers
-
 	//Deny Access
 	WCBackgroundLayer();																			//!< Deny access to default constructor
 public:

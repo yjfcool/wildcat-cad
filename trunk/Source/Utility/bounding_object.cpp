@@ -36,7 +36,7 @@
 /***********************************************~***************************************************/
 
 
-void WCAlignedBoundingBox::GenerateVBO(void) {
+void WCAlignedBoundingBox::GenerateBuffer(void) {
 	GLfloat p0[4] = { this->_xMin, this->_yMin, this->_zMin, 1.0 };
 	GLfloat p1[4] = { this->_xMin, this->_yMax, this->_zMin, 1.0 };
 	GLfloat p2[4] = { this->_xMax, this->_yMax, this->_zMin, 1.0 };
@@ -46,7 +46,7 @@ void WCAlignedBoundingBox::GenerateVBO(void) {
 	GLfloat p6[4] = { this->_xMax, this->_yMax, this->_zMax, 1.0 };
 	GLfloat p7[4] = { this->_xMax, this->_yMin, this->_zMax, 1.0 };
 	//Create data array
-	GLfloat data[96];
+	GLfloat *data = new GLfloat[96];
 	unsigned int size = 4 * sizeof(GLfloat);
 	//Quad 0 - Front
 	memcpy(data, p0, size);
@@ -78,19 +78,23 @@ void WCAlignedBoundingBox::GenerateVBO(void) {
 	memcpy(data+84, p0, size);
 	memcpy(data+88, p3, size);
 	memcpy(data+92, p2, size);
-	//Size and init buffer
-	glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);
-	glBufferData(GL_ARRAY_BUFFER, 96*sizeof(GLfloat), data, GL_STATIC_DRAW);
-/*** Debug ***
-	GLfloat *data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-	for (int i=0; i<24; i++) printf("\t%d V: %f %f %f %f\n", i, data2[i*4], data2[i*4+1], data2[i*4+2], data2[i*4+3]);
-	glUnmapBuffer(GL_ARRAY_BUFFER);	
-/*** Debug ***/
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//See what the performance level is
+	if (WCAdapter::HasGL15()) {
+		//Size and init buffer
+		glBindBuffer(GL_ARRAY_BUFFER, this->_buffer);
+		glBufferData(GL_ARRAY_BUFFER, 96*sizeof(GLfloat), data, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//Delete the local array
+		delete data;
+	}
+	//Must not have VBOs, use local buffers
+	else {
+		//Save pointer to data
+		this->_altBuffer = data;
+	}
 	//Mark as clean
 	this->_isDirty = false;
-	//Check for errors
-	if (glGetError() != GL_NO_ERROR) std::cout << "WCAlignedBoundingBox::GenerateVBO Error - At Buffer Creation.\n";
 }
 
 
@@ -98,62 +102,71 @@ void WCAlignedBoundingBox::GenerateVBO(void) {
 
 
 WCAlignedBoundingBox::WCAlignedBoundingBox() : ::WCBoundingObject(), 
-	_xMin(0.0), _xMax(0.0), _yMin(0.0), _yMax(0.0), _zMin(0.0), _zMax(0.0), _buffer(0) {
-	//Set up the buffer
-	glGenBuffers(1, &this->_buffer);
+	_xMin(0.0), _xMax(0.0), _yMin(0.0), _yMax(0.0), _zMin(0.0), _zMax(0.0), _buffer(0), _altBuffer(NULL) {
+	//Set up the buffer if appropriate
+	if (WCAdapter::HasGL15()) glGenBuffers(1, &this->_buffer);
 }
 
 
 WCAlignedBoundingBox::WCAlignedBoundingBox(const WCAlignedBoundingBox &box) : ::WCBoundingObject(box),
 	_xMin(box._xMin), _xMax(box._xMax), _yMin(box._yMin),
-	_yMax(box._yMax), _zMin(box._zMin), _zMax(box._zMax) {
-	//Set up the buffer
-	glGenBuffers(1, &this->_buffer);
+	_yMax(box._yMax), _zMin(box._zMin), _zMax(box._zMax), _buffer(0), _altBuffer(NULL) {
+	//Set up the buffer if appropriate
+	if (WCAdapter::HasGL15()) glGenBuffers(1, &this->_buffer);
 }
 
 
 WCAlignedBoundingBox::WCAlignedBoundingBox(const GLfloat &xMin, const GLfloat &xMax, const GLfloat &yMin,
 	const GLfloat &yMax, const GLfloat &zMin, const GLfloat &zMax) :  ::WCBoundingObject(), 
 	_xMin(xMin), _xMax(xMax), _yMin(yMin),
-	_yMax(yMax), _zMin(zMin), _zMax(zMax) {
-	//Set up the buffer
-	glGenBuffers(1, &this->_buffer);
+	_yMax(yMax), _zMin(zMin), _zMax(zMax), _buffer(0), _altBuffer(NULL) {
+	//Set up the buffer if appropriate
+	if (WCAdapter::HasGL15()) glGenBuffers(1, &this->_buffer);
 }
 
 
 WCAlignedBoundingBox::WCAlignedBoundingBox(const std::vector<WCGeometricPoint*> &points) : ::WCBoundingObject(),
-	_xMin(0.0), _xMax(0.0), _yMin(0.0), _yMax(0.0), _zMin(0.0), _zMax(0.0) {
-	//Set up the buffer
-	glGenBuffers(1, &this->_buffer);
+	_xMin(0.0), _xMax(0.0), _yMin(0.0), _yMax(0.0), _zMin(0.0), _zMax(0.0), _buffer(0), _altBuffer(NULL) {
+	//Set up the buffer if appropriate
+	if (WCAdapter::HasGL15()) glGenBuffers(1, &this->_buffer);
 	//Just set the data
 	this->Set(points);
 }
 
 
 WCAlignedBoundingBox::WCAlignedBoundingBox(const std::vector<WCVector4> &vectors) : ::WCBoundingObject(),
-	_xMin(0.0), _xMax(0.0), _yMin(0.0), _yMax(0.0), _zMin(0.0), _zMax(0.0) {
-	//Set up the buffer
-	glGenBuffers(1, &this->_buffer);
+	_xMin(0.0), _xMax(0.0), _yMin(0.0), _yMax(0.0), _zMin(0.0), _zMax(0.0), _buffer(0), _altBuffer(NULL) {
+	//Set up the buffer if appropriate
+	if (WCAdapter::HasGL15()) glGenBuffers(1, &this->_buffer);
 	//Just set the data
 	this->Set(vectors);
 }
 
 
 WCAlignedBoundingBox::WCAlignedBoundingBox(WCVector4 *vectors, const WPUInt &count) : ::WCBoundingObject(),
-	_xMin(0.0), _xMax(0.0), _yMin(0.0), _yMax(0.0), _zMin(0.0), _zMax(0.0) {
-	//Set up the buffer
-	glGenBuffers(1, &this->_buffer);
+	_xMin(0.0), _xMax(0.0), _yMin(0.0), _yMax(0.0), _zMin(0.0), _zMax(0.0), _buffer(0), _altBuffer(NULL) {
+	//Set up the buffer if appropriate
+	if (WCAdapter::HasGL15()) glGenBuffers(1, &this->_buffer);
 	//Just set the data
 	this->Set(vectors, count);
 }
 
 
 WCAlignedBoundingBox::WCAlignedBoundingBox(const GLuint &buffer, const WPUInt &size) : ::WCBoundingObject(),
-	_xMin(0.0), _xMax(0.0), _yMin(0.0), _yMax(0.0), _zMin(0.0), _zMax(0.0) {
-	//Set up the buffer
-	glGenBuffers(1, &this->_buffer);
+	_xMin(0.0), _xMax(0.0), _yMin(0.0), _yMax(0.0), _zMin(0.0), _zMax(0.0), _buffer(0), _altBuffer(NULL) {
+	//Set up the buffer if appropriate
+	if (WCAdapter::HasGL15()) glGenBuffers(1, &this->_buffer);
 	//Just set the data
 	this->Set(buffer, size);
+}
+
+
+WCAlignedBoundingBox::WCAlignedBoundingBox(const GLfloat *buffer, const WPUInt &size, const WPUInt &width) : ::WCBoundingObject(),
+	_xMin(0.0), _xMax(0.0), _yMin(0.0), _yMax(0.0), _zMin(0.0), _zMax(0.0), _buffer(0), _altBuffer(NULL) {
+	//Set up the buffer if appropriate
+	if (WCAdapter::HasGL15()) glGenBuffers(1, &this->_buffer);
+	//Just set the data
+	this->Set(buffer, size, width);
 }
 
 
@@ -172,7 +185,7 @@ void WCAlignedBoundingBox::Render(void) {
 	//Only render if visible
 	if (!this->_isVisible) return;
 	//Generate VBO if dirty
-	if (this->_isDirty) this->GenerateVBO();
+	if (this->_isDirty) this->GenerateBuffer();
 
 	//Get the current polymode
 	GLint polyMode[2];
@@ -302,6 +315,11 @@ void WCAlignedBoundingBox::Set(const GLuint &buffer, const WPUInt &size) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//Mark as dirty
 	this->_isDirty = true;
+}
+
+
+void WCAlignedBoundingBox::Set(const GLfloat *buffer, const WPUInt &size, const WPUInt &width) {
+	CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCAlignedBoundingBox::Set - Need to implement me.");
 }
 
 

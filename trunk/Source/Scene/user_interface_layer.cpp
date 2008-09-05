@@ -178,13 +178,12 @@ bool WCUserInterfaceLayer::OnReshape(const WPFloat width, const WPFloat height) 
 void WCUserInterfaceLayer::Render(WCRenderState *state) {
 	//Only render if visible
 	if (!this->_isVisible) return;
-	//Set the program to zero
-	if(glUseProgram)glUseProgram(0);
+	//Set the program to zero if appropriate
+	if(WCAdapter::HasGL20())glUseProgram(0);
 	//Setup billboarding
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
-//	state->DepthTest(false);
 	glDisable(GL_DEPTH_TEST);
 	//Render UI widgets
 	std::list<WCWidget*>::iterator iter = this->_widgets.begin();		
@@ -194,12 +193,7 @@ void WCUserInterfaceLayer::Render(WCRenderState *state) {
 	}
 	//Restore the render state
 	glEnable(GL_DEPTH_TEST);
-	state->DepthTest(true);
 	glPopMatrix();
-	//Restore the program
-//	glUseProgram(state->Program());
-	//Check for errors
-	if (glGetError() != GL_NO_ERROR) std::cout << "WCUserInterfaceLayer::Render Error - Unspecified Errors.\n";
 }
 
 

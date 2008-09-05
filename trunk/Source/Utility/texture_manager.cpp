@@ -80,7 +80,7 @@ void WCTextureManager::ParseManifest(const std::string &manifest, const std::str
 			newTexture = new WSTexture;
 			newTexture->_name = name;
 			newTexture->_id = 0;
-			newTexture->_target = WCAdapter::HasGL15() ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D;
+			newTexture->_target = WCAdapter::HasGLARBTextureRectangle() ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D;
 			newTexture->_mipLevel = 0;
 			newTexture->_width = 1;
 			newTexture->_height = 1;
