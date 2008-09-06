@@ -503,7 +503,7 @@ void WCTreeView::GenerateTexture(void) {
 	{
 		//Determine upper left tex-coord
 		GLfloat actualPixelHeight = (GLfloat)(this->_height / SCREEN_PIXEL_WIDTH);
-		GLfloat actualPixelWidth = (GLfloat)(this->_width / SCREEN_PIXEL_WIDTH);
+//		GLfloat actualPixelWidth = (GLfloat)(this->_width / SCREEN_PIXEL_WIDTH);
 		int scenePixelHeight = this->_layer->Scene()->WindowHeight();
 		GLfloat placementBorder = (GLfloat)(OVERLAY_PLACEMENT_BORDER / SCREEN_PIXEL_WIDTH);;
 		GLfloat upperY = scenePixelHeight - actualPixelHeight - this->_scrollbar->Position() - placementBorder;

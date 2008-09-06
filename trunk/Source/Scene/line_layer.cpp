@@ -70,32 +70,29 @@ void WCLineLayer::GenerateBuffers(void) {
 			this->_numVisible+=2;
 		}
 	}
-	
-	//Copy the data into the vertex VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, vIndex*sizeof(GLfloat), vData, GL_STATIC_DRAW);
-	//Copy the data into the vertex VBO
-	glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);
-	glBufferData(GL_ARRAY_BUFFER, cIndex*sizeof(GLfloat), cData, GL_STATIC_DRAW);
-	//Delete arrays
-	delete vData;
-	delete cData;
-/*** DEBUG ***
-	//Show Vertex Data
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
-	GLfloat *data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-	for (int i=0; i<vIndex; i+=3) printf("\tVertices - %d: %f %f %f\n", i, data2[i], data2[i+1], data2[i+2]);
-	glUnmapBuffer(GL_ARRAY_BUFFER);
-	//Show Color Data
-	glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);
-	data2 = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-	for (int i=0; i<cIndex; i+=4) printf("\tColors - %d: %f %f %f %f\n", i, data2[i], data2[i+1], data2[i+2], data2[i+3]);
-	glUnmapBuffer(GL_ARRAY_BUFFER);
-/*** DEBUG ***/
-	//Clean up and check for errors
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	if (glGetError() != GL_NO_ERROR) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCLineLayer::GenerateBuffers - At Cleanup and Exit.");
+
+	//Is the VBO path available
+	if(this->_perfLevel == PerformanceMedium) {
+		//Copy the data into the vertex VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, vIndex*sizeof(GLfloat), vData, GL_STATIC_DRAW);
+		//Copy the data into the vertex VBO
+		glBindBuffer(GL_ARRAY_BUFFER, this->_colorBuffer);
+		glBufferData(GL_ARRAY_BUFFER, cIndex*sizeof(GLfloat), cData, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//Delete arrays
+		delete vData;
+		delete cData;
+	}
+	//No VBO, so just get local buffers ready
+	else {
+		//Delete existing pointers if present
+		if (this->_altVertexBuffer) delete this->_altVertexBuffer;
+		if (this->_altColorBuffer) delete this->_altColorBuffer;
+		//Set alt buffer pointers
+		this->_altVertexBuffer =vData;
+		this->_altColorBuffer = cData;
+	}
 }
 
 
@@ -106,7 +103,7 @@ WCLineLayer::WCLineLayer(WCScene *scene, std::string name) : ::WCLayer(scene, na
 	_perfLevel(PerformanceLow), _renderProg(0),	_numVisible(0), _thickness(LINELAYER_THICKNESS),
 	_vertexBuffer(0), _colorBuffer(0), _altVertexBuffer(NULL), _altColorBuffer(NULL) {
 	//Set performance level
-	if(WCAdapter::HasGL15()) {
+	if(WCAdapter::HasGLARBVertexBufferObject()) {
 		//Set the higher performance level
 		this->_perfLevel = PerformanceMedium;
 		//Generate the two buffers

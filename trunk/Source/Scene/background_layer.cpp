@@ -114,7 +114,7 @@ WCBackgroundLayer::WCBackgroundLayer(WCScene *scene) : ::WCLayer(scene, "Backgro
 	_llColor(BACKGROUNDLAYER_BOTTOM_COLOR), _lrColor(BACKGROUNDLAYER_BOTTOM_COLOR), 
 	_ulColor(BACKGROUNDLAYER_TOP_COLOR), _urColor(BACKGROUNDLAYER_TOP_COLOR) {
 	//Set performance level
-	if(WCAdapter::HasGL15()) {
+	if(WCAdapter::HasGLARBVertexBufferObject()) {
 		//Set the higher performance level
 		this->_perfLevel = PerformanceMedium;
 		//If there are VBOs, create them
@@ -154,6 +154,12 @@ bool WCBackgroundLayer::OnReshape(const WPFloat width, const WPFloat height) {
 void WCBackgroundLayer::Render(WCRenderState *state) {
 	//Only render if visible
 	if (!this->_isVisible) return;
+	//Check if dirty
+	if (this->_isDirty) {
+		this->GenerateBuffers();
+		//Mark as clean
+		this->_isDirty = false;
+	}
 
 	//Setup billboarding
 	glMatrixMode(GL_MODELVIEW);
@@ -163,14 +169,8 @@ void WCBackgroundLayer::Render(WCRenderState *state) {
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 
-	//Check if dirty
-	if (this->_isDirty) {
-		this->GenerateBuffers();
-		//Mark as clean
-		this->_isDirty = false;
-	}	
-
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
+	//Check to see if VBOs are supported
+	if(this->_perfLevel == PerformanceMedium) {
 		//Set up state
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);

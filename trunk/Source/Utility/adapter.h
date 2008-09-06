@@ -66,26 +66,47 @@ public:
 	static void Initialize(void);																	//!< Static initialization method
 	static void Terminate(void);																	//!< Static Terminate method
 	
-	//Extension functions
+	//Extension Functions
 	inline static bool HasGL13(void)					{ CHKINIT; return (WCAdapter::_version >= 1.3); }
 	inline static bool HasGL14(void)					{ CHKINIT; return (WCAdapter::_version >= 1.4); }
 	inline static bool HasGL15(void)					{ CHKINIT; return (WCAdapter::_version >= 1.5); }
 	inline static bool HasGL20(void)					{ CHKINIT; return (WCAdapter::_version >= 2.0); }
 	inline static bool HasGL21(void)					{ CHKINIT; return (WCAdapter::_version >= 2.1); }
+	inline static bool HasGLARBMultitexture(void)		{ CHKINIT; return WCAdapter::_extensions[0]; }
+	inline static bool HasGLXARBGetProcAddress(void)	{ CHKINIT; return WCAdapter::_extensions[1]; }
+	inline static bool HasGLARBTransposeMatrix(void)	{ CHKINIT; return WCAdapter::_extensions[2]; }
+	inline static bool HasWGLARBBufferRegion(void)		{ CHKINIT; return WCAdapter::_extensions[3]; }
+	inline static bool HasGLARBMultisample(void)		{ CHKINIT; return WCAdapter::_extensions[4]; }	// 5 - 26
+	inline static bool HasGLARBVertexProgram(void)		{ CHKINIT; return WCAdapter::_extensions[27]; }
+	inline static bool HasGLARBFragmentProgram(void)	{ CHKINIT; return WCAdapter::_extensions[28]; }
+	inline static bool HasGLARBVertexBufferObject(void)	{ CHKINIT; return WCAdapter::_extensions[29]; }
+	inline static bool HasGLARBOcclusionQuery(void)		{ CHKINIT; return WCAdapter::_extensions[30]; }
+	inline static bool HasGLARBShaderObjects(void)		{ CHKINIT; return WCAdapter::_extensions[31]; }
+	inline static bool HasGLARBVertexShader(void)		{ CHKINIT; return WCAdapter::_extensions[32]; }
 	inline static bool HasGLARBFragmentShader(void)		{ CHKINIT; return WCAdapter::_extensions[33]; }
 	inline static bool HasGLARBShadingLanguage100(void)	{ CHKINIT; return WCAdapter::_extensions[34]; }
+	inline static bool HasGLARBTextureNonPowerOfTwo(void){ CHKINIT;return WCAdapter::_extensions[35]; }
+	inline static bool HasGLARBPointSprite(void)		{ CHKINIT; return WCAdapter::_extensions[36]; }
+	inline static bool HasGLARBFragmentProgramShadow(void){CHKINIT;return WCAdapter::_extensions[37]; }
+	inline static bool HasGLARBDrawBuffers(void)		{ CHKINIT; return WCAdapter::_extensions[38]; }
 	inline static bool HasGLARBTextureRectangle(void)	{ CHKINIT; return WCAdapter::_extensions[39]; }
+	inline static bool HasGLARBColorBufferFloat(void)	{ CHKINIT; return WCAdapter::_extensions[40]; }
+	inline static bool HasWGLARBPixelFormatFloat(void)	{ CHKINIT; return WCAdapter::_extensions[41]; }
+	inline static bool HasGLXARBFBConfigFloat(void)		{ CHKINIT; return WCAdapter::_extensions[42]; }
+	inline static bool HasGLARBHalfFloatPixel(void)		{ CHKINIT; return WCAdapter::_extensions[43]; }
 	inline static bool HasGLEXTTextureFloat(void)		{ CHKINIT; return WCAdapter::_extensions[44]; }	
-	inline static bool HasGLARBPixelBufferObject(void)	{ CHKINIT; return WCAdapter::_extensions[45]; }
-	inline static bool HasGLEXTFramebufferObject(void)	{ CHKINIT; return WCAdapter::_extensions[307]; }
+	inline static bool HasGLARBPixelBufferObject(void)	{ CHKINIT; return WCAdapter::_extensions[45]; } // 46-306
+	inline static bool HasGLEXTFramebufferObject(void)	{ CHKINIT; return WCAdapter::_extensions[307]; } // 307-320
 	inline static bool HasGLEXTGeometryShader4(void)	{ CHKINIT; return WCAdapter::_extensions[321]; }
 	inline static bool HasGLNVVertexProgram4(void)		{ CHKINIT; return WCAdapter::_extensions[322]; }
-	inline static bool HasGLEXTGPUShader4(void)			{ CHKINIT; return WCAdapter::_extensions[323]; }
+	inline static bool HasGLEXTGPUShader4(void)			{ CHKINIT; return WCAdapter::_extensions[323]; } // 324 - 342
 	inline static bool HasGLEXTBindableUniform(void)	{ CHKINIT; return WCAdapter::_extensions[343]; }
 	inline static bool HasGLEXTTextureInteger(void)		{ CHKINIT; return WCAdapter::_extensions[344]; }
 	inline static bool HasGLXEXTTextureFromPixmap(void)	{ CHKINIT; return WCAdapter::_extensions[345]; }	
 	inline static bool HasGLEXTTransformFeedback(void)	{ CHKINIT; return WCAdapter::_extensions[346]; }
-	
+	inline static bool HasGLAppleFloatPixels(void)		{ CHKINIT; return WCAdapter::_extensions[347]; }
+
+	//Limits Functions
 	inline static GLint GetMaxGeometryOutputVertices(void)	{ CHKINIT; return WCAdapter::_maxGeometryOutputVertices; }
 	inline static GLint GetMax2DTextureSize(void)			{ CHKINIT; return WCAdapter::_max2DTextureSize; }	
 };
