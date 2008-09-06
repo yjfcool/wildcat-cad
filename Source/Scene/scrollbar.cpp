@@ -337,7 +337,7 @@ void WCVerticalScrollbar::GenerateBuffers(void) {
 		verts[5] = verts[3];
 		verts[6] = verts[4];
 		verts[7] = verts[1];
-		GLfloat height = (GLfloat)((verts[3] - verts[1]) / SCREEN_PIXEL_WIDTH);
+//		GLfloat height = (GLfloat)((verts[3] - verts[1]) / SCREEN_PIXEL_WIDTH);
 		texCoords[0] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].K();
 		texCoords[1] = 1.0;
 		texCoords[2] = (GLfloat)this->_texSizes[VSCROLLER_TEX_BACKMIDDLE].K();
