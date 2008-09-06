@@ -35,38 +35,39 @@
 /***********************************************~***************************************************/
 
 
-void WCSelectionManager::ReadyTexture(void) {
+void WCSelectionManager::ReadyFramebuffer(void) {
 	//Determine size of texture (based on screen size)
 	GLsizei texWidth = this->_scene->WindowWidth();
 	GLsizei texHeight = this->_scene->WindowHeight();
 
-	/*** Setup Color Buffer Texture ***/
-
-	//Set up some parameters
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	//Set up texture
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_tex);
-	glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-	if (glGetError() != GL_NO_ERROR) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSelectionManager::ReadyTexture - Inital Check.");
+	//Set up some texture parameters
 	glActiveTexture(GL_TEXTURE0);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_tex);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	if (glGetError() != GL_NO_ERROR) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSelectionManager::ReadyTexture - Final Check.");
-
-	/*** Setup Depth RenderBuffer ***/
+	glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	//Set up framebuffer
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_framebuffer);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_tex, 0);
 	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, this->_depthRenderBuffer); 
 	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, texWidth, texHeight);
-	
-	/*** Clean up a bit ***/
-	if (glGetError() != GL_NO_ERROR) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSelectionManager::Cleanup.");
+	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, this->_depthRenderBuffer);
+	//Check for FBO errors
+	GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSelectionManager::WCSelectionManager - Framebuffer is not complete: " << retVal);
+		//throw error
+		return;
+	}
+	//Bind back to default framebuffer
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
-	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+	//Check for errors
+	if (glGetError() != GL_NO_ERROR) 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSelectionManager::ReadyFramebuffer - Final Check.");
 }
 
 
@@ -166,45 +167,11 @@ WPUInt WCSelectionManager::ProcessRectangleSelect(std::vector<std::pair<WCVisual
 }
 
 
-/*
-WPUInt WCSelectionManager::ProcessRectangleSelect(WCSelectionObject **selectionArray, GLubyte *pixels, 
-	const WPUInt width, const WPUInt height, bool notify) {
-	WPInt index;
-	std::map<WCSelectionObject*,WCSelectionObject*> selectees;
-	WCSelectionObject *selectee;
-	//Look through all pixels and add into counter
-	for (int i=0; i < width*height; i++) {
-		index = this->DecodeColor(pixels[i*4], pixels[i*4+1], pixels[i*4+2]);
-		//If there is a valid index
-		if (index != -1) {
-			selectee = selectionArray[index];
-			selectees.insert( std::make_pair(selectee, selectee) );
-		}
-	}
-	//If no entries in map, return 0
-	if (selectees.size() == 0) return 0;
-	std::map<WCSelectionObject*,WCSelectionObject*>::iterator iter;
-	//Otherwise, add all entries into the list
-	for (iter = selectees.begin(); iter != selectees.end(); iter++) {
-		//Index it our selectee
-		selectee = (*iter).first;
-		this->_selected.push_back( selectee );
-	}
-	//Now, notify all entries if appropriate
-	if (notify)	{
-		for (iter = selectees.begin(); iter != selectees.end(); iter++) (*iter).first->OnSelection(true, std::list<WCVisualObject*>());
-	}
-	//Return the number of selected items
-	return this->_selected.size();
-}
-*/
-
 /***********************************************~***************************************************/
 
 
-WCSelectionManager::WCSelectionManager(WCScene *scene) : ::WCObject(), _scene(scene), _tex(0), _depthRenderBuffer(0), _framebuffer(0),
-	_objects(), _selected(), _selectedVisuals(), _stack() {
-//	std::cout << "Selector: " << this << std::endl;
+WCSelectionManager::WCSelectionManager(WCScene *scene) : ::WCObject(), _perfLevel(PerformanceLow),
+	_scene(scene), _tex(0), _depthRenderBuffer(0), _framebuffer(0), _objects(), _selected(), _selectedVisuals(), _stack() {
 	//Make sure scene is not null
 	if (this->_scene == NULL) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSelectionManager::WCSelectionManager - NULL Scene passed.");
@@ -213,13 +180,16 @@ WCSelectionManager::WCSelectionManager(WCScene *scene) : ::WCObject(), _scene(sc
 	}
 	//Retain the scene
 	this->_scene->Retain(*this);
-	//Set up generation textures
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
+	//Determine performance level
+	if (WCAdapter::HasGLEXTFramebufferObject()) {
+		//Set the performance level to medium
+		this->_perfLevel = PerformanceMedium;
+		//Generate the framebuffer, texture, and renderbuffer
+		glGenFramebuffersEXT(1, &(this->_framebuffer));
 		glGenTextures(1, &this->_tex);
 		glGenRenderbuffersEXT(1, &this->_depthRenderBuffer);
-		this->ReadyTexture();
-		//Generate the framebuffer object
-		glGenFramebuffersEXT(1, &(this->_framebuffer));
+		//Prepare the framebuffer
+		this->ReadyFramebuffer();
 	}
 }
 
@@ -227,20 +197,22 @@ WCSelectionManager::WCSelectionManager(WCScene *scene) : ::WCObject(), _scene(sc
 WCSelectionManager::~WCSelectionManager() {
 	//Release the scene if possible
 	if (this->_scene != NULL) this->_scene->Release(*this);
+	//Delete the framebuffers and textures
+	if (this->_perfLevel == PerformanceMedium) {
+		glDeleteTextures(1, &this->_tex);
+		glDeleteRenderbuffersEXT(1, &this->_depthRenderBuffer);
+		glDeleteFramebuffersEXT(1, &this->_framebuffer);
+	}
 }
 
 
 void WCSelectionManager::ReceiveNotice(WCObjectMsg msg, WCObject *sender) {
 	//Message must be from scene - reset texture in case of reshape
-	if(WCAdapter::HasGLEXTFramebufferObject())
-	{
-		this->ReadyTexture();
-	}
+	if(this->_perfLevel == PerformanceMedium) this->ReadyFramebuffer();
 }
 
 
 bool WCSelectionManager::AddObject(WCVisualObject *object, WCSelectionObject *selector) {
-//	std::cout << "Add object: " << object << ", Selector: " << selector << std::endl;
 	//Make sure object is non-null
 	if ((object == NULL) || (selector == NULL)){
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSelectionManager::AddObject - NULL Object passed.");
@@ -289,26 +261,20 @@ WPUInt WCSelectionManager::Select(const WPUInt &xMin, const WPUInt &xMax, const 
 		return 0;
 	}
 
-	//Bind to framebuffer and bind texture
-	if(glBindFramebufferEXT)glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_framebuffer);
-	if(glFramebufferTexture2DEXT)glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_tex, 0);
-	// initialize depth renderbuffer 
-	if(glBindRenderbufferEXT)glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, this->_depthRenderBuffer); 
-	if(glFramebufferRenderbufferEXT)glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, this->_depthRenderBuffer);
-	GLenum retVal = GL_FRAMEBUFFER_EXT;
-	if(glCheckFramebufferStatusEXT)glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-	if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::WCTreeView - Framebuffer is not complete.");
-		return 0;
+	//Bind to framebuffer and bind texture (if perfLevel allows)
+	if (this->_perfLevel == PerformanceMedium) {
+		//Bind to the framebuffer
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_framebuffer);
+		//Set the read buffer
+		glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 	}
-	//Set the draw buffer
-	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+	//Otherwise, just set read buffer
+	else glReadBuffer(GL_BACK);
+	//Set some rendering parameters
 	glDisable(GL_BLEND);
-	//Clear the texture
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	//Render each visual object with a distinct color
-//	std::cout << "Selection objects: " << this->_objects.size() << std::endl;
 	WPInt index = 0;
 	WCColor indexColor;
 	std::vector<std::pair<WCVisualObject*,WCSelectionObject*> > selectionArray;
@@ -320,23 +286,13 @@ WPUInt WCSelectionManager::Select(const WPUInt &xMin, const WPUInt &xMax, const 
 		selectionArray.push_back( *iter );
 		//Render the object
 		(*iter).first->Render(0, indexColor, this->_scene->ActiveCamera()->Zoom());
-		//Check for errors
-		if (glGetError() != GL_NO_ERROR) {
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSelectionManager::WCSelectionManager - At rendering.");
-			return 0;
-		}
 		//Increment the index
 		index++;
 	}
 
-	//Clean up
-	glEnable(GL_BLEND);
-
 	//Evaluate the texture compared to the bounding box
 	GLsizei width = STDMAX(xMax - xMin, (WPUInt)1);
 	GLsizei height = STDMAX(yMax - yMin, (WPUInt)1);
-	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
-	
 	GLubyte *pixels;
 	//Handle single click special
 	if ((width == 1) && (height == 1)) {
@@ -353,20 +309,21 @@ WPUInt WCSelectionManager::Select(const WPUInt &xMin, const WPUInt &xMax, const 
 		//Read from the texture
 		glReadPixels(xMin, yMin, width, height, GL_RGBA, GL_UNSIGNED_BYTE , pixels);
 	}
-
-	//Exit from the framebuffer
-	if(glBindFramebufferEXT)glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-	if(glBindRenderbufferEXT)glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0); 
-	if (glGetError() != GL_NO_ERROR) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSelectionManager::WCSelectionManager - At clean up.");
-		return 0;
-	}
 	//Process the selection results
 	if ((width == 1) && (height == 1)) this->ProcessSingleSelect(selectionArray, pixels, notify);
 	else this->ProcessRectangleSelect(selectionArray, pixels, width, height, notify);
-
 	//Delete pixel data
 	delete pixels;
+
+	//Clean up
+	glEnable(GL_BLEND);
+	//Exit from the framebuffer (if appropriate)
+	if (this->_perfLevel == PerformanceMedium) glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	if (glGetError() != GL_NO_ERROR) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSelectionManager::WCSelectionManager - At clean up.");
+		//throw error
+		return 0;
+	}
 	//Return the number of selected items
 	return (WPUInt)this->_selected.size();
 }
@@ -407,7 +364,6 @@ bool WCSelectionManager::ForceDeselection(WCSelectionObject *object, const bool 
 		if ((*iter) == object) {
 			//Remove the selected object
 			this->_selected.erase(iter);
-//			this->_selected.remove(object);
 			//Call onDeselection
 			if (notify) object->OnDeselection(true);
 			//Be happy

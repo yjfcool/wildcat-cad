@@ -81,6 +81,7 @@ public:
 
 class WCSelectionManager : public WCObject {
 private:
+	WCPerformanceLevel							_perfLevel;											//!< Performance level indicator
 	WCScene										*_scene;											//!< Related scene
 	GLuint										_tex, _depthRenderBuffer;							//!< Selection texture and render buffer
 	GLuint										_framebuffer;										//!< Selection draw framebuffer
@@ -90,7 +91,7 @@ private:
 	std::stack< std::map<WCVisualObject*,WCSelectionObject*> > _stack;								//!< Push/pop stack
 	
 	//Private Methods
-	void ReadyTexture(void);																		//!< Prepare the texture
+	void ReadyFramebuffer(void);																	//!< Prepare the framebuffer
 	WCColor EncodeColor(const WPInt index);															//!< Encode the index value
 	WPInt DecodeColor(const GLubyte r, const GLubyte g, const GLubyte b);							//!< Decode the color values
 
