@@ -163,14 +163,14 @@ void WCBackgroundLayer::Render(WCRenderState *state) {
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
-		//Check if dirty
-		if (this->_isDirty) {
-			this->GenerateBuffers();
-			//Mark as clean
-			this->_isDirty = false;
-		}	
+	//Check if dirty
+	if (this->_isDirty) {
+		this->GenerateBuffers();
+		//Mark as clean
+		this->_isDirty = false;
+	}	
 
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
 		//Set up state
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);

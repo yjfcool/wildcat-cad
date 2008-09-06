@@ -30,6 +30,9 @@
 #define _WIN32_IE 0x0600	// Change this to the appropriate value to target other versions of IE.
 #endif
 
+#ifndef __WXMSW__
+// don't want MFC for wxWidgets application
+
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit
 
 // turns off MFC's hiding of some common and often safely ignored warning messages
@@ -37,9 +40,6 @@
 
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions
-
-
-
 
 
 #ifndef _AFX_NO_OLE_SUPPORT
@@ -51,7 +51,7 @@
 // Windows Header Files:
 #include <windows.h>
 
-
+#endif
 
 
 
