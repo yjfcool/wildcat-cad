@@ -34,6 +34,10 @@
 #ifdef __WIN32__
 //...
 #endif
+#ifdef __WXWINDOWS__
+#include "wx/wx.h"
+#include <wx/stdpaths.h>
+#endif
 
 
 /***********************************************~***************************************************/
@@ -44,14 +48,29 @@ std::string _ResourceDirectory(void) {
 	return _ApplicationDirectory() + "\\Resources";
 }
 
-
 std::string _ApplicationDirectory(void) {
+#ifdef __WXWINDOWS__
+	wxStandardPaths sp;
+	wxString exepath = sp.GetExecutablePath();
+	int last_fs = exepath.Find('/', true);
+	int last_bs = exepath.Find('\\', true);
+	wxString exedir;
+	if(last_fs > last_bs){
+		exedir = exepath.Truncate(last_fs);
+	}
+	else{
+		exedir = exepath.Truncate(last_bs);
+	}
+
+	return std::string(exedir.mb_str());
+#else
 	//Get the command line
 	LPTSTR cmdLine = GetCommandLineW();
 	//Convert it into Argv style
 	LPWSTR *szArglist;
 	int nArgs;
 	szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
+
 	//Make sure there is at least one string
 	if (nArgs == 0) {
 		MessageBox(NULL, L"Not able to figure out where this app is.", L"Bad Application Directory", MB_OK);
@@ -68,6 +87,7 @@ std::string _ApplicationDirectory(void) {
 	std::string directory(nstring);
 	//Directory where this application resides
 	return directory;
+#endif
 }
 
 std::string _FontDirectory(void) {
