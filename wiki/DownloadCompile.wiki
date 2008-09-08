@@ -37,6 +37,8 @@ There are a couple of extra steps to work around an issue with XCode.
 * Required Development IDE: Visual Studio 2005 (VS8) *
 * External Dependencies: xerces-c, libtiff, freetype, pthreads *
 
+or see CompilingVS2008Express page
+
 
 = Compiling on Linux =
 
