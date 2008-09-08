@@ -29,6 +29,9 @@
 /*** Included Header Files ***/
 #include "Utility/log_appenders.h"
 
+#ifdef __WXWINDOWS__
+#include "wx/wx.h"
+#endif
 
 /*** Locall Defined Values ***/
 #define FILEAPPENDER_APPENDFLAGS				std::ios::out | std::ios::ate | std::ios::app
@@ -86,10 +89,14 @@ WCFileAppender::WCFileAppender(const std::string &fileName, const bool &append) 
 		this->_stream.open(fileName.c_str(), FILEAPPENDER_NEWFLAGS);
 	//Make sure the stream is open for writing
 	if (!this->_stream) {
+#ifdef __WXWINDOWS__
+		wxMessageBox(L"Not able to create log file", L"This is not good.");
+#else
 #ifdef __WIN32__
 		int msgboxID = MessageBox(NULL, (LPCWSTR)L"Not able to create log file", (LPCWSTR)L"This is not good.", MB_ICONWARNING | MB_OK);
 #else
 		std::cerr << "WCFileAppender::WCFileAppender - Error: Not able to open file: " << fileName << " for output.\n";
+#endif
 #endif
 		return;
 	}
