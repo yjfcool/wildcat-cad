@@ -1,3 +1,12 @@
+I have just added a project using wxWidgets.
+I have only built the debug version, so far.
+It doesn't do much, yet. You can do "New" from the menu and you get a graphics view.
+I haven't connected up the mouse moves or key presses, so you can't do anything yet.
+There is no toolbar yet.
+But here are the compile instructions, anyway. I have to write them down somewhere, so I don't forget how to do it.
+
+
+
 I used Windows XP.
 
 Get Microsoft Visual C++ 2008 Express Edition and install it ( it's free, but almost 1GB ).
@@ -5,20 +14,12 @@ Get Microsoft Visual C++ 2008 Express Edition and install it ( it's free, but al
 Download the wxWidgets source code from here.
 http://prdownloads.sourceforge.net/wxwindows/wxMSW-2.8.8-Setup.exe
 
-Set an environment variable called WXWIN to be C:\wxWidgets-2.8.8 or whereever wxWidgets installed to. ( to 
+Set an environment variable called WXWIN to be C:\wxWidgets-2.8.8 or whereever wxWidgets installed to. ( to set an evironment variable go to Control Panel, then System, then Advanced tab, then press "Environment Variables" button, then press "New" ).
 
-set an evironment variable go to Control Panel, then System, then Advanced tab, then press "Environment 
-
-Variables" button, then press "New" ).
-
-Edit C:\wxWidgets-2.8.8\include\wx\msw\setup.h changing "#define wxUSE_GLCANVAS 0" to "#define 
-
-wxUSE_GLCANVAS 1" and changing "#define wxUSE_ODBC 0" to "#define wxUSE_ODBC 1"
+Edit C:\wxWidgets-2.8.8\include\wx\msw\setup.h changing "#define wxUSE_GLCANVAS 0" to "#define wxUSE_GLCANVAS 1" and changing "#define wxUSE_ODBC 0" to "#define wxUSE_ODBC 1"
 
 Open and build C:\wxWidgets-2.8.8\build\msw\wx_dll.dsw ( let VC2008 convert the projects )
-Change the configuration to "DLL Unicode Release" or to "DLL Unicode Debug" if you will be building Wildcat 
-
-in Debug mode.
+Change the configuration to "DLL Unicode Release" or to "DLL Unicode Debug" if you will be building Wildcat in Debug mode.
 
 Copy 4 of the dlls that get made from C:\wxWidgets-2.8.8\lib\vc_dll to wildcat-cad\trunk\Build\wxWin32
 
@@ -47,4 +48,4 @@ If it builds OK, press "Start Debugging" to run it, or go to Windows Explorer an
 Wildcat.exe in wildcat-cad\trunk\Build\wxWin32
 
 
-If you have a problem look at the forum, and post a question for me.   Dan Heeks.
+If you have a problem, look at the forum and post a question for me.   Dan Heeks.
