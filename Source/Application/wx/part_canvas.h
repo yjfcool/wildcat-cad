@@ -15,7 +15,12 @@ public:
     void OnPaint(wxPaintEvent& event);
     void OnSize(wxSizeEvent& event);
 	void OnEraseBackground(wxEraseEvent& event);
-    void OnMouseEvent(wxMouseEvent& event);
+    void OnMouse(wxMouseEvent& event);
+	void OnKeyDown(wxKeyEvent& event);
+	void OnKeyUp(wxKeyEvent& event);
+	void OnIdle(wxIdleEvent& event);
+
+	void OnDisplay(void);
 
 private:
     DECLARE_EVENT_TABLE()
