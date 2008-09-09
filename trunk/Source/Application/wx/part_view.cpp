@@ -26,6 +26,11 @@ bool WCPartView::OnCreate(wxDocument *doc, long WXUNUSED(flags) )
     frame->GetSize(&x, &y);
     frame->SetSize(wxDefaultCoord, wxDefaultCoord, x, y);
 #endif
+
+#ifdef __WXMSW__
+	frame->SetIcon(wxICON(Wildcat));
+#endif
+
     frame->Show(true);
 	canvas->Show(true);
     Activate(true);

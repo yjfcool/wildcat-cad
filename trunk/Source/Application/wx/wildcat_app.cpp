@@ -2,6 +2,7 @@
 
 #include "stdafx.h"
 #include "wx/docview.h"
+#include <wx/stdpaths.h>
 
 #include "wildcat_app.h"
 #include "main_frame.h"
@@ -30,6 +31,8 @@ bool WCWildcatApp::OnInit(void)
 	//Initialize xml manager
 	xercesc::XMLPlatformUtils::Initialize();
 
+	wxInitAllImageHandlers();
+
   //// Create a document manager
   m_docManager = new wxDocManager;
 
@@ -44,7 +47,7 @@ bool WCWildcatApp::OnInit(void)
 
   //// Give it an icon (this is ignored in MDI mode: uses resources)
 #ifdef __WXMSW__
-  m_frame->SetIcon(wxIcon(_T("doc")));
+  m_frame->SetIcon(wxICON(Wildcat));
 #endif
 #ifdef __X__
   m_frame->SetIcon(wxIcon(_T("doc.xbm")));
@@ -90,7 +93,12 @@ bool WCWildcatApp::OnInit(void)
 
 int WCWildcatApp::OnExit(void)
 {
-    delete m_docManager;
+	CLOGGER_INFO(WCLogManager::RootLogger(), "WCWildcatApp::~WCWildcatApp - Shutting Down...");
+	//Terminate the managers
+	xercesc::XMLPlatformUtils::Terminate();
+	WCLogManager::Terminate();
+
+	delete m_docManager;
     return 0;
 }
 
@@ -160,4 +168,21 @@ wxMDIChildFrame *WCWildcatApp::CreateChildFrame(wxDocument *doc, wxView *view, b
   subframe->SetMenuBar(menu_bar);
 
   return subframe;
+}
+
+wxString WCWildcatApp::GetExeFolder()const
+{
+	wxStandardPaths sp;
+	wxString exepath = sp.GetExecutablePath();
+	int last_fs = exepath.Find('/', true);
+	int last_bs = exepath.Find('\\', true);
+	wxString exedir;
+	if(last_fs > last_bs){
+		exedir = exepath.Truncate(last_fs);
+	}
+	else{
+		exedir = exepath.Truncate(last_bs);
+	}
+
+	return exedir;
 }

@@ -37,6 +37,7 @@
 #ifdef __WXWINDOWS__
 #include "wx/wx.h"
 #include <wx/stdpaths.h>
+#include "../Application/wx/wildcat_app.h"
 #endif
 
 
@@ -50,19 +51,7 @@ std::string _ResourceDirectory(void) {
 
 std::string _ApplicationDirectory(void) {
 #ifdef __WXWINDOWS__
-	wxStandardPaths sp;
-	wxString exepath = sp.GetExecutablePath();
-	int last_fs = exepath.Find('/', true);
-	int last_bs = exepath.Find('\\', true);
-	wxString exedir;
-	if(last_fs > last_bs){
-		exedir = exepath.Truncate(last_fs);
-	}
-	else{
-		exedir = exepath.Truncate(last_bs);
-	}
-
-	return std::string(exedir.mb_str());
+	return std::string(wxGetApp().GetExeFolder().mb_str());
 #else
 	//Get the command line
 	LPTSTR cmdLine = GetCommandLineW();

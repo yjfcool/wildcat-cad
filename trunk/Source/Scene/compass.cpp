@@ -88,7 +88,7 @@ void WCCompass::OnMouseMove(const WPFloat x, const WPFloat y) {
 void WCCompass::Render(void) {
 	//Check to make sure the compass is visible
 	if (!this->_isVisible) return;
-	
+
 	//Find the center of the overlay
 	WPFloat x = this->_xMin + (COMPASS_SIZE / 2.0) - 0.05;
 	WPFloat y = this->_yMin + (COMPASS_SIZE / 2.0) - 0.05;

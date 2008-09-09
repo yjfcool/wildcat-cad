@@ -30,7 +30,7 @@ wxGLCanvas(frame, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, L"some text", a
 }
 
 WCDocument* WCPartCanvas::GetWCDocument() {
-	return ((WCPartDocument *)(view->GetDocument()))->Document();
+	return view ? (((WCPartDocument *)(view->GetDocument()))->Document()) : NULL;
 }
 
 void WCPartCanvas::OnDisplay(void) {
@@ -208,12 +208,12 @@ void WCPartCanvas::OnKeyUp(wxKeyEvent& event)
 }
 
 void WCPartCanvas::OnIdle(wxIdleEvent& event) {
-	//Call idle method
-	GetWCDocument()->ActiveWorkbench()->OnIdle();
+	if(GetWCDocument()) {
+		//Call idle method
+		GetWCDocument()->ActiveWorkbench()->OnIdle();
 
-	//Render the doc if it is dirty
-	if (GetWCDocument()->IsVisualDirty()) 
-	this->Refresh();
-
-	event.Skip();
+		//Render the doc if it is dirty
+		if (GetWCDocument()->IsVisualDirty()) 
+			this->Refresh();
+	}
 }
