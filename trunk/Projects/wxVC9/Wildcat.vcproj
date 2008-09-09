@@ -1667,6 +1667,14 @@
 								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_recorder.cpp"
 								>
 								<FileConfiguration
+									Name="Debug|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
 									Name="Release|Win32"
 									ExcludedFromBuild="true"
 									>
@@ -1678,6 +1686,14 @@
 							<File
 								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_recorder_controller.cpp"
 								>
+								<FileConfiguration
+									Name="Debug|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
 								<FileConfiguration
 									Name="Release|Win32"
 									ExcludedFromBuild="true"
@@ -1867,6 +1883,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Source\Application\wx\main_frame.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\wx\part_canvas.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\wx\part_document.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\wx\part_view.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Source\Application\Win32\resource.h"
 					>
 				</File>
@@ -1896,6 +1928,10 @@
 				</File>
 				<File
 					RelativePath="..\..\Source\Application\wildcat.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\wx\wildcat_app.h"
 					>
 				</File>
 				<File
@@ -1931,15 +1967,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\Source\Application\wx\main_frame.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\Source\Application\wx\part_canvas.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Application\wx\part_canvas.h"
 					>
 				</File>
 				<File
@@ -1947,15 +1975,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\Source\Application\wx\part_document.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\Source\Application\wx\part_view.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Application\wx\part_view.h"
 					>
 				</File>
 				<File
@@ -1976,10 +1996,6 @@
 				</File>
 				<File
 					RelativePath="..\..\Source\Application\wx\wildcat_app.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Application\wx\wildcat_app.h"
 					>
 				</File>
 				<File
