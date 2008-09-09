@@ -106,10 +106,10 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\Build\Win32"
-			IntermediateDirectory="..\..\Build\Win32\Release"
+			OutputDirectory="..\..\Build\wxWin32"
+			IntermediateDirectory="..\..\Build\wxWin32\Release"
 			ConfigurationType="1"
-			UseOfMFC="2"
+			UseOfMFC="0"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -130,8 +130,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\Dependencies\pthreads\include;..\..\Dependencies\freetype\include;..\..\Dependencies\freetype\include\freetype2;..\..\Dependencies\libtiff\include;&quot;..\..\Dependencies\xerces-c-src_2_8_0\include&quot;;..\..\Source\Workbenches;..\..\Source"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;WIN32;__WIN32__;_WINDOWS;XML_LIBRARY"
+				AdditionalIncludeDirectories="&quot;$(WXWIN)\include&quot;;&quot;$(WXWIN)\include\msvc&quot;;..\..\Dependencies\pthreads\include;..\..\Dependencies\freetype\include;..\..\Dependencies\freetype\include\freetype2;..\..\Dependencies\libtiff\include;&quot;..\..\Dependencies\xerces-c-src_2_8_0\include&quot;;..\..\Source\Workbenches;..\..\Source"
+				PreprocessorDefinitions="WIN32;__WXMSW__;WXUSINGDLL;__WXWINDOWS__;_WINDOWS;NOPCH;_CRT_SECURE_NO_DEPRECATE;WIN32;__WIN32__;_WINDOWS;XML_LIBRARY"
 				RuntimeLibrary="2"
 				EnableEnhancedInstructionSet="2"
 				UsePrecompiledHeader="0"
@@ -150,9 +150,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenGL32.lib GLu32.lib xerces-c_static_2.lib gdiplus.lib libtiff.lib freetype.lib pthreadVC2.lib $(NOINHERIT)"
+				AdditionalDependencies="OpenGL32.lib GLu32.lib xerces-c_static_2.lib advapi32.lib gdiplus.lib libtiff.lib freetype.lib pthreadVC2.lib $(NOINHERIT)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\Dependencies\pthreads\lib;..\..\Dependencies\freetype\lib;..\..\Dependencies\libtiff\lib;&quot;..\..\Dependencies\xerces-c-src_2_8_0\lib&quot;"
+				AdditionalLibraryDirectories="..\..\Dependencies\pthreads\lib;..\..\Dependencies\freetype\lib;..\..\Dependencies\libtiff\lib;&quot;..\..\Dependencies\xerces-c-src_2_8_0\lib&quot;;&quot;$(WXWIN)\lib\vc_dll&quot;"
 				IgnoreDefaultLibraryNames="LIBCMT"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
@@ -183,6 +183,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Copy all of the resources into the correct directory"
+				CommandLine="copyResources &quot;..\..\Build\wxWin32&quot;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -1339,12 +1341,28 @@
 								Name="VCCLCompilerTool"
 							/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\Source\Workbenches\RTVisualization\vis_actions.cpp"
 						>
 						<FileConfiguration
 							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -1363,12 +1381,28 @@
 								Name="VCCLCompilerTool"
 							/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\Source\Workbenches\RTVisualization\vis_feature.cpp"
 						>
 						<FileConfiguration
 							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -1387,12 +1421,28 @@
 								Name="VCCLCompilerTool"
 							/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\Source\Workbenches\RTVisualization\visualization.cpp"
 						>
 						<FileConfiguration
 							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -1460,12 +1510,28 @@
 										Name="VCCLCompilerTool"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_listener_actions.cpp"
 								>
 								<FileConfiguration
 									Name="Debug|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|Win32"
 									ExcludedFromBuild="true"
 									>
 									<Tool
@@ -1484,12 +1550,28 @@
 										Name="VCCLCompilerTool"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_listener_modes.cpp"
 								>
 								<FileConfiguration
 									Name="Debug|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|Win32"
 									ExcludedFromBuild="true"
 									>
 									<Tool
@@ -1532,12 +1614,28 @@
 										Name="VCCLCompilerTool"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_motiontracker_controller.cpp"
 								>
 								<FileConfiguration
 									Name="Debug|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|Win32"
 									ExcludedFromBuild="true"
 									>
 									<Tool
@@ -1569,7 +1667,7 @@
 								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_recorder.cpp"
 								>
 								<FileConfiguration
-									Name="Debug|Win32"
+									Name="Release|Win32"
 									ExcludedFromBuild="true"
 									>
 									<Tool
@@ -1581,7 +1679,7 @@
 								RelativePath="..\..\Source\Workbenches\RTVisualization\vis_recorder_controller.cpp"
 								>
 								<FileConfiguration
-									Name="Debug|Win32"
+									Name="Release|Win32"
 									ExcludedFromBuild="true"
 									>
 									<Tool
