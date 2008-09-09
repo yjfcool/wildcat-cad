@@ -2,8 +2,7 @@ I have just added a project using wxWidgets.
 It doesn't do much, yet. You can do "New" from the menu and you get a graphics view.
 I haven't connected up the mouse moves or key presses, so you can't do anything yet.
 There is no toolbar yet.
-But here are the compile instructions, anyway. I have to write them down somewhere, so I don't forget how to do it.
-
+But here are the compile instructions, anyway.
 
 
 I used Windows XP.
