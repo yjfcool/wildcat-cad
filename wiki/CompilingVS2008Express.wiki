@@ -15,17 +15,17 @@ Change the configuration to "DLL Unicode Release" or to "DLL Unicode Debug" if y
 Copy 4 of the dlls that get made from C:\wxWidgets-2.8.8\lib\vc_dll to wildcat-cad\trunk\Build\wxWin32
 
 They are:
-wxmsw28u_aui_vc_custom.dll
-wxmsw28u_core_vc_custom.dll
-wxmsw28u_gl_vc_custom.dll
-wxbase28u_vc_custom.dll
+  *wxmsw28u_aui_vc_custom.dll
+  *wxmsw28u_core_vc_custom.dll
+  *wxmsw28u_gl_vc_custom.dll
+  *wxbase28u_vc_custom.dll
 
 or 
 
-wxmsw28ud_aui_vc_custom.dll
-wxmsw28ud_core_vc_custom.dll
-wxmsw28ud_gl_vc_custom.dll
-wxbase28ud_vc_custom.dll
+  *wxmsw28ud_aui_vc_custom.dll
+  *wxmsw28ud_core_vc_custom.dll
+  *wxmsw28ud_gl_vc_custom.dll
+  *wxbase28ud_vc_custom.dll
 
 if you are doing the debug mode
 
