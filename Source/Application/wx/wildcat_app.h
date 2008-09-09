@@ -19,6 +19,7 @@ class WCWildcatApp: public wxApp
     int OnExit(void);
 
     wxMDIChildFrame *CreateChildFrame(wxDocument *doc, wxView *view, bool isCanvas);
+	wxString GetExeFolder()const;
 
   protected:
     wxDocManager* m_docManager;

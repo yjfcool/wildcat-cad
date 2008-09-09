@@ -10,10 +10,12 @@
 
 IMPLEMENT_DYNAMIC_CLASS(WCPartDocument, wxDocument)
 
-WCPartDocument::WCPartDocument(void) {
+WCPartDocument::WCPartDocument(void):_part(NULL) {
 }
 
 WCPartDocument::~WCPartDocument(void) {
+	//Delete part if it exists
+	if (this->_part != NULL) delete this->_part;
 }
 
 bool WCPartDocument::OnCreate(const wxString& path, long flags) {

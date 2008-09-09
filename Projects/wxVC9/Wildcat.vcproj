@@ -2006,6 +2006,10 @@
 			<Filter
 				Name="Resources"
 				>
+				<File
+					RelativePath="..\..\Source\Application\wx\Wildcat.rc"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Dialogs"
