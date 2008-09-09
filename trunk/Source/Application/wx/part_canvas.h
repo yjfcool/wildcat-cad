@@ -5,6 +5,7 @@
 
 #include "wx/docview.h"
 #include <wx/glcanvas.h>
+#include "Kernel/document.h"
 
 class WCPartCanvas: public wxGLCanvas
 {
@@ -21,6 +22,7 @@ public:
 	void OnIdle(wxIdleEvent& event);
 
 	void OnDisplay(void);
+	WCDocument* GetWCDocument();
 
 private:
     DECLARE_EVENT_TABLE()
