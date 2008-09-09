@@ -1,5 +1,4 @@
 I have just added a project using wxWidgets.
-I have only built the debug version, so far.
 It doesn't do much, yet. You can do "New" from the menu and you get a graphics view.
 I haven't connected up the mouse moves or key presses, so you can't do anything yet.
 There is no toolbar yet.
@@ -40,6 +39,8 @@ if you are doing the debug mode
 
 
 Open "wildcat-cad\trunk\Projects\wxVC9\Wildcat.sln", it should open with Visual C++ 2008 Express.
+
+Choose "Release" configuration or "Debug".
 
 Press "Build Solution"
 
