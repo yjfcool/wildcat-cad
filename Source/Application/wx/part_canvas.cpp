@@ -9,14 +9,6 @@
 #include "Application/keymap.h"
 
 
-/*** Locally Defined Macros ***/
-#define KEY_UP(vk_code)							(::wxGetKeyState(vk_code))
-#define KEY_DOWN(vk_code)						(!(::wxGetKeyState(vk_code)))
-
-
-/***********************************************~***************************************************/
-
-
 BEGIN_EVENT_TABLE(WCPartCanvas, wxGLCanvas)
     EVT_SIZE(WCPartCanvas::OnSize)
 	EVT_ERASE_BACKGROUND(WCPartCanvas::OnEraseBackground)
@@ -28,14 +20,18 @@ END_EVENT_TABLE()
 
 // Define a constructor for part canvas
 WCPartCanvas::WCPartCanvas(wxView *v, wxMDIChildFrame *frame, int *attribList):
- wxGLCanvas(frame, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, L"some text", attribList)
+wxGLCanvas(frame, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, L"some text", attribList)
 {
 	view = v;
 	if (m_glContext)
 	{
 		m_glContext->SetCurrent(*this);
 	}
- }
+}
+
+WCDocument* WCPartCanvas::GetWCDocument() {
+	return ((WCPartDocument *)(view->GetDocument()))->Document();
+}
 
 void WCPartCanvas::OnDisplay(void) {
     /* must always be here */
@@ -48,8 +44,7 @@ void WCPartCanvas::OnDisplay(void) {
     SetCurrent();
 
 	//Try drawing the document
-    WCPartDocument *doc = (WCPartDocument *)(view->GetDocument());
-	doc->Document()->ActiveWorkbench()->Render();
+	GetWCDocument()->ActiveWorkbench()->Render();
 
     SwapBuffers();
 }
@@ -65,10 +60,10 @@ void WCPartCanvas::OnSize(wxSizeEvent& event)
     wxGLCanvas::OnSize(event);
 
 	//Set the window width and height parameters
-	((WCPartDocument*)(view->GetDocument()))->Document()->ActiveWorkbench()->OnReshape(event.GetSize().GetWidth(), event.GetSize().GetHeight());
+	GetWCDocument()->ActiveWorkbench()->OnReshape(event.GetSize().GetWidth(), event.GetSize().GetHeight());
 
 	//Render the doc if it is dirty
-	if (((WCPartDocument*)(view->GetDocument()))->Document()->IsVisualDirty()) this->Refresh();
+	if (GetWCDocument()->IsVisualDirty()) this->Refresh();
 }
 
 void WCPartCanvas::OnEraseBackground(wxEraseEvent& WXUNUSED(event))
@@ -85,7 +80,7 @@ void WCPartCanvas::OnMouse( wxMouseEvent& event )
 	else if(event.Moving() || event.Dragging())
 	{
 		//Pass message on to document
-		((WCPartDocument*)(view->GetDocument()))->Document()->ActiveWorkbench()->OnMouseMove(event.GetX(), event.GetY());
+		GetWCDocument()->ActiveWorkbench()->OnMouseMove(event.GetX(), event.GetY());
 	}
 
 	else if(event.GetWheelRotation() != 0)
@@ -93,44 +88,50 @@ void WCPartCanvas::OnMouse( wxMouseEvent& event )
 		//Convert to normalized value
 		float yDist = (float)(event.GetWheelRotation()) / 60.0f;
 		//Pass scrollWheel event on to the document
-		((WCPartDocument*)(view->GetDocument()))->Document()->ActiveWorkbench()->OnScroll(0.0f, yDist);
+		GetWCDocument()->ActiveWorkbench()->OnScroll(0.0f, yDist);
 		//Render the part if it's dirty
-		if (((WCPartDocument*)(view->GetDocument()))->Document()->IsVisualDirty()) this->Refresh();
+		if (GetWCDocument()->IsVisualDirty()) this->Refresh();
 	}
 
 	else if(event.LeftDown())
 	{
 		//See if modifier keys are pressed or released
-		if (KEY_DOWN(WXK_WINDOWS_LEFT)) ((WCPartDocument*)(view->GetDocument()))->Document()->ActiveWorkbench()->OnPanPress();
-		if (KEY_DOWN(WXK_SHIFT)) ((WCPartDocument*)(view->GetDocument()))->Document()->ActiveWorkbench()->OnRotatePress();
-		if (KEY_DOWN(WXK_WINDOWS_MENU)) ((WCPartDocument*)(view->GetDocument()))->Document()->ActiveWorkbench()->OnZoomPress();
-		if (KEY_DOWN(WXK_CONTROL)) ((WCPartDocument*)(view->GetDocument()))->Document()->ActiveWorkbench()->OnMultiSelectPress();
+		if (::wxGetKeyState(WXK_WINDOWS_LEFT)) GetWCDocument()->ActiveWorkbench()->OnPanPress();
+		if (event.ShiftDown()) GetWCDocument()->ActiveWorkbench()->OnRotatePress();
+		if (::wxGetKeyState(WXK_MENU)) GetWCDocument()->ActiveWorkbench()->OnZoomPress();
+		if (event.ControlDown()) GetWCDocument()->ActiveWorkbench()->OnMultiSelectPress();
 
 		//Call to left button pressed
-		((WCPartDocument*)(view->GetDocument()))->Document()->ActiveWorkbench()->OnMouseDown(WCMouseButton::Left());
+		GetWCDocument()->ActiveWorkbench()->OnMouseDown(WCMouseButton::Left());
 		//Render the doc if it's dirty
-		if (((WCPartDocument*)(view->GetDocument()))->Document()->IsVisualDirty()) this->Refresh();
+		if (GetWCDocument()->IsVisualDirty()) this->Refresh();
 	}
 	else if(event.LeftUp())
 	{
+		//See if modifier keys are pressed or released
+		if (!::wxGetKeyState(WXK_WINDOWS_LEFT)) GetWCDocument()->ActiveWorkbench()->OnPanRelease();
+		if (!event.ShiftDown()) GetWCDocument()->ActiveWorkbench()->OnRotateRelease();
+		if (!::wxGetKeyState(WXK_MENU)) GetWCDocument()->ActiveWorkbench()->OnZoomRelease();
+		if (!event.ControlDown()) GetWCDocument()->ActiveWorkbench()->OnMultiSelectRelease();
+
 		//Call to left button released
-		((WCPartDocument*)(view->GetDocument()))->Document()->ActiveWorkbench()->OnMouseUp(WCMouseButton::Left());
+		GetWCDocument()->ActiveWorkbench()->OnMouseUp(WCMouseButton::Left());
 		//Render the doc if it's dirty
-		if (((WCPartDocument*)(view->GetDocument()))->Document()->IsVisualDirty()) this->Refresh();
+		if (GetWCDocument()->IsVisualDirty()) this->Refresh();
 	}
 	else if(event.RightDown())
 	{
 		//Call to right button pressed
-		((WCPartDocument*)(view->GetDocument()))->Document()->ActiveWorkbench()->OnMouseDown(WCMouseButton::Right());
+		GetWCDocument()->ActiveWorkbench()->OnMouseDown(WCMouseButton::Right());
 		//Render the doc if it's dirty
-		if (((WCPartDocument*)(view->GetDocument()))->Document()->IsVisualDirty()) this->Refresh();
+		if (GetWCDocument()->IsVisualDirty()) this->Refresh();
 	}
 	else if(event.RightUp())
 	{
 		//Call to right button release
-		((WCPartDocument*)(view->GetDocument()))->Document()->ActiveWorkbench()->OnMouseUp(WCMouseButton::Right());
+		GetWCDocument()->ActiveWorkbench()->OnMouseUp(WCMouseButton::Right());
 		//Render the doc if it's dirty
-		if (((WCPartDocument*)(view->GetDocument()))->Document()->IsVisualDirty()) this->Refresh();
+		if (GetWCDocument()->IsVisualDirty()) this->Refresh();
 	}
 
 	event.Skip();
@@ -138,7 +139,7 @@ void WCPartCanvas::OnMouse( wxMouseEvent& event )
 
 void WCPartCanvas::OnKeyDown(wxKeyEvent& event)
 {
-	WCWorkbench* wb = ((WCPartDocument*)(view->GetDocument()))->Document()->ActiveWorkbench();
+	WCWorkbench* wb = GetWCDocument()->ActiveWorkbench();
 
 	//See what type of key is pressed
 	switch(event.GetKeyCode()) {
@@ -157,14 +158,14 @@ void WCPartCanvas::OnKeyDown(wxKeyEvent& event)
 	}
 
 	//Otherwise, get event key & modifiers
-	bool control = KEY_DOWN(WXK_CONTROL);
+	bool control = event.ControlDown();
 	bool option = false;
-	bool alt = KEY_DOWN(WXK_WINDOWS_MENU);
-	bool command = KEY_DOWN(WXK_WINDOWS_LEFT);
-	bool esc = KEY_DOWN(WXK_ESCAPE);
+	bool alt = event.AltDown();
+	bool command = event.CmdDown();
+	bool esc = ::wxGetKeyState(WXK_ESCAPE);
 	char key = event.GetKeyCode();
 	//Make lower case if not shifted
-	if (KEY_UP(WXK_SHIFT)) key = tolower(key);
+	if (!event.ShiftDown()) key = tolower(key);
 
 	//Create the key event
 	WCKeyEvent e(key, control, option, alt, command, esc);
@@ -175,37 +176,43 @@ void WCPartCanvas::OnKeyDown(wxKeyEvent& event)
 	//Pass the message to the part
 	wb->OnUserMessage(message);
 	//Check to see if is dirty
-	if (((WCPartDocument*)(view->GetDocument()))->Document()->IsVisualDirty()) this->Refresh();
+	if (GetWCDocument()->IsVisualDirty()) this->Refresh();
 
 	event.Skip();
 }
 
 void WCPartCanvas::OnKeyUp(wxKeyEvent& event)
 {
-	WCWorkbench* wb = ((WCPartDocument*)(view->GetDocument()))->Document()->ActiveWorkbench();
+	WCWorkbench* wb = GetWCDocument()->ActiveWorkbench();
 
-	//Check for pan key
-	if (KEY_UP(WXK_WINDOWS_LEFT) && wb->IsPan())
-		wb->OnPanRelease();
-	//Check for rotate key
-	if (KEY_UP(WXK_SHIFT) && wb->IsRotate()) 
-		wb->OnRotateRelease();
-	//Check for zoom key
-	if (KEY_UP(WXK_WINDOWS_MENU) && wb->IsZoom())
-		wb->OnZoomRelease();
-	//Check for multi-select
-	if (KEY_UP(WXK_CONTROL) && wb->IsMultiSelect())
-		wb->OnMultiSelectRelease();
+	switch(event.GetKeyCode()){
+		//Check for pan key
+		case WXK_WINDOWS_LEFT:
+			if (wb->IsPan())wb->OnPanRelease();
+			break;
+		//Check for rotate key
+		case WXK_SHIFT:
+			if (wb->IsRotate())wb->OnRotateRelease();
+			break;
+		//Check for zoom key
+		case WXK_MENU:
+			if (wb->IsZoom())wb->OnZoomRelease();
+			break;
+		//Check for multi-select
+		case WXK_CONTROL:
+			if (wb->IsMultiSelect())wb->OnMultiSelectRelease();
+			break;
+	}
 
 	event.Skip();
 }
 
 void WCPartCanvas::OnIdle(wxIdleEvent& event) {
 	//Call idle method
-	((WCPartDocument*)(view->GetDocument()))->Document()->ActiveWorkbench()->OnIdle();
+	GetWCDocument()->ActiveWorkbench()->OnIdle();
 
 	//Render the doc if it is dirty
-	if (((WCPartDocument*)(view->GetDocument()))->Document()->IsVisualDirty()) 
+	if (GetWCDocument()->IsVisualDirty()) 
 	this->Refresh();
 
 	event.Skip();
