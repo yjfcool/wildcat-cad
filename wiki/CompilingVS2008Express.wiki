@@ -1,3 +1,6 @@
+#summary Instructions for compiling wxWidgets-Windows version of Wildcat
+#labels Phase-Deploy
+
 I used Windows XP.
 
 Get Microsoft Visual C++ 2008 Express Edition and install it ( it's free, but almost 1GB ).
