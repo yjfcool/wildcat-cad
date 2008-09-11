@@ -180,11 +180,19 @@ bool WCSketchWorkbench::OnEnter(void) {
 	//Call to the base OnEnter
 	this->WCWorkbench::OnEnter();
 	//Show sketcher toolbars
+#ifdef __WXWINDOWS__
+	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Standard")->Show(true);
+	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("View")->Show(false);
+	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Sketcher")->Show(true);
+	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Profiles")->Show(true);
+	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Operations")->Show(true);
+#else
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Standard")->IsVisible(true);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("View")->IsVisible(false);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Sketcher")->IsVisible(true);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Profiles")->IsVisible(true);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Operations")->IsVisible(true);
+#endif
 	//Update mouse tracker
 	this->CalculateMousePosition();
 	//Clear the selection buffer
@@ -206,11 +214,19 @@ bool WCSketchWorkbench::OnExit(void) {
 //	this->DrawingMode( WCDrawingMode::Selection( this ));
 	this->DrawingMode( new WCSelectionMode( this ));
 	//Clear the selection buffer
+#ifdef __WXWINDOWS__
+	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Standard")->Show(false);
+	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("View")->Show(true);
+	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Sketcher")->Show(false);
+	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Profiles")->Show(false);
+	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Operations")->Show(false);
+#else
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Standard")->IsVisible(false);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("View")->IsVisible(true);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Sketcher")->IsVisible(false);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Profiles")->IsVisible(false);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Operations")->IsVisible(false);
+#endif
 	//Hide sketcher toolbars
 	this->_sketch->Document()->ToolbarManager()->PopState();
 	//Call to the base OnExit
@@ -618,7 +634,11 @@ bool WCSketchWorkbench::OnUserMessage(const WCUserMessage &message) {
 		//Toggle grid visibility
 		this->_grid->IsVisible( !this->_grid->IsVisible() );
 		//Toggle showGrid button
+#ifdef __WXWINDOWS__
+		this->_sketch->Document()->ToolbarManager()->ButtonFromName("showGrid")->SetToggle( this->_grid->IsVisible() );
+#else
 		this->_sketch->Document()->ToolbarManager()->ButtonFromName("showGrid")->IsActive( this->_grid->IsVisible() );
+#endif
 	}
 	//Otherwise this is an unknowe message
 	else {

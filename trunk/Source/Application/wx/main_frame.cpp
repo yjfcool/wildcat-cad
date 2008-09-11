@@ -4,6 +4,7 @@
 #include "main_frame.h"
 #include "part_canvas.h"
 #include "wildcat_app.h"
+#include "Workbenches/Kernel/workbench.h"
 
 /*
  * This is the top-level window of the application.
@@ -12,6 +13,8 @@
 IMPLEMENT_CLASS(WCMainFrame, wxDocMDIParentFrame)
 BEGIN_EVENT_TABLE(WCMainFrame, wxDocMDIParentFrame)
     EVT_MENU(DOCVIEW_ABOUT, WCMainFrame::OnAbout)
+EVT_MENU_RANGE(FIRST_TOOLBAR_BUTTON_ID, FIRST_TOOLBAR_BUTTON_ID + MAX_TOOLS, WCMainFrame::OnToolBarButton)
+EVT_UPDATE_UI_RANGE(FIRST_TOOLBAR_BUTTON_ID, FIRST_TOOLBAR_BUTTON_ID + MAX_TOOLS, WCMainFrame::OnUpdateToolBarButton)
 END_EVENT_TABLE()
 
 WCMainFrame::WCMainFrame(wxDocManager *manager, wxFrame *frame, const wxString& title,
@@ -65,4 +68,21 @@ WCPartCanvas *WCMainFrame::CreateCanvas(wxView *view, wxMDIChildFrame *parent)
 	canvas->SetCursor(wxCursor(wxCURSOR_PENCIL));
 
 	return canvas;
+}
+
+wxToolBarToolBase* WCMainFrame::AddToolBarTool(wxToolBar* toolbar, int tool_id, const wxString& title, wxBitmap& bitmap, const wxString& caption) {
+	wxToolBarToolBase* tool = toolbar->AddTool(tool_id, title, bitmap, caption);
+	m_id_button_map.insert( std::make_pair(tool_id, tool) );
+	return tool;
+}
+
+void WCMainFrame::OnToolBarButton( wxCommandEvent& event ) {
+	std::map<int, wxToolBarToolBase*>::iterator FindIt = m_id_button_map.find(event.GetId());
+	if(FindIt != m_id_button_map.end()) {
+		wxToolBarToolBase*tool = FindIt->second;
+		wxGetApp().GetWCDocument()->ActiveWorkbench()->OnUserMessage(std::string(tool->GetLabel().mb_str()));
+	}
+}
+
+void WCMainFrame::OnUpdateToolBarButton( wxUpdateUIEvent& event ) {
 }

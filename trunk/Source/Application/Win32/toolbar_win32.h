@@ -29,6 +29,7 @@
 #ifndef __TOOLBAR_WIN32_H__
 #define __TOOLBAR_WIN32_H__
 
+#ifndef __WXWINDOWS__
 
 /*** Included Header Files ***/
 #include "Application/Win32/toolbar_bridge.h"
@@ -89,6 +90,7 @@ public:
 
 /***********************************************~***************************************************/
 
+#endif
 
 #endif //__TOOLBAR_WIN32_H__
 

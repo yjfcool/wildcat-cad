@@ -32,7 +32,9 @@
 
 /*** Included Headers ***/
 #include "Application/wildcat.h"
-
+#ifdef __WXWINDOWS__
+#include "wx/wx.h"
+#endif
 
 /*** Locally Defined Values ***/
 #define TOOLBAR_ICON_SMALLSIZE					32
@@ -47,8 +49,10 @@ namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
+#ifndef __WXWINDOWS__
 class WCToolbar;
 class WCToolbarButton;
+#endif
 class WCDocument;
 
 
@@ -58,9 +62,15 @@ class WCDocument;
 class WCToolbarManager {
 private:
 	WCDocument									*_document;											//!< Parent document
+#ifdef __WXWINDOWS__
+	std::map<std::string, wxToolBarToolBase*>	_buttonMap;											//!< Map of all toolbar buttons
+	std::map<std::string, wxToolBar*>			_toolbarMap;										//!< Map of names to toolbar objects
+	std::stack< std::list< std::pair<bool,wxToolBar*> > > _stateStack;								//!< Push/pop stack
+#else
 	std::map<std::string, WCToolbarButton*>		_buttonMap;											//!< Map of all toolbar buttons
 	std::map<std::string, WCToolbar*>			_toolbarMap;										//!< Map of names to toolbar objects
 	std::stack< std::list< std::pair<bool,WCToolbar*> > > _stateStack;								//!< Push/pop stack
+#endif
 
 	//Private Methods
 	void ParseManifest(const std::string &manifest, const std::string &directory, const bool &verbose);		//!< Parse the given manifest
@@ -80,8 +90,13 @@ public:
 	void HideAll(void);																				//!< Hide all toolbars
 	void PushState(void);																			//!< Push toolbar visibility state
 	void PopState(void);																			//!< Pop toolbar visibility state
+#ifdef __WXWINDOWS__
+	wxToolBar* ToolbarFromName(const std::string &name);											//!< Get a toolbar from a name
+	wxToolBarToolBase* ButtonFromName(const std::string &name);										//!< Get an element from a name
+#else
 	WCToolbar* ToolbarFromName(const std::string &name);											//!< Get a toolbar from a name
 	WCToolbarButton* ButtonFromName(const std::string &name);										//!< Get an element from a name
+#endif
 };
 
 

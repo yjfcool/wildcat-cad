@@ -7,6 +7,7 @@ class wxDocManager;
 class WCMainFrame;
 class wxDocument;
 class wxView;
+#include "Workbenches/Kernel/document.h"
 
 // Define a new application
 class WCWildcatApp: public wxApp
@@ -20,6 +21,7 @@ class WCWildcatApp: public wxApp
 
     wxMDIChildFrame *CreateChildFrame(wxDocument *doc, wxView *view, bool isCanvas);
 	wxString GetExeFolder()const;
+	WCDocument* GetWCDocument();
 
   protected:
     wxDocManager* m_docManager;

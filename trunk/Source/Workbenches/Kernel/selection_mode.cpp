@@ -46,14 +46,22 @@ void WCSelectionMode::OnEntry(void) {
 	//Clear the document status text
 	this->_creator->Document()->Status("Ready");
 	//Set the icon to active
+#ifdef __WXWINDOWS__
+	this->_creator->Document()->ToolbarManager()->ButtonFromName("select")->SetToggle(true);
+#else
 	this->_creator->Document()->ToolbarManager()->ButtonFromName("select")->IsActive(true);
+#endif
 }
 
 
 void WCSelectionMode::OnExit(void) {
 //	CLOGGER_DEBUG(WCLogManager::RootLogger(), "Exiting Selection Draw Mode:" << this);
 	//Set the icon to not active
+#ifdef __WXWINDOWS__
+	this->_creator->Document()->ToolbarManager()->ButtonFromName("select")->SetToggle(false);
+#else
 	this->_creator->Document()->ToolbarManager()->ButtonFromName("select")->IsActive(false);
+#endif
 }
 
 

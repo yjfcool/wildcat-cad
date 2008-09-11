@@ -10,7 +10,7 @@
 
 IMPLEMENT_DYNAMIC_CLASS(WCPartDocument, wxDocument)
 
-WCPartDocument::WCPartDocument(void):_part(NULL) {
+WCPartDocument::WCPartDocument(void):_part(NULL), _document(NULL) {
 }
 
 WCPartDocument::~WCPartDocument(void) {

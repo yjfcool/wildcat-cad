@@ -107,9 +107,15 @@ bool WCPartWorkbench::OnEnter(void) {
 	//Call to the base OnEnter
 	this->WCWorkbench::OnEnter();
 	//Show part only design toolbars
+#ifdef __WXWINDOWS__
+	this->_part->Document()->ToolbarManager()->ToolbarFromName("Standard")->Show(true);
+	this->_part->Document()->ToolbarManager()->ToolbarFromName("View")->Show(true);
+	this->_part->Document()->ToolbarManager()->ToolbarFromName("Part Design")->Show(true);
+#else
 	this->_part->Document()->ToolbarManager()->ToolbarFromName("Standard")->IsVisible(true);
 	this->_part->Document()->ToolbarManager()->ToolbarFromName("View")->IsVisible(true);
 	this->_part->Document()->ToolbarManager()->ToolbarFromName("Part Design")->IsVisible(true);
+#endif
 	//Return true
 	return true;
 }
@@ -117,9 +123,15 @@ bool WCPartWorkbench::OnEnter(void) {
 
 bool WCPartWorkbench::OnExit(void) {
 	//Hide part design toolbars
+#ifdef __WXWINDOWS__
+	this->_part->Document()->ToolbarManager()->ToolbarFromName("Standard")->Show(false);
+	this->_part->Document()->ToolbarManager()->ToolbarFromName("View")->Show(false);
+	this->_part->Document()->ToolbarManager()->ToolbarFromName("Part Design")->Show(false);
+#else
 	this->_part->Document()->ToolbarManager()->ToolbarFromName("Standard")->IsVisible(false);
 	this->_part->Document()->ToolbarManager()->ToolbarFromName("View")->IsVisible(false);
 	this->_part->Document()->ToolbarManager()->ToolbarFromName("Part Design")->IsVisible(false);
+#endif
 	//Call to the base OnExit
 	this->WCWorkbench::OnExit();
 	//Return true

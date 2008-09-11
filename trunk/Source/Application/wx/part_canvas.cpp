@@ -44,7 +44,7 @@ void WCPartCanvas::OnDisplay(void) {
     SetCurrent();
 
 	//Try drawing the document
-	GetWCDocument()->ActiveWorkbench()->Render();
+	if(GetWCDocument())GetWCDocument()->ActiveWorkbench()->Render();
 
     SwapBuffers();
 }
