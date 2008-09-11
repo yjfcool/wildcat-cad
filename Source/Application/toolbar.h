@@ -37,6 +37,13 @@
 /*** Locally Defined Values ***/
 //None
 
+//Button types
+#define TOOLBARELEMENT_TYPE_TOGGLE				0
+#define TOOLBARELEMENT_TYPE_MOMENTARY			1
+#define TOOLBARELEMENT_TYPE_MODE				2
+
+
+#ifndef __WXWINDOWS__    // use wxToolBar instead
 
 /*** Namespace Declaration ***/
 namespace __WILDCAT_NAMESPACE__ {
@@ -51,12 +58,6 @@ class WCToolbarManager;
 
 
 /***********************************************~***************************************************/
-
-
-//Button types
-#define TOOLBARELEMENT_TYPE_TOGGLE				0
-#define TOOLBARELEMENT_TYPE_MOMENTARY			1
-#define TOOLBARELEMENT_TYPE_MODE				2
 
 
 class WCToolbarButton {
@@ -111,5 +112,8 @@ public:
 
 
 }	   // End Wildcat Namespace
+
+#endif // #ifndef __WXWINDOWS__
+
 #endif //__TOOLBAR_H__
 

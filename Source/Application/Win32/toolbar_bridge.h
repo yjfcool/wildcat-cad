@@ -29,6 +29,7 @@
 #ifndef __TOOLBAR_BRIDGE_H__
 #define __TOOLBAR_BRIDGE_H__
 
+#ifndef __WXWINDOWS__
 
 /*** Included Header Files ***/
 #include "Utility/wutil.h"
@@ -124,5 +125,8 @@ public:
 
 
 }	   //End Wildcat Namespace
+
+#endif
+
 #endif //__TOOLBAR_BRIDGE_H__
 

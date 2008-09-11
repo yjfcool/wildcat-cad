@@ -1907,19 +1907,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\Source\Application\toolbar.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Application\Win32\toolbar_bridge.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\Source\Application\toolbar_manager.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Application\Win32\toolbar_win32.h"
 					>
 				</File>
 				<File
@@ -1979,19 +1967,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\Source\Application\Win32\toolbar.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Application\Win32\toolbar_bridge.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\Source\Application\toolbar_manager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Application\Win32\toolbar_win32.cpp"
 					>
 				</File>
 				<File

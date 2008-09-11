@@ -186,3 +186,8 @@ wxString WCWildcatApp::GetExeFolder()const
 
 	return exedir;
 }
+
+WCDocument* WCWildcatApp::GetWCDocument()
+{
+	return ((WCPartDocument*)(m_docManager->GetCurrentDocument()))->Document();
+}
