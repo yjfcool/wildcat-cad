@@ -1,5 +1,32 @@
 // part_canvas.cpp
 
+/*******************************************************************************
+* Copyright (c) 2007, 2008, CerroKai Development
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*     * Redistributions of source code must retain the above copyright
+*       notice, this list of conditions and the following disclaimer.
+*     * Redistributions in binary form must reproduce the above copyright
+*       notice, this list of conditions and the following disclaimer in the
+*       documentation and/or other materials provided with the distribution.
+*     * Neither the name of CerroKai Development nor the
+*       names of its contributors may be used to endorse or promote products
+*       derived from this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY CerroKai Development ``AS IS'' AND ANY
+* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL CerroKai Development BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+********************************************************************************/
+
 #include "stdafx.h"
 #include "part_canvas.h"
 #include "part_document.h"
@@ -96,10 +123,10 @@ void WCPartCanvas::OnMouse( wxMouseEvent& event )
 	else if(event.LeftDown())
 	{
 		//See if modifier keys are pressed or released
-		if (::wxGetKeyState(WXK_WINDOWS_LEFT)) GetWCDocument()->ActiveWorkbench()->OnPanPress();
+		if (event.ControlDown()) GetWCDocument()->ActiveWorkbench()->OnPanPress();
 		if (event.ShiftDown()) GetWCDocument()->ActiveWorkbench()->OnRotatePress();
-		if (::wxGetKeyState(WXK_MENU)) GetWCDocument()->ActiveWorkbench()->OnZoomPress();
-		if (event.ControlDown()) GetWCDocument()->ActiveWorkbench()->OnMultiSelectPress();
+		if (event.AltDown()) GetWCDocument()->ActiveWorkbench()->OnZoomPress();
+		//if (event.ControlDown()) GetWCDocument()->ActiveWorkbench()->OnMultiSelectPress();
 
 		//Call to left button pressed
 		GetWCDocument()->ActiveWorkbench()->OnMouseDown(WCMouseButton::Left());
@@ -109,10 +136,10 @@ void WCPartCanvas::OnMouse( wxMouseEvent& event )
 	else if(event.LeftUp())
 	{
 		//See if modifier keys are pressed or released
-		if (!::wxGetKeyState(WXK_WINDOWS_LEFT)) GetWCDocument()->ActiveWorkbench()->OnPanRelease();
+		if (!event.ControlDown()) GetWCDocument()->ActiveWorkbench()->OnPanRelease();
 		if (!event.ShiftDown()) GetWCDocument()->ActiveWorkbench()->OnRotateRelease();
-		if (!::wxGetKeyState(WXK_MENU)) GetWCDocument()->ActiveWorkbench()->OnZoomRelease();
-		if (!event.ControlDown()) GetWCDocument()->ActiveWorkbench()->OnMultiSelectRelease();
+		if (!event.AltDown()) GetWCDocument()->ActiveWorkbench()->OnZoomRelease();
+		//if (!event.ControlDown()) GetWCDocument()->ActiveWorkbench()->OnMultiSelectRelease();
 
 		//Call to left button released
 		GetWCDocument()->ActiveWorkbench()->OnMouseUp(WCMouseButton::Left());

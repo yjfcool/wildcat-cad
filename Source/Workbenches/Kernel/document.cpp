@@ -43,9 +43,10 @@
 #define DOCUMENT_NAMEDVIEW_ISOMETRIC			-0.209315, -0.508694, -0.767096, 0.330123
 
 
+#ifndef __WXWINDOWS__
 /*** Static Member Initialization ***/
 std::string WCDocument::ToolbarManifest = "toolbar_manifest.xml";
-
+#endif
 
 /***********************************************~***************************************************/
 
@@ -72,9 +73,12 @@ void WCDocument::Initialize(void) {
 		//Setup undo-redo dictionary
 		this->_undoDictionary = new WCSerialDictionary();
 
+#ifndef __WXWINDOWS__
 		//Create toolbar manager
 		std::string resourcesDirectory = _ResourceDirectory();
 		_toolbarManager = new WCToolbarManager(this, WCDocument::ToolbarManifest, resourcesDirectory, false);
+#endif
+
 		//Set the default units
 		this->_lengthUnit = WCUnitType::TypeFromName("Millimeter");
 		this->_angleUnit = WCUnitType::TypeFromName("Degrees");
@@ -88,8 +92,10 @@ void WCDocument::Initialize(void) {
 		this->_backgroundLayer = this->_document->BackgroundLayer();
 		//Reference the treeview
 		this->_treeView = this->_document->TreeView();
+#ifndef __WXWINDOWS__
 		//Reference the toolbar manager
 		this->_toolbarManager = this->_document->ToolbarManager();
+#endif
 	}
 
 }
@@ -100,8 +106,12 @@ void WCDocument::Initialize(void) {
 
 WCDocument::WCDocument(WCFeature *creator, const std::string &name, const std::string &filename) : ::WCFeature(creator, name), 
 	_filename(filename), _scene(NULL), _uiLayer(NULL), _backgroundLayer(NULL), _treeView(NULL), _statusText("Ready"),
-	_actions(), _redoActions(), _undoDictionary(NULL), _activeWorkbench(NULL), _workbenchStack(), _namedViews(), _toolbarManager(NULL), 
-	_lengthUnit(NULL), _angleUnit(NULL) {
+	_actions(), _redoActions(), _undoDictionary(NULL), _activeWorkbench(NULL), _workbenchStack(), _namedViews(), 
+	_lengthUnit(NULL), _angleUnit(NULL)
+#ifndef __WXWINDOWS__
+, _toolbarManager(NULL)
+#endif
+{
 
 	//If this is root document
 	if (this->_document == NULL) {
@@ -125,8 +135,12 @@ WCDocument::WCDocument(WCFeature *creator, const std::string &name, const std::s
 WCDocument::WCDocument(xercesc::DOMElement *element, WCSerialDictionary *dictionary) : 
 	::WCFeature( WCSerializeableObject::ElementFromName(element,"Feature"), dictionary),
 	_filename(), _scene(NULL), _uiLayer(NULL), _backgroundLayer(NULL), _treeView(NULL), _statusText("Ready"),
-	_actions(), _redoActions(), _undoDictionary(NULL), _activeWorkbench(NULL), _workbenchStack(), _namedViews(), _toolbarManager(NULL),
-	_lengthUnit(NULL), _angleUnit(NULL) {
+	_actions(), _redoActions(), _undoDictionary(NULL), _activeWorkbench(NULL), _workbenchStack(), _namedViews(),
+	_lengthUnit(NULL), _angleUnit(NULL)
+#ifndef __WXWINDOWS__
+, _toolbarManager(NULL)
+#endif
+	{
 
 	//Get GUID and register it
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
@@ -192,8 +206,10 @@ WCDocument::~WCDocument() {
 		//Delete the layers
 		if (this->_uiLayer != NULL) delete this->_uiLayer;
 		if (this->_backgroundLayer != NULL) delete this->_backgroundLayer;
+#ifndef __WXWINDOWS__
 		//Delete the toolbar manager
 		if (this->_toolbarManager != NULL) delete this->_toolbarManager;
+#endif
 		//Delete undo dictionary
 		if (this->_undoDictionary != NULL) delete this->_undoDictionary;
 	}

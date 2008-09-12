@@ -37,6 +37,10 @@
 #include "Kernel/selection_mode.h"
 #include "PartDesign/part_plane.h"
 #include "PartDesign/part.h"
+#ifdef __WXWINDOWS__
+#include "Application/wx/wildcat_app.h"
+#include "Application/wx/main_frame.h"
+#endif
 
 
 //Sketch Feature Included Headers
@@ -181,11 +185,11 @@ bool WCSketchWorkbench::OnEnter(void) {
 	this->WCWorkbench::OnEnter();
 	//Show sketcher toolbars
 #ifdef __WXWINDOWS__
-	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Standard")->Show(true);
-	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("View")->Show(false);
-	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Sketcher")->Show(true);
-	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Profiles")->Show(true);
-	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Operations")->Show(true);
+	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("Standard")->Show(true);
+	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("View")->Show(false);
+	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("Sketcher")->Show(true);
+	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("Profiles")->Show(true);
+	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("Operations")->Show(true);
 #else
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Standard")->IsVisible(true);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("View")->IsVisible(false);
@@ -215,20 +219,22 @@ bool WCSketchWorkbench::OnExit(void) {
 	this->DrawingMode( new WCSelectionMode( this ));
 	//Clear the selection buffer
 #ifdef __WXWINDOWS__
-	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Standard")->Show(false);
-	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("View")->Show(true);
-	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Sketcher")->Show(false);
-	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Profiles")->Show(false);
-	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Operations")->Show(false);
+	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("Standard")->Show(false);
+	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("View")->Show(true);
+	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("Sketcher")->Show(false);
+	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("Profiles")->Show(false);
+	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("Operations")->Show(false);
+	//Hide sketcher toolbars
+	wxGetApp().m_frame->m_toolbarManager->PopState();
 #else
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Standard")->IsVisible(false);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("View")->IsVisible(true);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Sketcher")->IsVisible(false);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Profiles")->IsVisible(false);
 	this->_sketch->Document()->ToolbarManager()->ToolbarFromName("Operations")->IsVisible(false);
-#endif
 	//Hide sketcher toolbars
 	this->_sketch->Document()->ToolbarManager()->PopState();
+#endif
 	//Call to the base OnExit
 	this->WCWorkbench::OnExit();
 	//Make treeView visible
@@ -635,7 +641,7 @@ bool WCSketchWorkbench::OnUserMessage(const WCUserMessage &message) {
 		this->_grid->IsVisible( !this->_grid->IsVisible() );
 		//Toggle showGrid button
 #ifdef __WXWINDOWS__
-		this->_sketch->Document()->ToolbarManager()->ButtonFromName("showGrid")->SetToggle( this->_grid->IsVisible() );
+		wxGetApp().m_frame->m_toolbarManager->ButtonFromName("showGrid")->SetToggle( this->_grid->IsVisible() );
 #else
 		this->_sketch->Document()->ToolbarManager()->ButtonFromName("showGrid")->IsActive( this->_grid->IsVisible() );
 #endif
