@@ -1,5 +1,35 @@
 // wildcat_app.h
 
+// created by Dan Heeks August 2008, based on docview sample Julian Smart 04/01/98
+// some code copied from HeeksCAD
+
+/*******************************************************************************
+* Copyright (c) 2007, 2008, CerroKai Development
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*     * Redistributions of source code must retain the above copyright
+*       notice, this list of conditions and the following disclaimer.
+*     * Redistributions in binary form must reproduce the above copyright
+*       notice, this list of conditions and the following disclaimer in the
+*       documentation and/or other materials provided with the distribution.
+*     * Neither the name of CerroKai Development nor the
+*       names of its contributors may be used to endorse or promote products
+*       derived from this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY CerroKai Development ``AS IS'' AND ANY
+* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL CerroKai Development BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+********************************************************************************/
+
 #include "stdafx.h"
 #include "wx/docview.h"
 #include <wx/stdpaths.h>
@@ -18,10 +48,29 @@ WCWildcatApp::WCWildcatApp(void)
 {
     m_docManager = (wxDocManager *) NULL;
 	m_frame = NULL;
+	m_config = NULL;
+}
+
+WCWildcatApp::~WCWildcatApp(void)
+{
+	delete m_config;
 }
 
 bool WCWildcatApp::OnInit(void)
 {
+	m_config = new wxConfig(_T("Wildcat"));
+
+	int width = 600;
+	int height = 400;
+	int posx = 200;
+	int posy = 200;
+	m_config->Read(_T("MainFrameWidth"), &width);
+	m_config->Read(_T("MainFrameHeight"), &height);
+	m_config->Read(_T("MainFramePosX"), &posx);
+	m_config->Read(_T("MainFramePosY"), &posy);
+	if(posx < 0)posx = 0;
+	if(posy < 0)posy = 0;
+
 	//Initialize logger manager
 	WCLogManager::Initialize();
 	//Set root appender to a file appender
@@ -42,7 +91,7 @@ bool WCWildcatApp::OnInit(void)
 
   //// Create the main frame window
   m_frame = new WCMainFrame((wxDocManager *) m_docManager, (wxFrame *) NULL,
-                      _T("Wildcat"), wxPoint(0, 0), wxSize(500, 400),
+                      _T("Wildcat"), wxPoint(posx, posy), wxSize(width, height),
                       wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE);
 
   //// Give it an icon (this is ignored in MDI mode: uses resources)
@@ -82,7 +131,6 @@ bool WCWildcatApp::OnInit(void)
   //// Associate the menu bar with the frame
   m_frame->SetMenuBar(menu_bar);
 
-  m_frame->Centre(wxBOTH);
 #ifndef __WXMAC__
   m_frame->Show(true);
 #endif //ndef __WXMAC__
@@ -189,5 +237,7 @@ wxString WCWildcatApp::GetExeFolder()const
 
 WCDocument* WCWildcatApp::GetWCDocument()
 {
-	return ((WCPartDocument*)(m_docManager->GetCurrentDocument()))->Document();
+	wxDocument* doc = m_docManager->GetCurrentDocument();
+	if(doc == NULL)return NULL;
+	return ((WCPartDocument*)doc)->Document();
 }

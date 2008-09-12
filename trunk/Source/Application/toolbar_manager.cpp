@@ -233,8 +233,7 @@ void WCToolbarManager::ParseManifest(const std::string &manifest, const std::str
 
 			//Create the new toolbar
 #ifdef __WXWINDOWS__
-			wxToolBar* newToolbar = new wxToolBar(wxGetApp().m_frame, -1, wxDefaultPosition, wxDefaultSize, wxTB_NODIVIDER | wxTB_FLAT);
-			newToolbar->SetToolBitmapSize(wxSize(32, 32));
+			wxToolBar* newToolbar = _frame->AddToolBar(wxConvertMB2WX(name.c_str()));
 #else
 			newToolbar = new WCToolbar(this->_document, name, WCVector4(xPos, yPos, width, height));
 #endif
@@ -264,7 +263,8 @@ void WCToolbarManager::ParseManifest(const std::string &manifest, const std::str
 				if (newButton != NULL) {
 					//If not null, add to toolbar
 #ifdef __WXWINDOWS__
-					wxToolBarToolBase* tool = wxGetApp().m_frame->AddToolBarTool(newToolbar, next_tool_id, newButton->m_message, wxBitmap(wxGetApp().GetExeFolder() + _T("/Resources/") + newButton->m_stdIcon + _T(".tiff"), wxBITMAP_TYPE_TIF), newButton->m_tooltip);
+					wxString image_path = wxGetApp().GetExeFolder() + _T("/Resources/") + newButton->m_stdIcon + _T(".tiff");
+					wxToolBarToolBase* tool = _frame->AddToolBarTool(newToolbar, next_tool_id, newButton->m_message, wxBitmap(image_path, wxBITMAP_TYPE_TIF), newButton->m_tooltip);
 					next_tool_id++;
 					this->_buttonMap.insert( std::make_pair(newButton->m_message.mb_str(), tool) );
 #else
@@ -278,8 +278,8 @@ void WCToolbarManager::ParseManifest(const std::string &manifest, const std::str
 
 #ifdef __WXWINDOWS__
 			newToolbar->Realize();
-			wxGetApp().m_frame->m_aui_manager->AddPane(newToolbar, wxAuiPaneInfo().Name(wxConvertMB2WX(name.c_str())).Caption(wxConvertMB2WX(name.c_str())).ToolbarPane().Top().Left());
-			wxGetApp().m_frame->m_aui_manager->GetPane(newToolbar).Show();
+			_frame->m_aui_manager->AddPane(newToolbar, wxAuiPaneInfo().Name(wxConvertMB2WX(name.c_str())).Caption(wxConvertMB2WX(name.c_str())).ToolbarPane().Top().Left());
+			_frame->m_aui_manager->GetPane(newToolbar).Show();
 #endif
 
 		}
@@ -290,10 +290,6 @@ void WCToolbarManager::ParseManifest(const std::string &manifest, const std::str
 		xercesc::XMLString::release(&xmlWidth);
 		xercesc::XMLString::release(&xmlHeight);
 		xercesc::XMLString::release(&xmlButton);
-
-#ifdef __WXWINDOWS__
-		wxGetApp().m_frame->m_aui_manager->Update();
-#endif
 	}
 
 	//Error checking
@@ -322,9 +318,13 @@ void WCToolbarManager::ParseUserConfig(const std::string &prefFile, const std::s
 
 /***********************************************~***************************************************/
 
-	
+#ifdef __WXWINDOWS__
+WCToolbarManager::WCToolbarManager(WCMainFrame* frame, const std::string &manifest, const std::string &directory, const bool &verbose) :
+	_frame(frame), _buttonMap(), _toolbarMap() {
+#else
 WCToolbarManager::WCToolbarManager(WCDocument *doc, const std::string &manifest, const std::string &directory, const bool &verbose) : 
 	_document(doc), _buttonMap(), _toolbarMap() {
+#endif
 
 	if (verbose) CLOGGER_WARN(WCLogManager::RootLogger(), "WCToolbarManager::WCToolbarManager - Initializing toolbars.");
 	//Parse the toolbar manifest

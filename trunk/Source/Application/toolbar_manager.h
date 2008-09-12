@@ -43,6 +43,9 @@
 #define TOOLBAR_FOOTER_HEIGHT					26
 #define TOOLBAR_ICON_PADDING					8
 
+#ifdef __WXWINDOWS__
+class WCMainFrame;
+#endif
 
 /*** Namespace Declaration ***/
 namespace __WILDCAT_NAMESPACE__ {
@@ -52,8 +55,8 @@ namespace __WILDCAT_NAMESPACE__ {
 #ifndef __WXWINDOWS__
 class WCToolbar;
 class WCToolbarButton;
-#endif
 class WCDocument;
+#endif
 
 
 /***********************************************~***************************************************/
@@ -61,12 +64,13 @@ class WCDocument;
 
 class WCToolbarManager {
 private:
-	WCDocument									*_document;											//!< Parent document
 #ifdef __WXWINDOWS__
+	WCMainFrame*								_frame;												//!< Main Frame
 	std::map<std::string, wxToolBarToolBase*>	_buttonMap;											//!< Map of all toolbar buttons
 	std::map<std::string, wxToolBar*>			_toolbarMap;										//!< Map of names to toolbar objects
 	std::stack< std::list< std::pair<bool,wxToolBar*> > > _stateStack;								//!< Push/pop stack
 #else
+	WCDocument									*_document;											//!< Parent document
 	std::map<std::string, WCToolbarButton*>		_buttonMap;											//!< Map of all toolbar buttons
 	std::map<std::string, WCToolbar*>			_toolbarMap;										//!< Map of names to toolbar objects
 	std::stack< std::list< std::pair<bool,WCToolbar*> > > _stateStack;								//!< Push/pop stack
@@ -82,8 +86,13 @@ private:
 	WCToolbarManager& operator=(const WCToolbarManager& mgr);										//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCToolbarManager(WCDocument *doc, const std::string &manifest, const std::string &directory,	//!< Initialize the manager with a manifest
-												const bool &verbose=false);
+#ifdef __WXWINDOWS__
+	WCToolbarManager(WCMainFrame* frame,
+#else
+	WCToolbarManager(WCDocument *doc,
+#endif
+		const std::string &manifest, const std::string &directory, const bool &verbose=false);		//!< Initialize the manager with a manifest
+												
 	~WCToolbarManager();																			//!< Default destructor
 	
 	//Shader access info

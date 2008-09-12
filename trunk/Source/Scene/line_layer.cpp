@@ -103,7 +103,7 @@ WCLineLayer::WCLineLayer(WCScene *scene, std::string name) : ::WCLayer(scene, na
 	_perfLevel(PerformanceLow), _renderProg(0),	_numVisible(0), _thickness(LINELAYER_THICKNESS),
 	_vertexBuffer(0), _colorBuffer(0), _altVertexBuffer(NULL), _altColorBuffer(NULL) {
 	//Set performance level
-	if(WCAdapter::HasGLARBVertexBufferObject()) {
+	if(WCAdapter::HasGLEXTFramebufferObject()) {
 		//Set the higher performance level
 		this->_perfLevel = PerformanceMedium;
 		//Generate the two buffers
