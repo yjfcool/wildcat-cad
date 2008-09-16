@@ -53,11 +53,13 @@ namespace __WILDCAT_NAMESPACE__ {
 
 class WCScrollbar : public WCWidget {
 protected:
+	WCPerformanceLevel							_perfLevel;											//!< Performance level indicator
 	WCWidget									*_parent;											//!< Parent widget
 	WPFloat										_extent;											//!< How much can it scroll
 	WPFloat										_position;											//!< Current scroll location
 	bool										_isScrolling;										//!< Is the slider selected
 	GLuint										_vertBuffers[9], _texBuffers[9];					//!< Buffers for vertex and texCoord info
+	GLfloat										*_altVertBuffers[9], *_altTexBuffers[9];			//!< Local buffers for vert and tex info
 	GLuint										_textures[9];										//!< Texture buffers
 	WCVector4									_texSizes[9];										//!< Texture sizes
 

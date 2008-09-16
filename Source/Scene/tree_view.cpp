@@ -467,7 +467,6 @@ void WCTreeElement::Print(int indent) {
 void WCTreeView::GenerateTexture(void) {
 	//Set up some parameters
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
 	if(WCAdapter::HasGLEXTFramebufferObject()) {
 		//Set up texture
 		glActiveTexture(GL_TEXTURE0);
@@ -478,9 +477,8 @@ void WCTreeView::GenerateTexture(void) {
 		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
 		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, this->_texWidth, this->_texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-
+		//Check for errors
 		if (glGetError() != GL_NO_ERROR) 
 			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::GenerateTexture - GL error at Create.");
 	}
@@ -556,7 +554,7 @@ void WCTreeView::GenerateTexture(void) {
 
 void WCTreeView::GenerateBuffers(void) {
 	//Create the vertex data
-	GLfloat data[8];
+	GLfloat *data = new GLfloat[8];
 	//Check scroll state
 	if (this->_scrollbar->IsVisible()) {
 		//Lower left
@@ -586,59 +584,62 @@ void WCTreeView::GenerateBuffers(void) {
 		data[6] = (GLfloat)this->_xMax;
 		data[7] = (GLfloat)this->_yMin;
 	}
+	//Determine upper left tex-coord
+	GLfloat actualPixelHeight = (GLfloat)(this->_height / SCREEN_PIXEL_WIDTH);
+	GLfloat actualPixelWidth = (GLfloat)(this->_width / SCREEN_PIXEL_WIDTH);
+	GLfloat upperY = (GLfloat)(this->_texHeight - ((this->_texHeight - actualPixelHeight) * this->_scrollbar->Position()));
+	//Create the color data
+	GLfloat *texCoords = new GLfloat[8];
+	//Upper left
+	texCoords[2] = 0.0;
+	texCoords[3] = upperY;
+	//Upper right
+	texCoords[4] = actualPixelWidth;
+	texCoords[5] = texCoords[3];
+	//Lower right
+	texCoords[6] = actualPixelWidth;
+	texCoords[7] = texCoords[3] - actualPixelHeight;
+	//Lower left
+	texCoords[0] = 0.0;
+	texCoords[1] = texCoords[7];
 
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
+	if(this->_perfLevel == PerformanceMedium) {
+/*** DEBUG ***
+		 std::cout << "Actual Width: " << this->_width << std::endl;
+		 std::cout << "Actual Height: " << this->_height << std::endl;
+		 std::cout << "Virtual Width: " << this->_virtualWidth << std::endl;
+		 std::cout << "Virtual Height: " << this->_virtualHeight << std::endl;
+		 std::cout << "Texture Width: " << this->_texWidth << std::endl;
+		 std::cout << "Texture Height: " << this->_texHeight << std::endl;
+		 std::cout << "Scrollbar Extent: " << this->_scrollbar->Extent() << std::endl;
+		 std::cout << "Scrollbar Position: " << this->_scrollbar->Position() << std::endl;
+		 std::cout << "TC[0] " << texCoords[0] << std::endl;
+		 std::cout << "TC[1] " << texCoords[1] << std::endl;
+		 std::cout << "TC[2] " << texCoords[2] << std::endl;
+		 std::cout << "TC[3] " << texCoords[3] << std::endl;
+		 std::cout << "TC[4] " << texCoords[4] << std::endl;
+		 std::cout << "TC[5] " << texCoords[5] << std::endl;
+		 std::cout << "TC[6] " << texCoords[6] << std::endl;
+		 std::cout << "TC[7] " << texCoords[7] << std::endl;
+/*** DEBUG ***/
 		//Copy the data into the VBO
 		glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
 		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), data, GL_STATIC_DRAW);
-
-		/*** DEBUG ***
-		std::cout << "Actual Width: " << this->_width << std::endl;
-		std::cout << "Actual Height: " << this->_height << std::endl;
-		std::cout << "Virtual Width: " << this->_virtualWidth << std::endl;
-		std::cout << "Virtual Height: " << this->_virtualHeight << std::endl;
-		std::cout << "Texture Width: " << this->_texWidth << std::endl;
-		std::cout << "Texture Height: " << this->_texHeight << std::endl;
-		std::cout << "Scrollbar Extent: " << this->_scrollbar->Extent() << std::endl;
-		std::cout << "Scrollbar Position: " << this->_scrollbar->Position() << std::endl;
-		/*** DEBUG ***/
-
-		//Determine upper left tex-coord
-		GLfloat actualPixelHeight = (GLfloat)(this->_height / SCREEN_PIXEL_WIDTH);
-		GLfloat actualPixelWidth = (GLfloat)(this->_width / SCREEN_PIXEL_WIDTH);
-		GLfloat upperY = (GLfloat)(this->_texHeight - ((this->_texHeight - actualPixelHeight) * this->_scrollbar->Position()));
-		//Create the color data
-		GLfloat texCoords[8];
-		//Upper left
-		texCoords[2] = 0.0;
-		texCoords[3] = upperY;
-		//Upper right
-		texCoords[4] = actualPixelWidth;
-		texCoords[5] = texCoords[3];
-		//Lower right
-		texCoords[6] = actualPixelWidth;
-		texCoords[7] = texCoords[3] - actualPixelHeight;
-		//Lower left
-		texCoords[0] = 0.0;
-		texCoords[1] = texCoords[7];
-
-		/*** DEBUG ***
-		std::cout << "TC[0] " << texCoords[0] << std::endl;
-		std::cout << "TC[1] " << texCoords[1] << std::endl;
-		std::cout << "TC[2] " << texCoords[2] << std::endl;
-		std::cout << "TC[3] " << texCoords[3] << std::endl;
-		std::cout << "TC[4] " << texCoords[4] << std::endl;
-		std::cout << "TC[5] " << texCoords[5] << std::endl;
-		std::cout << "TC[6] " << texCoords[6] << std::endl;
-		std::cout << "TC[7] " << texCoords[7] << std::endl;
-		/*** DEBUG ***/
 		//Copy the data into the VBO
 		glBindBuffer(GL_ARRAY_BUFFER, this->_texCoordBuffer);
 		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
-		//Clean up
+		//Clean up data arrays and rebind to zero
+		delete data;
+		delete texCoords;
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	else {
+		//Delete local buffers if present
+		if (this->_altVertexBuffer != NULL) delete this->_altVertexBuffer;
+		if (this->_altTexCoordBuffer != NULL) delete this->_altTexCoordBuffer;
+		//Set the buffers to the created data
+		this->_altVertexBuffer = data;
+		this->_altTexCoordBuffer = texCoords;
 		//Render the scrollbar
 		this->_scrollbar->Render();
 	}
@@ -675,10 +676,10 @@ WCVector4 WCTreeView::ToVirtualWindow(const WCVector4 &pos) {
 /***********************************************~***************************************************/
 
 
-WCTreeView::WCTreeView(WCUserInterfaceLayer *layer) : ::WCOverlay(layer, false), _elementMap(), _root(NULL), _selected(), _mouseOver(NULL),
-	_tex(0), _texWidth(0), _texHeight(0), _framebuffer(0), _vertexBuffer(0), _texCoordBuffer(0),
+WCTreeView::WCTreeView(WCUserInterfaceLayer *layer) : ::WCOverlay(layer, false), _perfLevel(PerformanceLow),
+	_elementMap(), _root(NULL), _selected(), _mouseOver(NULL), _tex(0), _texWidth(0), _texHeight(0),
+	_framebuffer(0), _vertexBuffer(0), _texCoordBuffer(0), _altVertexBuffer(NULL), _altTexCoordBuffer(NULL),
 	_scrollbar(NULL), _scale(1.0), _virtualWidth(0.0), _virtualHeight(0.0) {
-
 	//Make sure layer is not null
 	if (this->_layer == NULL) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::WCTreeView - NULL layer passed.");
@@ -689,21 +690,22 @@ WCTreeView::WCTreeView(WCUserInterfaceLayer *layer) : ::WCOverlay(layer, false),
 	layer->RegisterWidget(this);
 	//Set up generation texture
 	glGenTextures(1, &this->_tex);
-
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
+	//Check the performance level (Must have FBP, VBO, and texture rect support)
+	if(WCAdapter::HasGLEXTFramebufferObject() && WCAdapter::HasGLARBVertexBufferObject() && WCAdapter::HasGLARBTextureRectangle()) {
+		//Set perfLevel to medium
+		this->_perfLevel = PerformanceMedium;
 		//Generate the framebuffer object
 		glGenFramebuffersEXT(1, &(this->_framebuffer));
-
 		//Generate the buffers
 		glGenBuffers(1, &this->_vertexBuffer);
 		glGenBuffers(1, &this->_texCoordBuffer);
-		this->_isDirty = true;
 	}
-
 	//Create the scrollbar
 	this->_scrollbar = new WCVerticalScrollbar(this, 1.0, 0.0);
 	this->_scrollbar->IsVisible(false);
 	this->_scrollbar->Retain(*this);
+	//Mark as dirty
+	this->_isDirty = true;
 }
 
 
@@ -719,9 +721,15 @@ WCTreeView::~WCTreeView() {
 	if (this->_layer != NULL) this->_layer->UnregisterWidget(this);
 	//Delete the texture
 	glDeleteTextures(1, &(this->_tex));
-	//Delete the buffers
-	glDeleteBuffers(1, &this->_vertexBuffer);
-	glDeleteBuffers(1, &this->_texCoordBuffer);
+	//Delete the buffers and FBO (as appropriate)
+	if (this->_perfLevel == PerformanceMedium) {
+		glDeleteFramebuffersEXT(1, &this->_framebuffer);
+		glDeleteBuffers(1, &this->_vertexBuffer);
+		glDeleteBuffers(1, &this->_texCoordBuffer);
+	}
+	//Delete local buffers if present
+	if (this->_altVertexBuffer != NULL) delete this->_altVertexBuffer;
+	if (this->_altTexCoordBuffer != NULL) delete this->_altTexCoordBuffer;
 }
 
 
@@ -951,23 +959,21 @@ void WCTreeView::OnArrowKeyPress(const WCArrowKey &key) {
 void WCTreeView::Render(void) {
 	//Make sure is visible and has root element
 	if ((!this->_isVisible) || (this->_root == NULL)) return;
-
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
-		//Check to see if tree is dirty
-		if (this->_isDirty) {
-			//Generate the tree texture
-			this->GenerateTexture();
-			//Generate the display buffers
-			this->GenerateBuffers();
-			//Mark as clean
-			this->_isDirty = false;
-		}
-
-		//Render the scrollbar
-		this->_scrollbar->Render();
-
+	//Check to see if tree is dirty
+	if (this->_isDirty) {
+		//Generate the tree texture
+		this->GenerateTexture();
+		//Generate the display buffers
+		this->GenerateBuffers();
+		//Mark as clean
+		this->_isDirty = false;
+	}
+	//Render the scrollbar
+	this->_scrollbar->Render();
+	//Set up depending on perfLevel
+	if(this->_perfLevel == PerformanceMedium) {
 		//Enable the texture for use
-		glEnable(GL_TEXTURE_RECTANGLE_ARB);	
+		glEnable(GL_TEXTURE_RECTANGLE_ARB);
 		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_tex);
 		//Setup vertex array
 		glEnableClientState(GL_VERTEX_ARRAY);
@@ -977,25 +983,20 @@ void WCTreeView::Render(void) {
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, this->_texCoordBuffer);
 		glTexCoordPointer(2, GL_FLOAT, 0, 0);
-
 		//Draw
 		glColor4f(1.0, 1.0, 1.0, 1.0);
 		glDrawArrays(GL_QUADS, 0, 4);
-
 		//Bind back to nothing
-		glBindBuffer(GL_ARRAY_BUFFER, 0);	
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		//Make sure that vertex and normal arrays are disabled
 		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		//Clean up
 		glDisable(GL_TEXTURE_RECTANGLE_ARB);
 	}
-	else
-	{
-		//Generate the tree texture
-		this->GenerateTexture();
-		//Generate the display buffers
-		this->GenerateBuffers();
+	//Must be low performance
+	else {
+
 	}
 	
 	//Optionally render tie-in lines
