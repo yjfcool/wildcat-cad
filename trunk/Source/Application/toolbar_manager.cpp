@@ -30,35 +30,9 @@
 #include "Application/toolbar_manager.h"
 #include "Application/toolbar.h"
 
-#ifdef __WXWINDOWS__
-#include "Application/wx/wildcat_app.h"
-#include "Application/wx/main_frame.h"
-#endif
 
 /***********************************************~***************************************************/
 
-#ifdef __WXWINDOWS__
-// a class just to temporarily store buttons when reading the XML file
-class WCToolbarButton{
-public:
-	wxString m_message;
-	wxString m_tooltip;
-	int m_type;
-	wxString m_stdIcon;
-	wxString m_activeIcon;
-	bool m_active;
-	bool m_enabled;
-	WCToolbarButton(const WCUserMessage &message, const std::string &tooltip, const unsigned int &type, const std::string &stdIcon, const std::string &activeIcon, const bool &active, const bool &enabled) {
-		m_message = wxConvertMB2WX(message.c_str());
-		m_tooltip = wxConvertMB2WX(tooltip.c_str());
-		m_type = type;
-		m_stdIcon = wxConvertMB2WX(stdIcon.c_str());;
-		m_activeIcon = wxConvertMB2WX(activeIcon.c_str());;
-		m_active = active;
-		m_enabled = enabled;
-	}
-};
-#endif
 
 void WCToolbarManager::ParseManifest(const std::string &manifest, const std::string &directory, const bool &verbose) {
 	//Create xml parser
@@ -77,12 +51,7 @@ void WCToolbarManager::ParseManifest(const std::string &manifest, const std::str
 	xercesc::DOMNamedNodeMap *nodeMap;
 	XMLCh* xmlString;
 	WCToolbarButton *newButton = NULL;
-#ifdef __WXWINDOWS__
-	std::map<std::string, WCToolbarButton*> tempButtonMap;
-	int next_tool_id = FIRST_TOOLBAR_BUTTON_ID;
-#else
 	WCToolbar *newToolbar = NULL;
-#endif
 
 	//Try to parse
 	try {
@@ -164,18 +133,13 @@ void WCToolbarManager::ParseManifest(const std::string &manifest, const std::str
 			std::string enabledString(chars);
 			xercesc::XMLString::release(&chars);
 			if (enabledString == "true") enabled = true;
-
 			//Create the new toolbar button
 			newButton = new WCToolbarButton(message, tooltip, type, standardIcon, activeIcon, active, enabled);
 			//Be verbose if appropriate
 			if ((newButton != NULL) && verbose) 
 				CLOGGER_DEBUG(WCLogManager::RootLogger(), "Button " << message << " successfully loaded");
 			//Add object into map
-#ifdef __WXWINDOWS__
-			tempButtonMap.insert( std::make_pair(message, newButton) );
-#else
 			this->_buttonMap.insert( std::make_pair(message, newButton) );
-#endif
 		}
 		//Clean up a bit
 		xercesc::XMLString::release(&xmlMessage);
@@ -232,11 +196,7 @@ void WCToolbarManager::ParseManifest(const std::string &manifest, const std::str
 			int height = xercesc::XMLString::parseInt(tmpNode->getNodeValue());
 
 			//Create the new toolbar
-#ifdef __WXWINDOWS__
-			wxToolBar* newToolbar = _frame->AddToolBar(wxConvertMB2WX(name.c_str()));
-#else
 			newToolbar = new WCToolbar(this->_document, name, WCVector4(xPos, yPos, width, height));
-#endif
 			//Be verbose if appropriate
 			if ((newToolbar != NULL) && verbose) 
 				CLOGGER_DEBUG(WCLogManager::RootLogger(), "Toolbar " << name << " successfully loaded");
@@ -251,37 +211,17 @@ void WCToolbarManager::ParseManifest(const std::string &manifest, const std::str
 				tmpNode = buttonsList->item(buttonIndex)->getFirstChild();
 				//Find the button
 				chars = xercesc::XMLString::transcode(tmpNode->getNodeValue());
-#ifdef __WXWINDOWS__
-				std::map<std::string, WCToolbarButton*>::iterator FindIt = tempButtonMap.find(std::string(chars));
-				if(FindIt == tempButtonMap.end())newButton = NULL;
-				else newButton = FindIt->second;
-#else
 				newButton = this->ButtonFromName(chars);
-#endif
 				xercesc::XMLString::release(&chars);
 				//Make sure is not null
 				if (newButton != NULL) {
 					//If not null, add to toolbar
-#ifdef __WXWINDOWS__
-					wxString image_path = wxGetApp().GetExeFolder() + _T("/Resources/") + newButton->m_stdIcon + _T(".tiff");
-					wxToolBarToolBase* tool = _frame->AddToolBarTool(newToolbar, next_tool_id, newButton->m_message, wxBitmap(image_path, wxBITMAP_TYPE_TIF), newButton->m_tooltip);
-					next_tool_id++;
-					this->_buttonMap.insert( std::make_pair(newButton->m_message.mb_str(), tool) );
-#else
 					newToolbar->AddButton(newButton);
-#endif
 				}
 				else {
 					CLOGGER_ERROR(WCLogManager::RootLogger(), "WCToolbarManager::ParseManifest - Not able to load button");
 				}
 			}
-
-#ifdef __WXWINDOWS__
-			newToolbar->Realize();
-			_frame->m_aui_manager->AddPane(newToolbar, wxAuiPaneInfo().Name(wxConvertMB2WX(name.c_str())).Caption(wxConvertMB2WX(name.c_str())).ToolbarPane().Top().Left());
-			_frame->m_aui_manager->GetPane(newToolbar).Show();
-#endif
-
 		}
 		//Clean up a bit
 		xercesc::XMLString::release(&xmlName);
@@ -318,14 +258,9 @@ void WCToolbarManager::ParseUserConfig(const std::string &prefFile, const std::s
 
 /***********************************************~***************************************************/
 
-#ifdef __WXWINDOWS__
-WCToolbarManager::WCToolbarManager(WCMainFrame* frame, const std::string &manifest, const std::string &directory, const bool &verbose) :
-	_frame(frame), _buttonMap(), _toolbarMap() {
-#else
+
 WCToolbarManager::WCToolbarManager(WCDocument *doc, const std::string &manifest, const std::string &directory, const bool &verbose) : 
 	_document(doc), _buttonMap(), _toolbarMap() {
-#endif
-
 	if (verbose) CLOGGER_WARN(WCLogManager::RootLogger(), "WCToolbarManager::WCToolbarManager - Initializing toolbars.");
 	//Parse the toolbar manifest
 	this->ParseManifest(manifest, directory, verbose);
@@ -335,7 +270,6 @@ WCToolbarManager::WCToolbarManager(WCDocument *doc, const std::string &manifest,
 
 
 WCToolbarManager::~WCToolbarManager() {
-#ifndef __WXWINDOWS__
 	//Loop through all of the toolbars
 	std::map<std::string, WCToolbar*>::iterator toolbarIter;
 	for (toolbarIter = this->_toolbarMap.begin(); toolbarIter != this->_toolbarMap.end(); toolbarIter++) {
@@ -349,7 +283,6 @@ WCToolbarManager::~WCToolbarManager() {
 		//Delete the element
 		delete (*buttonIter).second;
 	}
-#endif
 }
 	
 
@@ -364,15 +297,10 @@ void WCToolbarManager::PushState(void) {
 void WCToolbarManager::PopState(void) {
 }
 
-#ifdef __WXWINDOWS__
-wxToolBar* WCToolbarManager::ToolbarFromName(const std::string &name) {
-	//Check to see if the name is in the toolbar map
-	std::map<std::string, wxToolBar*>::iterator iter = this->_toolbarMap.find(name);
-#else
+
 WCToolbar* WCToolbarManager::ToolbarFromName(const std::string &name) {
 	//Check to see if the name is in the toolbar map
 	std::map<std::string, WCToolbar*>::iterator iter = this->_toolbarMap.find(name);
-#endif
 	//See if you found anything
 	if( iter == this->_toolbarMap.end() ) {
 		//Not able to find
@@ -383,15 +311,10 @@ WCToolbar* WCToolbarManager::ToolbarFromName(const std::string &name) {
 	return (*iter).second;
 }
 
-#ifdef __WXWINDOWS__
-wxToolBarToolBase* WCToolbarManager::ButtonFromName(const std::string &name) {
-	//Check to see if the name is in the button map
-	std::map<std::string, wxToolBarToolBase*>::iterator iter = this->_buttonMap.find(name);
-#else
+
 WCToolbarButton* WCToolbarManager::ButtonFromName(const std::string &name) {
 	//Check to see if the name is in the button map
 	std::map<std::string, WCToolbarButton*>::iterator iter = this->_buttonMap.find(name);
-#endif
 	//See if you found anything
 	if( iter == this->_buttonMap.end() ) {
 	//Not able to find

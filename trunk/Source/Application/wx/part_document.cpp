@@ -1,5 +1,3 @@
-// part_document.cpp
-
 /*******************************************************************************
 * Copyright (c) 2007, 2008, CerroKai Development
 * All rights reserved.
@@ -27,31 +25,48 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ********************************************************************************/
 
-#include "stdafx.h"
-#include "part_document.h"
-#include "part_view.h"
-#include "part_canvas.h"
+
+/*** Included Header Files ***/
+#include "Application/wx/part_document.h"
+#include "Application/wx/part_view.h"
+#include "Application/wx/part_canvas.h"
 #include "PartDesign/part.h"
 #include "PartDesign/part_feature.h"
 #include "Application/keymap.h"
 
-IMPLEMENT_DYNAMIC_CLASS(WCPartDocument, wxDocument)
+
+/***********************************************~***************************************************/
+
+
+IMPLEMENT_DYNAMIC_CLASS(__WILDCAT_NAMESPACE__::WCPartDocument, wxDocument)
+
+
+/***********************************************~***************************************************/
+
 
 WCPartDocument::WCPartDocument(void):_part(NULL), _document(NULL) {
+	//Nothing else to do for now
 }
+
 
 WCPartDocument::~WCPartDocument(void) {
 	//Delete part if it exists
 	if (this->_part != NULL) delete this->_part;
 }
 
+
 bool WCPartDocument::OnCreate(const wxString& path, long flags) {
 	wxDocument::OnCreate(path, flags);
 	InitOpenGL();
+	//Create the new part
 	this->_part = new WCPart("", "");
 	this->_document = this->_part;
 	//Set the default surface renderer
 	WCPartFeature::DefaultSurfaceRenderer = this->_part->Scene()->ShaderManager() ? this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight") : 0;
-
+	//Return true, always...
 	return true;
 }
+
+
+/***********************************************~***************************************************/
+

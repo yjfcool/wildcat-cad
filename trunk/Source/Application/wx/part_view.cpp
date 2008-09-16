@@ -1,5 +1,3 @@
-// part_view.cpp
-
 /*******************************************************************************
 * Copyright (c) 2007, 2008, CerroKai Development
 * All rights reserved.
@@ -28,80 +26,83 @@
 ********************************************************************************/
 
 
-#include "stdafx.h"
-#include "part_view.h"
-#include "part_document.h"
-#include "wildcat_app.h"
-#include "main_frame.h"
-#include "part_canvas.h"
+/*** Included Header Files ***/
+#include "Application/wx/part_view.h"
+#include "Application/wx/part_document.h"
+#include "Application/wx/wildcat_app.h"
+#include "Application/wx/main_frame.h"
+#include "Application/wx/part_canvas.h"
+
+
+/***********************************************~***************************************************/ 
+
 
 IMPLEMENT_DYNAMIC_CLASS(WCPartView, wxView)
-
 BEGIN_EVENT_TABLE(WCPartView, wxView)
 END_EVENT_TABLE()
 
+
+/***********************************************~***************************************************/ 
+
+
 // What to do when a view is created. Creates actual
 // windows for displaying the view.
-bool WCPartView::OnCreate(wxDocument *doc, long WXUNUSED(flags) )
-{
-    frame = wxGetApp().CreateChildFrame(doc, this, true);
-    frame->SetTitle(_T("WCPartView"));
-
-    canvas = wxGetApp().m_frame->CreateCanvas(this, frame);
+bool WCPartView::OnCreate(wxDocument *doc, long WXUNUSED(flags) ) {
+	this->_frame = wxGetApp().CreateChildFrame(doc, this, true);
+    this->_frame->SetTitle(_T("WCPartView"));
+    this->_canvas = wxGetApp().Frame()->CreateCanvas(this, this->_frame);
 #ifdef __X__
     // X seems to require a forced resize
     int x, y;
-    frame->GetSize(&x, &y);
-    frame->SetSize(wxDefaultCoord, wxDefaultCoord, x, y);
+    this->_frame->GetSize(&x, &y);
+    this->_frame->SetSize(wxDefaultCoord, wxDefaultCoord, x, y);
 #endif
-
 #ifdef __WXMSW__
-	frame->SetIcon(wxICON(Wildcat));
+	this->_frame->SetIcon(wxICON(Wildcat));
 #endif
 
-    frame->Show(true);
-	canvas->Show(true);
+    this->_frame->Show(true);
+	this->_canvas->Show(true);
     Activate(true);
-
+	//Always return true
     return true;
 }
+
 
 // Sneakily gets used for default print/preview
 // as well as drawing on the screen.
-void WCPartView::OnDraw(wxDC *dc)
-{
+void WCPartView::OnDraw(wxDC *dc) {
 }
 
-void WCPartView::OnUpdate(wxView *WXUNUSED(sender), wxObject *WXUNUSED(hint))
-{
-  if (canvas)
-    canvas->Refresh();
+
+void WCPartView::OnUpdate(wxView *WXUNUSED(sender), wxObject *WXUNUSED(hint)) {
+	//If the canvas is present, refresh it
+	if (this->_canvas) this->_canvas->Refresh();
 }
+
 
 // Clean up windows used for displaying the view.
-bool WCPartView::OnClose(bool deleteWindow)
-{
-  if (!GetDocument()->Close())
-    return false;
-
-  // Clear the canvas in  case we're in single-window mode,
-  // and the canvas stays.
-  canvas->ClearBackground();
-  canvas->view = (wxView *) NULL;
-  canvas = (WCPartCanvas *) NULL;
-
-  wxString s(wxTheApp->GetAppName());
-  if (frame)
-    frame->SetTitle(s);
-
-  SetFrame((wxFrame*)NULL);
-
-  Activate(false);
-
-  if (deleteWindow)
-  {
-    delete frame;
-    return true;
-  }
-  return true;
+bool WCPartView::OnClose(bool deleteWindow) {
+	//If doc won't close, then don't close
+	if (!this->GetDocument()->Close()) return false;
+	// Clear the canvas in  case we're in single-window mode,
+	// and the canvas stays.
+	this->_canvas->ClearBackground();
+	this->_canvas->View(NULL);
+	this->_canvas = NULL;
+	wxString s(wxTheApp->GetAppName());
+	if (this->_frame) this->_frame->SetTitle(s);
+	SetFrame((wxFrame*)NULL);
+	Activate(false);
+	//If we are deleting the window
+	if (deleteWindow) {
+		//Delete the frame
+		delete this->_frame;
+	}
+	//We outta here
+	return true;
 }
+
+
+/***********************************************~***************************************************/
+

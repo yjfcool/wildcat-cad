@@ -1,4 +1,3 @@
-// part_view.h
 /*******************************************************************************
 * Copyright (c) 2007, 2008, CerroKai Development
 * All rights reserved.
@@ -26,32 +25,49 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ********************************************************************************/
 
-#ifndef WC_WX_PART_VIEW_HEADER
-#define WC_WX_PART_VIEW_HEADER
 
-#include "wx/docview.h"
+#ifndef __PART_VIEW__
+#define __PART_VIEW__
 
+
+/*** Included Header Files ***/
+#include "Utility/wutil.h"
+#include <wx/docview.h>
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
+/*** Class Predefines ***/
 class WCPartCanvas;
 
-class WCPartView: public wxView
-{
-public:
-    wxMDIChildFrame *frame;
-    WCPartCanvas *canvas;
-  
-    WCPartView() { canvas = (WCPartCanvas *) NULL; frame = (wxMDIChildFrame *) NULL; }
-    ~WCPartView() {}
 
-    bool OnCreate(wxDocument *doc, long flags);
-    void OnDraw(wxDC *dc);
-    void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
-    bool OnClose(bool deleteWindow = true);
+/***********************************************~***************************************************/
 
+
+class WCPartView: public wxView {
 private:
-    DECLARE_DYNAMIC_CLASS(WCPartView)
+	wxMDIChildFrame								*_frame;											//!< Related child frame
+    WCPartCanvas								*_canvas;											//!< Drawing canvas
+	//wx Macros
+	DECLARE_DYNAMIC_CLASS(WCPartView)
     DECLARE_EVENT_TABLE()
+public:
+	//Constructors and Destructors
+	WCPartView() : _canvas(NULL), _frame(NULL)	{ }													//!< Default constructor
+    ~WCPartView()								{ }													//!< Default destructor
+
+	bool OnCreate(wxDocument *doc, long flags);														//!<
+    void OnDraw(wxDC *dc);																			//!<
+    void OnUpdate(wxView *sender, wxObject *hint=NULL);												//!<
+    bool OnClose(bool deleteWindow=true);															//!<
 };
 
 
+/***********************************************~***************************************************/
 
-#endif
+
+}	   // End Wildcat Namespace
+#endif //__PART_VIEW__
+

@@ -60,9 +60,7 @@ class WCToolbarManager;
 class WCDocument : public WCFeature, public virtual WCVisualObject {
 protected:
 	//Static Members
-#ifndef __WXWINDOWS__
 	static std::string							ToolbarManifest;									//!< Name of the resource manifest
-#endif
 	//Instance Data Members
 	std::string									_filename;											//!< Filename for this document
 	WCScene										*_scene;											//!< Scene associated with document
@@ -76,9 +74,7 @@ protected:
 	WCWorkbench*								_activeWorkbench;									//!< Current active workbench
 	std::stack<WCWorkbench*>					_workbenchStack;									//!< Workbench stack
 	std::map<std::string, WCNamedView>			_namedViews;										//!< Named views
-#ifndef __WXWINDOWS__
 	WCToolbarManager							*_toolbarManager;									//!< Toolbar manager
-#endif
 	WCUnitType									*_lengthUnit;										//!< Length unit type
 	WCUnitType									*_angleUnit;										//!< Angle unit type
 private:
@@ -111,9 +107,7 @@ public:
 	inline WCSerialDictionary* UndoDictionary(void) { return this->_undoDictionary; }				//!< Get the undo dictionary
 	bool EnterWorkbench(WCWorkbench *workbench);													//!< Enter a new workbench
 	bool ExitWorkbench(void);																		//!< Exit the current workbench
-#ifndef __WXWINDOWS__
 	inline WCToolbarManager* ToolbarManager(void) const { return this->_toolbarManager; }			//!< Get the toolbar manager
-#endif
 	inline void LengthUnit(WCUnitType *type)	{ delete this->_lengthUnit; this->_lengthUnit = type; }	//!< Set the length unit type
 	inline WCUnitType* LengthUnit(void)			{ return this->_lengthUnit; }						//!< Get the length unit type
 	inline void AngleUnit(WCUnitType *type)		{ delete this->_angleUnit; this->_angleUnit = type; }	//!< Set the angle unit type

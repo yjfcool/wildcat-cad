@@ -72,8 +72,8 @@ void WCTextureManager::LoadTexture(WSTexture *texObj) {
 	}
 	else {
 		// use pow(2, n) for texture width and height
-		for(texObj->_texture_width = 1; texObj->_texture_width < img.width; texObj->_texture_width *= 2){}
-		for(texObj->_texture_height = 1; texObj->_texture_height < img.height; texObj->_texture_height *= 2){}
+		for(texObj->_texture_width = 1; texObj->_texture_width < (GLint)img.width; texObj->_texture_width *= 2){}
+		for(texObj->_texture_height = 1; texObj->_texture_height < (GLint)img.height; texObj->_texture_height *= 2){}
 	}
 
 	//Get all of the raster data

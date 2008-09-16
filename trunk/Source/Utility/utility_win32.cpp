@@ -37,7 +37,7 @@
 #ifdef __WXWINDOWS__
 #include "wx/wx.h"
 #include <wx/stdpaths.h>
-#include "../Application/wx/wildcat_app.h"
+#include "Application/wx/wildcat_app.h"
 #endif
 
 
