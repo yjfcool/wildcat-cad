@@ -440,6 +440,13 @@ char* adapterExtensions[ADAPTER_EXTENSION_COUNT] = {
 
 	/*** End Limits ***/
 
+
+	/*** Work arounds ***/
+#ifdef __WIN32__
+	//Fix possible issue where GLARB_VERTEX_BUFFER_OBJECT is true, but glGenBuffers is not found
+	if (glGenBuffers == NULL) WCAdapter::_extensions[29] = false;
+#endif
+
 	//Mark the adapter as initialized
 	WCAdapter::_isInitialized = true;
 	//Check for GL errors

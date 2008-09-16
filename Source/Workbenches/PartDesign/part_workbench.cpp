@@ -33,10 +33,6 @@
 #include "Scene/frame_rate_monitor.h"
 #include "Kernel/selection_mode.h"
 #include "Sketcher/sketch.h"
-#ifdef __WXWINDOWS__
-#include "Application/wx/wildcat_app.h"
-#include "Application/wx/main_frame.h"
-#endif
 
 
 //Part Feature Included Headers
@@ -111,15 +107,9 @@ bool WCPartWorkbench::OnEnter(void) {
 	//Call to the base OnEnter
 	this->WCWorkbench::OnEnter();
 	//Show part only design toolbars
-#ifdef __WXWINDOWS__
-	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("Standard")->Show(true);
-	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("View")->Show(true);
-	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("Part Design")->Show(true);
-#else
 	this->_part->Document()->ToolbarManager()->ToolbarFromName("Standard")->IsVisible(true);
 	this->_part->Document()->ToolbarManager()->ToolbarFromName("View")->IsVisible(true);
 	this->_part->Document()->ToolbarManager()->ToolbarFromName("Part Design")->IsVisible(true);
-#endif
 	//Return true
 	return true;
 }
@@ -127,15 +117,9 @@ bool WCPartWorkbench::OnEnter(void) {
 
 bool WCPartWorkbench::OnExit(void) {
 	//Hide part design toolbars
-#ifdef __WXWINDOWS__
-	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("Standard")->Show(false);
-	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("View")->Show(false);
-	wxGetApp().m_frame->m_toolbarManager->ToolbarFromName("Part Design")->Show(false);
-#else
 	this->_part->Document()->ToolbarManager()->ToolbarFromName("Standard")->IsVisible(false);
 	this->_part->Document()->ToolbarManager()->ToolbarFromName("View")->IsVisible(false);
 	this->_part->Document()->ToolbarManager()->ToolbarFromName("Part Design")->IsVisible(false);
-#endif
 	//Call to the base OnExit
 	this->WCWorkbench::OnExit();
 	//Return true

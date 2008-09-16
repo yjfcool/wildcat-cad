@@ -1,5 +1,3 @@
-// wildcat_app.h
-
 /*******************************************************************************
 * Copyright (c) 2007, 2008, CerroKai Development
 * All rights reserved.
@@ -27,36 +25,68 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ********************************************************************************/
 
-#ifndef WX_WILDCAT_APP_HEADER
-#define WX_WILDCAT_APP_HEADER
 
-class wxDocManager;
-class WCMainFrame;
-class wxDocument;
-class wxView;
-#include "Workbenches/Kernel/document.h"
+#ifndef __WILDCAT_APP__
+#define __WILDCAT_APP__
+
+
+/*** Included Header Files ***/
+#include "Utility/wutil.h"
 #include <wx/config.h>
 
-// Define a new application
-class WCWildcatApp: public wxApp
-{
-public:
-	WCMainFrame *m_frame;
-	wxConfig* m_config;
 
-	WCWildcatApp(void);
-	~WCWildcatApp(void);
+/*** Some wx Stuff ***/
+class wxDocManager;
+class wxDocument;
+class wxView;
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
+/*** Class Predefinitions ***/
+
+class WCMainFrame;
+class WCDocument;
+
+
+/***********************************************~***************************************************/
+
+
+class WCWildcatApp : public wxApp {
+protected:
+	wxDocManager								*_docManager;										//!<
+	WCMainFrame									*_frame;											//!<
+	wxConfig									*_config;											//!<
+public:
+	//Constructors and Destructors
+	WCWildcatApp(void);																				//!< Default constructor
+	~WCWildcatApp(void);																			//!< Default destructor
+
+	//Member Access Methods
+	inline wxConfig* Config(void)				{ return this->_config; }							//!< Return application configuration
+	inline WCMainFrame* Frame(void)				{ return this->_frame; }							//!< Return application frame
+	inline wxDocManager* DocManager(void)		{ return this->_docManager; }						//!< Return application document manager
+
 	bool OnInit(void);
 	int OnExit(void);
 
 	wxMDIChildFrame *CreateChildFrame(wxDocument *doc, wxView *view, bool isCanvas);
 	wxString GetExeFolder()const;
 	WCDocument* GetWCDocument();
-
-protected:
-	wxDocManager* m_docManager;
 };
 
+
+/***********************************************~***************************************************/
+
+
+}	   // End Wildcat Namespace
+
+
+//Global Access Function
 DECLARE_APP(WCWildcatApp)
 
-#endif
+
+#endif //__WILDCAT_APP__
+

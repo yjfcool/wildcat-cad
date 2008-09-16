@@ -43,8 +43,6 @@
 #define TOOLBARELEMENT_TYPE_MODE				2
 
 
-#ifndef __WXWINDOWS__    // use wxToolBar instead
-
 /*** Namespace Declaration ***/
 namespace __WILDCAT_NAMESPACE__ {
 
@@ -75,6 +73,7 @@ public:
 	~WCToolbarButton();																				//!< Default destructor
 
 	//Member Access Methods
+	inline WCToolbarButton_Bridge* Bridge(void)	{ return this->_bridge; }							//!< Get the bridge object
 	bool IsActive(void) const;																		//!< Get the active state
 	void IsActive(const bool &state);																//!< Set the active state
 	bool IsEnabled(void) const;																		//!< Get the enabled state
@@ -98,10 +97,11 @@ private:
 	friend class WCToolbarManager;																	//!< Toolbar manager is a friend
 public:
 	//Constructors and Destructors
-	WCToolbar(WCDocument *doc, const std::string &name, const WCVector4 &position);					//!< Default constructor
+	WCToolbar(WCDocument *doc, const std::string &title, const WCVector4 &position);				//!< Default constructor
 	~WCToolbar();																					//!< Default constructor
 
 	//Member Access Methods
+	inline WCToolbar_Bridge* Bridge(void)		{ return this->_bridge; }							//!< Get the bridge object
 	WCToolbarButton* ButtonFromName(const std::string &name);										//!< Get a button from a name
 	bool IsVisible(void) const;																		//!< Get the visible state
 	void IsVisible(const bool &state);																//!< Set the visible state
@@ -112,8 +112,5 @@ public:
 
 
 }	   // End Wildcat Namespace
-
-#endif // #ifndef __WXWINDOWS__
-
 #endif //__TOOLBAR_H__
 

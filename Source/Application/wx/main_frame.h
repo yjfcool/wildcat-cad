@@ -1,5 +1,3 @@
-// main_frame.h
-
 /*******************************************************************************
 * Copyright (c) 2007, 2008, CerroKai Development
 * All rights reserved.
@@ -27,48 +25,82 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ********************************************************************************/
 
-#include "wx/mdi.h"
-#include "wx/docview.h"
-#include "wx/docmdi.h"
+
+#ifndef __MAIN_FRAME_H__
+#define __MAIN_FRAME_H__
+
+
+/*** Included Header Files ***/
+#include "Utility/wutil.h"
+#include <wx/mdi.h>
+#include <wx/docview.h>
+#include <wx/docmdi.h>
 #include <wx/aui/aui.h>
-#include <map>
 #include "Application/toolbar_manager.h"
 
-#define MAX_TOOLS 10000
 
+/*** Locally Define Values ***/
+#define MAX_TOOLS 10000
+#define DOCVIEW_CUT     1
+#define DOCVIEW_ABOUT   wxID_ABOUT
 enum{
 	FIRST_TOOLBAR_BUTTON_ID = wxID_HIGHEST + 1,
 	NEXT_ID_AFTER_TOOLBAR_BUTTONS = FIRST_TOOLBAR_BUTTON_ID + MAX_TOOLS
 };
 
-// Define a new frame
+
+/*** Externally Defined Variables ***/
+extern bool singleWindowMode;
+
+
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
+
+
+/*** Class Predefinitions ***/
 class WCPartCanvas;
 
-class WCMainFrame: public wxDocMDIParentFrame
-{
+
+/***********************************************~***************************************************/
+
+
+class WCMainFrame : public wxDocMDIParentFrame {
 public:
-	wxMenu *editMenu;
-	wxAuiManager* m_aui_manager;
-	std::map<int, wxToolBarToolBase*> m_id_button_map;
-	WCToolbarManager *m_toolbarManager;
+	wxMenu										*_editMenu;											//!< Edit menu object
+	wxAuiManager								*_auiManager;										//!< wxAuiManager
+	std::map<int, wxToolBarToolBase*>			_idButtonMap;										//!< Map of all buttons
+	WCToolbarManager							*_toolbarManager;									//!< Toolbar manager
+public:
+	//Constructors and Destructors
+	WCMainFrame(wxDocManager *manager, wxFrame *frame, const wxString& title, const wxPoint& pos,	//!< Primary constructor
+												const wxSize& size, long type);
+	~WCMainFrame();																					//!< Default destructor
 
-	WCMainFrame(wxDocManager *manager, wxFrame *frame, const wxString& title, const wxPoint& pos, const wxSize& size,
-		long type);
-	~WCMainFrame();
+	//Primary Access Methods
+	inline wxAuiManager* AuiManager(void)		{ return this->_auiManager; }						//!< Get the AuiManager
+	inline WCToolbarManager* ToolbarManager(void){ return this->_toolbarManager; }					//!< Get the toolbar manager
 
-	void OnAbout(wxCommandEvent& event);
-	void OnSize( wxSizeEvent& evt );
-	void OnMove( wxMoveEvent& evt );
-	WCPartCanvas *CreateCanvas(wxView *view, wxMDIChildFrame *parent);
-	wxToolBar* AddToolBar(const wxString& name);
-	wxToolBarToolBase* AddToolBarTool(wxToolBar* toolbar, int tool_id, const wxString& title, wxBitmap& bitmap, const wxString& caption);
-	void OnToolBarButton( wxCommandEvent& event );
-	void OnUpdateToolBarButton( wxUpdateUIEvent& event );
+	//Event Handlers
+	void OnAbout(wxCommandEvent& event);															//!< On about event request
+	void OnSize(wxSizeEvent& evt);																	//!< On resize of main window
+	void OnMove(wxMoveEvent& evt);																	//!< On main window move
+	void OnToolBarButton( wxCommandEvent& event );													//!< On toolbar button press
+	void OnUpdateToolBarButton( wxUpdateUIEvent& event );											//!< On update of toolbar button
 
+	//Primary Class Methods
+	WCPartCanvas *CreateCanvas(wxView *view, wxMDIChildFrame *parent);								//!<
+	wxToolBar* AddToolBar(const wxString& name);													//!<
+	wxToolBarToolBase* AddToolBarTool(wxToolBar* toolbar, int tool_id, const wxString& title,		//!<
+												wxBitmap& bitmap, const wxString& caption);
+
+	//wx Macro
 	DECLARE_EVENT_TABLE()
 };
 
-#define DOCVIEW_CUT     1
-#define DOCVIEW_ABOUT   wxID_ABOUT
 
-extern bool singleWindowMode;
+/***********************************************~***************************************************/
+
+
+}	   // End Wildcat Namespace
+#endif //__MAIN_FRAME_H__
+

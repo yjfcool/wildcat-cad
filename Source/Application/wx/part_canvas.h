@@ -1,5 +1,3 @@
-// part_canvas.h
-
 /*******************************************************************************
 * Copyright (c) 2007, 2008, CerroKai Development
 * All rights reserved.
@@ -27,32 +25,58 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ********************************************************************************/
 
-#ifndef WC_WX_PART_CANVAS_HEADER
-#define WC_WX_PART_CANVAS_HEADER
 
-#include "wx/docview.h"
+#ifndef __PART_CANVAS_H__
+#define __PART_CANVAS_H__
+
+
+/*** Included Header Files ***/
+#include "Utility/wutil.h"
+#include <wx/docview.h>
 #include <wx/glcanvas.h>
-#include "Kernel/document.h"
 
-class WCPartCanvas: public wxGLCanvas
-{
-public:
-    wxView *view;
-    
-    WCPartCanvas(wxView *v, wxMDIChildFrame *frame, int *attribList = (int*) NULL);
-    void OnPaint(wxPaintEvent& event);
-    void OnSize(wxSizeEvent& event);
-	void OnEraseBackground(wxEraseEvent& event);
-    void OnMouse(wxMouseEvent& event);
-	void OnKeyDown(wxKeyEvent& event);
-	void OnKeyUp(wxKeyEvent& event);
-	void OnIdle(wxIdleEvent& event);
 
-	void OnDisplay(void);
-	WCDocument* GetWCDocument();
+/*** Namespace Declaration ***/
+namespace __WILDCAT_NAMESPACE__ {
 
+
+/*** Class Predefinitions ***/
+class WCDocument;
+
+
+/***********************************************~***************************************************/
+
+
+class WCPartCanvas : public wxGLCanvas {
 private:
+    wxView										*_view;												//!< Associated wxView
+	//wx Macros
     DECLARE_EVENT_TABLE()
+public:
+	//Constructors and Destructors
+    WCPartCanvas(wxView *view, wxMDIChildFrame *frame, int *attribList=NULL);						//!< Primary constructor
+	~WCPartCanvas()								{ }													//!< Default destructor
+
+	//Access Methods
+	inline wxView* View(void)					{ return this->_view; }								//!< Get the underlying view
+	inline void View(wxView* view)				{ this->_view = view; }								//!< Set the underlying view
+
+	//Event Handlers
+	void OnPaint(wxPaintEvent& event);																//!<
+    void OnSize(wxSizeEvent& event);																//!<
+	void OnEraseBackground(wxEraseEvent& event);													//!<
+    void OnMouse(wxMouseEvent& event);																//!<
+	void OnKeyDown(wxKeyEvent& event);																//!<
+	void OnKeyUp(wxKeyEvent& event);																//!<
+	void OnIdle(wxIdleEvent& event);																//!<
+	void OnDisplay(void);																			//!<
+	WCDocument* GetWCDocument();																	//!<
 };
 
-#endif
+
+/***********************************************~***************************************************/
+
+
+}	   // End Wildcat Namespace
+#endif //__PART_CANVAS_H__
+

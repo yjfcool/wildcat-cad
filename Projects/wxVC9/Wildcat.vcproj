@@ -1907,6 +1907,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Source\Application\toolbar.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\wx\toolbar_bridge.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Source\Application\toolbar_manager.h"
 					>
 				</File>
@@ -1933,14 +1941,38 @@
 				<File
 					RelativePath="..\..\Source\Application\Win32\dialog.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\Source\Application\dialog_manager.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\Source\Application\Win32\dialog_win32.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\Source\Application\Win32\font_manager.cpp"
@@ -1964,6 +1996,14 @@
 				</File>
 				<File
 					RelativePath="..\..\Source\Application\wx\part_view.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\wx\toolbar.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Application\wx\toolbar_bridge.cpp"
 					>
 				</File>
 				<File

@@ -31,6 +31,10 @@
 #include "Kernel/action.h"
 #include "Kernel/workbench.h"
 #include "Application/toolbar_manager.h"
+#ifdef __WXWINDOWS__
+#include "Application/wx/wildcat_app.h"
+#include "Application/wx/main_frame.h"
+#endif
 
 
 /*** Locally Defined Values ***/
@@ -43,10 +47,9 @@
 #define DOCUMENT_NAMEDVIEW_ISOMETRIC			-0.209315, -0.508694, -0.767096, 0.330123
 
 
-#ifndef __WXWINDOWS__
 /*** Static Member Initialization ***/
 std::string WCDocument::ToolbarManifest = "toolbar_manifest.xml";
-#endif
+
 
 /***********************************************~***************************************************/
 
@@ -73,10 +76,13 @@ void WCDocument::Initialize(void) {
 		//Setup undo-redo dictionary
 		this->_undoDictionary = new WCSerialDictionary();
 
-#ifndef __WXWINDOWS__
+#ifdef __WXWINDOWS__
+		//Get reference to toolbar manager
+		this->_toolbarManager = wxGetApp().Frame()->ToolbarManager();
+#else
 		//Create toolbar manager
 		std::string resourcesDirectory = _ResourceDirectory();
-		_toolbarManager = new WCToolbarManager(this, WCDocument::ToolbarManifest, resourcesDirectory, false);
+		this->_toolbarManager = new WCToolbarManager(this, WCDocument::ToolbarManifest, resourcesDirectory, false);
 #endif
 
 		//Set the default units
@@ -92,10 +98,8 @@ void WCDocument::Initialize(void) {
 		this->_backgroundLayer = this->_document->BackgroundLayer();
 		//Reference the treeview
 		this->_treeView = this->_document->TreeView();
-#ifndef __WXWINDOWS__
 		//Reference the toolbar manager
 		this->_toolbarManager = this->_document->ToolbarManager();
-#endif
 	}
 
 }
@@ -107,11 +111,7 @@ void WCDocument::Initialize(void) {
 WCDocument::WCDocument(WCFeature *creator, const std::string &name, const std::string &filename) : ::WCFeature(creator, name), 
 	_filename(filename), _scene(NULL), _uiLayer(NULL), _backgroundLayer(NULL), _treeView(NULL), _statusText("Ready"),
 	_actions(), _redoActions(), _undoDictionary(NULL), _activeWorkbench(NULL), _workbenchStack(), _namedViews(), 
-	_lengthUnit(NULL), _angleUnit(NULL)
-#ifndef __WXWINDOWS__
-, _toolbarManager(NULL)
-#endif
-{
+	_lengthUnit(NULL), _angleUnit(NULL), _toolbarManager(NULL) {
 
 	//If this is root document
 	if (this->_document == NULL) {
@@ -125,7 +125,6 @@ WCDocument::WCDocument(WCFeature *creator, const std::string &name, const std::s
 		this->AddView( WCNamedView("Top", WCQuaternion(DOCUMENT_NAMEDVIEW_TOP)) );
 		this->AddView( WCNamedView("Bottom", WCQuaternion(DOCUMENT_NAMEDVIEW_BOTTOM)) );
 		this->AddView( WCNamedView("Isometric", WCQuaternion(DOCUMENT_NAMEDVIEW_ISOMETRIC)) );
-
 	}
 	//Initialize
 	this->Initialize();
@@ -136,11 +135,7 @@ WCDocument::WCDocument(xercesc::DOMElement *element, WCSerialDictionary *diction
 	::WCFeature( WCSerializeableObject::ElementFromName(element,"Feature"), dictionary),
 	_filename(), _scene(NULL), _uiLayer(NULL), _backgroundLayer(NULL), _treeView(NULL), _statusText("Ready"),
 	_actions(), _redoActions(), _undoDictionary(NULL), _activeWorkbench(NULL), _workbenchStack(), _namedViews(),
-	_lengthUnit(NULL), _angleUnit(NULL)
-#ifndef __WXWINDOWS__
-, _toolbarManager(NULL)
-#endif
-	{
+	_lengthUnit(NULL), _angleUnit(NULL), _toolbarManager(NULL) {
 
 	//Get GUID and register it
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");

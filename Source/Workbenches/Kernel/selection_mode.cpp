@@ -29,10 +29,6 @@
 /*** Included Header Files ***/
 #include "Kernel/selection_mode.h"
 #include "Kernel/document.h"
-#ifdef __WXWINDOWS__
-#include "Application/wx/wildcat_app.h"
-#include "Application/wx/main_frame.h"
-#endif
 
 
 /***********************************************~***************************************************/
@@ -50,22 +46,14 @@ void WCSelectionMode::OnEntry(void) {
 	//Clear the document status text
 	this->_creator->Document()->Status("Ready");
 	//Set the icon to active
-#ifdef __WXWINDOWS__
-	wxGetApp().m_frame->m_toolbarManager->ButtonFromName("select")->SetToggle(true);
-#else
 	this->_creator->Document()->ToolbarManager()->ButtonFromName("select")->IsActive(true);
-#endif
 }
 
 
 void WCSelectionMode::OnExit(void) {
 //	CLOGGER_DEBUG(WCLogManager::RootLogger(), "Exiting Selection Draw Mode:" << this);
 	//Set the icon to not active
-#ifdef __WXWINDOWS__
-	wxGetApp().m_frame->m_toolbarManager->ButtonFromName("select")->SetToggle(false);
-#else
 	this->_creator->Document()->ToolbarManager()->ButtonFromName("select")->IsActive(false);
-#endif
 }
 
 

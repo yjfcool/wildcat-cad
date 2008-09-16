@@ -30,44 +30,50 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ********************************************************************************/
 
-#include "stdafx.h"
-#include "wx/docview.h"
-#include <wx/stdpaths.h>
 
-#include "wildcat_app.h"
-#include "main_frame.h"
-#include "part_document.h"
-#include "part_view.h"
+/*** Included Header Files ***/
+#include "Application/wx/wildcat_app.h"
+#include "Application/wx/main_frame.h"
+#include "Application/wx/part_document.h"
+#include "Application/wx/part_view.h"
 #include "Utility/wutil.h"
 #include "Utility/log_manager.h"
 #include "Utility/log_appenders.h"
+#include "Kernel/document.h"
+
+
+/***********************************************~***************************************************/
+
 
 IMPLEMENT_APP(WCWildcatApp)
 
-WCWildcatApp::WCWildcatApp(void)
-{
-    m_docManager = (wxDocManager *) NULL;
-	m_frame = NULL;
-	m_config = NULL;
+
+/***********************************************~***************************************************/
+
+
+WCWildcatApp::WCWildcatApp(void) : _docManager(NULL), _frame(NULL), _config(NULL) {
+	//Nothing else for now
 }
 
-WCWildcatApp::~WCWildcatApp(void)
-{
-	delete m_config;
+
+WCWildcatApp::~WCWildcatApp(void) {
+	//Delete the config if present
+	if (this->_config) delete _config;
 }
 
-bool WCWildcatApp::OnInit(void)
-{
-	m_config = new wxConfig(_T("Wildcat"));
+
+bool WCWildcatApp::OnInit(void) {
+	//Create new wxConfig
+	this->_config = new wxConfig(_T("Wildcat"));
 
 	int width = 600;
 	int height = 400;
 	int posx = 200;
 	int posy = 200;
-	m_config->Read(_T("MainFrameWidth"), &width);
-	m_config->Read(_T("MainFrameHeight"), &height);
-	m_config->Read(_T("MainFramePosX"), &posx);
-	m_config->Read(_T("MainFramePosY"), &posy);
+	this->_config->Read(_T("MainFrameWidth"), &width);
+	this->_config->Read(_T("MainFrameHeight"), &height);
+	this->_config->Read(_T("MainFramePosX"), &posx);
+	this->_config->Read(_T("MainFramePosY"), &posy);
 	if(posx < 0)posx = 0;
 	if(posy < 0)posy = 0;
 
@@ -79,87 +85,76 @@ bool WCWildcatApp::OnInit(void)
 	CLOGGER_INFO(WCLogManager::RootLogger(), "WCWildcatApp::WCWildcatApp - Starting up...");
 	//Initialize xml manager
 	xercesc::XMLPlatformUtils::Initialize();
-
+	//Initialize wx image handlers
 	wxInitAllImageHandlers();
 
-  //// Create a document manager
-  m_docManager = new wxDocManager;
+	//Create a document manager
+	this->_docManager = new wxDocManager;
 
-  //// Create a template relating part documents to their views
-  (void) new wxDocTemplate(m_docManager, _T("Text"), _T("*.txt"), _T(""), _T("txt"), _T("Text Doc"), _T("Text View"),
-          CLASSINFO(WCPartDocument), CLASSINFO(WCPartView));
-
-  //// Create the main frame window
-  m_frame = new WCMainFrame((wxDocManager *) m_docManager, (wxFrame *) NULL,
-                      _T("Wildcat"), wxPoint(posx, posy), wxSize(width, height),
-                      wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE);
-
-  //// Give it an icon (this is ignored in MDI mode: uses resources)
+	//Create a template relating part documents to their views
+	(void) new wxDocTemplate(this->_docManager, _T("Text"), _T("*.txt"), _T(""), _T("txt"), _T("Text Doc"), _T("Text View"),
+							 CLASSINFO(WCPartDocument), CLASSINFO(WCPartView));
+	//Create the main frame window
+	this->_frame = new WCMainFrame(this->_docManager, (wxFrame*)NULL, _T("Wildcat"), wxPoint(posx, posy), wxSize(width, height),
+									wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE);
+	//Give it an icon (this is ignored in MDI mode: uses resources)
 #ifdef __WXMSW__
-  m_frame->SetIcon(wxICON(Wildcat));
+	this->_frame->SetIcon(wxICON(Wildcat));
 #endif
 #ifdef __X__
-  m_frame->SetIcon(wxIcon(_T("doc.xbm")));
+	this->_frame->SetIcon(wxIcon(_T("doc.xbm")));
 #endif
-
-  //// Make a menubar
-  wxMenu *file_menu = new wxMenu;
-  wxMenu *edit_menu = (wxMenu *) NULL;
-
-  file_menu->Append(wxID_NEW, _T("&New...\tCtrl-N"));
-  file_menu->Append(wxID_OPEN, _T("&Open...\tCtrl-X"));
-
-  file_menu->AppendSeparator();
-  file_menu->Append(wxID_EXIT, _T("E&xit\tAlt-X"));
-  
-  // A nice touch: a history of files visited. Use this menu.
-  m_docManager->FileHistoryUseMenu(file_menu);
-
-  wxMenu *help_menu = new wxMenu;
-  help_menu->Append(DOCVIEW_ABOUT, _T("&About\tF1"));
-
-  wxMenuBar *menu_bar = new wxMenuBar;
-
-  menu_bar->Append(file_menu, _T("&File"));
-  if (edit_menu)
-    menu_bar->Append(edit_menu, _T("&Edit"));
-  menu_bar->Append(help_menu, _T("&Help"));
+	//Make a menubar
+	wxMenu *file_menu = new wxMenu;
+	wxMenu *edit_menu = (wxMenu *) NULL;
+	file_menu->Append(wxID_NEW, _T("&New...\tCtrl-N"));
+	file_menu->Append(wxID_OPEN, _T("&Open...\tCtrl-X"));
+	file_menu->AppendSeparator();
+	file_menu->Append(wxID_EXIT, _T("E&xit\tAlt-X"));
+	//A nice touch: a history of files visited. Use this menu.
+	this->_docManager->FileHistoryUseMenu(file_menu);
+	//Create the help menu
+	wxMenu *help_menu = new wxMenu;
+	help_menu->Append(DOCVIEW_ABOUT, _T("&About\tF1"));
+	//Create the file menu
+	wxMenuBar *menu_bar = new wxMenuBar;
+	menu_bar->Append(file_menu, _T("&File"));
+	//Create edit menu
+	if (edit_menu) menu_bar->Append(edit_menu, _T("&Edit"));
+	menu_bar->Append(help_menu, _T("&Help"));
 
 #ifdef __WXMAC__
-  wxMenuBar::MacSetCommonMenuBar(menu_bar);
+	wxMenuBar::MacSetCommonMenuBar(menu_bar);
 #endif //def __WXMAC__
-  //// Associate the menu bar with the frame
-  m_frame->SetMenuBar(menu_bar);
-
+	// Associate the menu bar with the frame
+	this->_frame->SetMenuBar(menu_bar);
 #ifndef __WXMAC__
-  m_frame->Show(true);
+	this->_frame->Show(true);
 #endif //ndef __WXMAC__
-
-  SetTopWindow(m_frame);
-  return true;
+	SetTopWindow(this->_frame);
+	return true;
 }
 
-int WCWildcatApp::OnExit(void)
-{
+
+int WCWildcatApp::OnExit(void) {
 	CLOGGER_INFO(WCLogManager::RootLogger(), "WCWildcatApp::~WCWildcatApp - Shutting Down...");
+	//Delete the document manager if present
+	if (this->_docManager) delete this->_docManager;
 	//Terminate the managers
 	xercesc::XMLPlatformUtils::Terminate();
 	WCLogManager::Terminate();
-
-	delete m_docManager;
     return 0;
 }
+
 
 /*
  * Centralised code for creating a document frame.
  * Called from view.cpp, when a view is created.
  */
- 
-wxMDIChildFrame *WCWildcatApp::CreateChildFrame(wxDocument *doc, wxView *view, bool isCanvas)
-{
+wxMDIChildFrame *WCWildcatApp::CreateChildFrame(wxDocument *doc, wxView *view, bool isCanvas) {
   //// Make a child frame
   wxDocMDIChildFrame *subframe =
-      new wxDocMDIChildFrame(doc, view, m_frame, wxID_ANY, _T("Child Frame"),
+      new wxDocMDIChildFrame(doc, view, this->_frame, wxID_ANY, _T("Child Frame"),
                              wxPoint(10, 10), wxSize(300, 300),
                              wxDEFAULT_FRAME_STYLE |
                              wxNO_FULL_REPAINT_ON_RESIZE);
@@ -218,8 +213,8 @@ wxMDIChildFrame *WCWildcatApp::CreateChildFrame(wxDocument *doc, wxView *view, b
   return subframe;
 }
 
-wxString WCWildcatApp::GetExeFolder()const
-{
+
+wxString WCWildcatApp::GetExeFolder()const {
 	wxStandardPaths sp;
 	wxString exepath = sp.GetExecutablePath();
 	int last_fs = exepath.Find('/', true);
@@ -231,13 +226,17 @@ wxString WCWildcatApp::GetExeFolder()const
 	else{
 		exedir = exepath.Truncate(last_bs);
 	}
-
+	//Return the exe directory
 	return exedir;
 }
 
-WCDocument* WCWildcatApp::GetWCDocument()
-{
-	wxDocument* doc = m_docManager->GetCurrentDocument();
-	if(doc == NULL)return NULL;
-	return ((WCPartDocument*)doc)->Document();
+
+WCDocument* WCWildcatApp::GetWCDocument() {
+	wxDocument* doc = this->_docManager->GetCurrentDocument();
+	if (doc == NULL) return NULL;
+	return ((WCDocument*)doc)->Document();
 }
+
+
+/***********************************************~***************************************************/
+

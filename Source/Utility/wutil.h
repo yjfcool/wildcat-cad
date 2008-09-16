@@ -55,9 +55,14 @@
 #define STDFABS	std::fabs
 #endif
 
-#ifdef __WIN32__
+#ifdef __WXWINDOWS__
 #include "Application/Win32/stdafx.h"	//Generic header file For Windows
 #include "Application/Win32/win_gl.h"	//Header file for windows platform
+#include <wx/wx.h>
+#include <wx/docview.h>
+#include <wx/stdpaths.h>
+#include <wx/config.h>
+
 
 //Defines for std:: problem
 #define STDMIN	min
