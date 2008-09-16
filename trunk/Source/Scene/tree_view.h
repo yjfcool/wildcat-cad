@@ -77,6 +77,7 @@ private:
 	//Friend Class
 	friend class WCTreeView;
 public:
+	//Constructors and Destructors
 	WCTreeElement(WCTreeView *tree, std::string name, WCEventController *controller, WSTexture *icon);//!< Primary constructor
 	~WCTreeElement();																				//!< Default destructor
 	
@@ -117,7 +118,7 @@ public:
 
 class WCTreeView : public WCOverlay {
 protected:
-	//Data Objects
+	WCPerformanceLevel							_perfLevel;											//!< Performance level indicator
 	std::map<WCTreeElement*, WCTreeElement*>	_elementMap;										//!< Mapping of all elements
 	WCTreeElement								*_root;												//!< Tree root
 	std::list<WCTreeElement*>					_selected;											//!< Selected elements
@@ -127,6 +128,7 @@ protected:
 	GLuint										_texWidth, _texHeight;								//!< Texture width and height
 	GLuint										_framebuffer;										//!< Rendering framebuffer
 	GLuint										_vertexBuffer, _texCoordBuffer;						//!< Display buffers
+	GLfloat										*_altVertexBuffer, *_altTexCoordBuffer;				//!< Local buffers
 	WCVerticalScrollbar							*_scrollbar;										//!< Scrollbar widget
 	WPFloat										_scale;												//!< View scale factor
 	WPFloat										_virtualWidth, _virtualHeight;						//!< Virtual tree width and height

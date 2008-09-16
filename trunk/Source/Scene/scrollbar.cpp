@@ -62,9 +62,11 @@
 /***********************************************~***************************************************/
 
 
-WCScrollbar::WCScrollbar(WCWidget *parent, WPFloat extent, WPFloat position) : 
-	::WCWidget(parent->Layer()), _parent(parent), _extent(extent), _position(position) {
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
+WCScrollbar::WCScrollbar(WCWidget *parent, WPFloat extent, WPFloat position) : ::WCWidget(parent->Layer()),
+	_perfLevel(PerformanceLow), _parent(parent), _extent(extent), _position(position) {
+	if(WCAdapter::HasGLARBVertexBufferObject()) {
+		//Set performance level to medium
+		this->_perfLevel = PerformanceMedium;
 		//Generate buffers
 		glGenBuffers(9, this->_vertBuffers);
 		glGenBuffers(9, this->_texBuffers);
@@ -73,7 +75,7 @@ WCScrollbar::WCScrollbar(WCWidget *parent, WPFloat extent, WPFloat position) :
 
 
 WCScrollbar::~WCScrollbar() {
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
+	if(this->_perfLevel == PerformanceMedium) {
 		//Delete the buffers
 		glDeleteBuffers(9, this->_vertBuffers);
 		glDeleteBuffers(9, this->_texBuffers);
@@ -95,7 +97,7 @@ void WCScrollbar::Extent(const WPFloat extent) {
 
 
 void WCVerticalScrollbar::GenerateBuffers(void) {
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
+	if(this->_perfLevel == PerformanceMedium) {
 		//Setup arrays for vertex and texCoord data
 		GLfloat verts[8];
 		GLfloat texCoords[8];
@@ -710,7 +712,7 @@ void WCVerticalScrollbar::OnScroll(const WPFloat &x, const WPFloat &y) {
 void WCVerticalScrollbar::Render(void) {
 	//Only render if visible
 	if (!this->_isVisible) return;
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
+	if(this->_perfLevel == PerformanceMedium) {
 		//Generate buffers if necessary
 		if (this->_isDirty) this->GenerateBuffers();
 
