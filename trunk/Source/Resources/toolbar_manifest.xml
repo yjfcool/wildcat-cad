@@ -2,15 +2,15 @@
 <manifest>
 	<buttons>
 		<button message="select" tooltip="Select Mode" type="MODE" standardIcon="select32" activeIcon="select32" active="false" enabled="true"/>
-		<button message="new" tooltip="Select Mode" type="MOMENTARY" standardIcon="new32" activeIcon="new32" active="false" enabled="true"/>
-		<button message="open" tooltip="Select Mode" type="MOMENTARY" standardIcon="open32" activeIcon="open32" active="false" enabled="true"/>
-		<button message="save" tooltip="Select Mode" type="MOMENTARY" standardIcon="save32" activeIcon="save32" active="false" enabled="true"/>
-		<button message="print" tooltip="Select Mode" type="MOMENTARY" standardIcon="print32" activeIcon="print32" active="false" enabled="true"/>
-		<button message="cut" tooltip="Select Mode" type="MOMENTARY" standardIcon="cut32" activeIcon="cut32" active="false" enabled="false"/>
-		<button message="copy" tooltip="Select Mode" type="MOMENTARY" standardIcon="copy32" activeIcon="copy32" active="false" enabled="false"/>
-		<button message="paste" tooltip="Select Mode" type="MOMENTARY" standardIcon="paste32" activeIcon="paste32" active="false" enabled="false"/>
-		<button message="undo" tooltip="Select Mode" type="TOGGLE" standardIcon="undo32" activeIcon="undo32" active="false" enabled="true"/>
-		<button message="redo" tooltip="Select Mode" type="TOGGLE" standardIcon="redo32" activeIcon="redo32" active="false" enabled="true"/>
+		<button message="new" tooltip="New" type="MOMENTARY" standardIcon="new32" activeIcon="new32" active="false" enabled="true"/>
+		<button message="open" tooltip="Open" type="MOMENTARY" standardIcon="open32" activeIcon="open32" active="false" enabled="true"/>
+		<button message="save" tooltip="Save" type="MOMENTARY" standardIcon="save32" activeIcon="save32" active="false" enabled="true"/>
+		<button message="print" tooltip="Print" type="MOMENTARY" standardIcon="print32" activeIcon="print32" active="false" enabled="true"/>
+		<button message="cut" tooltip="Cut" type="MOMENTARY" standardIcon="cut32" activeIcon="cut32" active="false" enabled="false"/>
+		<button message="copy" tooltip="Copy" type="MOMENTARY" standardIcon="copy32" activeIcon="copy32" active="false" enabled="false"/>
+		<button message="paste" tooltip="Paste" type="MOMENTARY" standardIcon="paste32" activeIcon="paste32" active="false" enabled="false"/>
+		<button message="undo" tooltip="Undo" type="TOGGLE" standardIcon="undo32" activeIcon="undo32" active="false" enabled="true"/>
+		<button message="redo" tooltip="Redo" type="TOGGLE" standardIcon="redo32" activeIcon="redo32" active="false" enabled="true"/>
 		<button message="isoview" tooltip="Isometric View" type="MOMENTARY" standardIcon="isoView32" activeIcon="isoView32" active="false" enabled="true"/>
 		<button message="frontview" tooltip="Front View" type="MOMENTARY" standardIcon="frontView32" activeIcon="frontView32" active="false" enabled="true"/>
 		<button message="backview" tooltip="Back View" type="MOMENTARY" standardIcon="backView32" activeIcon="backView32" active="false" enabled="true"/>
