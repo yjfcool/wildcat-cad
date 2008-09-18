@@ -88,7 +88,7 @@ private:
 	std::string									_title;												//!< Title of the toolbar
 	WCToolbar									*_core;												//!< Core toolbar pointer
 	wxToolBar									*_platform;											//!< Platform toolbar pointer
-	int											_nextToolID;										//!< Counter for toolbar button placement
+	static int									_nextToolID;										//!< Counter for toolbar button placement
 public:
 	//Constructors and Destructors
 	WCToolbar_Bridge(WCMainFrame *frame, WCToolbar* toolbar, const std::string &title,				//!< Primary constructor

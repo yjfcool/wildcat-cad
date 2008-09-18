@@ -77,9 +77,12 @@ void WCToolbarButton_Bridge::IsEnabled(const bool &state) {
 
 /***********************************************~***************************************************/
 
+// static member variable
+int WCToolbar_Bridge::_nextToolID(FIRST_TOOLBAR_BUTTON_ID);
+
 
 WCToolbar_Bridge::WCToolbar_Bridge(WCMainFrame *frame, WCToolbar* toolbar, const std::string &title, const WCVector4 &position) : 
-	_frame(frame),	_isVisible(false), _title(title), _core(toolbar), _platform(NULL), _nextToolID(FIRST_TOOLBAR_BUTTON_ID) {
+	_frame(frame),	_isVisible(false), _title(title), _core(toolbar), _platform(NULL) {
 	//Create platform toolbar
 	this->_platform = this->_frame->AddToolBar(wxConvertMB2WX(title.c_str()));
 	//Make sure is not nil
