@@ -160,13 +160,11 @@ void WCMainFrame::OnToolBarButton( wxCommandEvent& event ) {
 	std::map<int, wxToolBarToolBase*>::iterator FindIt = this->_idButtonMap.find(event.GetId());
 	if(FindIt != this->_idButtonMap.end()) {
 		wxToolBarToolBase*tool = FindIt->second;
-		if(wxGetApp().GetWCDocument()) {
-			wxGetApp().GetWCDocument()->ActiveWorkbench()->OnUserMessage(std::string(tool->GetLabel().mb_str()));
+		if(tool->GetLabel() == _T("new")) {
+			this->m_docManager->OnFileNew(event);
 		}
-		else {
-			if(tool->GetLabel() == _T("new")) {
-				this->m_docManager->OnFileNew(event);
-			}
+		else if(wxGetApp().GetWCDocument()) {
+			wxGetApp().GetWCDocument()->ActiveWorkbench()->OnUserMessage(std::string(tool->GetLabel().mb_str()));
 		}
 	}
 }

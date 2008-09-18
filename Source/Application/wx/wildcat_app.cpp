@@ -234,7 +234,7 @@ wxString WCWildcatApp::GetExeFolder()const {
 WCDocument* WCWildcatApp::GetWCDocument() {
 	wxDocument* doc = this->_docManager->GetCurrentDocument();
 	if (doc == NULL) return NULL;
-	return ((WCDocument*)doc)->Document();
+	return ((WCPartDocument*)doc)->Document();
 }
 
 

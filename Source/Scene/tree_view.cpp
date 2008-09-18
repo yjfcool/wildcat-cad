@@ -467,49 +467,30 @@ void WCTreeElement::Print(int indent) {
 void WCTreeView::GenerateTexture(void) {
 	//Set up some parameters
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
-		//Set up texture
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_tex);
-		GLfloat borderColor[] = {0.0, 0.0, 0.0, 0.0};
-		glTexParameterfv(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_BORDER_COLOR, borderColor);
-		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, this->_texWidth, this->_texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-		//Check for errors
-		if (glGetError() != GL_NO_ERROR) 
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::GenerateTexture - GL error at Create.");
-	}
-
+	//Set up texture
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_tex);
+	GLfloat borderColor[] = {0.0, 0.0, 0.0, 0.0};
+	glTexParameterfv(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_BORDER_COLOR, borderColor);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, this->_texWidth, this->_texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	//Check for errors
+	if (glGetError() != GL_NO_ERROR) 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::GenerateTexture - GL error at Create.");
 	//Store the viewport
 	glPushAttrib(GL_VIEWPORT_BIT);
-
 	//Bind to framebuffer and bind texture
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_framebuffer);
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_tex, 0);
-		GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-		if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) 
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::WCTreeView - Framebuffer is not complete.");
-
-		//Set the viewport
-		glViewport(0, 0, this->_texWidth, this->_texHeight);
-	}
-	else
-	{
-		//Determine upper left tex-coord
-		GLfloat actualPixelHeight = (GLfloat)(this->_height / SCREEN_PIXEL_WIDTH);
-//		GLfloat actualPixelWidth = (GLfloat)(this->_width / SCREEN_PIXEL_WIDTH);
-		int scenePixelHeight = this->_layer->Scene()->WindowHeight();
-		GLfloat placementBorder = (GLfloat)(OVERLAY_PLACEMENT_BORDER / SCREEN_PIXEL_WIDTH);;
-		GLfloat upperY = scenePixelHeight - actualPixelHeight - this->_scrollbar->Position() - placementBorder;
-
-		//Set the viewport
-		glViewport(0, upperY, this->_texWidth, this->_texHeight);
-	}
-
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->_framebuffer);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_ARB, this->_tex, 0);
+	GLenum retVal = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	//Check for errors
+	if (retVal != GL_FRAMEBUFFER_COMPLETE_EXT) 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::WCTreeView - Framebuffer is not complete.");
+	//Set the viewport
+	glViewport(0, 0, this->_texWidth, this->_texHeight);
 	//Set the projection matrix
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -519,14 +500,11 @@ void WCTreeView::GenerateTexture(void) {
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
-	
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
-		//Clear the framebuffer
-		glClearColor(1.0, 1.0, 1.0, 0.0);
-		glClear(GL_COLOR_BUFFER_BIT);
-		//Restore clear color
-		glClearColor(0.0, 0.0, 0.0, 1.0);
-	}
+	//Clear the framebuffer
+	glClearColor(1.0, 1.0, 1.0, 0.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	//Restore clear color
+	glClearColor(0.0, 0.0, 0.0, 1.0);
 
 	//Render full virtual tree
 	WPFloat xPos = 0.0;
@@ -542,13 +520,11 @@ void WCTreeView::GenerateTexture(void) {
 	//Restore the viewport
 	glPopAttrib();
 
-	if(WCAdapter::HasGLEXTFramebufferObject()) {
-		//Unbind the framebuffer
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-		//Check for errors
-		if (glGetError() != GL_NO_ERROR) 
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::WCTreeView - At clean up.");
-	}
+	//Unbind the framebuffer
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	//Check for errors
+	if (glGetError() != GL_NO_ERROR) 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTreeView::WCTreeView - At clean up.");
 }
 
 
@@ -603,46 +579,34 @@ void WCTreeView::GenerateBuffers(void) {
 	texCoords[0] = 0.0;
 	texCoords[1] = texCoords[7];
 
-	if(this->_perfLevel == PerformanceMedium) {
-/*** DEBUG ***
-		 std::cout << "Actual Width: " << this->_width << std::endl;
-		 std::cout << "Actual Height: " << this->_height << std::endl;
-		 std::cout << "Virtual Width: " << this->_virtualWidth << std::endl;
-		 std::cout << "Virtual Height: " << this->_virtualHeight << std::endl;
-		 std::cout << "Texture Width: " << this->_texWidth << std::endl;
-		 std::cout << "Texture Height: " << this->_texHeight << std::endl;
-		 std::cout << "Scrollbar Extent: " << this->_scrollbar->Extent() << std::endl;
-		 std::cout << "Scrollbar Position: " << this->_scrollbar->Position() << std::endl;
-		 std::cout << "TC[0] " << texCoords[0] << std::endl;
-		 std::cout << "TC[1] " << texCoords[1] << std::endl;
-		 std::cout << "TC[2] " << texCoords[2] << std::endl;
-		 std::cout << "TC[3] " << texCoords[3] << std::endl;
-		 std::cout << "TC[4] " << texCoords[4] << std::endl;
-		 std::cout << "TC[5] " << texCoords[5] << std::endl;
-		 std::cout << "TC[6] " << texCoords[6] << std::endl;
-		 std::cout << "TC[7] " << texCoords[7] << std::endl;
-/*** DEBUG ***/
-		//Copy the data into the VBO
-		glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), data, GL_STATIC_DRAW);
-		//Copy the data into the VBO
-		glBindBuffer(GL_ARRAY_BUFFER, this->_texCoordBuffer);
-		glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
-		//Clean up data arrays and rebind to zero
-		delete data;
-		delete texCoords;
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-	else {
-		//Delete local buffers if present
-		if (this->_altVertexBuffer != NULL) delete this->_altVertexBuffer;
-		if (this->_altTexCoordBuffer != NULL) delete this->_altTexCoordBuffer;
-		//Set the buffers to the created data
-		this->_altVertexBuffer = data;
-		this->_altTexCoordBuffer = texCoords;
-		//Render the scrollbar
-		this->_scrollbar->Render();
-	}
+	/*** DEBUG ***
+	std::cout << "Actual Width: " << this->_width << std::endl;
+	std::cout << "Actual Height: " << this->_height << std::endl;
+	std::cout << "Virtual Width: " << this->_virtualWidth << std::endl;
+	std::cout << "Virtual Height: " << this->_virtualHeight << std::endl;
+	std::cout << "Texture Width: " << this->_texWidth << std::endl;
+	std::cout << "Texture Height: " << this->_texHeight << std::endl;
+	std::cout << "Scrollbar Extent: " << this->_scrollbar->Extent() << std::endl;
+	std::cout << "Scrollbar Position: " << this->_scrollbar->Position() << std::endl;
+	std::cout << "TC[0] " << texCoords[0] << std::endl;
+	std::cout << "TC[1] " << texCoords[1] << std::endl;
+	std::cout << "TC[2] " << texCoords[2] << std::endl;
+	std::cout << "TC[3] " << texCoords[3] << std::endl;
+	std::cout << "TC[4] " << texCoords[4] << std::endl;
+	std::cout << "TC[5] " << texCoords[5] << std::endl;
+	std::cout << "TC[6] " << texCoords[6] << std::endl;
+	std::cout << "TC[7] " << texCoords[7] << std::endl;
+	/*** DEBUG ***/
+	//Copy the data into the VBO
+	glBindBuffer(GL_ARRAY_BUFFER, this->_vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), data, GL_STATIC_DRAW);
+	//Copy the data into the VBO
+	glBindBuffer(GL_ARRAY_BUFFER, this->_texCoordBuffer);
+	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
+	//Clean up data arrays and rebind to zero
+	delete data;
+	delete texCoords;
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
@@ -959,19 +923,19 @@ void WCTreeView::OnArrowKeyPress(const WCArrowKey &key) {
 void WCTreeView::Render(void) {
 	//Make sure is visible and has root element
 	if ((!this->_isVisible) || (this->_root == NULL)) return;
-	//Check to see if tree is dirty
-	if (this->_isDirty) {
-		//Generate the tree texture
-		this->GenerateTexture();
-		//Generate the display buffers
-		this->GenerateBuffers();
-		//Mark as clean
-		this->_isDirty = false;
-	}
 	//Render the scrollbar
 	this->_scrollbar->Render();
 	//Set up depending on perfLevel
 	if(this->_perfLevel == PerformanceMedium) {
+		//Check to see if tree is dirty
+		if (this->_isDirty) {
+			//Generate the tree texture
+			this->GenerateTexture();
+			//Generate the display buffers
+			this->GenerateBuffers();
+			//Mark as clean
+			this->_isDirty = false;
+		}
 		//Enable the texture for use
 		glEnable(GL_TEXTURE_RECTANGLE_ARB);
 		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, this->_tex);
@@ -996,9 +960,38 @@ void WCTreeView::Render(void) {
 	}
 	//Must be low performance
 	else {
-
+		//Store the viewport
+		glPushAttrib(GL_VIEWPORT_BIT);
+		//Determine upper left tex-coord
+		GLfloat actualPixelHeight = (GLfloat)(this->_height / SCREEN_PIXEL_WIDTH);
+		int scenePixelHeight = this->_layer->Scene()->WindowHeight();
+		GLfloat placementBorder = (GLfloat)(OVERLAY_PLACEMENT_BORDER / SCREEN_PIXEL_WIDTH);;
+		GLfloat upperY = scenePixelHeight - actualPixelHeight - this->_scrollbar->Position() - placementBorder;
+		//Set the viewport
+		glViewport(0, upperY, this->_texWidth, this->_texHeight);
+		//Set the projection matrix
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glLoadIdentity();
+		glOrtho(0.0, this->_virtualWidth, 0.0, this->_virtualHeight, -1.0, 1.0);
+		//Clear the modelview matrix
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glLoadIdentity();
+		//Render full virtual tree
+		WPFloat xPos = 0.0;
+		WPFloat yPos = this->_virtualHeight;
+		this->_root->Render(xPos, yPos, 0);
+		//Restore the modelview matrix
+		glPopMatrix();
+		//Restore the projection matrix
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
+		//Restore the viewport
+		glPopAttrib();
 	}
-	
+
 	//Optionally render tie-in lines
 	if (this->_scrollbar->IsVisible()) {
 		//Setup data arrays
