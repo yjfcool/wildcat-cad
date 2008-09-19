@@ -565,3 +565,8 @@ std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCScene
 
 /***********************************************~***************************************************/
 
+GLuint WCScene::ProgramFromName(const std::string &name) {
+	// Get a program from a name
+	if(this->_shaderManager == NULL)return 0;
+	return this->_shaderManager->ProgramFromName(name);
+}

@@ -76,7 +76,7 @@ WCVisWorkbench::WCVisWorkbench(WCVisualization *vis) : ::WCWorkbench(vis, "Real-
 	}
 
 	//Set the render program for the layer
-	this->_layer->RenderProgram( this->_visualization->Scene()->ShaderManager()->ProgramFromName("scn_basiclight") );
+	this->_layer->RenderProgram( this->_visualization->Scene()->ProgramFromName("scn_basiclight") );
 
 	//Create the ground plane
 	this->_ground = new WCGroundPlane(*this->_visualization, 0.1, 0.1);

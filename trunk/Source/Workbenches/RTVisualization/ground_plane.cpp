@@ -37,7 +37,7 @@
 
 void WCGroundPlane::GenerateBuffers(void) {
 	//Set the render program
-	this->_renderProg = this->_visualization->Scene()->ShaderManager()->ProgramFromName("scn_basiclight");
+	this->_renderProg = this->_visualization->Scene()->ProgramFromName("scn_basiclight");
 	GLfloat vertData[12] = {
 							-5.0, -5.0, 0.0,		// Lower left corner
 							-5.0, 5.0, 0.0,		// Upper left corner

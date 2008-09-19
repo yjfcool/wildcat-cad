@@ -206,7 +206,7 @@ void WCModePartShaftCreate::GenerateSurfaces(void) {
 	std::list<WCNurbsSurface*>::iterator surfIter;
 	for (surfIter = this->_surfaces.begin(); surfIter != this->_surfaces.end(); surfIter++) {
 		(*surfIter)->Color( WCPartFeature::ConstructionColor );
-		(*surfIter)->RenderProgram( this->_workbench->Part()->Scene()->ShaderManager()->ProgramFromName("scn_basiclight"));
+		(*surfIter)->RenderProgram( this->_workbench->Part()->Scene()->ProgramFromName("scn_basiclight"));
 	}
 }
 

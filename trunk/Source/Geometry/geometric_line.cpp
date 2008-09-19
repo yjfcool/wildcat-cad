@@ -350,7 +350,7 @@ void WCGeometricLine::Render(const GLuint &defaultProg, const WCColor &color, co
 	}
 	else {
 		color.Enable();
-		glUseProgram(0);
+		if(this->_renderProg != 0 || defaultProg != 0)glUseProgram(0);
 	}
 	//Set the line thickness
 	glLineWidth((GLfloat)this->_thickness);

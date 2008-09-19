@@ -72,9 +72,9 @@ void WCGeometryContext::StartCurve(void) {
 #ifdef GL_EXT_transform_feedback
 			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartCurve - Actually Running as High");
 			//Get program IDs
-			this->_ncDefault = this->_shaderManager->ProgramFromName("nc_default_plH");
+			this->_ncDefault = this->ProgramFromName("nc_default_plH");
 			this->_ncDefault23 = 0;
-			this->_ncBezier23 = this->_shaderManager->ProgramFromName("nc23_bezier_plH");				
+			this->_ncBezier23 = this->ProgramFromName("nc23_bezier_plH");				
 			//Determine number of vertices per batch
 			this->_ncVertsPerBatch = STDMIN(NURBSCURVE_MAX_VERT_PER_BATCH, WCAdapter::GetMaxGeometryOutputVertices());
 			//Initialize generation buffers
@@ -92,9 +92,9 @@ void WCGeometryContext::StartCurve(void) {
 		case NURBSCURVE_PERFLEVEL_MEDIUM:
 			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartCurve Debug - Actually Running as Medium");
 			//Get program IDs
-			this->_ncDefault = this->_shaderManager->ProgramFromName("nc_default_plM");
-			this->_ncDefault23 = this->_shaderManager->ProgramFromName("nc23_default_plM");
-			this->_ncBezier23 = this->_shaderManager->ProgramFromName("nc23_bezier_plM");
+			this->_ncDefault = this->ProgramFromName("nc_default_plM");
+			this->_ncDefault23 = this->ProgramFromName("nc23_default_plM");
+			this->_ncBezier23 = this->ProgramFromName("nc23_bezier_plM");
 			//Set up generation static
 			this->_ncMaxTexSize = STDMIN(WCAdapter::GetMax2DTextureSize(), (GLint)NURBSCURVE_MAX_LOD);
 			//Set up control point texture
@@ -269,8 +269,8 @@ void WCGeometryContext::StartSurface(void) {
 #ifdef GL_EXT_transform_feedback
 //			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - Actually Running as High.");
 			//Setup high generation programs
-			this->_nsDefault = this->_shaderManager->ProgramFromName("ns_default_plH");
-			this->_nsBezier23 = this->_shaderManager->ProgramFromName("ns23_bezier_plH");
+			this->_nsDefault = this->ProgramFromName("ns_default_plH");
+			this->_nsBezier23 = this->ProgramFromName("ns23_bezier_plH");
 			//Determine number of vertices per batch
 			this->_nsVertsPerBatch = STDMIN(NURBSSURFACE_MAX_VERT_PER_BATCH, WCAdapter::GetMaxGeometryOutputVertices());
 			//Initialize generation buffers
@@ -294,9 +294,9 @@ void WCGeometryContext::StartSurface(void) {
 		case NURBSSURFACE_PERFLEVEL_MEDIUM:
 			CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCGeometryContext::StartSurface - Actually Running as Medium.");
 			//Setup medium generation programs
-			this->_nsDefault = this->_shaderManager->ProgramFromName("ns_default_plM");
-			this->_nsDefault23 = this->_shaderManager->ProgramFromName("ns23_default_plM");				
-			this->_nsBezier23 = this->_shaderManager->ProgramFromName("ns23_bezier_plM");				
+			this->_nsDefault = this->ProgramFromName("ns_default_plM");
+			this->_nsDefault23 = this->ProgramFromName("ns23_default_plM");				
+			this->_nsBezier23 = this->ProgramFromName("ns23_bezier_plM");				
 			//Determine maximum texture size
 			this->_nsMaxTexSize = STDMIN(WCAdapter::GetMax2DTextureSize(), (GLint)NURBSSURFACE_MAX_TEXSIZE);
 			//Check for errors
@@ -484,8 +484,8 @@ void WCGeometryContext::StartTrimSurface(void) {
 	//Make sure there is support for needed extensions
 	if (WCAdapter::HasGLEXTTextureFloat() && WCAdapter::HasGLARBTextureRectangle() && WCAdapter::HasGLEXTFramebufferObject()) {
 		//Get program IDs
-		this->_tsPointInversion = this->_shaderManager->ProgramFromName("trimsurface_inversion");
-		this->_tsTriangulate = this->_shaderManager->ProgramFromName("trimsurface_triangulate");
+		this->_tsPointInversion = this->ProgramFromName("trimsurface_inversion");
+		this->_tsTriangulate = this->ProgramFromName("trimsurface_triangulate");
 		//Set some program values
 		this->_tsLocations = new GLint[1];
 		this->_tsLocations[TRIMSURFACE_LOC_PI_PARAMS] = glGetUniformLocation(this->_tsPointInversion, "params");
@@ -568,15 +568,15 @@ void WCGeometryContext::StartIntersection(void) {
 	//Make sure there is support for needed extensions
 	if (WCAdapter::HasGLEXTTextureFloat() && WCAdapter::HasGLARBTextureRectangle() && WCAdapter::HasGLEXTFramebufferObject()) {
 		//Get program IDs
-		this->_cliM = this->_shaderManager->ProgramFromName("cli_plM");
-		this->_cciM = this->_shaderManager->ProgramFromName("cci_plM");
-//		this->_sliM = this->_shaderManager->ProgramFromName("sli_plM");
-//		this->_sciM = this->_shaderManager->ProgramFromName("sci_plM");
-//		this->_ssiM = this->_shaderManager->ProgramFromName("ssi_plM");
-//		this->_tliM = this->_shaderManager->ProgramFromName("tli_plM");
-//		this->_tciM = this->_shaderManager->ProgramFromName("tci_plM");
-//		this->_tsiM = this->_shaderManager->ProgramFromName("tsi_plM");
-//		this->_ttiM = this->_shaderManager->ProgramFromName("tti_plM");
+		this->_cliM = this->ProgramFromName("cli_plM");
+		this->_cciM = this->ProgramFromName("cci_plM");
+//		this->_sliM = this->ProgramFromName("sli_plM");
+//		this->_sciM = this->ProgramFromName("sci_plM");
+//		this->_ssiM = this->ProgramFromName("ssi_plM");
+//		this->_tliM = this->ProgramFromName("tli_plM");
+//		this->_tciM = this->ProgramFromName("tci_plM");
+//		this->_tsiM = this->ProgramFromName("tsi_plM");
+//		this->_ttiM = this->ProgramFromName("tti_plM");
 
 		//Set the locations of each uniform variable
 		this->_iLocations = new GLint[15];
@@ -732,3 +732,9 @@ std::ostream& __WILDCAT_NAMESPACE__::operator<<(std::ostream& out, const WCGeome
 
 /***********************************************~***************************************************/
 
+
+GLuint WCGeometryContext::ProgramFromName(const std::string &name) {
+	// Get a program from a name
+	if(this->_shaderManager == NULL)return 0;
+	return this->_shaderManager->ProgramFromName(name);
+}

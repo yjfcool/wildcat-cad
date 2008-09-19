@@ -114,7 +114,7 @@ void WCVisMotionTracker::Initialize(void) {
 	//Check feature name
 	if (this->_name == "") this->_name = this->_visualization->GenerateFeatureName(this);
 	//Set the render program for the layer
-	this->_renderProg =  this->_visualization->Scene()->ShaderManager()->ProgramFromName("scn_basiclight");
+	this->_renderProg =  this->_visualization->Scene()->ProgramFromName("scn_basiclight");
 
 	//Create the buffers
 	glGenBuffers(1, &this->_vertBuffer);

@@ -447,7 +447,7 @@ void WCTrimmedNurbsSurface::Render(const GLuint &defaultProg, const WCColor &col
 	}
 	else {
 		color.Enable();
-		glUseProgram( this->_context->ShaderManager()->ProgramFromName("scn_selection_trim") );
+		glUseProgram( this->_context->ProgramFromName("scn_selection_trim") );
 	}
 
 	//Set up the texture
