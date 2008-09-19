@@ -173,6 +173,9 @@ public:
 
 	/*** Non-Member Functions ***/
 	friend std::ostream& operator<<(std::ostream& out, const WCScene &scene);						//!< Overloaded output operator
+	
+	//Shader Access Methods
+	GLuint ProgramFromName(const std::string &name);												//!< Get a program from a name
 };
 
 

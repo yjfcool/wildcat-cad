@@ -55,7 +55,7 @@ bool WCModePartPadCreate::CheckSelections(void) {
 	//Or check to see if profiles are selected
 	else {
 		profiles = this->_workbench->SelectionManager()->FilterSelected<WCSketchProfile>(true);
-		sketch = profiles.front()->Sketch();
+		if(profiles.size() > 0)sketch = profiles.front()->Sketch();
 	}
 	//If there are any valid profiles
 	if (profiles.size() > 0) {
@@ -219,7 +219,7 @@ void WCModePartPadCreate::GenerateSurfaces(void) {
 	std::list<WCNurbsSurface*>::iterator surfIter;
 	for (surfIter = this->_surfaces.begin(); surfIter != this->_surfaces.end(); surfIter++) {
 		(*surfIter)->Color( WCPartFeature::ConstructionColor );
-		(*surfIter)->RenderProgram(this->_workbench->Part()->Scene()->ShaderManager()->ProgramFromName("scn_basiclight"));
+		(*surfIter)->RenderProgram(this->_workbench->Part()->Scene()->ProgramFromName("scn_basiclight"));
 	}
 }
 

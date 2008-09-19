@@ -381,7 +381,7 @@ void WCPartPad::GenerateSideSurfaces(std::list<std::list<WSFaceUse*> > &topoFace
  ***/
 void WCPartPad::GenerateTopBottom(std::list<std::list<WCTrimProfile> > &topTrims, std::list<std::list<WCTrimProfile> > &bottomTrims,
 	std::list<std::list<WSFaceUse*> > &topoFaceUses) {
-	GLuint prog = this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight_trim");
+	GLuint prog = this->_part->Scene()->ProgramFromName("scn_basiclight_trim");
 	std::vector<WCVector4> controlPoints;
 	WCVector4 tmpPt1;
 	WSFaceUse *tmpUse;

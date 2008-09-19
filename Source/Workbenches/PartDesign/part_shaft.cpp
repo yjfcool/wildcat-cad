@@ -217,7 +217,7 @@ std::list<WCTrimProfile> WCPartShaft::GenerateFrontProfile(const WCRay &ray) {
 	//Make sure front is valid
 	if (front != NULL) {
 		//Set the color and render program
-		front->RenderProgram( this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight_trim") );
+		front->RenderProgram( this->_part->Scene()->ProgramFromName("scn_basiclight_trim") );
 		//Add to the list of surfaces
 		this->_surfaces.push_back(front);
 	}
@@ -387,8 +387,8 @@ void WCPartShaft::GenerateBackProfile(const WCRay &ray) {
 	//Make sure back is valid
 	if (back != NULL) {
 //		back->TextureSize(1024);
-//		back->RenderProgram( this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight_trim") );
-		back->RenderProgram( this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight") );
+//		back->RenderProgram( this->_part->Scene()->ProgramFromName("scn_basiclight_trim") );
+		back->RenderProgram( this->_part->Scene()->ProgramFromName("scn_basiclight") );
 		//Add to list of surfaces
 		this->_surfaces.push_back(back);
 	}
@@ -430,7 +430,7 @@ void WCPartShaft::GenerateSurfaces(const WCRay &ray, const std::list<WCTrimProfi
 		(*surfIter)->Color( WCPartFeature::DefaultSurfaceColor );
 		//Only set if needs setting (trimmed surfaces have already been set)
 		if ((*surfIter)->RenderProgram() == 0)
-			(*surfIter)->RenderProgram( this->_part->Scene()->ShaderManager()->ProgramFromName("scn_basiclight"));
+			(*surfIter)->RenderProgram( this->_part->Scene()->ProgramFromName("scn_basiclight"));
 	}
 	
 	/*** Done with Surfaces ***/
