@@ -245,11 +245,6 @@ void WCSketch::UnpublishGeometry(void) {
 }
 
 
-void WCSketch::GenerateTopolgy(void) {
-	std::cout << "Gimme' dat topo!\n";
-}
-
-
 bool WCSketch::AddFeature(WCSketchFeature *feature) {
 	//Make sure feature is non-null
 	if (feature == NULL) {

@@ -902,9 +902,90 @@ xercesc::DOMElement* WCPartPad::Serialize(xercesc::DOMDocument *document, WCSeri
 	//Include the part feature element
 	xercesc::DOMElement* featureElement = this->WCPartFeature::Serialize(document, dictionary);
 	element->appendChild(featureElement);
-
 	//Add GUID attribute
 	WCSerializeableObject::AddStringAttrib(element, "guid", guid);
+	//Add IsReversed attribute
+	WCSerializeableObject::AddBoolAttrib(element, "reversed", this->_isReversed);
+	//Add FirstType, SecondType
+	this->_firstType.ToElement(element, "firstType");
+	this->_secondType.ToElement(element, "secondType");
+	//Add FirstOffset, SecondOffset
+	WCSerializeableObject::AddFloatAttrib(element, "firstOffset", this->_firstOffset);
+	WCSerializeableObject::AddFloatAttrib(element, "secondOffset", this->_secondOffset);
+	//Add Direction
+	this->_direction.ToElement(element, "direction");
+
+	//Loop through all sketch profiles and add them
+	xmlString = xercesc::XMLString::transcode("profiles");
+	XMLCh* profileStr = xercesc::XMLString::transcode("profile");
+	xercesc::DOMElement *profiles = document->createElement(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	element->appendChild(profiles);
+	xercesc::DOMElement *profileElem;
+	std::list<std::list<WCSketchProfile*> >::iterator profilesIter;
+	std::list<WCSketchProfile*>::iterator profileIter;
+	for (profilesIter = this->_profiles.begin(); profilesIter != this->_profiles.end(); profilesIter++) {
+		for (profileIter = (*profilesIter).begin(); profileIter != (*profilesIter).end(); profileIter++) {
+			//Create an entry for each profile
+			profileElem = document->createElement(profileStr);
+			//Add profile address
+			WCSerializeableObject::AddGUIDAttrib(profileElem, "address", *profileIter, dictionary);
+			//Add profile int/ext flag
+			WCSerializeableObject::AddBoolAttrib(profileElem, "external", (*profileIter) == (*profilesIter).front());
+			//Add profile to list
+			profiles->appendChild(profileElem);
+		}
+	}
+
+	//Add TopologyModel
+	xercesc::DOMElement* topologyElement = this->_topologyModel->Serialize(document, dictionary);
+	element->appendChild(topologyElement);
+
+	//Add Geometric Points
+	xmlString = xercesc::XMLString::transcode("Points");
+	xercesc::DOMElement *points = document->createElement(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	element->appendChild(points);
+	std::list<WCGeometricPoint*>::iterator pointIter;
+	for (pointIter = this->_points.begin(); pointIter != this->_points.end(); pointIter++) {
+		xercesc::DOMElement *pointElement = (*pointIter)->Serialize(document, dictionary);
+		points->appendChild(pointElement);
+	}
+
+	//Add Geometric Lines
+	xmlString = xercesc::XMLString::transcode("Lines");
+	xercesc::DOMElement *lines = document->createElement(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	element->appendChild(lines);
+	std::list<WCGeometricLine*>::iterator lineIter;
+	for (lineIter = this->_lines.begin(); lineIter != this->_lines.end(); lineIter++) {
+		xercesc::DOMElement *lineElement = (*lineIter)->Serialize(document, dictionary);
+		lines->appendChild(lineElement);
+	}
+
+	//Add Geometric Curves
+	xmlString = xercesc::XMLString::transcode("Curves");
+	xercesc::DOMElement *curves = document->createElement(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	element->appendChild(curves);
+	std::list<WCNurbsCurve*>::iterator curveIter;
+	for (curveIter = this->_curves.begin(); curveIter != this->_curves.end(); curveIter++) {
+		xercesc::DOMElement *curveElement = (*curveIter)->Serialize(document, dictionary);
+		curves->appendChild(curveElement);
+	}
+
+	//Add Geometric Surfaces
+	xmlString = xercesc::XMLString::transcode("Surfaces");
+	xercesc::DOMElement *surfaces = document->createElement(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	element->appendChild(surfaces);
+	std::list<WCNurbsSurface*>::iterator surfaceIter;
+	for (surfaceIter = this->_surfaces.begin(); surfaceIter != this->_surfaces.end(); surfaceIter++) {
+		xercesc::DOMElement *surfaceElement = (*surfaceIter)->Serialize(document, dictionary);
+		surfaces->appendChild(surfaceElement);
+	}
+
+	//TrimSurfaces...
 
 	//Return the primary element
 	return element;

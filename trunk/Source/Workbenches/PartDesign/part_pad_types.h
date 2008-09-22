@@ -78,6 +78,12 @@ public:
 	WCPartPadType& operator=(const WCPartPadType &type)	{ this->_type = type._type; return *this; }	//!< Type equation				
 	bool operator==(const WCPartPadType &type) const { return this->_type == type._type; }			//!< Equals operator
 	bool operator!=(const WCPartPadType &type) const { return this->_type != type._type; }			//!< Inequality operator
+
+	//Serialization Methods
+	void ToElement(xercesc::DOMElement *element, const std::string &name) { 
+												WCSerializeableObject::AddFloatAttrib(element, name, this->_type); }
+	void FromElement(xercesc::DOMElement *element, const std::string &name)	{
+												this->_type = (PartPadType)WCSerializeableObject::GetFloatAttrib(element, name); }
 };
 
 
