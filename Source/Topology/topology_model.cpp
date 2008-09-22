@@ -156,8 +156,19 @@ void WCTopologyModel::AddShell(WSTopologyShell* shell) {
 }
 
 
-xercesc::DOMElement* WCTopologyModel::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict) {
-	return NULL;
+xercesc::DOMElement* WCTopologyModel::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
+	//Insert self into dictionary
+	WCGUID guid = dictionary->InsertAddress(this);
+	//Create the base element for the object
+	XMLCh* xmlString = xercesc::XMLString::transcode("TopologyModel");
+	xercesc::DOMElement* element = document->createElement(xmlString);
+	xercesc::XMLString::release(&xmlString);
+
+	//Good luck here
+	//...
+
+	//Return the primary element
+	return element;
 }
 
 

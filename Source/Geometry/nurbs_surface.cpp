@@ -1557,9 +1557,57 @@ bool WCNurbsSurface::operator==(const WCNurbsSurface &surface) {
 
 
 xercesc::DOMElement* WCNurbsSurface::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
-	//Create the base element for the object
-	xercesc::DOMElement*  surfaceElem = document->createElement(xercesc::XMLString::transcode("NURBSSurface"));
-	return surfaceElem;
+	//Insert self into dictionary
+	WCGUID guid = dictionary->InsertAddress(this);
+	//Create primary element for this object
+	XMLCh* xmlString = xercesc::XMLString::transcode("NURBSSurface");
+	xercesc::DOMElement*  element = document->createElement(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	//Add GUID attribute
+	WCSerializeableObject::AddStringAttrib(element, "guid", guid);
+	//Include the parent element
+	xercesc::DOMElement* curveElement = this->WCGeometricSurface::Serialize(document, dictionary);
+	element->appendChild(curveElement);
+
+	//Add Context attrib
+	WCSerializeableObject::AddGUIDAttrib(element, "context", this->_context, dictionary);
+	//Degree
+	WCSerializeableObject::AddFloatAttrib(element, "degreeU", this->_degreeU);
+	WCSerializeableObject::AddFloatAttrib(element, "degreeV", this->_degreeV);
+	//Number of control point
+	WCSerializeableObject::AddFloatAttrib(element, "cpU", this->_cpU);
+	WCSerializeableObject::AddFloatAttrib(element, "cpV", this->_cpV);
+	//Number of knot points
+	WCSerializeableObject::AddFloatAttrib(element, "kpU", this->_kpU);
+	WCSerializeableObject::AddFloatAttrib(element, "kpV", this->_kpV);
+	//Modes
+	this->_modeU.ToElement(element, "modeU");
+	this->_modeV.ToElement(element, "modeV");
+
+	//Add list of control points
+	for (WPUInt i=0; i<this->_cpU * this->_cpV; i++)
+		this->_controlPoints.at(i).ToElement(element, "ControlPoint");
+
+	//List of knot points for U
+	xmlString = xercesc::XMLString::transcode("KnotPointU");
+	xercesc::DOMElement *kpElement;
+	for (WPUInt i=0; i<this->_kpU; i++) {
+		kpElement = document->createElement(xmlString);
+		WCSerializeableObject::AddFloatAttrib(kpElement, "value", this->_knotPointsU[i]);
+		element->appendChild(kpElement);
+	}
+	xercesc::XMLString::release(&xmlString);
+	//List of knot points for V
+	xmlString = xercesc::XMLString::transcode("KnotPointV");
+	for (WPUInt i=0; i<this->_kpV; i++) {
+		kpElement = document->createElement(xmlString);
+		WCSerializeableObject::AddFloatAttrib(kpElement, "value", this->_knotPointsU[i]);
+		element->appendChild(kpElement);
+	}
+	xercesc::XMLString::release(&xmlString);
+
+	//Return the element
+	return element;
 }
 
 

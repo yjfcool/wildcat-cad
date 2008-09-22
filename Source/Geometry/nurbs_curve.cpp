@@ -588,7 +588,7 @@ WCNurbsCurve::WCNurbsCurve(xercesc::DOMElement *element, WCSerialDictionary *dic
 	//Get degree
 	this->_degree = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "degree");
 	//Setup NURBS mode
-	this->_mode.FromElement(WCSerializeableObject::ElementFromName(element,"Mode"));
+	this->_mode.FromElement(element, "mode");
 	//Get number of control points
 	this->_cp = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "numCP");
 	//Get number of knot points
@@ -1381,19 +1381,14 @@ xercesc::DOMElement* WCNurbsCurve::Serialize(xercesc::DOMDocument *document, WCS
 
 	//Add Context attrib
 	WCSerializeableObject::AddGUIDAttrib(element, "context", this->_context, dictionary);
-	//Degree
+	//Add Degree
 	WCSerializeableObject::AddFloatAttrib(element, "degree", this->_degree);
-	//Number of control point
+	//Add Number of control point
 	WCSerializeableObject::AddFloatAttrib(element, "numCP", this->_cp);
-	//Number of knot points
+	//Add Number of knot points
 	WCSerializeableObject::AddFloatAttrib(element, "numKP", this->_kp);
-
-	//NURBS Mode
-	xmlString = xercesc::XMLString::transcode("Mode");
-	xercesc::DOMElement *modeElement = document->createElement(xmlString);
-	this->_mode.ToElement(modeElement);
-	element->appendChild(modeElement);
-	xercesc::XMLString::release(&xmlString);
+	//Add NURBS Mode
+	this->_mode.ToElement(element, "mode");
 
 	//Add list of control points
 	for (WPUInt i=0; i<this->_cp; i++)
