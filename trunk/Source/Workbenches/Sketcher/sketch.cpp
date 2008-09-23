@@ -144,8 +144,6 @@ WCSketch::WCSketch(xercesc::DOMElement *element, WCSerialDictionary *dictionary)
 			retVal = WCSketchFeature::Deserialize(featureElement, dictionary);
 		}
 	}
-	//Publish the geometric
-	this->PublishGeometry();
 }
 
 

@@ -806,8 +806,51 @@ WCPartPad::WCPartPad(xercesc::DOMElement *element, WCSerialDictionary *dictionar
 	::WCPartFeature( WCSerializeableObject::ElementFromName(element,"PartFeature"), dictionary),
 	_profiles(), _isReversed(false), _firstType(WCPartPadType::Dimension()), _secondType(WCPartPadType::Dimension()),
 	_firstOffset(0.0), _secondOffset(0.0), _points(), _lines(), _curves(), _surfaces(), _topologyModel(NULL) {
-	//Restore the pad here
-	//...
+	//Make sure element if not null
+	if (element == NULL) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCPartPad::WCPartPad - NULL Element passed.");
+		//throw error
+		return;
+	}
+	//Get GUID and register it
+	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
+	dictionary->InsertGUID(guid, this);
+
+	//Restore isReversed
+	this->_isReversed = WCSerializeableObject::GetBoolAttrib(element, "reversed");
+	//Add FirstType, SecondType
+	this->_firstType.FromElement(element, "firstType");
+	this->_secondType.FromElement(element, "secondType");
+	//Add FirstOffset, SecondOffset
+	this->_firstOffset = WCSerializeableObject::GetFloatAttrib(element, "firstOffset");
+	this->_secondOffset = WCSerializeableObject::GetFloatAttrib(element, "secondOffset");
+	//Add Direction
+	this->_direction.FromElement( WCSerializeableObject::ElementFromName(element,"Direction") );
+
+	//Create sketch features
+	XMLCh* xmlString = xercesc::XMLString::transcode("Profiles");
+	xercesc::DOMNodeList *profileList = element->getElementsByTagName(xmlString)->item(0)->getChildNodes();
+	xercesc::XMLString::release(&xmlString);
+	xercesc::DOMNode *tmpNode;
+	xercesc::DOMElement *profileElement;
+	//Loop through all features
+	for (WPUInt featureIndex=0; featureIndex < profileList->getLength(); featureIndex++) {
+		//Get the indexed node
+		tmpNode = profileList->item(featureIndex);
+		//Make sure node is element
+		if (tmpNode->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
+			//Cast node to element
+			profileElement = (xercesc::DOMElement*)tmpNode;
+			WCSketchProfile* profile = (WCSketchProfile*)WCSerializeableObject::GetGUIDAttrib(profileElement, "address", dictionary);
+			bool outerProfile = WCSerializeableObject::GetBoolAttrib(profileElement, "external");
+			std::cout << "Found profile: " << profile << ", Ext: " << outerProfile << std::endl;
+		}
+	}
+
+	//Now union the pad model (both geometric and topological) with the part model
+	if (this->_part->TopologyModel()) this->_part->TopologyModel()->Union(this->_topologyModel);
+	//Finish initialization
+	this->Initialize();
 }
 
 
@@ -913,11 +956,11 @@ xercesc::DOMElement* WCPartPad::Serialize(xercesc::DOMDocument *document, WCSeri
 	WCSerializeableObject::AddFloatAttrib(element, "firstOffset", this->_firstOffset);
 	WCSerializeableObject::AddFloatAttrib(element, "secondOffset", this->_secondOffset);
 	//Add Direction
-	this->_direction.ToElement(element, "direction");
+	this->_direction.ToElement(element, "Direction");
 
 	//Loop through all sketch profiles and add them
-	xmlString = xercesc::XMLString::transcode("profiles");
-	XMLCh* profileStr = xercesc::XMLString::transcode("profile");
+	xmlString = xercesc::XMLString::transcode("Profiles");
+	XMLCh* profileStr = xercesc::XMLString::transcode("Profile");
 	xercesc::DOMElement *profiles = document->createElement(xmlString);
 	xercesc::XMLString::release(&xmlString);
 	element->appendChild(profiles);

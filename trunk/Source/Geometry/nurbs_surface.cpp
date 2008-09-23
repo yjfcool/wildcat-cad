@@ -894,7 +894,103 @@ WCNurbsSurface::WCNurbsSurface(xercesc::DOMElement *element, WCSerialDictionary 
 	::WCGeometricSurface( WCSerializeableObject::ElementFromName(element,"GeometricSurface"), dictionary ),
 	_context(NULL), _degreeU(0), _degreeV(0), _modeU(WCNurbsMode::Default()), _modeV(WCNurbsMode::Default()), _cpU(0), _cpV(0),
 	_controlPoints(), _kpU(0), _kpV(0), _knotPointsU(NULL), _knotPointsV(NULL), _lengthU(0.0), _lengthV(0.0), _buffers(), _altBuffers() {
-	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::WCNurbsSurface - Restore from XML is not implemented.");
+	//Make sure element if not null
+	if (element == NULL) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::WCNurbsSurface - NULL Element passed.");
+		//throw error
+		return;
+	}
+	//Get GUID and register it
+	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
+	dictionary->InsertGUID(guid, this);
+
+	//Get context
+	this->_context = (WCGeometryContext*)WCSerializeableObject::GetGUIDAttrib(element, "context", dictionary);
+	//Get degrees
+	this->_degreeU = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "degreeU");
+	this->_degreeV = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "degreeV");
+	//Get number of control points
+	this->_cpU = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "cpU");
+	this->_cpV = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "cpV");
+	//Get number of knot points
+	this->_kpU = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "kpU");
+	this->_kpV = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "kpV");
+	//Setup NURBS mode
+	this->_modeU.FromElement(element, "modeU");
+	this->_modeV.FromElement(element, "modeV");
+
+	//Find all nodes called ControlPoints
+	XMLCh *xmlString = xercesc::XMLString::transcode("ControlPoint");
+	xercesc::DOMNodeList *nodeList = element->getElementsByTagName(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	//Make sure cp and length agree
+	if (nodeList->getLength() != this->_cpU * this->_cpV) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::WCNurbsSurface - CP size mismatch.");
+		//throw error
+		return;
+	}
+	//Loop through all cp and load them
+	WCVector4 cp;
+	xercesc::DOMElement *cpElement;
+	for (WPUInt index=0; index< this->_cpU * this->_cpV; index++) {
+		//Cast to an element
+		cpElement = (xercesc::DOMElement*)nodeList->item(index);
+		//Load vector from element
+		cp.FromElement(cpElement);
+		//Add vector into control point list
+		this->_controlPoints.push_back(cp);
+	}
+	
+	//Find all nodes called KnotPointU
+	xmlString = xercesc::XMLString::transcode("KnotPointU");
+	nodeList = element->getElementsByTagName(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	//Make sure kp and length agree
+	if (nodeList->getLength() != this->_kpU) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::WCNurbsSurface - KP U size mismatch.");
+		//throw error
+		return;
+	}
+	//Allocate kp array
+	this->_knotPointsU = new WPFloat[this->_kpU];
+	//Loop through all kp and load them
+	WPFloat kp;
+	xercesc::DOMElement *kpElement;
+	for (WPUInt index=0; index< this->_kpU; index++) {
+		//Cast to an element
+		kpElement = (xercesc::DOMElement*)nodeList->item(index);
+		//Load float from element
+		kp = WCSerializeableObject::GetFloatAttrib(kpElement, "value");
+		//Add value into knot point list
+		this->_knotPointsU[index] = kp;
+	}
+
+	//Find all nodes called KnotPointV
+	xmlString = xercesc::XMLString::transcode("KnotPointV");
+	nodeList = element->getElementsByTagName(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	//Make sure kp and length agree
+	if (nodeList->getLength() != this->_kpV) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::WCNurbsSurface - KP V size mismatch.");
+		//throw error
+		return;
+	}
+	//Allocate kp array
+	this->_knotPointsV = new WPFloat[this->_kpV];
+	//Loop through all kp and load them
+	for (WPUInt index=0; index< this->_kpV; index++) {
+		//Cast to an element
+		kpElement = (xercesc::DOMElement*)nodeList->item(index);
+		//Load float from element
+		kp = WCSerializeableObject::GetFloatAttrib(kpElement, "value");
+		//Add value into knot point list
+		this->_knotPointsV[index] = kp;
+	}
+
+	//Find the rough length of the curve and the number of needed segments
+//	this->_length = WCNurbs::EstimateLength(this->_controlPoints);
+	//Establish aligned bounding box
+	this->_bounds = new WCAlignedBoundingBox(this->_controlPoints);
 }
 
 
