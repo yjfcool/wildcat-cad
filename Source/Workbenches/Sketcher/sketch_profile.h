@@ -109,7 +109,7 @@ private:
 	bool DetermineIsClosed(void);																	//!< Determine if profile is closed
 	bool DetermineIsSelfIntersecting(void);															//!< Determine if profile is self-intersecting
 	void ForceClockwise(void);																		//!< Force the profile to be defined clockwise
-
+	void Initialize(void);																			//!< Private initializer
 	//Deny Access
 	WCSketchProfile();																				//!< Deny access to default constructor
 	WCSketchProfile(const WCSketchProfile& pt);														//!< Deny access to copy constructor

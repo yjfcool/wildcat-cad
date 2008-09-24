@@ -56,8 +56,8 @@ void WCConstraintLength::GenerateMeasure(const WPFloat &offset, const WPFloat &l
 void WCConstraintLength::Initialize(void) {
 	//Retain the line
 	this->_line->Retain(*this);
-
-
+	//Create the length controller
+	this->_controller = new WCConstraintLengthController(this);
 	//Add into sketch
 	if (!this->_sketch->AddConstraint(this)) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCConstraintLength::WCConstraintLength - Problem adding constraint to sketch.");
@@ -65,12 +65,8 @@ void WCConstraintLength::Initialize(void) {
 		//throw error
 		return;
 	}
-
 	//Create the measure
 	this->GenerateMeasure(0.25*this->_length, 0.5);
-
-	//Create the length controller
-	this->_controller = new WCConstraintLengthController(this);
 	//Create tree element and add into the tree (beneath the sketch features element)
 	WSTexture* constraintIcon = this->_document->Scene()->TextureManager()->TextureFromName("constraint32");
 	this->_treeElement = new WCTreeElement(	this->_sketch->Document()->TreeView(), this->_name, this->_controller, constraintIcon);

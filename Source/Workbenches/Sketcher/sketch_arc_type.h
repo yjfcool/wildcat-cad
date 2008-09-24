@@ -65,13 +65,16 @@ public:
 												return t; }		
 	inline static WCSketchArcType ThreePoint(void)	{ WCSketchArcType t(SKETCHARC_TYPE_THREEPOINT);	//!< Create a lower-right placement object
 												return t; }
-
-	
 	//Overridden operators
 	inline WCSketchArcType& operator=(const WCSketchArcType &type) { this->_type = type._type;		//!< Equals operator
 												return *this; }
 	inline bool operator==(const WCSketchArcType &type) const { return this->_type == type._type; }	//!< Equality operator
 	inline bool operator!=(const WCSketchArcType &type) const { return this->_type != type._type; }	//!< Inequality operator
+	//Serialization Methods
+	void ToElement(xercesc::DOMElement *element, const std::string &name) { 
+												WCSerializeableObject::AddFloatAttrib(element, name, this->_type); }
+	void FromElement(xercesc::DOMElement *element, const std::string &name)	{ 
+												this->_type = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, name); }
 };
 
 

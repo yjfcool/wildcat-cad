@@ -252,6 +252,23 @@ void WCSketchProfile::ForceClockwise(void) {
 }
 
 
+void WCSketchProfile::Initialize(void) {
+	//Create the profile controller
+	this->_controller = new WCSketchProfileController(this);
+	//Create tree element and add into the tree (beneath the sketch profiles element)
+	WSTexture *profileIcon = this->_document->Scene()->TextureManager()->TextureFromName("profile32");
+	this->_treeElement = new WCTreeElement(this->_sketch->Document()->TreeView(), this->_name, this->_controller, profileIcon);
+	this->_sketch->ProfilesTreeElement()->AddLastChild(this->_treeElement);
+	
+	//Retain curves
+	std::list< std::pair<WCGeometricCurve*,bool> >::iterator listIter;
+	for (listIter = this->_curveList.begin(); listIter != this->_curveList.end(); listIter++) {
+		//Retain the curve
+		(*listIter).first->Retain(*this);
+	}
+}
+
+
 /***********************************************~***************************************************/
 
 
@@ -265,19 +282,7 @@ WCSketchProfile::WCSketchProfile(WCSketch *sketch, const std::string &name, std:
 		//throw error
 		return;
 	}
-	//Create the profile controller
-	this->_controller = new WCSketchProfileController(this);
-	//Create tree element and add into the tree (beneath the sketch profiles element)
-	WSTexture *profileIcon = this->_document->Scene()->TextureManager()->TextureFromName("profile32");
-	this->_treeElement = new WCTreeElement(this->_sketch->Document()->TreeView(), this->_name, this->_controller, profileIcon);
-	this->_sketch->ProfilesTreeElement()->AddLastChild(this->_treeElement);
-	
-	//Retain curves
-	std::list<WCGeometricCurve*>::iterator listIter;
-	for (listIter = list.begin(); listIter != list.end(); listIter++) {
-		//Retain the curve
-		(*listIter)->Retain(*this);
-	}
+
 	//Determine linearity
 	this->_isLinear = this->DetermineIsLinear(list);
 	//Determine if Closed
@@ -286,13 +291,53 @@ WCSketchProfile::WCSketchProfile(WCSketch *sketch, const std::string &name, std:
 	this->_isSelfIntersecting = this->DetermineIsSelfIntersecting();
 	//If linear, closed, and not self-intersecting, then force clockwise
 	if (this->_isLinear && this->_isClosed && !this->_isSelfIntersecting) this->ForceClockwise();
+	//Complete initialization
+	this->Initialize();
 }
 
 
 WCSketchProfile::WCSketchProfile(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	WCSketchFeature( WCSerializeableObject::ElementFromName(element,"SketchFeature"), dictionary ), 
 	_curveList(), _isLinear(false), _isClosed(false), _isSelfIntersecting(false) {
-	//Do something here
+	//Make sure element if not null
+	if (element == NULL) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSketchProfile::WCSketchProfile - NULL Element passed.");
+		//throw error
+		return;
+	}
+	//Get GUID and register it
+	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
+	dictionary->InsertGUID(guid, this);
+
+	//Setup booleans
+	this->_isLinear = WCSerializeableObject::GetBoolAttrib(element,"linear");
+	this->_isClosed = WCSerializeableObject::GetBoolAttrib(element,"closed");
+	this->_isSelfIntersecting = WCSerializeableObject::GetBoolAttrib(element,"intersecting");
+
+	//Setup curve list
+	XMLCh* xmlString = xercesc::XMLString::transcode("Curves");
+	xercesc::DOMNodeList *curveList = element->getElementsByTagName(xmlString)->item(0)->getChildNodes();
+	xercesc::XMLString::release(&xmlString);
+	xercesc::DOMNode *tmpNode;
+	xercesc::DOMElement *curveElement;
+	//Loop through all curves
+	for (WPUInt curveIndex=0; curveIndex < curveList->getLength(); curveIndex++) {
+		//Get the indexed node
+		tmpNode = curveList->item(curveIndex);
+		//Make sure node is element
+		if (tmpNode->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
+			//Cast node to element
+			curveElement = (xercesc::DOMElement*)tmpNode;
+			//Get the curve address
+			WCGeometricCurve* curve = (WCGeometricCurve*)WCSerializeableObject::GetGUIDAttrib(curveElement, "address", dictionary);
+			//Get the curve orientation
+			bool orientation = WCSerializeableObject::GetBoolAttrib(curveElement, "orientation");
+			//Add curve to list
+			this->_curveList.push_back( std::make_pair(curve, orientation) );
+		}
+	}
+	//Complete initialization
+	this->Initialize();
 }
 
 
@@ -629,7 +674,43 @@ void WCSketchProfile::OnDeselection(const bool fromManager) {
 
 	
 xercesc::DOMElement* WCSketchProfile::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
-	return NULL;
+	//Insert self into dictionary
+	WCGUID guid = dictionary->InsertAddress(this);
+	//Create the base element for the object
+	XMLCh* xmlString = xercesc::XMLString::transcode("SketchProfile");
+	xercesc::DOMElement* element = document->createElement(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	//Include the sketch feature element
+	xercesc::DOMElement* featureElement = this->WCSketchFeature::Serialize(document, dictionary);
+	element->appendChild(featureElement);
+	//Add GUID attribute
+	WCSerializeableObject::AddStringAttrib(element, "guid", guid);
+	//Add boolean attributes
+	WCSerializeableObject::AddBoolAttrib(element, "linear", this->_isLinear);
+	WCSerializeableObject::AddBoolAttrib(element, "closed", this->_isClosed);
+	WCSerializeableObject::AddBoolAttrib(element, "intersecting", this->_isSelfIntersecting);
+
+	//Loop through all curves and add them
+	xmlString = xercesc::XMLString::transcode("Curves");
+	XMLCh* curveStr = xercesc::XMLString::transcode("Curve");
+	xercesc::DOMElement *curves = document->createElement(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	element->appendChild(curves);
+	xercesc::DOMElement *curveElem;
+	std::list<std::pair<WCGeometricCurve*,bool> >::iterator curvesIter;
+	for (curvesIter = this->_curveList.begin(); curvesIter != this->_curveList.end(); curvesIter++) {
+		//Create an entry for each curve
+		curveElem = document->createElement(curveStr);
+		//Add curve address
+		WCSerializeableObject::AddGUIDAttrib(curveElem, "address", (*curvesIter).first, dictionary);
+		//Add curve orientation flag
+		WCSerializeableObject::AddBoolAttrib(curveElem, "orientation", (*curvesIter).second);
+		//Add curve to list
+		curves->appendChild(curveElem);
+	}
+	xercesc::XMLString::release(&curveStr);
+	//Return the element
+	return element;
 }
 
 

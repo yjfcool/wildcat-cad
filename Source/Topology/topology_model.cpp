@@ -140,6 +140,28 @@ void _DeleteTopologyShell(WSTopologyShell *shell) {
 /***********************************************~***************************************************/
 
 
+WCTopologyModel::WCTopologyModel(const WCTopologyModel&) : ::WCSerializeableObject(), _shellList() {
+	//There is a whole lot that needs to happen here...
+}
+
+
+WCTopologyModel::WCTopologyModel(xercesc::DOMElement *element, WCSerialDictionary *dictionary) : ::WCSerializeableObject(),
+	_shellList() {
+	//Make sure element if not null
+	if (element == NULL) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTopologyModel::WCTopologyModel - NULL Element passed.");
+		//throw error
+		return;
+	}
+	//Get GUID and register it
+	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
+	dictionary->InsertGUID(guid, this);
+
+	//Restore here
+	//...
+}
+
+
 WCTopologyModel::~WCTopologyModel() {
 	//Delete all shells
 	std::list<WSTopologyShell*>::iterator listIter;

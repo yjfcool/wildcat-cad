@@ -326,7 +326,18 @@ WCTrimmedNurbsSurface::WCTrimmedNurbsSurface(const WCTrimmedNurbsSurface &surf) 
 WCTrimmedNurbsSurface::WCTrimmedNurbsSurface(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	::WCNurbsSurface( WCSerializeableObject::ElementFromName(element,"NurbsSurface"), dictionary ),
 	_profileList(), _isTextureDirty(true), _trimTexture(0), _texWidth(0), _texHeight(0) {
-	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::WCTrimmedNurbsSurface - Restore from XML is not implemented.");
+	//Make sure element if not null
+	if (element == NULL) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::WCTrimmedNurbsSurface - NULL Element passed.");
+		//throw error
+		return;
+	}
+	//Get GUID and register it
+	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
+	dictionary->InsertGUID(guid, this);
+
+	//Restore trim profile list
+	//...
 }
 
 
@@ -638,9 +649,23 @@ void WCTrimmedNurbsSurface::GenerateTessellation(WPUInt &lodU, WPUInt &lodV, std
 
 
 xercesc::DOMElement* WCTrimmedNurbsSurface::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
-	//Create the base element for the object
-	xercesc::DOMElement*  trimmedElem = document->createElement(xercesc::XMLString::transcode("TrimmedSurface"));
-	return trimmedElem;
+	//Insert self into dictionary
+	WCGUID guid = dictionary->InsertAddress(this);
+	//Create primary element for this object
+	XMLCh* xmlString = xercesc::XMLString::transcode("TrimmedNURBSSurface");
+	xercesc::DOMElement*  element = document->createElement(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	//Add GUID attribute
+	WCSerializeableObject::AddStringAttrib(element, "guid", guid);
+	//Include the parent element
+	xercesc::DOMElement* surfElement = this->WCNurbsSurface::Serialize(document, dictionary);
+	element->appendChild(surfElement);
+
+	//Save lists of TrimProfiles
+	//...
+
+	//Return the element
+	return element;
 }
 
 

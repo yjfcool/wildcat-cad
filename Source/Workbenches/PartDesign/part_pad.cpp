@@ -661,7 +661,6 @@ void _ConfigureFaceUses(std::list<WCSketchProfile*> &profileList, WSTopologyShel
 
 			/*** Configure dependent edgeUses ***/
 			_ConfigureSideEdgeUses(loopUse, sideIndex, profileList.front()->CurveCount(),  sideEUs, topVUs, bottomVUs);
-
 		}
 	}
 	//Clean up dangling faceUse and shell pointers
@@ -796,7 +795,7 @@ WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, std::list<std::l
 	this->GenerateTopBottom(topTrims, bottomTrims, topoFaceUses);
 	this->_topologyModel = this->GenerateTopology(topoBottomPoints, topoTopPoints, topoBottomEUs, topoSideEUs, topoTopEUs, topoFaceUses);
 	//Now union the pad model (both geometric and topological) with the part model
-	this->_part->TopologyModel()->Union(this->_topologyModel);
+	if (this->_part->TopologyModel()) this->_part->TopologyModel()->Union(this->_topologyModel);
 	//Finish initialization
 	this->Initialize();
 }
@@ -827,27 +826,117 @@ WCPartPad::WCPartPad(xercesc::DOMElement *element, WCSerialDictionary *dictionar
 	//Add Direction
 	this->_direction.FromElement( WCSerializeableObject::ElementFromName(element,"Direction") );
 
-	//Create sketch features
+	//Restore sketch profiles
 	XMLCh* xmlString = xercesc::XMLString::transcode("Profiles");
 	xercesc::DOMNodeList *profileList = element->getElementsByTagName(xmlString)->item(0)->getChildNodes();
 	xercesc::XMLString::release(&xmlString);
 	xercesc::DOMNode *tmpNode;
-	xercesc::DOMElement *profileElement;
+	xercesc::DOMElement *tmpElement;
+	std::list<WCSketchProfile*> tmpList;
 	//Loop through all features
-	for (WPUInt featureIndex=0; featureIndex < profileList->getLength(); featureIndex++) {
+	for (WPUInt index=0; index < profileList->getLength(); index++) {
 		//Get the indexed node
-		tmpNode = profileList->item(featureIndex);
+		tmpNode = profileList->item(index);
 		//Make sure node is element
 		if (tmpNode->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
 			//Cast node to element
-			profileElement = (xercesc::DOMElement*)tmpNode;
-			WCSketchProfile* profile = (WCSketchProfile*)WCSerializeableObject::GetGUIDAttrib(profileElement, "address", dictionary);
-			bool outerProfile = WCSerializeableObject::GetBoolAttrib(profileElement, "external");
-			std::cout << "Found profile: " << profile << ", Ext: " << outerProfile << std::endl;
+			tmpElement = (xercesc::DOMElement*)tmpNode;
+			WCSketchProfile* profile = (WCSketchProfile*)WCSerializeableObject::GetGUIDAttrib(tmpElement, "address", dictionary);
+			bool outerProfile = WCSerializeableObject::GetBoolAttrib(tmpElement, "external");
+			//If is an outer profile, add list of profiles to master list (make sure to skip first outer
+			if (outerProfile && !tmpList.empty()) {
+				this->_profiles.push_back(tmpList);
+				//Make sure to clear the temp list
+				tmpList.clear();
+			}
+			//Add profile to temp list
+			tmpList.push_back(profile);
+		}
+	}
+	//Add last list if not empty
+	if (!tmpList.empty()) this->_profiles.push_back(tmpList);
+
+	//Restore Points
+	xmlString = xercesc::XMLString::transcode("Points");
+	xercesc::DOMNodeList *nodeList = element->getElementsByTagName(xmlString)->item(0)->getChildNodes();
+	xercesc::XMLString::release(&xmlString);
+	//Loop through all nodes
+	for (WPUInt index=0; index < nodeList->getLength(); index++) {
+		//Get the indexed node
+		tmpNode = nodeList->item(index);
+		//Make sure node is element
+		if (tmpNode->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
+			//Cast node to element
+			tmpElement = (xercesc::DOMElement*)tmpNode;
+			WCGeometricPoint* point = new WCGeometricPoint(tmpElement, dictionary);
+			//Add profile to temp list
+			this->_points.push_back(point);
 		}
 	}
 
-	//Now union the pad model (both geometric and topological) with the part model
+	//Restore Lines
+	xmlString = xercesc::XMLString::transcode("Lines");
+	nodeList = element->getElementsByTagName(xmlString)->item(0)->getChildNodes();
+	xercesc::XMLString::release(&xmlString);
+	//Loop through all nodes
+	for (WPUInt index=0; index < nodeList->getLength(); index++) {
+		//Get the indexed node
+		tmpNode = nodeList->item(index);
+		//Make sure node is element
+		if (tmpNode->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
+			//Cast node to element
+			tmpElement = (xercesc::DOMElement*)tmpNode;
+			WCGeometricLine* line = new WCGeometricLine(tmpElement, dictionary);
+			//Add line to temp list
+			this->_lines.push_back(line);
+		}
+	}
+
+	//Restore Curves
+	xmlString = xercesc::XMLString::transcode("Curves");
+	nodeList = element->getElementsByTagName(xmlString)->item(0)->getChildNodes();
+	xercesc::XMLString::release(&xmlString);
+	//Loop through all nodes
+	for (WPUInt index=0; index < nodeList->getLength(); index++) {
+		//Get the indexed node
+		tmpNode = nodeList->item(index);
+		//Make sure node is element
+		if (tmpNode->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
+			//Cast node to element
+			tmpElement = (xercesc::DOMElement*)tmpNode;
+			WCNurbsCurve* curve = new WCNurbsCurve(tmpElement, dictionary);
+			//Add curve to temp list
+			this->_curves.push_back(curve);
+		}
+	}
+
+	//Restore Surfaces
+	xmlString = xercesc::XMLString::transcode("Surfaces");
+	nodeList = element->getElementsByTagName(xmlString)->item(0)->getChildNodes();
+	xercesc::XMLString::release(&xmlString);
+	WCNurbsSurface *surface;
+	//Loop through all nodes
+	for (WPUInt index=0; index < nodeList->getLength(); index++) {
+		//Get the indexed node
+		tmpNode = nodeList->item(index);
+		//Make sure node is element
+		if (tmpNode->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
+			//Cast node to element
+			tmpElement = (xercesc::DOMElement*)tmpNode;
+			const XMLCh* elementName = tmpElement->getTagName();
+			char *str = xercesc::XMLString::transcode(elementName);
+			std::string value(str);
+			delete str;
+			if (value == "TrimmedNURBSSurface") surface = new WCTrimmedNurbsSurface(tmpElement, dictionary);
+			else if (value == "NurbsSurface") surface = new WCNurbsSurface(tmpElement, dictionary);
+			else surface = NULL;
+			//Add surface to temp list (as appropriate)
+			if (surface) this->_surfaces.push_back(surface);
+		}
+	}
+
+	//Restore topology model
+	this->_topologyModel = new WCTopologyModel( WCSerializeableObject::ElementFromName(element,"TopologyModel"), dictionary );
 	if (this->_part->TopologyModel()) this->_part->TopologyModel()->Union(this->_topologyModel);
 	//Finish initialization
 	this->Initialize();
@@ -979,7 +1068,8 @@ xercesc::DOMElement* WCPartPad::Serialize(xercesc::DOMDocument *document, WCSeri
 			profiles->appendChild(profileElem);
 		}
 	}
-
+	xercesc::XMLString::release(&profileStr);
+	
 	//Add TopologyModel
 	xercesc::DOMElement* topologyElement = this->_topologyModel->Serialize(document, dictionary);
 	element->appendChild(topologyElement);
