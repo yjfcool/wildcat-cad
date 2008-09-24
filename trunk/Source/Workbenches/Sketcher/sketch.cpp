@@ -144,6 +144,8 @@ WCSketch::WCSketch(xercesc::DOMElement *element, WCSerialDictionary *dictionary)
 			retVal = WCSketchFeature::Deserialize(featureElement, dictionary);
 		}
 	}
+	//Add all geometry into the part
+	this->PublishGeometry();
 }
 
 
@@ -704,11 +706,6 @@ xercesc::DOMElement* WCSketch::Serialize(xercesc::DOMDocument *document, WCSeria
 		featureElem = (*featureIter)->Serialize(document, dictionary);
 		//Add the feature element as a child to this one
 		if (featureElem != NULL) features->appendChild(featureElem);
-		else {
-			//Create a dummy feature from the feature name
-//			featureElem = document->createElement(xercesc::XMLString::transcode((*featureIter)->GetName().c_str()));
-//			features->appendChild(featureElem);
-		}
 	}
 
 	//Return the element

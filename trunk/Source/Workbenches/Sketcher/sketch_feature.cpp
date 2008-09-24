@@ -31,9 +31,15 @@
 #include "Sketcher/sketch.h"
 
 /*** Feature Headers ***/
-#include "Sketcher/sketch_point.h"
-#include "Sketcher/sketch_line.h"
+#include "Sketcher/sketch_arc.h"
+#include "Sketcher/sketch_axis.h"
 #include "Sketcher/sketch_circle.h"
+#include "Sketcher/sketch_conic_twopoint.h"
+#include "Sketcher/sketch_ellipse.h"
+#include "Sketcher/sketch_line.h"
+#include "Sketcher/sketch_point.h"
+#include "Sketcher/sketch_profile.h"
+
 
 /*** Constraint Headers ***/
 #include "Constraint/constraint_angle.h"
@@ -154,9 +160,33 @@ bool WCSketchFeature::Deserialize(xercesc::DOMElement* featureElement, WCSerialD
 	/*** Features ***/
 
 	//Find the feature to create
-	if (name == "Point") {
+	if (name == "SketchArc") {
 		//Create the feature
-		new WCSketchPoint(featureElement, dictionary);
+		new WCSketchArc(featureElement, dictionary);
+		//All is good here
+		return true;
+	}
+	else if (name == "SketchAxis") {
+		//Create the feature
+		new WCSketchAxis(featureElement, dictionary);
+		//All is good here
+		return true;
+	}
+	else if (name == "SketchCircle") {
+		//Create the feature
+		new WCSketchCircle(featureElement, dictionary);
+		//All is good here
+		return true;
+	}
+	else if (name == "SketchConicTwoPoint") {
+		//Create the feature
+		new WCSketchConicTwoPoint(featureElement, dictionary);
+		//All is good here
+		return true;
+	}
+	else if (name == "SketchEllipse") {
+		//Create the feature
+		new WCSketchEllipse(featureElement, dictionary);
 		//All is good here
 		return true;
 	}
@@ -166,9 +196,15 @@ bool WCSketchFeature::Deserialize(xercesc::DOMElement* featureElement, WCSerialD
 		//All is good here
 		return true;
 	}
-	else if (name == "SketchCircle") {
+	else if (name == "SketchPoint") {
 		//Create the feature
-		new WCSketchCircle(featureElement, dictionary);
+		new WCSketchPoint(featureElement, dictionary);
+		//All is good here
+		return true;
+	}
+	else if (name == "SketchProfile") {
+		//Create the feature
+		new WCSketchProfile(featureElement, dictionary);
 		//All is good here
 		return true;
 	}

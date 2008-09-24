@@ -1656,14 +1656,14 @@ xercesc::DOMElement* WCNurbsSurface::Serialize(xercesc::DOMDocument *document, W
 	//Insert self into dictionary
 	WCGUID guid = dictionary->InsertAddress(this);
 	//Create primary element for this object
-	XMLCh* xmlString = xercesc::XMLString::transcode("NURBSSurface");
+	XMLCh* xmlString = xercesc::XMLString::transcode("NurbsSurface");
 	xercesc::DOMElement*  element = document->createElement(xmlString);
 	xercesc::XMLString::release(&xmlString);
 	//Add GUID attribute
 	WCSerializeableObject::AddStringAttrib(element, "guid", guid);
 	//Include the parent element
-	xercesc::DOMElement* curveElement = this->WCGeometricSurface::Serialize(document, dictionary);
-	element->appendChild(curveElement);
+	xercesc::DOMElement* surfElement = this->WCGeometricSurface::Serialize(document, dictionary);
+	element->appendChild(surfElement);
 
 	//Add Context attrib
 	WCSerializeableObject::AddGUIDAttrib(element, "context", this->_context, dictionary);

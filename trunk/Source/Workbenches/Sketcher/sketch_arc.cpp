@@ -147,7 +147,30 @@ WCSketchArc::WCSketchArc(WCSketch *sketch, const std::string &name, const WCVect
 WCSketchArc::WCSketchArc(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	WCSketchFeature(  WCSerializeableObject::ElementFromName(element,"SketchFeature"), dictionary ),
 	_type(WCSketchArcType::Standard()), _center(), _radius(0.0), _startAngle(0.0), _endAngle(0.0), _curve(NULL), _centerPoint(NULL) {
-	//Do something here
+	//Make sure element if not null
+	if (element == NULL) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSketchArc::WCSketchArc - NULL Element passed.");
+		//throw error
+		return;
+	}
+	//Get GUID and register it
+	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
+	dictionary->InsertGUID(guid, this);
+
+	//Restore the type
+	this->_type.FromElement(element, "ArcType");
+	//Setup radius and start/end angles
+	this->_radius = WCSerializeableObject::GetBoolAttrib(element, "radius");
+	this->_startAngle = WCSerializeableObject::GetBoolAttrib(element, "startAngle");
+	this->_endAngle = WCSerializeableObject::GetBoolAttrib(element, "endAngle");
+	//Setup center
+	this->_center.FromElement( WCSerializeableObject::ElementFromName(element,"Center") );
+	//Setup base
+	this->_curve = new WCNurbsCurve( WCSerializeableObject::ElementFromName(element,"NURBSCurve"), dictionary );
+	//Setup center point
+	this->_centerPoint = new WCGeometricPoint( WCSerializeableObject::ElementFromName(element,"GeometricPoint"), dictionary );
+	//Initialize the object
+	this->Initialize();
 }
 
 
@@ -251,8 +274,34 @@ void WCSketchArc::OnDeselection(const bool fromManager) {
 
 	
 xercesc::DOMElement* WCSketchArc::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
-	CLOGGER_WARN(WCLogManager::RootLogger(), "WCSketchArc::Serialize - Not yet implemented.");
-	return NULL;
+	//Insert self into dictionary
+	WCGUID guid = dictionary->InsertAddress(this);
+	//Create primary element for this object
+	XMLCh* xmlString = xercesc::XMLString::transcode("SketchArc");
+	xercesc::DOMElement* element = document->createElement(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	//Include the parent element
+	xercesc::DOMElement* featureElement = this->WCSketchFeature::Serialize(document, dictionary);
+	element->appendChild(featureElement);
+	//Add GUID attribute
+	WCSerializeableObject::AddStringAttrib(element, "guid", guid);
+
+	//Add type
+	this->_type.ToElement(element, "ArcType");
+	//Add attributes
+	WCSerializeableObject::AddFloatAttrib(element, "radius", this->_radius);
+	WCSerializeableObject::AddFloatAttrib(element, "startAngle", this->_startAngle);
+	WCSerializeableObject::AddFloatAttrib(element, "endAngle", this->_endAngle);
+	//Add center vector
+	this->_center.ToElement(element, "Center");
+	//Add child geometric curve
+	xercesc::DOMElement *curveElement = this->_curve->Serialize(document, dictionary);
+	element->appendChild(curveElement);
+	xercesc::DOMElement *pointElement = this->_centerPoint->Serialize(document, dictionary);
+	element->appendChild(pointElement);
+	
+	//Return the new element
+	return element;
 }
 
 	

@@ -215,7 +215,7 @@ xercesc::DOMElement* WCSketchPoint::Serialize(xercesc::DOMDocument *document, WC
 	//Insert self into dictionary
 	WCGUID guid = dictionary->InsertAddress(this);
 	//Create primary element for this object
-	XMLCh* xmlString = xercesc::XMLString::transcode("Point");
+	XMLCh* xmlString = xercesc::XMLString::transcode("SketchPoint");
 	xercesc::DOMElement* element = document->createElement(xmlString);
 	xercesc::XMLString::release(&xmlString);
 	//Include the parent element
