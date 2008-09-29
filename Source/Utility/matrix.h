@@ -83,7 +83,7 @@ public:
 	static WCMatrix4 FromGLMatrix(GLfloat *data);													//!< Convert from an OpenGL 4x4 matrix
 	void GLLoadMatrix(void);																		//!< Load the matrix into GL
 	WCMatrix ToMatrix(void);																		//!< Convert to a WCMatrix object
-	void ToElement(xercesc::DOMNode *parent, const std::string &name);								//!< Serialize the object
+	xercesc::DOMElement* ToElement(xercesc::DOMNode *parent, const std::string &name);				//!< Serialize the object
 	void FromElement(xercesc::DOMElement *element);													//!< Deserialize the object
 
 	//Operators

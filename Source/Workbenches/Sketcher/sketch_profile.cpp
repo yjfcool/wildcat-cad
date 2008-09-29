@@ -255,6 +255,12 @@ void WCSketchProfile::ForceClockwise(void) {
 void WCSketchProfile::Initialize(void) {
 	//Create the profile controller
 	this->_controller = new WCSketchProfileController(this);
+	//Add into sketch
+	if (!this->_sketch->AddFeature(this)) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSketchProfile::WCSketchProfile - Problem adding profile to sketch.");
+		//throw error
+		return;
+	}
 	//Create tree element and add into the tree (beneath the sketch profiles element)
 	WSTexture *profileIcon = this->_document->Scene()->TextureManager()->TextureFromName("profile32");
 	this->_treeElement = new WCTreeElement(this->_sketch->Document()->TreeView(), this->_name, this->_controller, profileIcon);
@@ -276,13 +282,6 @@ WCSketchProfile::WCSketchProfile(WCSketch *sketch, const std::string &name, std:
 	::WCSketchFeature(sketch), _curveList(), _isLinear(false), _isClosed(false), _isSelfIntersecting(false) {
 	//Check feature name
 	if (this->_name == "") this->_name = this->_sketch->GenerateFeatureName(this);
-	//Add into sketch
-	if (!this->_sketch->AddFeature(this)) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSketchProfile::WCSketchProfile - Problem adding profile to sketch.");
-		//throw error
-		return;
-	}
-
 	//Determine linearity
 	this->_isLinear = this->DetermineIsLinear(list);
 	//Determine if Closed
@@ -698,6 +697,7 @@ xercesc::DOMElement* WCSketchProfile::Serialize(xercesc::DOMDocument *document, 
 	element->appendChild(curves);
 	xercesc::DOMElement *curveElem;
 	std::list<std::pair<WCGeometricCurve*,bool> >::iterator curvesIter;
+	WPUInt index = 0;
 	for (curvesIter = this->_curveList.begin(); curvesIter != this->_curveList.end(); curvesIter++) {
 		//Create an entry for each curve
 		curveElem = document->createElement(curveStr);
@@ -705,6 +705,8 @@ xercesc::DOMElement* WCSketchProfile::Serialize(xercesc::DOMDocument *document, 
 		WCSerializeableObject::AddGUIDAttrib(curveElem, "address", (*curvesIter).first, dictionary);
 		//Add curve orientation flag
 		WCSerializeableObject::AddBoolAttrib(curveElem, "orientation", (*curvesIter).second);
+		//Add index of the curve
+		WCSerializeableObject::AddFloatAttrib(curveElem, "index", index++);
 		//Add curve to list
 		curves->appendChild(curveElem);
 	}

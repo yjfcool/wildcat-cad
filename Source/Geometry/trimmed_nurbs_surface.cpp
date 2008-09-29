@@ -320,6 +320,7 @@ WCTrimmedNurbsSurface::WCTrimmedNurbsSurface(WCGeometryContext *context, const s
 
 WCTrimmedNurbsSurface::WCTrimmedNurbsSurface(const WCTrimmedNurbsSurface &surf) : ::WCNurbsSurface(surf),
 	_profileList(surf._profileList), _isTextureDirty(true), _trimTexture(0),  _texWidth(0), _texHeight(0) {
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTrimmedNurbsSurface::WCTrimmedNurbsSurface - Copy constructor not implemented.");
 }
 
 
@@ -337,7 +338,37 @@ WCTrimmedNurbsSurface::WCTrimmedNurbsSurface(xercesc::DOMElement *element, WCSer
 	dictionary->InsertGUID(guid, this);
 
 	//Restore trim profile list
-	//...
+	XMLCh *xmlString = xercesc::XMLString::transcode("Profile");
+	xercesc::DOMNodeList *profileList = element->getElementsByTagName(xmlString);
+	xercesc::XMLString::release(&xmlString);
+	xmlString = xercesc::XMLString::transcode("Curve");
+	xercesc::DOMNodeList* curveList;
+	xercesc::DOMElement *profileElement, *curveElement;
+	std::list<std::pair<WCGeometricCurve*,bool> > tmpList;
+	//Loop through all profiles
+	for (int i = 0; i < profileList->getLength(); i++) {
+		//Get the profile element
+		profileElement = (xercesc::DOMElement*)profileList->item(i);
+		//Get the list of all curves in the profile
+		curveList = profileElement->getElementsByTagName(xmlString);
+		//Loop through all curves
+		for (int j = 0; j < curveList->getLength(); j++) {
+			//Get the curve element
+			curveElement = (xercesc::DOMElement*)curveList->item(j);
+			//Get the curve address
+			WCGeometricCurve *curve = (WCGeometricCurve*)WCSerializeableObject::GetGUIDAttrib(curveElement, "address", dictionary);
+			//Get the curve orientation
+			bool orientation = WCSerializeableObject::GetBoolAttrib(curveElement, "orientation");
+			//Add curve to tmp list
+			tmpList.push_back( std::make_pair(curve, orientation) );
+		}
+		//If there are curves in tmpList add tmpList to _profileList
+		if (tmpList.size()) {
+			this->_profileList.push_back(tmpList);
+			//Clear the list
+			tmpList.clear();
+		}
+	}
 }
 
 
@@ -662,7 +693,41 @@ xercesc::DOMElement* WCTrimmedNurbsSurface::Serialize(xercesc::DOMDocument *docu
 	element->appendChild(surfElement);
 
 	//Save lists of TrimProfiles
-	//...
+	xmlString = xercesc::XMLString::transcode("TrimProfiles");
+	xercesc::DOMElement* trimProfilesElement = document->createElement(xmlString);
+	element->appendChild(trimProfilesElement);
+	xercesc::XMLString::release(&xmlString);
+	xercesc::DOMElement *profileElement;
+	xmlString = xercesc::XMLString::transcode("Profile");
+	XMLCh* curveString = xercesc::XMLString::transcode("Curve");
+	std::list<WCTrimProfile>::iterator profileIter;
+	WPUInt profileIndex = 0;
+	for (profileIter = this->_profileList.begin(); profileIter != this->_profileList.end(); profileIter++) {
+		//Add an element for the overall trim profile
+		profileElement = document->createElement(xmlString);
+		//Add the order index of the profile
+		WCSerializeableObject::AddFloatAttrib(profileElement, "index", profileIndex++);
+		//Append the element
+		trimProfilesElement->appendChild(profileElement);
+		//Inner loop for profile curves
+		WPUInt curveIndex = 0;
+		std::list<std::pair<WCGeometricCurve*,bool> >::iterator curveIter;
+		for (curveIter = (*profileIter).begin(); curveIter != (*profileIter).end(); curveIter++) {
+			//Add an element for the curve
+			xercesc::DOMElement* curveElement = document->createElement(curveString);
+			//Add the curve address
+			WCSerializeableObject::AddGUIDAttrib(curveElement, "address", (*curveIter).first, dictionary);
+			//Add curve direction
+			WCSerializeableObject::AddBoolAttrib(curveElement, "orientation", (*curveIter).second);
+			//Add the order index of the curve
+			WCSerializeableObject::AddFloatAttrib(curveElement, "index", curveIndex++);
+			//Append the element
+			profileElement->appendChild(curveElement);
+		}
+	}
+	//Make sure to release the strings
+	xercesc::XMLString::release(&xmlString);
+	xercesc::XMLString::release(&curveString);
 
 	//Return the element
 	return element;

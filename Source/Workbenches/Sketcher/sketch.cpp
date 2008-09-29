@@ -701,9 +701,12 @@ xercesc::DOMElement* WCSketch::Serialize(xercesc::DOMDocument *document, WCSeria
 	element->appendChild(features);
 	xercesc::DOMElement *featureElem;
 	std::list<WCSketchFeature*>::iterator featureIter;
+	WPUInt index = 0;
 	for (featureIter = this->_featureList.begin(); featureIter != this->_featureList.end(); featureIter++) {
 		//Get the feature element
 		featureElem = (*featureIter)->Serialize(document, dictionary);
+		//Add the index of the feature
+		WCSerializeableObject::AddFloatAttrib(featureElem, "index", index++);
 		//Add the feature element as a child to this one
 		if (featureElem != NULL) features->appendChild(featureElem);
 	}

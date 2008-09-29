@@ -166,7 +166,7 @@ bool WCPartFeature::Deserialize(xercesc::DOMElement* featureElement, WCSerialDic
 	}
 	else if (name == "Sketch") {
 		//Create the sketch feature
-		WCSketch *sketch = new WCSketch(featureElement, dictionary);
+		new WCSketch(featureElement, dictionary);
 		//All is good here
 		return true;
 	}
