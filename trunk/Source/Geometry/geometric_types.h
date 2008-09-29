@@ -81,7 +81,7 @@ public:
 /***********************************************~***************************************************/
 
 
-class WCGeometricCurve : virtual public WCGeometricObject {
+class WCGeometricCurve : public WCGeometricObject {
 public:
 	static WPFloat								DefaultThickness;									//!< Static default curve thickness
 protected:
@@ -123,7 +123,7 @@ public:
 /***********************************************~***************************************************/
 
 
-class WCGeometricSurface : virtual public WCGeometricObject {
+class WCGeometricSurface : public WCGeometricObject {
 protected:
 	bool										_isClosedU, _isClosedV;								//!< Curve closure flags
 	bool										_isSelfIntersecting;								//!< Curve self-intersection flag

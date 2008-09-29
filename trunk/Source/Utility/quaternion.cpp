@@ -177,7 +177,7 @@ void WCQuaternion::ToGLRotation(void) {
 }
 
 
-void WCQuaternion::ToElement(xercesc::DOMNode *parent, const std::string &name) {
+xercesc::DOMElement* WCQuaternion::ToElement(xercesc::DOMNode *parent, const std::string &name) {
 	//Name the node
 	XMLCh* xmlString = xmlString = xercesc::XMLString::transcode(name.c_str());
 	//Create the node in the document
@@ -196,6 +196,8 @@ void WCQuaternion::ToElement(xercesc::DOMNode *parent, const std::string &name) 
 
 	//Append child to parent
 	parent->appendChild(child);
+	//Return the child
+	return child;
 }
 
 

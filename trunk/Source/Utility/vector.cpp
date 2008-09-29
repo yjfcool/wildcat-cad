@@ -114,7 +114,7 @@ WCMatrix WCVector4::ToMatrix(void) {
 }
 
 
-void WCVector4::ToElement(xercesc::DOMNode *parent, const std::string &name) {
+xercesc::DOMElement* WCVector4::ToElement(xercesc::DOMNode *parent, const std::string &name) {
 	//Name the node
 	XMLCh* xmlString = xmlString = xercesc::XMLString::transcode(name.c_str());
 	//Create the node in the document
@@ -133,6 +133,8 @@ void WCVector4::ToElement(xercesc::DOMNode *parent, const std::string &name) {
 
 	//Append child to parent
 	parent->appendChild(child);
+	//Return the new child
+	return child;
 }
 
 

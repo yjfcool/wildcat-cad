@@ -543,13 +543,15 @@ xercesc::DOMElement* WCPart::Serialize(xercesc::DOMDocument *document, WCSerialD
 	xercesc::DOMElement *features = document->createElement(xmlString);
 	xercesc::XMLString::release(&xmlString);
 	element->appendChild(features);
-
 	//Loop through all features and add them in
 	xercesc::DOMElement *featureElem;
 	std::list<WCPartFeature*>::iterator featureIter;
+	WPUInt index = 0;
 	for (featureIter = this->_featureList.begin(); featureIter != this->_featureList.end(); featureIter++) {
 		//Get the feature element
 		featureElem = (*featureIter)->Serialize(document, dictionary);
+		//Add index attribute to element
+		WCSerializeableObject::AddFloatAttrib(featureElem, "index", index++);
 		//Add the feature element as a child to this one
 		if (featureElem != NULL) features->appendChild(featureElem);
 	}
@@ -563,11 +565,17 @@ xercesc::DOMElement* WCPart::Serialize(xercesc::DOMDocument *document, WCSerialD
 	//Loop through all actions and add them in
 	xercesc::DOMElement *actionElem;
 	std::list<WCAction*>::iterator actionIter;
+	index = 0;
 	for (actionIter = this->_actions.begin(); actionIter != this->_actions.end(); actionIter++) {
 		//Get the feature element
 		actionElem = (*actionIter)->Serialize(document, dictionary);
-		//Add the feature element as a child to this one
-		if (actionElem != NULL) actions->appendChild(actionElem);
+		//See if element exists
+		if (actionElem != NULL) {
+			//Add index attribute to element
+			WCSerializeableObject::AddFloatAttrib(actionElem, "index", index++);
+			//Add the feature element as a child to this one
+			actions->appendChild(actionElem);
+		}
 	}
 
 	//Return the element

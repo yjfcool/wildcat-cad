@@ -80,7 +80,7 @@ public:
 	//Conversion methods
 	WCVector ToVector(void);																		//!< Convert to a WCVector object
 	WCMatrix ToMatrix(void);																		//!< Convert to a WCMatrix object
-	void ToElement(xercesc::DOMNode *parent, const std::string &name);								//!< Serialize the object
+	xercesc::DOMElement* ToElement(xercesc::DOMNode *parent, const std::string &name);				//!< Serialize the object
 	void FromElement(xercesc::DOMElement *element);													//!< Deserialize the object
 
 	//Overloaded Operators
