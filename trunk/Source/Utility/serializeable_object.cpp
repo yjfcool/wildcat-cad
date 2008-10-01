@@ -273,7 +273,7 @@ void* WCSerialDictionary::AddressFromGUID(const WCGUID &guid) {
 	}
 	//If not found
 	else {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSerialDictionary::AddressFromGUID - GUID not found");
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSerialDictionary::AddressFromGUID - GUID not found: " << guid);
 		//Return NULL
 		return NULL;
 	}
@@ -297,7 +297,7 @@ void WCSerialDictionary::UpdateAddress(const WCGUID &guid, const void* address) 
 	}
 	//If not found
 	else {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSerialDictionary::UpdateAddress - GUID not found");
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCSerialDictionary::UpdateAddress - GUID not found: " << guid);
 	}
 }
 

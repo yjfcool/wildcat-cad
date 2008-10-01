@@ -681,7 +681,6 @@ WCTopologyModel* WCPartPad::GenerateTopology(std::list<std::list<WSVertexUse*> >
 
 	//Ready all of the Use lists
 	std::list<std::list<WSFaceUse*> >::iterator faceListIter = topoFaceUses.begin();
-
 	std::list<std::vector<WSEdgeUse*> >::iterator	euBottomListIter = topoBottomEUs.begin();
 	std::list<std::vector<WSEdgeUse*> >::iterator	euSideListIter = topoSideEUs.begin();
 	std::list<std::vector<WSEdgeUse*> >::iterator	euTopListIter = topoTopEUs.begin();

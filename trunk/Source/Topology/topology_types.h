@@ -64,7 +64,8 @@ struct WSTopologyShell {
 	WSFaceUse									*faceUses;											//!< List of face uses (solid model)
 	WSEdgeUse									*edgeUses;											//!< List of edge uses (wireframe model)
 	WSVertexUse									*vertexUses;										//!< List of vertex uses (not sure)
-	WSTopologyShell() : model(NULL), faceUses(NULL), edgeUses(NULL), vertexUses(NULL) { }			//!< Default constructor
+	WSTopologyShell() : model(NULL), faceUses(NULL), edgeUses(NULL), 	//!< Default constructor
+												vertexUses(NULL) { }
 };
 
 
