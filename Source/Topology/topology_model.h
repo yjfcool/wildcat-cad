@@ -57,7 +57,7 @@ private:
 	WCTopologyModel& operator=(const WCTopologyModel&);												//!< Deny access to equals operator
 public:
 	WCTopologyModel() : ::WCSerializeableObject(), _shellList() { }									//!< Default constructor
-	WCTopologyModel(const WCTopologyModel&);														//!< Copy constructor
+	WCTopologyModel(const WCTopologyModel& model);													//!< Copy constructor
 	WCTopologyModel(xercesc::DOMElement *element, WCSerialDictionary *dictionary);					//!< Persistance constructor
 	~WCTopologyModel();																				//!< Default destructor
 
