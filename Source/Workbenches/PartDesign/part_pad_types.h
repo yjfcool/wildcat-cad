@@ -83,7 +83,7 @@ public:
 	void ToElement(xercesc::DOMElement *element, const std::string &name) { 
 												WCSerializeableObject::AddFloatAttrib(element, name, this->_type); }
 	void FromElement(xercesc::DOMElement *element, const std::string &name)	{
-												this->_type = (PartPadType)WCSerializeableObject::GetFloatAttrib(element, name); }
+												this->_type = (PartPadType)(int)WCSerializeableObject::GetFloatAttrib(element, name); }
 };
 
 
