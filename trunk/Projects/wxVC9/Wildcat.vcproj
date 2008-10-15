@@ -150,7 +150,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenGL32.lib GLu32.lib xerces-c_static_2.lib advapi32.lib gdiplus.lib libtiff.lib freetype.lib pthreadVC2.lib $(NOINHERIT)"
+				AdditionalDependencies="OpenGL32.lib GLu32.lib xerces-c_static_2.lib advapi32.lib gdiplus.lib libtiff.lib freetype.lib pthreadVC2.lib $(NOINHERIT) wxmsw28u_core.lib wxmsw28u_aui.lib wxmsw28u_gl.lib wxbase28u.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\Dependencies\pthreads\lib;..\..\Dependencies\freetype\lib;..\..\Dependencies\libtiff\lib;&quot;..\..\Dependencies\xerces-c-src_2_8_0\lib&quot;;&quot;$(WXWIN)\lib\vc_dll&quot;"
 				IgnoreDefaultLibraryNames="LIBCMT"
@@ -2575,6 +2575,14 @@
 		<Filter
 			Name="Topology"
 			>
+			<File
+				RelativePath="..\..\Source\Topology\topology_model_internal.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Source\Topology\topology_model_internal.h"
+				>
+			</File>
 			<Filter
 				Name="Headers"
 				>
