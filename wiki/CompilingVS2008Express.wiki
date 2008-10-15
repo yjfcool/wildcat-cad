@@ -23,14 +23,12 @@ They are:
   *wxmsw28u_gl_vc_custom.dll
   *wxbase28u_vc_custom.dll
 
-or 
+or, if you are doing the debug mode
 
   *wxmsw28ud_aui_vc_custom.dll
   *wxmsw28ud_core_vc_custom.dll
   *wxmsw28ud_gl_vc_custom.dll
   *wxbase28ud_vc_custom.dll
-
-if you are doing the debug mode
 
 
 Open "wildcat-cad\trunk\Projects\wxVC9\Wildcat.sln", it should open with Visual C++ 2008 Express.
