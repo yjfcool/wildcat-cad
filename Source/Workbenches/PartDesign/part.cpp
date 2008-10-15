@@ -101,6 +101,8 @@ WCPart::WCPart(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	//Create tree element
 	WSTexture* partIcon = this->_scene->TextureManager()->TextureFromName("part32");
 	this->_treeElement = new WCTreeElement(this->_treeView, this->_name, this->_controller, partIcon);
+	//Create the topology model
+	this->_topologyModel = new WCTopologyModel();
 	
 	//Create rendering layers
 	this->_pointLayer = new WCPointLayer(this->_scene, "Points");

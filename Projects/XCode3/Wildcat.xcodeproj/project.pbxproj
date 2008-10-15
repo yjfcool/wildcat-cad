@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5806B9FD0DA3C0A800D9989D /* vis_listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5806B9FC0DA3C0A800D9989D /* vis_listener.cpp */; };
 		580873CC0D9A7C3600038336 /* wildcat.icns in Resources */ = {isa = PBXBuildFile; fileRef = 580873CB0D9A7C3600038336 /* wildcat.icns */; };
+		58415F680EA53C8100CF401D /* topology_model_internal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58415F670EA53C8100CF401D /* topology_model_internal.cpp */; };
 		5845428C0DA53F49005BC943 /* vis_listener_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5845428B0DA53F49005BC943 /* vis_listener_controller.cpp */; };
 		584542BC0DA54213005BC943 /* listener32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 584542BB0DA54213005BC943 /* listener32.tiff */; };
 		584542D30DA548EE005BC943 /* vis_recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 584542D20DA548EE005BC943 /* vis_recorder.cpp */; };
@@ -217,7 +218,6 @@
 		585F36760D68B4B700673AE6 /* sketch_constraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36500D68B4B700673AE6 /* sketch_constraint.cpp */; };
 		585F36770D68B4B700673AE6 /* sketch_constraint_dimcreate_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36520D68B4B700673AE6 /* sketch_constraint_dimcreate_mode.cpp */; };
 		585F36780D68B4B700673AE6 /* sketch_constraint_geocreate_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36530D68B4B700673AE6 /* sketch_constraint_geocreate_mode.cpp */; };
-		585F368F0D68B65E00673AE6 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 585F368E0D68B65E00673AE6 /* Info.plist */; };
 		585F369A0D68B66E00673AE6 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 585F36900D68B66E00673AE6 /* Credits.rtf */; };
 		585F369B0D68B66E00673AE6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 585F36920D68B66E00673AE6 /* InfoPlist.strings */; };
 		585F369C0D68B66E00673AE6 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 585F36940D68B66E00673AE6 /* MainMenu.nib */; };
@@ -378,6 +378,8 @@
 		5831C1C80E1099CF00EA53DD /* apple_gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = apple_gl.h; path = ../../Source/Application/MacOS/apple_gl.h; sourceTree = SOURCE_ROOT; };
 		583FEAC60DAA69D100CCE245 /* document_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = document_controller.h; path = ../../Source/Application/MacOS/document_controller.h; sourceTree = SOURCE_ROOT; };
 		583FEAC70DAA69D100CCE245 /* document_controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = document_controller.mm; path = ../../Source/Application/MacOS/document_controller.mm; sourceTree = SOURCE_ROOT; };
+		58415F660EA53C5300CF401D /* topology_model_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = topology_model_internal.h; path = ../../Source/Topology/topology_model_internal.h; sourceTree = SOURCE_ROOT; };
+		58415F670EA53C8100CF401D /* topology_model_internal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = topology_model_internal.cpp; path = ../../Source/Topology/topology_model_internal.cpp; sourceTree = SOURCE_ROOT; };
 		5845428A0DA53F49005BC943 /* vis_listener_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_controller.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_controller.h; sourceTree = SOURCE_ROOT; };
 		5845428B0DA53F49005BC943 /* vis_listener_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener_controller.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener_controller.cpp; sourceTree = SOURCE_ROOT; };
 		584542BB0DA54213005BC943 /* listener32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = listener32.tiff; path = ../../Source/Resources/listener32.tiff; sourceTree = SOURCE_ROOT; };
@@ -1702,6 +1704,7 @@
 			isa = PBXGroup;
 			children = (
 				585F35EB0D68B3C700673AE6 /* topology_model.cpp */,
+				58415F670EA53C8100CF401D /* topology_model_internal.cpp */,
 				585027830E08270700BF2CBB /* topology_slice.cpp */,
 				585027850E08273100BF2CBB /* topology_intersect.cpp */,
 				585027870E08274100BF2CBB /* topology_union.cpp */,
@@ -1715,6 +1718,7 @@
 			children = (
 				585F35F10D68B3C700673AE6 /* wtpkl.h */,
 				585F35EC0D68B3C700673AE6 /* topology_model.h */,
+				58415F660EA53C5300CF401D /* topology_model_internal.h */,
 				585027710E08153500BF2CBB /* topology_types.h */,
 			);
 			name = Headers;
@@ -3236,7 +3240,6 @@
 				585F357E0D68B26600673AE6 /* trimsurface_vis.fsh in Resources */,
 				58F5B4CE0E10063500D730F8 /* cci_plM.fsh in Resources */,
 				5857A8240E1AC7E100808402 /* cli_plM.fsh in Resources */,
-				585F368F0D68B65E00673AE6 /* Info.plist in Resources */,
 				585F369A0D68B66E00673AE6 /* Credits.rtf in Resources */,
 				585F369B0D68B66E00673AE6 /* InfoPlist.strings in Resources */,
 				585F369C0D68B66E00673AE6 /* MainMenu.nib in Resources */,
@@ -3478,6 +3481,7 @@
 				5850278A0E08274F00BF2CBB /* topology_subtract.cpp in Sources */,
 				586257100E379A5C00369675 /* converter_stl.cpp in Sources */,
 				5890DC3E0E65CD7C0038BBC4 /* part_pad_dialog.mm in Sources */,
+				58415F680EA53C8100CF401D /* topology_model_internal.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

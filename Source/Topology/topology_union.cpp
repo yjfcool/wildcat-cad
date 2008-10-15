@@ -28,18 +28,23 @@
 
 /*** Included Header Files ***/
 #include "Topology/topology_model.h"
+#include "Topology/topology_model_internal.h"
 #include "Topology/topology_types.h"
 
 
 /***********************************************~***************************************************/
 
 
-WCTopologyModel* WCTopologyModel::Union(WCTopologyModel *model) { 
-	//See if any shells are in shellList
+WCTopologyModel* WCTopologyModel::Union(WCTopologyModel *model) {
+	//See if no shells are in the shell list
 	if (this->_shellList.empty()) {
-		//Copy the shell list
-		this->_shellList = model->_shellList;
+		//Just copy the model in
+		_CopyTopologyModel(this, model->_shellList);
+		return this;
 	}
+
+	//Otherwise...
+	std::cout << "Union!!!\n";
 	//Return this for now
 	return this;
 }
