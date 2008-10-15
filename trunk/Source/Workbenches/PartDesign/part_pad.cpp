@@ -794,7 +794,7 @@ WCPartPad::WCPartPad(WCPartBody *body, const std::string &name, std::list<std::l
 	this->GenerateTopBottom(topTrims, bottomTrims, topoFaceUses);
 	this->_topologyModel = this->GenerateTopology(topoBottomPoints, topoTopPoints, topoBottomEUs, topoSideEUs, topoTopEUs, topoFaceUses);
 	//Now union the pad model (both geometric and topological) with the part model
-	if (this->_part->TopologyModel()) this->_part->TopologyModel()->Union(this->_topologyModel);
+	this->_part->TopologyModel()->Union(this->_topologyModel);
 	//Finish initialization
 	this->Initialize();
 }
@@ -936,7 +936,7 @@ WCPartPad::WCPartPad(xercesc::DOMElement *element, WCSerialDictionary *dictionar
 
 	//Restore topology model
 	this->_topologyModel = new WCTopologyModel( WCSerializeableObject::ElementFromName(element,"TopologyModel"), dictionary );
-	if (this->_part->TopologyModel()) this->_part->TopologyModel()->Union(this->_topologyModel);
+	this->_part->TopologyModel()->Union(this->_topologyModel);
 	//Finish initialization
 	this->Initialize();
 }
