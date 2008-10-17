@@ -112,40 +112,11 @@ WSTopologyShell* _LoadTopologyShell(xercesc::DOMElement *element, WCSerialDictio
 /***********************************************~***************************************************/
 
 
-void _CopyTopologyVertex(WSVertexUse *oldVertex, WSVertexUse *newVertex, std::map<WSTopologyShell*,WSTopologyShell*> &shells,
-	std::map<WSFaceUse*,WSFaceUse*> &faces, std::map<WSLoopUse*,WSLoopUse*> &loops, std::map<WSEdgeUse*,WSEdgeUse*> &edges,
-	std::map<WSVertexUse*,WSVertexUse*> &vertices) {
-	//Copy all of the references
-	newVertex->point	= oldVertex->point;
-	newVertex->shell	= shells.find(oldVertex->shell)->second;
-	newVertex->loop		= loops.find(oldVertex->loop)->second;
-	newVertex->edge		= edges.find(oldVertex->edge)->second;
-	newVertex->next		= vertices.find(oldVertex->next)->second;
-	newVertex->prev		= vertices.find(oldVertex->prev)->second;
-}
-
-
 void _CatalogTopologyVertex(WSVertexUse* vertex, std::map<WSVertexUse*,WSVertexUse*> &vertices) {
 	//Create a new vu
 	WSVertexUse *newVU = new WSVertexUse();
 	//Insert both vu into catalog
 	vertices.insert( std::make_pair(vertex, newVU) );
-}
-
-
-void _CopyTopologyEdge(WSEdgeUse *oldEdge, WSEdgeUse *newEdge, std::map<WSTopologyShell*,WSTopologyShell*> &shells,
-	std::map<WSFaceUse*,WSFaceUse*> &faces, std::map<WSLoopUse*,WSLoopUse*> &loops, std::map<WSEdgeUse*,WSEdgeUse*> &edges,
-	std::map<WSVertexUse*,WSVertexUse*> &vertices) {
-	//Copy all of the references
-	newEdge->curve		= oldEdge->curve;
-	newEdge->orientation= oldEdge->orientation;
-	newEdge->mate		= edges.find(oldEdge->mate)->second;
-	newEdge->vertexUse	= vertices.find(oldEdge->vertexUse)->second;
-	newEdge->shell		= shells.find(oldEdge->shell)->second;
-	newEdge->loop		= loops.find(oldEdge->loop)->second;
-	newEdge->cw			= edges.find(oldEdge->cw)->second;
-	newEdge->ccw		= edges.find(oldEdge->ccw)->second;
-	newEdge->radial		= edges.find(oldEdge->radial)->second;
 }
 
 
@@ -159,21 +130,8 @@ void _CatalogTopologyEdge(WSEdgeUse* edge, std::map<WSEdgeUse*,WSEdgeUse*> &edge
 }
 
 
-void _CopyTopologyLoop(WSLoopUse *oldLoop, WSLoopUse *newLoop, std::map<WSTopologyShell*,WSTopologyShell*> &shells,
-	std::map<WSFaceUse*,WSFaceUse*> &faces, std::map<WSLoopUse*,WSLoopUse*> &loops, std::map<WSEdgeUse*,WSEdgeUse*> &edges,
-	std::map<WSVertexUse*,WSVertexUse*> &vertices) {
-	//Copy all of the references
-	newLoop->face		= faces.find(oldLoop->face)->second;
-	newLoop->next		= loops.find(oldLoop->next)->second;
-	newLoop->prev		= loops.find(oldLoop->prev)->second;
-	newLoop->mate		= loops.find(oldLoop->mate)->second;
-	newLoop->edgeUses	= edges.find(oldLoop->edgeUses)->second;
-	newLoop->vertexUses	= vertices.find(oldLoop->vertexUses)->second;
-}
-
-
 void _CatalogTopologyLoop(WSLoopUse* loop, std::map<WSLoopUse*,WSLoopUse*> &loops,
-	std::map<WSEdgeUse*,WSEdgeUse*> &edges, std::map<WSVertexUse*,WSVertexUse*> &vertices) {
+						  std::map<WSEdgeUse*,WSEdgeUse*> &edges, std::map<WSVertexUse*,WSVertexUse*> &vertices) {
 	//Create a new lu
 	WSLoopUse *newLU = new WSLoopUse();
 	//Insert both lu into catalog
@@ -208,22 +166,8 @@ void _CatalogTopologyLoop(WSLoopUse* loop, std::map<WSLoopUse*,WSLoopUse*> &loop
 }
 
 
-void _CopyTopologyFace(WSFaceUse* oldFace, WSFaceUse *newFace, std::map<WSTopologyShell*,WSTopologyShell*> &shells,
-   std::map<WSFaceUse*,WSFaceUse*> &faces, std::map<WSLoopUse*,WSLoopUse*> &loops, std::map<WSEdgeUse*,WSEdgeUse*> &edges,
-   std::map<WSVertexUse*,WSVertexUse*> &vertices) {
-	//Copy all of the references
-	newFace->surface	= oldFace->surface;
-	newFace->orientation= oldFace->orientation;
-	newFace->shell		= shells.find(oldFace->shell)->second;
-	newFace->next		= faces.find(oldFace->next)->second;
-	newFace->prev		= faces.find(oldFace->prev)->second;
-	newFace->mate		= faces.find(oldFace->mate)->second;
-	newFace->loopUses	= loops.find(oldFace->loopUses)->second;
-}
-
-
 void _CatalogTopologyFace(WSFaceUse* face, std::map<WSFaceUse*,WSFaceUse*> &faces,
-	std::map<WSLoopUse*,WSLoopUse*> &loops, std::map<WSEdgeUse*,WSEdgeUse*> &edges, std::map<WSVertexUse*,WSVertexUse*> &vertices) {
+						  std::map<WSLoopUse*,WSLoopUse*> &loops, std::map<WSEdgeUse*,WSEdgeUse*> &edges, std::map<WSVertexUse*,WSVertexUse*> &vertices) {
 	//Create a new fu
 	WSFaceUse *newFU = new WSFaceUse();
 	//Insert both fu into map
@@ -242,20 +186,9 @@ void _CatalogTopologyFace(WSFaceUse* face, std::map<WSFaceUse*,WSFaceUse*> &face
 }
 
 
-void _CopyTopologyShell(WSTopologyShell *oldShell, WSTopologyShell *newShell, WCTopologyModel *model,
-	std::map<WSFaceUse*,WSFaceUse*> &faces, std::map<WSLoopUse*,WSLoopUse*> &loops, std::map<WSEdgeUse*,WSEdgeUse*> &edges,
-	std::map<WSVertexUse*,WSVertexUse*> &vertices) {
-	//Copy all of the references
-	newShell->model		= model;
-	newShell->faceUses	= faces.find(oldShell->faceUses)->second;
-	newShell->edgeUses	= edges.find(oldShell->edgeUses)->second;
-	newShell->vertexUses= vertices.find(oldShell->vertexUses)->second;
-}
-
-
 void _CatalogTopologyShell(WSTopologyShell *shell, std::map<WSTopologyShell*,WSTopologyShell*> &shells,
-	std::map<WSFaceUse*,WSFaceUse*> &faces, std::map<WSLoopUse*,WSLoopUse*> &loops, std::map<WSEdgeUse*,WSEdgeUse*> &edges,
-	std::map<WSVertexUse*,WSVertexUse*> &vertices) {
+						   std::map<WSFaceUse*,WSFaceUse*> &faces, std::map<WSLoopUse*,WSLoopUse*> &loops, std::map<WSEdgeUse*,WSEdgeUse*> &edges,
+						   std::map<WSVertexUse*,WSVertexUse*> &vertices) {
 	//Check for shell existance
 	ASSERT(shell);
 	//Create new shell
@@ -296,6 +229,76 @@ void _CatalogTopologyShell(WSTopologyShell *shell, std::map<WSTopologyShell*,WST
 			fu = fu->next;
 		}
 	}	
+}
+
+
+/***********************************************~***************************************************/
+
+
+void _CopyTopologyVertex(WSVertexUse *oldVertex, WSVertexUse *newVertex, std::map<WSTopologyShell*,WSTopologyShell*> &shells,
+	std::map<WSFaceUse*,WSFaceUse*> &faces, std::map<WSLoopUse*,WSLoopUse*> &loops, std::map<WSEdgeUse*,WSEdgeUse*> &edges,
+	std::map<WSVertexUse*,WSVertexUse*> &vertices) {
+	//Copy all of the references
+	newVertex->point	= oldVertex->point;
+	newVertex->shell	= shells.find(oldVertex->shell)->second;
+	newVertex->loop		= loops.find(oldVertex->loop)->second;
+	newVertex->edge		= edges.find(oldVertex->edge)->second;
+	newVertex->next		= vertices.find(oldVertex->next)->second;
+	newVertex->prev		= vertices.find(oldVertex->prev)->second;
+}
+
+
+void _CopyTopologyEdge(WSEdgeUse *oldEdge, WSEdgeUse *newEdge, std::map<WSTopologyShell*,WSTopologyShell*> &shells,
+	std::map<WSFaceUse*,WSFaceUse*> &faces, std::map<WSLoopUse*,WSLoopUse*> &loops, std::map<WSEdgeUse*,WSEdgeUse*> &edges,
+	std::map<WSVertexUse*,WSVertexUse*> &vertices) {
+	//Copy all of the references
+	newEdge->curve		= oldEdge->curve;
+	newEdge->orientation= oldEdge->orientation;
+	newEdge->mate		= edges.find(oldEdge->mate)->second;
+	newEdge->vertexUse	= vertices.find(oldEdge->vertexUse)->second;
+	newEdge->shell		= shells.find(oldEdge->shell)->second;
+	newEdge->loop		= loops.find(oldEdge->loop)->second;
+	newEdge->cw			= edges.find(oldEdge->cw)->second;
+	newEdge->ccw		= edges.find(oldEdge->ccw)->second;
+	newEdge->radial		= edges.find(oldEdge->radial)->second;
+}
+
+
+void _CopyTopologyLoop(WSLoopUse *oldLoop, WSLoopUse *newLoop, std::map<WSTopologyShell*,WSTopologyShell*> &shells,
+	std::map<WSFaceUse*,WSFaceUse*> &faces, std::map<WSLoopUse*,WSLoopUse*> &loops, std::map<WSEdgeUse*,WSEdgeUse*> &edges,
+	std::map<WSVertexUse*,WSVertexUse*> &vertices) {
+	//Copy all of the references
+	newLoop->face		= faces.find(oldLoop->face)->second;
+	newLoop->next		= loops.find(oldLoop->next)->second;
+	newLoop->prev		= loops.find(oldLoop->prev)->second;
+	newLoop->mate		= loops.find(oldLoop->mate)->second;
+	newLoop->edgeUses	= edges.find(oldLoop->edgeUses)->second;
+	newLoop->vertexUses	= vertices.find(oldLoop->vertexUses)->second;
+}
+
+
+void _CopyTopologyFace(WSFaceUse* oldFace, WSFaceUse *newFace, std::map<WSTopologyShell*,WSTopologyShell*> &shells,
+   std::map<WSFaceUse*,WSFaceUse*> &faces, std::map<WSLoopUse*,WSLoopUse*> &loops, std::map<WSEdgeUse*,WSEdgeUse*> &edges,
+   std::map<WSVertexUse*,WSVertexUse*> &vertices) {
+	//Copy all of the references
+	newFace->surface	= oldFace->surface;
+	newFace->orientation= oldFace->orientation;
+	newFace->shell		= shells.find(oldFace->shell)->second;
+	newFace->next		= faces.find(oldFace->next)->second;
+	newFace->prev		= faces.find(oldFace->prev)->second;
+	newFace->mate		= faces.find(oldFace->mate)->second;
+	newFace->loopUses	= loops.find(oldFace->loopUses)->second;
+}
+
+
+void _CopyTopologyShell(WSTopologyShell *oldShell, WSTopologyShell *newShell, WCTopologyModel *model,
+	std::map<WSFaceUse*,WSFaceUse*> &faces, std::map<WSLoopUse*,WSLoopUse*> &loops, std::map<WSEdgeUse*,WSEdgeUse*> &edges,
+	std::map<WSVertexUse*,WSVertexUse*> &vertices) {
+	//Copy all of the references
+	newShell->model		= model;
+	newShell->faceUses	= faces.find(oldShell->faceUses)->second;
+	newShell->edgeUses	= edges.find(oldShell->edgeUses)->second;
+	newShell->vertexUses= vertices.find(oldShell->vertexUses)->second;
 }
 
 
