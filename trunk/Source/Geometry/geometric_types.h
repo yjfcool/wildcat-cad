@@ -125,8 +125,9 @@ public:
 
 class WCGeometricSurface : public WCGeometricObject {
 protected:
-	bool										_isClosedU, _isClosedV;								//!< Curve closure flags
-	bool										_isSelfIntersecting;								//!< Curve self-intersection flag
+	bool										_isClosedU, _isClosedV;								//!< Surface closure flags
+	bool										_isSelfIntersecting;								//!< Surface self-intersection flag
+	bool										_isPlanar;											//!< Surface planar flag
 private:
 	//Hidden Constructors
 	WCGeometricSurface& operator=(const WCGeometricSurface &surface);								//!< Deny access to equals operator
@@ -145,6 +146,7 @@ public:
 	virtual bool IsClosedU(void) const			{ return this->_isClosedU; }						//!< Get the closed on U flag
 	virtual bool IsClosedV(void) const			{ return this->_isClosedV; }						//!< Get the closed on V flag
 	virtual bool IsSelfIntersecting(void) const { return this->_isSelfIntersecting; }				//!< Get the self-intersection flag
+	virtual bool IsPlanar(void) const			{ return this->_isPlanar; }							//!< Get the planar flag
 
 	//Required Member Functions
 	virtual WPFloat Area(const WPFloat &tolerance=GEOMETRICOBJECT_DEFAULT_EPSILON)=0;				//!< Calculate the area of the surface

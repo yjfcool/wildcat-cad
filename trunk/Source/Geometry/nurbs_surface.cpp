@@ -66,6 +66,12 @@ void WCNurbsSurface::ValidateSelfIntersection(void) {
 }
 
 
+void WCNurbsSurface::ValidatePlanar(void) {
+	//Not implemented for now
+	this->_isPlanar = false;
+}
+
+
 void WCNurbsSurface::GenerateKnotPointsVBOs(void) {
 	//Determine actual number of bytes needed in the buffer
 	WPUInt size = this->_kpU * 4 * sizeof(GLfloat);
@@ -874,6 +880,7 @@ WCNurbsSurface::WCNurbsSurface(WCGeometryContext *context, const WPUInt &degreeU
 	//Validate surface flags
 	this->ValidateClosure();
 	this->ValidateSelfIntersection();
+	this->ValidatePlanar();
 	//Establish aligned bounding box
 	this->_bounds = new WCAlignedBoundingBox(this->_controlPoints);
 }

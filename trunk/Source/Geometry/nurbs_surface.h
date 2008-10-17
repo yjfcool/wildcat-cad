@@ -105,7 +105,8 @@ protected:
 private:
 	//Private Methods
 	void ValidateClosure(void);																		//!< Check the closure of the surface
-	void ValidateSelfIntersection(void);															//!< Check the self-intersection of the surface	
+	void ValidateSelfIntersection(void);															//!< Check the self-intersection of the surface
+	void ValidatePlanar(void);																		//!< Check the planar property of the surface
 	void GenerateKnotPointsVBOs(void);																//!< Generate the knot points VBO
 	void GenerateKnotPointsTextures(void);															//!< Generate the knot point textures
 	void GenerateControlPointsVBO(void);															//!< Generate the control points VBO
