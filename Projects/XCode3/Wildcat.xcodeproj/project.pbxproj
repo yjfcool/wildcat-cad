@@ -371,10 +371,6 @@
 		58778F9B0ED5CF2A00A4B1A8 /* passthrough.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35700D68B26600673AE6 /* passthrough.vsh */; };
 		58778F9C0ED5CF2C00A4B1A8 /* ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F35910D68B28800673AE6 /* ray.cpp */; };
 		58778F9D0ED5CF2D00A4B1A8 /* ray.h in Headers */ = {isa = PBXBuildFile; fileRef = 585F35920D68B28800673AE6 /* ray.h */; };
-		58778F9E0ED5CF2E00A4B1A8 /* sci_plM.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4C6E50E36525900A466D1 /* sci_plM.fsh */; };
-		58778F9F0ED5CF3000A4B1A8 /* sli_plM.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4C6E30E36522A00A466D1 /* sli_plM.fsh */; };
-		58778FA00ED5CF3100A4B1A8 /* spi_plM.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4C6E20E36521900A466D1 /* spi_plM.fsh */; };
-		58778FA10ED5CF3200A4B1A8 /* ssi_plM.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4C6E40E36524700A466D1 /* ssi_plM.fsh */; };
 		58778FA20ED5CF3300A4B1A8 /* trimmed_nurbs_surface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F35930D68B28800673AE6 /* trimmed_nurbs_surface.cpp */; };
 		58778FA30ED5CF3400A4B1A8 /* trimmed_nurbs_surface.h in Headers */ = {isa = PBXBuildFile; fileRef = 585F35940D68B28800673AE6 /* trimmed_nurbs_surface.h */; };
 		58778FA40ED5CF3500A4B1A8 /* trimsurface_inversion.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 58F8E8A50E196E280041A7DA /* trimsurface_inversion.fsh */; };
@@ -3437,10 +3433,6 @@
 				58778F930ED5CF2400A4B1A8 /* ns_default_plH.gsh in Resources */,
 				58778F940ED5CF2400A4B1A8 /* ns_default_plM.fsh in Resources */,
 				58778F9B0ED5CF2A00A4B1A8 /* passthrough.vsh in Resources */,
-				58778F9E0ED5CF2E00A4B1A8 /* sci_plM.fsh in Resources */,
-				58778F9F0ED5CF3000A4B1A8 /* sli_plM.fsh in Resources */,
-				58778FA00ED5CF3100A4B1A8 /* spi_plM.fsh in Resources */,
-				58778FA10ED5CF3200A4B1A8 /* ssi_plM.fsh in Resources */,
 				58778FA40ED5CF3500A4B1A8 /* trimsurface_inversion.fsh in Resources */,
 				58778FA50ED5CF3600A4B1A8 /* trimsurface_triangulate.fsh in Resources */,
 				58778FA60ED5CF3700A4B1A8 /* trimsurface_vis.fsh in Resources */,

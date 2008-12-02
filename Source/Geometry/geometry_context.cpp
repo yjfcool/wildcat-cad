@@ -570,7 +570,7 @@ void WCGeometryContext::StartIntersection(void) {
 		//Get program IDs
 		this->_cliM = this->ProgramFromName("cli_plM");
 		this->_cciM = this->ProgramFromName("cci_plM");
-//		this->_sliM = this->ProgramFromName("sli_plM");
+		this->_sliM = this->ProgramFromName("sli_plM");
 //		this->_sciM = this->ProgramFromName("sci_plM");
 //		this->_ssiM = this->ProgramFromName("ssi_plM");
 //		this->_tliM = this->ProgramFromName("tli_plM");
@@ -584,6 +584,9 @@ void WCGeometryContext::StartIntersection(void) {
 		this->_iLocations[INTERSECTION_CLI_PARAMS] = glGetUniformLocation(this->_cliM, "params");
 		this->_iLocations[INTERSECTION_CLI_LBEGIN] = glGetUniformLocation(this->_cliM, "lineBegin");
 		this->_iLocations[INTERSECTION_CLI_LEND] = glGetUniformLocation(this->_cliM, "lineEnd");
+		this->_iLocations[INTERSECTION_SLI_PARAMS] = glGetUniformLocation(this->_sliM, "params");
+		this->_iLocations[INTERSECTION_SLI_LBEGIN] = glGetUniformLocation(this->_sliM, "lineBegin");
+		this->_iLocations[INTERSECTION_SLI_LEND] = glGetUniformLocation(this->_sliM, "lineEnd");
 		if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::StartIntersection - Locations.");
 
 		//Set up CCI left texture

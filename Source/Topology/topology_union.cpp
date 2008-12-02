@@ -42,9 +42,25 @@ WCTopologyModel* WCTopologyModel::Union(WCTopologyModel *model) {
 		_CopyTopologyModel(this, model->_shellList);
 		return this;
 	}
+	//Otherwise, need to do complex union
+	else {
+		std::cout << "Union!!!\n";
+		//Create maps for all children objects
+		std::map<WSTopologyShell*,WSTopologyShell*> shells;
+		std::map<WSFaceUse*,WSFaceUse*> faces;
+		std::map<WSLoopUse*,WSLoopUse*> loops;
+		std::map<WSEdgeUse*,WSEdgeUse*> edges;
+		std::map<WSVertexUse*,WSVertexUse*> vertices;
+/*		
+		//Go through each shell and catalog it
+		std::list<WSTopologyShell*>::const_iterator shellIter;
+		for (shellIter = source.begin(); shellIter != source.end(); shellIter++) {
+			//Catalog the shells and children
+			_CatalogTopologyShell(*shellIter, shells, faces, loops, edges, vertices);
+		}
+*/
+	}
 
-	//Otherwise...
-	std::cout << "Union!!!\n";
 	//Return this for now
 	return this;
 }

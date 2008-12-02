@@ -67,6 +67,9 @@ bool WCCameraLayer::OnMouseMove(const WPFloat x, const WPFloat y) {
 			WCVector4 axis = a.CrossProduct(b).Normalize(true);
 			WPFloat angle = acos( a.DotProduct(b) );
 			WCQuaternion incr(axis.I(), axis.J(), axis.K(), angle * this->_rotSensitivity, true);
+//			incr = incr * this->_scene->ActiveCamera()->Quaternion();
+//			incr.Normalize();
+//			this->_scene->ActiveCamera()->Quaternion( incr );
 			this->_scene->ActiveCamera()->Quaternion( incr * this->_scene->ActiveCamera()->Quaternion() );
 			this->_xMark = x;
 			this->_yMark = y;
@@ -77,7 +80,7 @@ bool WCCameraLayer::OnMouseMove(const WPFloat x, const WPFloat y) {
 			this->_scene->ActiveCamera()->Pan(this->_panX + xDiff, this->_panY + yDiff);
 		}
 		else if (this->_mode == WCCameraMode::Zoom()) {
-			//Calculate new zom factor
+			//Calculate new zo0m factor
 //			WPFloat oldZoom = this->_scene->ActiveCamera()->Zoom();
 			WPFloat newZoom = this->_zoom - (this->_yMark - y) * this->_zoomSensitivity;
 			if (newZoom > CAMERALAYER_ZOOM_MAX) newZoom = CAMERALAYER_ZOOM_MAX;

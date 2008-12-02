@@ -48,6 +48,9 @@
 #define INTERSECTION_CLI_LBEGIN				1
 #define INTERSECTION_CLI_LEND				2
 #define INTERSECTION_CCI_PARAMS				3
+#define INTERSECTION_SLI_PARAMS				4
+#define INTERSECTION_SLI_LBEGIN				5
+#define INTERSECTION_SLI_LEND				6
 
 
 /*** Namespace Declaration ***/
