@@ -28,6 +28,7 @@
 
 /*** Included Header Files ***/
 #include "Geometry/geometric_intersection.h"
+#include "Geometry/geometry_context.h"
 #include "Geometry/geometric_point.h"
 #include "Geometry/geometric_line.h"
 #include "Geometry/nurbs_curve.h"
@@ -42,15 +43,84 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	std::list<WCIntersectionResult> results;
 	//See if point is within surface bounding box
 	if (left->BoundingBox().Intersection(right->BoundingBox())) return results;
-	
-	//Otherwise, generate surface to precision of tol and place into local buffer
-	//...
-	
+
+	//Determine estimated area of surface and LODs
+	WPUInt lodU = STDMIN((WPUInt)(WCNurbs::EstimateLengthU(left->ControlPoints(), left->NumberControlPointsU()) / tol), (WPUInt)WCAdapter::GetMax2DTextureSize());
+	WPUInt lodV = STDMIN((WPUInt)(WCNurbs::EstimateLengthV(left->ControlPoints(), left->NumberControlPointsV()) / tol), (WPUInt)WCAdapter::GetMax2DTextureSize());
+	//Generate surface to precision of tol and place into local buffer
+	std::vector<GLfloat*> buffers = left->GenerateClientBuffers(0.0, 1.0, lodU, 0.0, 1.0, lodV, true);
+	GLfloat* vertexBuffer = buffers.at(NURBSSURFACE_VERTEX_BUFFER);
+	GLuint* indexBuffer = (GLuint*)buffers.at(NURBSSURFACE_INDEX_BUFFER);
+
+	//Determine number of triangles in the surface
+	WCVector4 p = right->Data();
+	WPUInt indexA, indexB, indexC;
+	WCVector4 v0, v1, v2, v1v0, v2v0, d, dNorm, pvec, tvec, qvec;
+	WPFloat det, u, v, t;
+	WPUInt numTris = (lodU - 1) * (lodV - 1) * 2;
 	//Compare point against each triangle within buffer
-	//...
-	
+	for (WPUInt triIndex=0; triIndex < numTris; triIndex++) {
+		//Get the indices for the three vertices
+		indexA = indexBuffer[triIndex];
+		indexB = indexBuffer[triIndex+1];
+		indexC = indexBuffer[triIndex+2];
+		//Get the vertex values for the triangle
+		v0 = WCVector4(vertexBuffer[indexA]);
+		v1 = WCVector4(vertexBuffer[indexB]);
+		v2 = WCVector4(vertexBuffer[indexC]);
+
+		//Get vXv0 vectors and normal
+		v1v0 = v1 - v0;
+		v2v0 = v2 - v0;
+		d = v1v0.CrossProduct(v2v0);
+		dNorm = d;
+		dNorm.Normalize();
+
+		//Calculate determinant
+		pvec = d.CrossProduct(v2v0);
+		det = pvec.DotProduct(v1v0);
+		//Get tvec and U
+		tvec = p - v0;
+		u = tvec.DotProduct(pvec);
+		//Make sure u is within bounds
+		if (u >= 0.0 && u <= det) {
+			qvec = tvec.CrossProduct(v1v0);
+			//Calculate and bounds test v
+			v = d.DotProduct(qvec);
+			if (v >= 0.0 && u + v <= det) {
+				//Calculate t and scale u and v
+				t = v2v0.DotProduct(qvec);
+				det = 1.0 / det;
+				t *= det;
+				//Make sure t is very small
+				//...
+				u *= det;
+				v *= det;
+				//Convert u and v into surface u and v values
+				//...
+
+				//Create intersection result for the point
+				WCIntersectionResult hit;
+				hit.type = IntersectPoint;
+//				hit.leftBoundary = (u < tol) || (1.0 - u < tol);
+//				hit.rightBoundary = true;
+//				hit.leftParam.I(u);
+//				hit.rightParam = right->Data();
+				//Do boundary cull check, insert if ok
+				if (!(flags * INTERSECT_CULL_BOUNDARY) || !hit.leftBoundary) {
+					//Add the hit to the list
+					results.push_back(hit);
+				}
+			}
+		}
+	}
+
+	//Release the surface buffers
+	left->ReleaseBuffers(buffers);
+	//Return the results
 	return results;
 }
+
 
 std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCNurbsSurface *left,
 	WCGeometricLine *right, const WPFloat &tol, const unsigned int &flags) {
@@ -58,12 +128,25 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	//See if line intersects surface bounding box
 	if (left->BoundingBox().Intersection(right->BoundingBox())) return results;
 	
-	//Otherwise, generate surface to precision of tol and place into local buffer
-	//...
-	
+	//Determine estimated area of surface and LODs
+	WPUInt lodU = STDMIN((WPUInt)(WCNurbs::EstimateLengthU(left->ControlPoints(), left->NumberControlPointsU()) / tol), (WPUInt)WCAdapter::GetMax2DTextureSize());
+	WPUInt lodV = STDMIN((WPUInt)(WCNurbs::EstimateLengthV(left->ControlPoints(), left->NumberControlPointsV()) / tol), (WPUInt)WCAdapter::GetMax2DTextureSize());
+	//Generate surface to precision of tol and place into local buffer
+	std::vector<GLuint> textures;
+	left->GenerateTextureBuffers(0.0, 1.0, lodU, 0.0, 1.0, lodV, textures, true);
+	GLuint vertexTex = textures.at(NURBSSURFACE_VERTEX_BUFFER);
+	GLuint indexTex = textures.at(NURBSSURFACE_INDEX_BUFFER);
+	//Set program values
+	glUseProgram(left->Context()->SurfaceLineProgram());
+	glUniform3f(left->Context()->IntersectionLocations()[INTERSECTION_SLI_PARAMS], (GLfloat)lodU, (GLfloat)lodV, (GLfloat)tol);
+	glUniform4f(left->Context()->IntersectionLocations()[INTERSECTION_SLI_LBEGIN], 
+				(GLfloat)right->Begin().I(), (GLfloat)right->Begin().J(), (GLfloat)right->Begin().K(), 1.0);
+	glUniform4f(left->Context()->IntersectionLocations()[INTERSECTION_SLI_LEND],
+				(GLfloat)right->End().I(), (GLfloat)right->End().J(), (GLfloat)right->End().K(), 1.0);
+
 	//Try to intersect line with each triangle within buffer
 	//...
-	
+	left->ReleaseTextures(textures);
 	return results;
 }
 

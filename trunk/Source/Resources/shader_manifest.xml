@@ -22,6 +22,8 @@
 		<shader name="trimsurface_triangulate" type="GL_FRAGMENT_SHADER" filename="trimsurface_triangulate.fsh" />
 		<shader name="cli_plM" type="GL_FRAGMENT_SHADER" filename="cli_plM.fsh" />
 		<shader name="cci_plM" type="GL_FRAGMENT_SHADER" filename="cci_plM.fsh" />
+		<shader name="spi_plM" type="GL_FRAGMENT_SHADER" filename="spi_plM.fsh" />
+		<shader name="sli_plM" type="GL_FRAGMENT_SHADER" filename="sli_plM.fsh" />
 	</shaders>
 	<programs>
 		<program name="scn_basiclight">
@@ -116,6 +118,14 @@
 		<program name="cci_plM">
 			<shader>passthrough</shader>
 			<shader>cci_plM</shader>
+		</program>
+		<program name="spi_plM">
+			<shader>passthrough</shader>
+			<shader>spi_plM</shader>
+		</program>
+		<program name="sli_plM">
+			<shader>passthrough</shader>
+			<shader>sli_plM</shader>
 		</program>
 	</programs>
 </manifest>

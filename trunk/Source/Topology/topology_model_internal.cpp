@@ -322,6 +322,8 @@ void _CopyTopologyModel(WCTopologyModel* destination, const std::list<WSTopology
 	for (shellsIter = shells.begin(); shellsIter != shells.end(); shellsIter++) {
 		//Copy the old to the new
 		_CopyTopologyShell( (*shellsIter).first, (*shellsIter).second, destination, faces, loops, edges, vertices );
+		//Insert the shell into the topology model
+		destination->AddShell( (*shellsIter).first );
 	}
 
 	//Loop through all of the faces
@@ -336,6 +338,20 @@ void _CopyTopologyModel(WCTopologyModel* destination, const std::list<WSTopology
 	for (loopsIter = loops.begin(); loopsIter != loops.end(); loopsIter++) {
 		//Copy the old to the new
 		_CopyTopologyLoop( (*loopsIter).first, (*loopsIter).second, shells, faces, loops, edges, vertices );
+	}
+
+	//Loop through all of the edges
+	std::map<WSEdgeUse*,WSEdgeUse*>::iterator edgesIter;
+	for (edgesIter = edges.begin(); edgesIter != edges.end(); edgesIter++) {
+		//Copy the old to the new
+		_CopyTopologyEdge( (*edgesIter).first, (*edgesIter).second, shells, faces, loops, edges, vertices );
+	}
+
+	//Loop through all of the vertices
+	std::map<WSVertexUse*,WSVertexUse*>::iterator verticesIter;
+	for (verticesIter = vertices.begin(); verticesIter != vertices.end(); verticesIter++) {
+		//Copy the old to the new
+		_CopyTopologyVertex( (*verticesIter).first, (*verticesIter).second, shells, faces, loops, edges, vertices );
 	}
 }
 
