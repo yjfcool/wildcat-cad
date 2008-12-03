@@ -31,6 +31,7 @@
 #include "Utility/adapter.h"
 #include "Utility/serializeable_object.h"
 #include "Utility/log_manager.h"
+#include "Utility/assert_exception.h"
 
 
 /***********************************************~***************************************************/
@@ -453,6 +454,20 @@ GLuint WCShaderManager::ProgramFromName(const std::string &name) {
 	}
 	//Otherwise, get the object ID
 	return (*iter).second->_id;
+}
+
+
+std::string WCShaderManager::NameFromProgramID(const GLuint &id) {
+	//Look through all entries in the program map
+	std::map<std::string, WSProgram*>::iterator iter;
+	for (iter = this->_programMap.begin(); iter != this->_programMap.end(); iter++) {
+		//Check to see if the ID matches, if so then return the name of the program
+		ASSERT( (*iter).second );
+		if ( (*iter).second->_id == id) return (*iter).first;
+	}
+	//No match, return empty string
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::NameFromProgramID - Unable to find program: " << id);
+	return "";
 }
 
 	

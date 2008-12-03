@@ -348,11 +348,11 @@ void _CopyTopologyModel(WCTopologyModel* destination, const std::list<WSTopology
 	}
 
 	//Loop through all of the vertices
-	std::map<WSVertexUse*,WSVertexUse*>::iterator verticesIter;
-	for (verticesIter = vertices.begin(); verticesIter != vertices.end(); verticesIter++) {
-		//Copy the old to the new
-		_CopyTopologyVertex( (*verticesIter).first, (*verticesIter).second, shells, faces, loops, edges, vertices );
-	}
+//	std::map<WSVertexUse*,WSVertexUse*>::iterator verticesIter;
+//	for (verticesIter = vertices.begin(); verticesIter != vertices.end(); verticesIter++) {
+//		//Copy the old to the new
+//		_CopyTopologyVertex( (*verticesIter).first, (*verticesIter).second, shells, faces, loops, edges, vertices );
+//	}
 }
 
 
