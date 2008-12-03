@@ -95,7 +95,7 @@ WCAlignedBoundingBox WCVisualLayer::BoundingBox(void) {
 void WCVisualLayer::Render(WCRenderState *state) {
 	//Only render if visible
 	if (!this->_isVisible) return;
-	
+
 	//Set lighting params if needed
 	if (this->_renderProg != 0) {
 		glUseProgram(this->_renderProg);
@@ -118,8 +118,8 @@ void WCVisualLayer::Render(WCRenderState *state) {
 	//Mark layer as clean
 	this->_isDirty = false;
 	//Check for errors
-	if (glGetError() != GL_NO_ERROR) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryLayer::Render Error - Unspecified Errors.");	
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryLayer::Render Error: " << std::hex << err);
 }
 
 

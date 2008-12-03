@@ -108,7 +108,7 @@ private:
 	
 public:
 	//Constructors and Destructors
-	WCGeometryContext(const WPGLContext &context, WCShaderManager *shaderManager);						//!< Primary constructor
+	WCGeometryContext(const WPGLContext &context, WCShaderManager *shaderManager);					//!< Primary constructor
 	~WCGeometryContext();																			//!< Default destructor
 	
 	//General Access Methods

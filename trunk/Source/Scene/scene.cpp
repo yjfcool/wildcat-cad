@@ -478,6 +478,7 @@ WCAlignedBoundingBox WCScene::BoundingBox(void) {
 void WCScene::Render(void) {
 	//Mark the scene as clean
 	this->_isDirty = false;
+	GLenum err;
 	
 	//Clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		
@@ -488,13 +489,20 @@ void WCScene::Render(void) {
 	//Now set up the camera (all objects from here are camera dependent)
 	this->_activeCamera->ReadyScene();
 	//Render primary layers (in reverse order - bottom to top)
-	for (WCLayer* ptr=this->_bottomLayer; ptr != NULL; ptr=ptr->Previous()) 
+	for (WCLayer* ptr=this->_bottomLayer; ptr != NULL; ptr=ptr->Previous()) {
+		//Render the layer
 		ptr->Render(this->_activeCamera->RenderState());
+		//Check for errors
+		err = glGetError();
+		if (err != GL_NO_ERROR)
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCScene::Render Layers Error: " << std::hex << err);
+	}
 	//Call frametick if present
 	if (this->_frameTickObject != NULL) (*this->_frameTickObject)();
 	//Check for GL errors
-	if (glGetError() != GL_NO_ERROR)
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCScene::Render Error - Unspecified Errors.");
+	err = glGetError();
+	if (err != GL_NO_ERROR)
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCScene::Render Error: " << std::hex << err);
 }
 
 

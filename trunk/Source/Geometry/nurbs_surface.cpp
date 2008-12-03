@@ -718,9 +718,10 @@ WCNurbsSurface::GenerateSurfaceSize4(const WPFloat &uStart, const WPFloat &uStop
 		glBindBuffer(GL_ARRAY_BUFFER, buffers.at(NURBSSURFACE_TEXCOORD_BUFFER));
 		glBufferData(GL_ARRAY_BUFFER, numVerts * NURBSSURFACE_FLOATS_PER_TEXCOORD * sizeof(GLfloat), tData, GL_STATIC_DRAW);
 		//Clean up and report errors
-		glBindBuffer(GL_ARRAY_BUFFER, 0);	
-		if (glGetError() != GL_NO_ERROR)
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceSize4 - Error buffering server data.");
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		GLenum err = glGetError();
+		if (err != GL_NO_ERROR)
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::GenerateSurfaceSize4 - Error buffering server data: " << err);
 		//Delete arrays
 		delete vData;
 		delete nData;
@@ -1091,6 +1092,9 @@ void WCNurbsSurface::ApplyTranslation(const WCVector4 &translation) {
 void WCNurbsSurface::Render(const GLuint &defaultProg, const WCColor &color, const WPFloat &zoom) {
 	//Make sure surface is visible
 	if (!this->_isVisible) return;
+	GLenum err;
+	err = glGetError();
+	if (err != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::Start Render Error: " << std::hex << err);
 
 	//Determine best LOD values
 	WPFloat lengthU = WCNurbs::EstimateLengthU(this->_controlPoints, this->_cpU);
@@ -1108,7 +1112,6 @@ void WCNurbsSurface::Render(const GLuint &defaultProg, const WCColor &color, con
 		//Mark as dirty
 		this->IsVisualDirty(true);
 	}
-
 	//Check to see if surface needs to be generated
 	if (this->IsVisualDirty()) {
 		//Generate the server buffer of data
@@ -1160,7 +1163,8 @@ void WCNurbsSurface::Render(const GLuint &defaultProg, const WCColor &color, con
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	//Report them errors
-	if (glGetError() != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::Render - Unspecified error.");
+	err = glGetError();
+	if (err != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCNurbsSurface::Render Error: " << std::hex << err);
 }
 
 

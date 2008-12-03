@@ -35,6 +35,114 @@
 /***********************************************~***************************************************/
 
 
+
+void _CatalogEdges(WSEdgeUse* edge, std::list<WSEdgeUse*> &edges, std::list<WSVertexUse*> &vertices) {
+	//Catalog edgeUse
+	ASSERT(edge);
+	edges.push_back( edge );
+	//Catalog the child vertexUse
+	if( edge->vertexUse ) vertices.push_back( edge->vertexUse );
+}
+
+
+void _CatalogLoops(WSLoopUse* loop, std::list<WSLoopUse*> &loops, std::list<WSEdgeUse*> &edges, std::list<WSVertexUse*> &vertices) {
+	//Catalog the loopUse
+	ASSERT( loop );
+	loops.push_back( loop );
+	
+	//See if children are vertices
+	if (loop->vertexUses) {
+		//Catalog all children objects
+		WSVertexUse *firstVU = NULL, *vu = loop->vertexUses;
+		while (firstVU != vu) {
+			//Recursively get all children, starting with this vertex
+			vertices.push_back( vu );
+			//Set first LU if necessary
+			if (!firstVU) firstVU = vu;
+			//Move to next vu
+			vu = vu->next;
+		}		
+	}
+	//Children must be edges
+	else if (loop->edgeUses) {
+		//Catalog all children objects
+		WSEdgeUse *firstEU = NULL, *eu = loop->edgeUses;
+		while (firstEU != eu) {
+			//Recursively get all children, starting with this edge
+			_CatalogEdges(eu, edges, vertices);
+			//Set first EU if necessary
+			if (!firstEU) firstEU = eu;
+			//Move to next eu
+			eu = eu->cw;			
+		}
+	}
+}
+
+
+void _CatalogFaces(WSFaceUse* face, std::list<WSFaceUse*> &faces, std::list<WSLoopUse*> &loops, 
+	std::list<WSEdgeUse*> &edges, std::list<WSVertexUse*> &vertices) {
+	//Catalog the faceUse
+	ASSERT( face );
+	faces.push_back( face );
+	
+	//Catalog all children objects
+	WSLoopUse *firstLU = NULL, *lu = face->loopUses;
+	while (firstLU != lu) {
+		//Recursively get all children, starting with this loop
+		_CatalogLoops(lu, loops, edges, vertices);
+		//Set first LU if necessary
+		if (!firstLU) firstLU = lu;
+		//Move to next lu
+		lu = lu->next;
+	}
+}
+
+
+void _CatalogShells(WSTopologyShell *shell, std::list<WSTopologyShell*> &shells,
+	std::list<WSFaceUse*> &faces, std::list<WSLoopUse*> &loops, std::list<WSEdgeUse*> &edges, std::list<WSVertexUse*> &vertices) {
+	//Catalog the shell
+	ASSERT( shell );
+	shells.push_back( shell );
+	
+	//See if vertexUses is non-NULL
+	if (shell->vertexUses) {
+		//Catalog the vertex
+		vertices.push_back( shell->vertexUses );
+	}
+	
+	//See if edgeUses is non-NULL
+	if (shell->edgeUses) {
+		//Catalog all children objects
+		WSEdgeUse *firstEU = NULL, *eu = shell->edgeUses;
+		while (firstEU != eu) {
+			//Recursively get all children, starting with this edge
+			_CatalogEdges(eu, edges, vertices);
+			//Set first EU if necessary
+			if (!firstEU) firstEU = eu;
+			//Move to next eu
+			eu = eu->cw;
+		}
+	}
+	
+	//See if faceUses if non-NULL
+	if(shell->faceUses) {
+		//Catalog all children objects
+		WSFaceUse *firstFU = NULL, *fu = shell->faceUses;
+		while (firstFU != fu) {
+			//Recursively get all children, starting with this face
+			_CatalogFaces(fu, faces, loops, edges, vertices);
+			//Set first FU if necessary
+			if (!firstFU) firstFU = fu;
+			//Move to next fu
+			fu = fu->next;
+		}
+	}	
+}
+
+
+/***********************************************~***************************************************/
+
+
 WCTopologyModel* WCTopologyModel::Union(WCTopologyModel *model) {
 	//See if no shells are in the shell list
 	if (this->_shellList.empty()) {
@@ -45,20 +153,37 @@ WCTopologyModel* WCTopologyModel::Union(WCTopologyModel *model) {
 	//Otherwise, need to do complex union
 	else {
 		std::cout << "Union!!!\n";
-		//Create maps for all children objects
-		std::map<WSTopologyShell*,WSTopologyShell*> shells;
-		std::map<WSFaceUse*,WSFaceUse*> faces;
-		std::map<WSLoopUse*,WSLoopUse*> loops;
-		std::map<WSEdgeUse*,WSEdgeUse*> edges;
-		std::map<WSVertexUse*,WSVertexUse*> vertices;
-/*		
-		//Go through each shell and catalog it
+		//Create lists for all children objects
+		std::list<WSTopologyShell*> leftShells, rightShells;
+		std::list<WSFaceUse*> leftFaces, rightFaces;
+		std::list<WSLoopUse*> leftLoops, rightLoops;
+		std::list<WSEdgeUse*> leftEdges, rightEdges;
+		std::list<WSVertexUse*> leftVertices, rightVertices;
+
+		//Go through each shell in the LEFT model and catalog it
 		std::list<WSTopologyShell*>::const_iterator shellIter;
-		for (shellIter = source.begin(); shellIter != source.end(); shellIter++) {
+		for (shellIter = this->_shellList.begin(); shellIter != this->_shellList.end(); shellIter++) {
 			//Catalog the shells and children
-			_CatalogTopologyShell(*shellIter, shells, faces, loops, edges, vertices);
+			_CatalogShells(*shellIter, leftShells, leftFaces, leftLoops, leftEdges, leftVertices);
 		}
-*/
+
+		std::cout << "Left Shells: " << leftShells.size() << std::endl;
+		std::cout << "Left Faces: " << leftFaces.size() << std::endl;
+		std::cout << "Left Loops: " << leftLoops.size() << std::endl;
+		std::cout << "Left Edges: " << leftEdges.size() << std::endl;
+		std::cout << "Left Vertices: " << leftVertices.size() << std::endl;
+
+		//Go through each shell in the RIGHT model and catalog it
+		for (shellIter = model->_shellList.begin(); shellIter != model->_shellList.end(); shellIter++) {
+			//Catalog the shells and children
+			_CatalogShells(*shellIter, rightShells, rightFaces, rightLoops, rightEdges, rightVertices);
+		}
+		
+		std::cout << "Right Shells: " << rightShells.size() << std::endl;
+		std::cout << "Right Faces: " << rightFaces.size() << std::endl;
+		std::cout << "Right Loops: " << rightLoops.size() << std::endl;
+		std::cout << "Right Edges: " << rightEdges.size() << std::endl;
+		std::cout << "Right Vertices: " << rightVertices.size() << std::endl;
 	}
 
 	//Return this for now

@@ -95,6 +95,7 @@ public:
 	//Shader Access Methods
 	GLuint ShaderFromName(const std::string &name);													//!< Get a shader from a name
 	GLuint ProgramFromName(const std::string &name);												//!< Get a program from a name
+	std::string NameFromProgramID(const GLuint &id);												//!< Get program name from ID
 };
 
 
