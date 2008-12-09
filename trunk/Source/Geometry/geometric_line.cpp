@@ -37,7 +37,7 @@
 /***********************************************~***************************************************/
 
 
-WCGeometricLine::WCGeometricLine(const WCVector4 &p0, const WCVector4 &p1) : ::WCGeometricCurve(),
+WCGeometricLine::WCGeometricLine(const WCVector4 &p0, const WCVector4 &p1) : ::WCGeometricCurve(NULL),
 	_p0(p0), _p1(p1), _isInfinite(false) {
 	//Establish aligned bounding box
 	WCVector4 pts[2] = {this->_p0, this->_p1};

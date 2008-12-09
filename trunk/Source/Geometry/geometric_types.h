@@ -45,6 +45,7 @@ namespace __WILDCAT_NAMESPACE__ {
 
 
 /*** Class Predefines ***/
+class WCGeometryContext;
 class WCRay;
 class WCGeometricPoint;
 
@@ -54,17 +55,23 @@ class WCGeometricPoint;
 
 class WCGeometricObject : virtual public WCSerializeableObject, virtual public WCVisualObject {
 protected:
+	WCGeometryContext							*_context;											//!< Geometry context
 	bool										_isConstruction;									//!< Is this a construction element
 private:
 	//Hidden Constructors
+	WCGeometricObject();																			//!< Deny access to default constructor
 	WCGeometricObject& operator=(const WCGeometricObject &object);									//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCGeometricObject() : ::WCSerializeableObject(), ::WCVisualObject(), _isConstruction(false) { }	//!< Default constructor
+	WCGeometricObject(WCGeometryContext *context) : ::WCSerializeableObject(), ::WCVisualObject(),	//!< Primary constructor
+												_context(context), _isConstruction(false) { }
+	WCGeometricObject(const WCGeometricObject &object) : ::WCSerializeableObject(), ::WCVisualObject(),//!< Copy constructor
+												_context(object._context), _isConstruction(object._isConstruction) { }
 	WCGeometricObject(xercesc::DOMElement *element, WCSerialDictionary *dictionary);				//!< Persistance constructor
 	virtual ~WCGeometricObject()				{ }													//!< Default destructor
 	
 	//Member Access Methods
+	inline WCGeometryContext* Context(void)		{ return this->_context; }							//!< Get the geometry context
 	inline bool IsConstruction(void) const		{ return this->_isConstruction; }					//!< Get construction element state
 	inline void IsConstruction(const bool &state)	{ this->_isConstruction = state; }				//!< Set construction element state
 
@@ -90,12 +97,13 @@ protected:
 	WPFloat										_thickness;											//!< Curve thicknes
 private:
 	//Hidden Constructors
+	WCGeometricCurve();																				//!< Deny access to default constructor
 	WCGeometricCurve& operator=(const WCGeometricCurve &curve);										//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCGeometricCurve() : ::WCGeometricObject(), _isClosed(false), _isSelfIntersecting(false),		//!< Default constructor
-												_thickness(WCGeometricCurve::DefaultThickness) { }
-	WCGeometricCurve(const WCGeometricCurve &curve) : ::WCVisualObject(curve),						//!< Copy constructor
+	WCGeometricCurve(WCGeometryContext *context) : ::WCGeometricObject(context), _isClosed(false),	//!< Primary constructor
+												_isSelfIntersecting(false),	_thickness(WCGeometricCurve::DefaultThickness) { }
+	WCGeometricCurve(const WCGeometricCurve &curve) : ::WCGeometricObject(curve),					//!< Copy constructor
 												_isClosed(curve._isClosed),
 												_isSelfIntersecting(curve._isSelfIntersecting),
 												_thickness(curve._thickness) { }
@@ -130,12 +138,13 @@ protected:
 	bool										_isPlanar;											//!< Surface planar flag
 private:
 	//Hidden Constructors
+	WCGeometricSurface();																			//!< Deny access to default constructor
 	WCGeometricSurface& operator=(const WCGeometricSurface &surface);								//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCGeometricSurface() : ::WCGeometricObject(), _isClosedU(false), _isClosedV(false), 			//!< Default constructor
-												_isSelfIntersecting(false) { }						//!< Copy constructor
-	WCGeometricSurface(const WCGeometricSurface &surface) : ::WCVisualObject(surface),
+	WCGeometricSurface(WCGeometryContext *context) : ::WCGeometricObject(context), _isClosedU(false),//!< Default constructor
+												_isClosedV(false), _isSelfIntersecting(false) { }
+	WCGeometricSurface(const WCGeometricSurface &surface) : ::WCGeometricObject(surface),			//!< Copy constructor
 												_isClosedU(surface._isClosedU),
 												_isClosedV(surface._isClosedV),
 												_isSelfIntersecting(surface._isSelfIntersecting) { }

@@ -826,7 +826,7 @@ GLuint* WCNurbsSurface::GenerateIndex(const WPFloat &uStart, const WPFloat &uSto
 
 WCNurbsSurface::WCNurbsSurface(WCGeometryContext *context, const WPUInt &degreeU, const WPUInt &degreeV, const WPUInt &cpU, const WPUInt &cpV, 
 	const std::vector<WCVector4> &controlPoints, const WCNurbsMode &modeU, const WCNurbsMode &modeV, const std::vector<WPFloat> &kpU, const std::vector<WPFloat> &kpV) : 
-	::WCGeometricSurface(), _context(context), _degreeU(degreeU), _degreeV(degreeV), _modeU(modeU), _modeV(modeV), 
+	::WCGeometricSurface(context), _degreeU(degreeU), _degreeV(degreeV), _modeU(modeU), _modeV(modeV), 
 	_cpU(cpU), _cpV(cpV), _controlPoints(controlPoints), _kpU(0), _kpV(0), _knotPointsU(NULL), _knotPointsV(NULL),
 	_lengthU(0.0), _lengthV(0.0), _lodU(0), _lodV(0), _buffers(), _altBuffers() {
 	//Check to make sure a CP collection was passed
@@ -888,7 +888,7 @@ WCNurbsSurface::WCNurbsSurface(WCGeometryContext *context, const WPUInt &degreeU
 
 
 WCNurbsSurface::WCNurbsSurface(const WCNurbsSurface &surf) : ::WCGeometricSurface(surf),
-	_context(surf._context), _degreeU(surf._degreeU), _degreeV(surf._degreeV), _modeU(surf._modeU), _modeV(surf._modeV), 
+	_degreeU(surf._degreeU), _degreeV(surf._degreeV), _modeU(surf._modeU), _modeV(surf._modeV), 
 	_cpU(surf._cpU), _cpV(surf._cpV), _controlPoints(surf._controlPoints), _kpU(surf._kpU), _kpV(surf._kpV), _knotPointsU(NULL), _knotPointsV(NULL),
 	_lengthU(surf._lengthU), _lengthV(surf._lengthV), _lodU(0), _lodV(0), _buffers(), _altBuffers() {
 	//Need to load knot points
@@ -900,7 +900,7 @@ WCNurbsSurface::WCNurbsSurface(const WCNurbsSurface &surf) : ::WCGeometricSurfac
 
 WCNurbsSurface::WCNurbsSurface(xercesc::DOMElement *element, WCSerialDictionary *dictionary) :
 	::WCGeometricSurface( WCSerializeableObject::ElementFromName(element,"GeometricSurface"), dictionary ),
-	_context(NULL), _degreeU(0), _degreeV(0), _modeU(WCNurbsMode::Default()), _modeV(WCNurbsMode::Default()), _cpU(0), _cpV(0),
+	_degreeU(0), _degreeV(0), _modeU(WCNurbsMode::Default()), _modeV(WCNurbsMode::Default()), _cpU(0), _cpV(0),
 	_controlPoints(), _kpU(0), _kpV(0), _knotPointsU(NULL), _knotPointsV(NULL), _lengthU(0.0), _lengthV(0.0), _buffers(), _altBuffers() {
 	//Make sure element if not null
 	if (element == NULL) {
