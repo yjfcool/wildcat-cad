@@ -28,6 +28,7 @@
 
 /*** Included Header Files ***/
 #include "Geometry/geometric_types.h"
+#include "Geometry/geometry_context.h"
 
 
 /*** Static Member Initialization ***/
@@ -56,7 +57,10 @@ WCGeometricObject::WCGeometricObject(xercesc::DOMElement *element, WCSerialDicti
 	//Get the visible flag
 	this->_isVisible = WCSerializeableObject::GetBoolAttrib(element, "visible");
 	//Get the renderProg
-	this->_renderProg = (GLuint)WCSerializeableObject::GetFloatAttrib(element, "renderProg");
+	std::string renderProgName = WCSerializeableObject::GetStringAttrib(element, "renderProg");
+	//Make sure context exists, then get the shader ID
+	if (this->_context)
+		this->_renderProg = this->_context->ShaderManager()->ProgramFromName(renderProgName);
 	//Get the color value
 	this->_color.FromElement(  WCSerializeableObject::ElementFromName(element,"Color") );
 }
@@ -79,7 +83,10 @@ xercesc::DOMElement* WCGeometricObject::Serialize(xercesc::DOMDocument *document
 	//Set visible attribute
 	WCSerializeableObject::AddBoolAttrib(element, "visible", this->_isVisible);
 	//Set the renderProg attribute
-	WCSerializeableObject::AddFloatAttrib(element, "renderProg", this->_renderProg);
+	std::string renderProgName = "NULL";
+	if (this->_context)
+		std::string renderProgName = this->_context->ShaderManager()->NameFromProgramID(this->_renderProg);
+	WCSerializeableObject::AddStringAttrib(element, "renderProg", renderProgName);
 	//Add the color value
 	this->_color.ToElement(element, "Color");
 
