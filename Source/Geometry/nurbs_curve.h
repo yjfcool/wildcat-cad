@@ -79,7 +79,6 @@ class WCGeometryContext;
 class WCNurbsCurve : public WCGeometricCurve {
 protected:
 	//Basic data
-	WCGeometryContext							*_context;											//!< Geometry context
 	WPUInt										_degree;											//!< Degree of the curve
 	WCNurbsMode									_mode;												//!< NURBS knot mode
 	WPUInt										_cp, _kp;											//!< Number of control and knot points, N value
@@ -116,7 +115,6 @@ public:
 	~WCNurbsCurve();																				//!< Default destructor
 	
 	//General Access Methods
-	inline WCGeometryContext* Context(void)		{ return this->_context; }							//!< Get the geometry context
 	inline std::vector<WCVector4> ControlPoints(void)	{ return this->_controlPoints; }			//!< Get the control points vector
 	void ControlPoints(const std::vector<WCVector4> &controlPoints);								//!< Set the control points vector
 	inline WPUInt NumberControlPoints(void) const{ return this->_cp; }								//!< Get the number of control points

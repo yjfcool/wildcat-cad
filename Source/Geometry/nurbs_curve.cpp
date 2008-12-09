@@ -513,7 +513,7 @@ GLfloat* WCNurbsCurve::GenerateCurveOne(const bool &server, GLuint &buffer) {
 
 
 WCNurbsCurve::WCNurbsCurve(WCGeometryContext *context, const WPUInt &degree, const std::vector<WCVector4> &controlPoints, 
-	const WCNurbsMode &mode, const std::vector<WPFloat> &knotPoints) : ::WCGeometricCurve(), _context(context),
+	const WCNurbsMode &mode, const std::vector<WPFloat> &knotPoints) : ::WCGeometricCurve(context),
 	_degree(degree), _mode(mode), _cp((WPUInt)controlPoints.size()), _kp(0), _controlPoints(controlPoints), _knotPoints(NULL),
 	_length(0.0), _lod(0), _buffer(0), _altBuffer(NULL) {
 	//Make sure cpCollection is non-null
@@ -550,7 +550,7 @@ WCNurbsCurve::WCNurbsCurve(WCGeometryContext *context, const WPUInt &degree, con
 
 
 WCNurbsCurve::WCNurbsCurve(const WCNurbsCurve &curve) :
-	::WCGeometricCurve(curve), _context(curve._context), _degree(curve._degree), _mode(curve._mode),
+	::WCGeometricCurve(curve), _degree(curve._degree), _mode(curve._mode),
 	_cp(curve._cp), _kp(curve._kp), _controlPoints(curve._controlPoints), _knotPoints(NULL),
 	_length(curve._length), _lod(0), _buffer(0), _altBuffer(NULL) {
 	//Do some more setup only if degree is not 1
@@ -571,7 +571,7 @@ WCNurbsCurve::WCNurbsCurve(const WCNurbsCurve &curve) :
 
 WCNurbsCurve::WCNurbsCurve(xercesc::DOMElement *element, WCSerialDictionary *dictionary) : 
 	::WCGeometricCurve( WCSerializeableObject::ElementFromName(element,"GeometricCurve"), dictionary ),
-	_context(NULL), _degree(), _mode(WCNurbsMode::Default()), _cp(), _kp(), _controlPoints(), _knotPoints(),
+	_degree(), _mode(WCNurbsMode::Default()), _cp(), _kp(), _controlPoints(), _knotPoints(),
 	_length(0.0), _lod(0), _buffer(0), _altBuffer(NULL) {
 	//Make sure element if not null
 	if (element == NULL) {

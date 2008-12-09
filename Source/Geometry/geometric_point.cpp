@@ -35,28 +35,28 @@
 
 
 WCGeometricPoint::WCGeometricPoint(const WPFloat &x, const WPFloat &y, const WPFloat &z, const WPFloat &w) : 
-	::WCGeometricObject(), _data(x, y, z, w), _size(POINT_POINTSIZE) {
+	::WCGeometricObject(NULL), _data(x, y, z, w), _size(POINT_POINTSIZE) {
 	//Establish aligned bounding box
 	this->_bounds = new WCAlignedBoundingBox(&this->_data, 1);
 }
 
 
 WCGeometricPoint::WCGeometricPoint(const WCVector4 &vec) : 
-	::WCGeometricObject(), _data(vec), _size(POINT_POINTSIZE) {
+	::WCGeometricObject(NULL), _data(vec), _size(POINT_POINTSIZE) {
 	//Establish aligned bounding box
 	this->_bounds = new WCAlignedBoundingBox(&this->_data, 1);
 }
 
 
 WCGeometricPoint::WCGeometricPoint(const WCGeometricPoint &point) : 
-	::WCGeometricObject(), _data(point._data), _size(POINT_POINTSIZE) {
+	::WCGeometricObject(NULL), _data(point._data), _size(POINT_POINTSIZE) {
 	//Establish aligned bounding box
 	this->_bounds = new WCAlignedBoundingBox(&this->_data, 1);
 }
 
 
 WCGeometricPoint::WCGeometricPoint(const WPUInt &size, const WPFloat *data) : 
-	::WCGeometricObject(), _data(size, data), _size(POINT_POINTSIZE) {
+	::WCGeometricObject(NULL), _data(size, data), _size(POINT_POINTSIZE) {
 	//Establish aligned bounding box
 	this->_bounds = new WCAlignedBoundingBox(&this->_data, 1);
 }

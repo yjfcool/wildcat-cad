@@ -49,6 +49,8 @@ WCGeometricObject::WCGeometricObject(xercesc::DOMElement *element, WCSerialDicti
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
 	dictionary->InsertGUID(guid, this);
 
+	//Get the context reference
+	this->_context = (WCGeometryContext*)WCSerializeableObject::GetGUIDAttrib(element, "context", dictionary);
 	//Get the construction flag
 	this->_isConstruction = WCSerializeableObject::GetBoolAttrib(element, "construction");
 	//Get the visible flag
@@ -70,6 +72,8 @@ xercesc::DOMElement* WCGeometricObject::Serialize(xercesc::DOMDocument *document
 	//Add GUID attribute
 	WCSerializeableObject::AddStringAttrib(element, "guid", guid);
 
+	//Set context attribute
+	WCSerializeableObject::AddGUIDAttrib(element, "context", this->_context, dictionary);
 	//Set construction attribute
 	WCSerializeableObject::AddBoolAttrib(element, "construction", this->_isConstruction);
 	//Set visible attribute

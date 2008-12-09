@@ -91,7 +91,6 @@ class WCGeometryContext;
 
 class WCNurbsSurface : public WCGeometricSurface {
 protected:
-	WCGeometryContext							*_context;											//!< Geometry context
 	WPUInt										_degreeU, _degreeV;									//!< Degree in U and V directions
 	WCNurbsMode									_modeU, _modeV;										//!< NURBS knot mode for U and V directions
 	WPUInt										_cpU, _cpV;											//!< Number of control points in U and V directions
@@ -142,7 +141,6 @@ public:
 	virtual ~WCNurbsSurface();																		//!< Default destructor
 	
 	//General Access Methods
-	inline WCGeometryContext* Context(void)		{ return this->_context; }							//!< Get the geometry context
 	inline std::vector<WCVector4> ControlPoints(void){ return this->_controlPoints; }				//!< Get the control points
 	void ControlPoints(const std::vector<WCVector4> &controlPoints);								//!< Set the control points
 	inline WPUInt NumberControlPointsU(void) const	{ return this->_cpU; }							//!< Get the number of control points

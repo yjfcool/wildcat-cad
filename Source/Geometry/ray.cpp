@@ -33,18 +33,20 @@
 /***********************************************~***************************************************/
 
 
-WCRay::WCRay(const WCRay &ray) : ::WCVisualObject(), _base(ray._base), _direction(ray._direction) {
+WCRay::WCRay(const WCRay &ray) : ::WCGeometricObject(NULL), _base(ray._base), _direction(ray._direction) {
 	//Nothing else to do for now
 }
 
 
-WCRay::WCRay(const WCVector4 &base, const WCVector4 &direction) : ::WCVisualObject(), _base(base), _direction(direction) {
+WCRay::WCRay(const WCVector4 &base, const WCVector4 &direction) : ::WCGeometricObject(NULL), _base(base), _direction(direction) {
 	//Make sure to normailze direction vector
 	this->_direction.Normalize();
 }
 
 
-WCRay::WCRay(xercesc::DOMElement *element, WCSerialDictionary *dictionary) : ::WCVisualObject(), _base(), _direction() {
+WCRay::WCRay(xercesc::DOMElement *element, WCSerialDictionary *dictionary) : 
+	::WCGeometricObject( WCSerializeableObject::ElementFromName(element,"GeometricObject"), dictionary),
+	_base(), _direction() {
 	//Restore from element
 	//...
 }
