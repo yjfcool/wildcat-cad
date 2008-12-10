@@ -912,8 +912,6 @@ WCNurbsSurface::WCNurbsSurface(xercesc::DOMElement *element, WCSerialDictionary 
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
 	dictionary->InsertGUID(guid, this);
 
-	//Get context
-	this->_context = (WCGeometryContext*)WCSerializeableObject::GetGUIDAttrib(element, "context", dictionary);
 	//Get degrees
 	this->_degreeU = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "degreeU");
 	this->_degreeV = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "degreeV");
@@ -1676,8 +1674,6 @@ xercesc::DOMElement* WCNurbsSurface::Serialize(xercesc::DOMDocument *document, W
 	xercesc::DOMElement* surfElement = this->WCGeometricSurface::Serialize(document, dictionary);
 	element->appendChild(surfElement);
 
-	//Add Context attrib
-	WCSerializeableObject::AddGUIDAttrib(element, "context", this->_context, dictionary);
 	//Degree
 	WCSerializeableObject::AddFloatAttrib(element, "degreeU", this->_degreeU);
 	WCSerializeableObject::AddFloatAttrib(element, "degreeV", this->_degreeV);

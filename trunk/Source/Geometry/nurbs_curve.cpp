@@ -583,8 +583,6 @@ WCNurbsCurve::WCNurbsCurve(xercesc::DOMElement *element, WCSerialDictionary *dic
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
 	dictionary->InsertGUID(guid, this);
 
-	//Get context
-	this->_context = (WCGeometryContext*)WCSerializeableObject::GetGUIDAttrib(element, "context", dictionary); 
 	//Get degree
 	this->_degree = (WPUInt)WCSerializeableObject::GetFloatAttrib(element, "degree");
 	//Setup NURBS mode
@@ -1379,8 +1377,6 @@ xercesc::DOMElement* WCNurbsCurve::Serialize(xercesc::DOMDocument *document, WCS
 	xercesc::DOMElement* curveElement = this->WCGeometricCurve::Serialize(document, dictionary);
 	element->appendChild(curveElement);
 
-	//Add Context attrib
-	WCSerializeableObject::AddGUIDAttrib(element, "context", this->_context, dictionary);
 	//Add Degree
 	WCSerializeableObject::AddFloatAttrib(element, "degree", this->_degree);
 	//Add Number of control point
