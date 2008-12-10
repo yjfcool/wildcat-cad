@@ -85,7 +85,7 @@ xercesc::DOMElement* WCGeometricObject::Serialize(xercesc::DOMDocument *document
 	//Set the renderProg attribute
 	std::string renderProgName = "NULL";
 	if (this->_context)
-		std::string renderProgName = this->_context->ShaderManager()->NameFromProgramID(this->_renderProg);
+		renderProgName = this->_context->ShaderManager()->NameFromProgramID(this->_renderProg);
 	WCSerializeableObject::AddStringAttrib(element, "renderProg", renderProgName);
 	//Add the color value
 	this->_color.ToElement(element, "Color");

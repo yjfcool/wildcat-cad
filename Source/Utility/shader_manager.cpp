@@ -462,8 +462,10 @@ std::string WCShaderManager::NameFromProgramID(const GLuint &id) {
 	std::map<std::string, WSProgram*>::iterator iter;
 	for (iter = this->_programMap.begin(); iter != this->_programMap.end(); iter++) {
 		//Check to see if the ID matches, if so then return the name of the program
-		ASSERT( (*iter).second );
-		if ( (*iter).second->_id == id) return (*iter).first;
+//		ASSERT( (*iter).second );
+		std::cout << "Shader ID: " << (*iter).second->_id << ", Name: " << (*iter).first << std::endl;
+		if ( (*iter).second->_id == id) 
+			return (*iter).first;
 	}
 	//No match, return empty string
 	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::NameFromProgramID - Unable to find program: " << id);
