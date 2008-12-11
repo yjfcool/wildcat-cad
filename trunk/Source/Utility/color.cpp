@@ -85,7 +85,7 @@ WCColor& WCColor::operator=(const WCColor &color) {
 
 bool WCColor::operator==(const WCColor &color) const {
 	//Just compare the bit strings
-	return memcmp(this->_rgba, color._rgba, 4 * sizeof(GLfloat));
+	return !memcmp(this->_rgba, color._rgba, 4 * sizeof(GLfloat));
 }
 
 
