@@ -70,11 +70,10 @@ WCQuaternion::WCQuaternion(const WCQuaternion& quat) {
 
 
 WCQuaternion::WCQuaternion(const WCQuaternion *quat) {
+	//Make sure quat is present
+	ASSERT(quat);
 	//Copy the parameters
-	this->_q[0] = quat->_q[0];
-	this->_q[1] = quat->_q[1];
-	this->_q[2] = quat->_q[2];
-	this->_q[3] = quat->_q[3];
+	memcpy(this->_q, quat->_q, 4 * sizeof(WPFloat));
 }
 
 
@@ -178,6 +177,8 @@ void WCQuaternion::ToGLRotation(void) {
 
 
 xercesc::DOMElement* WCQuaternion::ToElement(xercesc::DOMNode *parent, const std::string &name) {
+	//Make sure parent is present
+	ASSERT(parent);
 	//Name the node
 	XMLCh* xmlString = xmlString = xercesc::XMLString::transcode(name.c_str());
 	//Create the node in the document
@@ -202,6 +203,8 @@ xercesc::DOMElement* WCQuaternion::ToElement(xercesc::DOMNode *parent, const std
 
 
 void WCQuaternion::FromElement(xercesc::DOMElement *element) {
+	//Make sure element is present
+	ASSERT(element);
 	//Get i element
 	this->_q[0] = WCSerializeableObject::GetFloatAttrib(element, "i");
 	//Get j element
@@ -221,7 +224,7 @@ WPFloat WCQuaternion::InnerProduct(const WCQuaternion &quat) {
 
 
 WCQuaternion WCQuaternion::Slerp(const WCQuaternion &quat, const WPFloat &scalar) {
-	std::cout << "WCQuaternion::Slerp Error - Not yet implemented.\n";
+	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCQuaternion::Slerp Error - Not yet implemented.");
 	WCQuaternion a(quat);
 	return a;
 }
