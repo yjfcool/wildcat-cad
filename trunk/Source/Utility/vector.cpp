@@ -30,6 +30,7 @@
 #include "Utility/vector.h"
 #include "Utility/matrix.h"
 #include "Utility/serializeable_object.h"
+#include "Utility/assert_exception.h"
 
 
 /*** Platform Included Header Files ***/
@@ -52,7 +53,7 @@
 
 WCVector4::WCVector4() {
 	//Set all elements to zero
-	memset(this->_data.d, 0, sizeof(WPFloat) * 4);
+	memset(this->_data.d, 0, 4 * sizeof(WPFloat));
 }
 
 
@@ -73,32 +74,27 @@ WCVector4::WCVector4(const WPFloat &value) {
 
 
 WCVector4::WCVector4(const WPFloat *data) {
+	//Check to make sure data exists
+	ASSERT(data);
+	//Copy the data
 	memcpy(this->_data.d, data, 4*sizeof(WPFloat));
 }
 
 
 WCVector4::WCVector4(const WPUInt &size, const WPFloat *data) {
-	//Check to make sure non-NULL data passed
-	if (data == NULL) {
-		std::cout << "WCVector4::WCVector4 Error - NULL data passed.\n";
-		//throw error
-		return;
-	}
-	//Check to make sure size is not too large
-	if (size > 4) {
-		std::cout << "WCVector4::WCVector4 Error - Size is too large\n";
-		//throw error
-		return;
-	}
+	//Couple of quick checks
+	ASSERT(data);
+	ASSERT(size <= 4);
+	//Zero all values
+	memset(this->_data.d, 0, 4 * sizeof(WPFloat));
 	//Copy in values
-	for (WPUInt i=0; i<size; i++) this->_data.d[i] = data[i];
-	//Zero remaining values
-	for (WPUInt i=size; i<4; i++) this->_data.d[i] = 0.0;
+	memcpy(this->_data.d, data, size * sizeof(WPFloat));
 }
 
 
 WCVector4::WCVector4(const WCVector4 &vector) {
-	memcpy(this->_data.d, vector._data.d, sizeof(WPFloat) * 4);
+	//Copy the data from the other vector
+	memcpy(this->_data.d, vector._data.d, 4 * sizeof(WPFloat));
 }
 
 
@@ -115,6 +111,8 @@ WCMatrix WCVector4::ToMatrix(void) {
 
 
 xercesc::DOMElement* WCVector4::ToElement(xercesc::DOMNode *parent, const std::string &name) {
+	//Make sure there is a parent
+	ASSERT(parent);
 	//Name the node
 	XMLCh* xmlString = xmlString = xercesc::XMLString::transcode(name.c_str());
 	//Create the node in the document
@@ -139,6 +137,8 @@ xercesc::DOMElement* WCVector4::ToElement(xercesc::DOMNode *parent, const std::s
 
 
 void WCVector4::FromElement(xercesc::DOMElement *element) {
+	//Make sure there is an element
+	ASSERT(element);
 	//Get i element
 	this->_data.d[0] = WCSerializeableObject::GetFloatAttrib(element, "i");
 	//Get j element
@@ -336,9 +336,10 @@ WCVector4& WCVector4::operator=(const WCVector4 &vector) {
 
 
 WCVector4& WCVector4::operator=(const WCVector &vector) {
-	if (vector._size != 4) std::cout << "WCVector4::operator= Warning - Missized cast from Vector to Vector4.\n";
+	//Make sure vector size is always 4
+	ASSERT(vector._size == 4);
 	//Copy over the data
-	memcpy(this->_data.d, vector._data, 4*sizeof(WPFloat));
+	memcpy(this->_data.d, vector._data, 4 * sizeof(WPFloat));
 	return *this;
 }
 

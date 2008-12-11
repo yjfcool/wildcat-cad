@@ -30,6 +30,7 @@
 #include "Utility/matrix.h"
 #include "Utility/vector.h"
 #include "Utility/serializeable_object.h"
+#include "Utility/assert_exception.h"
 
 
 /*** Platform Included Header Files ***/
@@ -60,12 +61,10 @@ WCMatrix4::WCMatrix4(const bool &identity) {
 
 
 WCMatrix4::WCMatrix4(const WPFloat* data) {
+	//Check data is present
+	ASSERT(data);
 	//Copy all 16 elements over if non-null
-	if (data != NULL)
-		memcpy(this->_data, data, 16 * sizeof(WPFloat));
-	//Otherwise just set to identity
-	else 
-		this->SetIdentity();
+	memcpy(this->_data, data, 16 * sizeof(WPFloat));
 }	
 
 
@@ -73,6 +72,7 @@ WCMatrix4::WCMatrix4(const WPFloat &a0, const WPFloat &a1, const WPFloat &a2, co
 					 const WPFloat &b0, const WPFloat &b1, const WPFloat &b2, const WPFloat &b3,
 					 const WPFloat &c0, const WPFloat &c1, const WPFloat &c2, const WPFloat &c3,
 					 const WPFloat &d0, const WPFloat &d1, const WPFloat &d2, const WPFloat &d3) {
+	//Just set the values
 	this->_data[0] = a0;	this->_data[1] = a1;	this->_data[2] = a2;	this->_data[3] = a3;
 	this->_data[4] = b0;	this->_data[5] = b1;	this->_data[6] = b2;	this->_data[7] = b3;
 	this->_data[8] = c0;	this->_data[9] = c1;	this->_data[10]= c2;	this->_data[11]= c3;
@@ -81,22 +81,34 @@ WCMatrix4::WCMatrix4(const WPFloat &a0, const WPFloat &a1, const WPFloat &a2, co
 
 
 WCMatrix4::WCMatrix4(const WCMatrix4 &m) {
-	this->_data[0] = m._data[0];	this->_data[1] = m._data[1];	this->_data[2] = m._data[2];	this->_data[3] = m._data[3];
-	this->_data[4] = m._data[4];	this->_data[5] = m._data[5];	this->_data[6] = m._data[6];	this->_data[7] = m._data[7];
-	this->_data[8] = m._data[8];	this->_data[9] = m._data[9];	this->_data[10]= m._data[10];	this->_data[11]= m._data[11];
-	this->_data[12]= m._data[12];	this->_data[13]= m._data[13];	this->_data[14]= m._data[14];	this->_data[15]= m._data[15];
+	//Copy all of the values
+	memcpy(this->_data, m._data, 16 * sizeof(WPFloat));
+//	this->_data[0] = m._data[0];	this->_data[1] = m._data[1];	this->_data[2] = m._data[2];	this->_data[3] = m._data[3];
+//	this->_data[4] = m._data[4];	this->_data[5] = m._data[5];	this->_data[6] = m._data[6];	this->_data[7] = m._data[7];
+//	this->_data[8] = m._data[8];	this->_data[9] = m._data[9];	this->_data[10]= m._data[10];	this->_data[11]= m._data[11];
+//	this->_data[12]= m._data[12];	this->_data[13]= m._data[13];	this->_data[14]= m._data[14];	this->_data[15]= m._data[15];
 }
 
 	
 void WCMatrix4::SetIdentity(void) {
-	this->_data[0] = 1.0;	this->_data[1] = 0.0;	this->_data[2] = 0.0;	this->_data[3] = 0.0;
-	this->_data[4] = 0.0;	this->_data[5] = 1.0;	this->_data[6] = 0.0;	this->_data[7] = 0.0;
-	this->_data[8] = 0.0;	this->_data[9] = 0.0;	this->_data[10]= 1.0;	this->_data[11]= 0.0;
-	this->_data[12]= 0.0;	this->_data[13]= 0.0;	this->_data[14]= 0.0;	this->_data[15]= 1.0;
+	//Set everything to zero
+	memset(this->_data, 0, 16 * sizeof(WPFloat));
+	//Set diagonals
+	this->_data[0] = 1.0;
+	this->_data[5] = 1.0;
+	this->_data[10] = 1.0;
+	this->_data[15] = 1.0;
+//	this->_data[0] = 1.0;	this->_data[1] = 0.0;	this->_data[2] = 0.0;	this->_data[3] = 0.0;
+//	this->_data[4] = 0.0;	this->_data[5] = 1.0;	this->_data[6] = 0.0;	this->_data[7] = 0.0;
+//	this->_data[8] = 0.0;	this->_data[9] = 0.0;	this->_data[10]= 1.0;	this->_data[11]= 0.0;
+//	this->_data[12]= 0.0;	this->_data[13]= 0.0;	this->_data[14]= 0.0;	this->_data[15]= 1.0;
 }
 
 
 WCMatrix4 WCMatrix4::FromGLMatrix(GLfloat *data) {
+	//Make sure data is present
+	ASSERT(data);
+	//Copy the data
 	WCMatrix4 retMat(data[0], data[4], data[8],  data[12],
 					 data[1], data[5], data[9],  data[13],
 					 data[2], data[6], data[10], data[14],
@@ -120,6 +132,8 @@ WCMatrix WCMatrix4::ToMatrix(void) {
 
 
 xercesc::DOMElement* WCMatrix4::ToElement(xercesc::DOMNode *parent, const std::string &name) {
+	//Make sure parent is present
+	ASSERT(parent);
 	//Name the node
 	XMLCh* xmlString = xmlString = xercesc::XMLString::transcode(name.c_str());
 	//Create the node in the document
@@ -156,6 +170,8 @@ xercesc::DOMElement* WCMatrix4::ToElement(xercesc::DOMNode *parent, const std::s
 
 
 void WCMatrix4::FromElement(xercesc::DOMElement *element) {
+	//Make sure element is present
+	ASSERT(element);
 	//Get elements
 	this->_data[0] = WCSerializeableObject::GetFloatAttrib(element, "i0");
 	this->_data[1] = WCSerializeableObject::GetFloatAttrib(element, "i1");
@@ -281,29 +297,19 @@ WPFloat WCMatrix4::NormInf(void) {
 
 
 WPFloat WCMatrix4::Determinant(void) {
-	WPFloat retVal = 1.0;
-	return retVal;
+	//Just a shorthand to condense the code
+	WPFloat *d = this->_data;
+	//Calculate 3x3 intermediate determinants
+	WPFloat a = (d[5]*d[10]*d[15]) + (d[6]*d[11]*d[13]) + (d[7]*d[9]*d[14]) - (d[5]*d[11]*d[14]) - (d[6]*d[9]*d[15]) - (d[7]*d[10]*d[13]);
+	WPFloat b = (d[4]*d[10]*d[15]) + (d[6]*d[11]*d[12]) + (d[7]*d[8]*d[14]) - (d[4]*d[11]*d[14]) - (d[6]*d[8]*d[15]) - (d[7]*d[10]*d[12]);
+	WPFloat c = (d[4]*d[9]*d[15]) + (d[5]*d[11]*d[12]) + (d[7]*d[8]*d[13]) - (d[4]*d[11]*d[13]) - (d[5]*d[8]*d[15]) - (d[7]*d[9]*d[12]);
+	WPFloat d = (d[4]*d[9]*d[14]) + (d[5]*d[10]*d[12]) + (d[6]*d[8]*d[13]) - (d[4]*d[10]*d[13]) - (d[5]*d[8]*d[14]) - (d[6]*d[9]*d[12]);
+	//Calculate final value
+	return = (d[0] * a) - (d[1] * b) + (d[2] * c) - (d[3] * d);
 }
 
 
 WCMatrix4 WCMatrix4::Inverse(void) {
-/*
-	//Create the new output matrix
-	WCMatrix4 C(*this);
-	WCMatrix4 work;
-	__CLPK_integer M = 4;	
-	__CLPK_integer N =4;		
-	__CLPK_integer IPIV[4];	
-	__CLPK_integer INFO = 0;	
-
-	//First, compute the LU-decomposition matrix
-	dgetrf_(&M, &N, C.GetData(), &N, IPIV, &INFO);
-	if (INFO != 0) std::cout << "dgetrf: " << INFO << std::endl;	
-	//Then get the inverse
-	dgetri_(&N, C.GetData(), &N, IPIV, work.GetData(), &N, &INFO);	
-	if (INFO != 0) std::cout << "dgetri: " << INFO << std::endl;	
-	return C;
-*/
 	//Temporary variables
 	WCMatrix4 dst;
 	WPFloat tmp[12];
@@ -383,7 +389,6 @@ WCMatrix4 WCMatrix4::Inverse(void) {
     det = 1/det; 
     for (int j = 0; j < 16; j++) 
         dst._data[j] *= det;
-		
 	//Return the matrix
 	return dst;
 }

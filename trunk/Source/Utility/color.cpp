@@ -71,25 +71,20 @@ void WCColor::Set(const GLfloat &r, const GLfloat &g, const GLfloat &b, const GL
 
 void WCColor::Set(const WCColor &color) {
 	//Copy the components
-	memcpy(this->_rgba, color._rgba, 4*sizeof(GLfloat));
+	memcpy(this->_rgba, color._rgba, 4 * sizeof(GLfloat));
 }
 
 
 WCColor& WCColor::operator=(const WCColor &color) {
 	//Copy all color components
-	memcpy(this->_rgba, color._rgba, 4*sizeof(GLfloat));
+	memcpy(this->_rgba, color._rgba, 4 * sizeof(GLfloat));
 	return *this;
 }
 
 
 bool WCColor::operator==(const WCColor &color) const {
-	//Return true if all components are same
-	if ((this->_rgba[0] == color._rgba[0]) && 
-		(this->_rgba[1] == color._rgba[1]) && 
-		(this->_rgba[2] == color._rgba[2]) && 
-		(this->_rgba[3] == color._rgba[3])) 
-			return true;
-	return false;
+	//Just compare the bit strings
+	return memcmp(this->_rgba, color._rgba, 4 * sizeof(GLfloat));
 }
 
 
@@ -99,6 +94,8 @@ bool WCColor::operator!=(const WCColor &color) const {
 
 
 xercesc::DOMElement* WCColor::ToElement(xercesc::DOMNode *parent, const std::string &name) {
+	//Make sure parent is present
+	ASSERT(parent);
 	//Name the node
 	XMLCh* xmlString = xmlString = xercesc::XMLString::transcode(name.c_str());
 	//Create the node in the document
@@ -123,6 +120,8 @@ xercesc::DOMElement* WCColor::ToElement(xercesc::DOMNode *parent, const std::str
 
 
 void WCColor::FromElement(xercesc::DOMElement *element) {
+	//Make sure element is present
+	ASSERT(element);
 	//Get r element
 	this->_rgba[0] = WCSerializeableObject::GetFloatAttrib(element, "r");
 	//Get g element
