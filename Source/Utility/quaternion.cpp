@@ -30,6 +30,8 @@
 #include "Utility/quaternion.h"
 #include "Utility/matrix.h"
 #include "Utility/serializeable_object.h"
+#include "Utility/log_manager.h"
+#include "Utility/assert_exception.h"
 
 
 /***********************************************~***************************************************/
