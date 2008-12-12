@@ -29,6 +29,7 @@
 /*** Inluded Header Files ***/
 #import <Cocoa/Cocoa.h>
 #include "Utility/log_manager.h"
+#include "Kernel/document_type_manager.h"
 #include "Application/dialog_manager.h"
 #include "Application/MacOS/document_controller.h"
 
@@ -37,18 +38,37 @@
 
 
 void InitApplication(void) {
-	//Initialize logger manager
-	WCLogManager::Initialize();
-	//Initialize xml manager
-	xercesc::XMLPlatformUtils::Initialize();
+	try {
+		//Initialize logger manager
+		WCLogManager::Initialize();
+		//Initialize xml manager
+		xercesc::XMLPlatformUtils::Initialize();
+		//Initialize document type manager
+		WCDocumentTypeManager::Initialize();
+
+		//Register base document types
+		//								----Name----------------Description-------------------------Extension-------DTD Filename--------Factory---
+		WCDocumentTypeManager::RegisterType("Part",				"Wildcat Part Document",			"wildPart",		"wildpart.dtd",		NULL);
+		WCDocumentTypeManager::RegisterType("Visualization",	"Wildcat Visualization Document",	"wildVis",		"wildvis.dtd",		NULL);
+	}
+	//Only catch Wildcat exceptions here
+	catch(WCException ex) {
+		std::cerr << "Exception caught in InitApplication: " << ex.what() << std::endl;
+	}
 }
 
 
 void ShutdownApplication(void) {
-	//Terminate the managers
-	WCDialogManager::Terminate();
-	xercesc::XMLPlatformUtils::Terminate();
-	WCLogManager::Terminate();
+	try {
+		//Terminate the managers
+		WCDialogManager::Terminate();
+		xercesc::XMLPlatformUtils::Terminate();
+		WCLogManager::Terminate();
+	}
+	//Only catch Wildcat exceptions here
+	catch(WCException ex) {
+		std::cerr << "Exception caught in ShutdownApplication: " << ex.what() << std::endl;
+	}
 }
 
 
