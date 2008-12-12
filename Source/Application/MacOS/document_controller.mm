@@ -35,6 +35,7 @@
 
 
 /*** Included Header Files ***/
+#include "Kernel/document_type_manager.h"
 #include "Application/dialog_manager.h"
 #include "Application/dialog.h"
 
@@ -51,9 +52,12 @@ public:
 		//See what type of message
 		if (message == "SelectDocType") {
 			std::string docType = this->_dialog->StringFromScript("docType");
+			
 
 			//Lets create a VisDocument
 			NSError *outError = [NSError alloc];
+//			WCDocumentFactory *factory = WCDocumentTypeManager::FactoryFromType(docType);
+//			WCDocument *doc = factory->Create();
 			WCDocument_OSX *document;
 			if (docType == "visDoc") {
 				document = [[WCVisDocument alloc] initWithType:@"Whatever" error:&outError];

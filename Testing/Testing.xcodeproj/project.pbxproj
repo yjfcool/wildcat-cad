@@ -32,7 +32,7 @@
 		585CF2770ED72239003B673B /* WildcatUtility.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WildcatUtility.framework; path = /Library/Frameworks/WildcatUtility.framework; sourceTree = "<absolute>"; };
 		585CF2880ED7231D003B673B /* libxerces-c.28.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libxerces-c.28.0.dylib"; path = "../Dependencies/xerces-c-src_2_8_0/lib/libxerces-c.28.0.dylib"; sourceTree = SOURCE_ROOT; };
 		585CF28D0ED7236A003B673B /* test_vector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_vector.cpp; sourceTree = "<group>"; };
-		585CF2970ED72481003B673B /* UnitTesting */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = UnitTesting; path = build/Debug/UnitTesting; sourceTree = "<group>"; };
+		585CF2970ED72481003B673B /* UnitTesting */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UnitTesting; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

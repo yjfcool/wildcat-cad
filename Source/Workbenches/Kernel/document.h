@@ -134,6 +134,19 @@ public:
 /***********************************************~***************************************************/
 
 
+class WCDocumentFactory {
+public:
+	//Constructors and Destructors
+	WCDocumentFactory()							{ }													//!< Default constructor
+	virtual ~WCDocumentFactory()				{ }													//!< Default destructor
+
+	virtual WCDocument* Create(void)=0;																//!< Mandatory method for document opening
+};
+
+
+/***********************************************~***************************************************/
+
+
 }	   // End Wildcat Namespace
 #endif //__DOCUMENT_H__
 
