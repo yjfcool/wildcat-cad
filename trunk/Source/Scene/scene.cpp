@@ -46,7 +46,7 @@ std::string WCScene::TextureManifest = "texture_manifest.xml";
 /***********************************************~***************************************************/
 
 
-WCScene::WCScene() : :: WCSerializeableObject(), 
+WCScene::WCScene(WCGLContext *copyContext) : :: WCSerializeableObject(), 
 	_glContext(NULL), _shaderManager(NULL), _textureManager(NULL), _fontManager(NULL), _geomContext(NULL), _isDirty(true),
 	_useShadowPass(false), _useSelectionPass(false),
 	_xMin(-1.0), _yMin(-1.0), _xMax(1.0), _yMax(1.0), _width(2.0), _height(2.0), _winWidth(1), _winHeight(1),
@@ -56,21 +56,19 @@ WCScene::WCScene() : :: WCSerializeableObject(),
 	
 	std::string resourcesDirectory = _ResourceDirectory();
 
-	if(WCAdapter::HasGL15())
-	{
+	//Create a new gl Context (copying from a root context if possible)
+	this->_glContext = new WCGLContext(*copyContext);
+	if(WCAdapter::HasGL15()) {
 		//Start new shader manager
 		this->_shaderManager = new WCShaderManager(WCScene::ShaderManifest, resourcesDirectory, false);
 	}
-
 	//Start new texture manager
 	this->_textureManager = new WCTextureManager(WCScene::TextureManifest, resourcesDirectory, false);
-//Platform specific capture of current context
-#ifdef __APPLE__
-	this->_glContext = CGLGetCurrentContext();
-#elif __WIN32__
+	
+#ifdef __WIN32__
 	this->_fontManager = new WCFontManager("", "", false);
-	this->_glContext = NULL;
 #endif
+
 	//Create new geometry context
 	this->_geomContext = new WCGeometryContext(this->_glContext, this->_shaderManager);
 
@@ -114,13 +112,13 @@ WCScene::WCScene(xercesc::DOMElement* element, WCSerialDictionary *dictionary) :
 	this->_shaderManager = new WCShaderManager(WCScene::ShaderManifest, resourcesDirectory, false);
 	//Start new texture manager
 	this->_textureManager = new WCTextureManager(WCScene::TextureManifest, resourcesDirectory, false);
-//Platform specific capture of current context
-#ifdef __APPLE__
-	this->_glContext = CGLGetCurrentContext();
-#elif __WIN32__
+	//Create a new gl Context
+	this->_glContext = new WCGLContext();
+
+#ifdef __WIN32__
 	this->_fontManager = new WCFontManager("", "", false);
-	this->_glContext = NULL;
 #endif
+
 	//Create new geometry context
 	this->_geomContext = new WCGeometryContext(this->_glContext, this->_shaderManager);
 	//Register context guid

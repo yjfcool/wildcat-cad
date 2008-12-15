@@ -434,7 +434,7 @@
 		58DB05A70DA6C085008FF90E /* dialog_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DB05A60DA6C085008FF90E /* dialog_manager.cpp */; };
 		58E3D48C0EF6BFB8003656A8 /* wildcat_kernel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58E3D48B0EF6BFB8003656A8 /* wildcat_kernel.cpp */; };
 		58E3D5610EF6F567003656A8 /* gl_context.h in Headers */ = {isa = PBXBuildFile; fileRef = 58E3D55F0EF6F567003656A8 /* gl_context.h */; };
-		58E3D5620EF6F567003656A8 /* gl_context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58E3D5600EF6F567003656A8 /* gl_context.cpp */; };
+		58E3D5620EF6F567003656A8 /* gl_context_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 58E3D5600EF6F567003656A8 /* gl_context_osx.mm */; };
 		58F156D00D6B15A0008290F7 /* constraint_angle_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36140D68B4B700673AE6 /* constraint_angle_actions.cpp */; };
 		58F156D10D6B15A5008290F7 /* constraint_angle_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36160D68B4B700673AE6 /* constraint_angle_controller.cpp */; };
 		58F156DE0D6B18C4008290F7 /* constraint_angle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36120D68B4B700673AE6 /* constraint_angle.cpp */; };
@@ -1106,7 +1106,7 @@
 		58E3D48A0EF6BFB8003656A8 /* wildcat_kernel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wildcat_kernel.h; path = ../../Source/Workbenches/Kernel/wildcat_kernel.h; sourceTree = SOURCE_ROOT; };
 		58E3D48B0EF6BFB8003656A8 /* wildcat_kernel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wildcat_kernel.cpp; path = ../../Source/Workbenches/Kernel/wildcat_kernel.cpp; sourceTree = SOURCE_ROOT; };
 		58E3D55F0EF6F567003656A8 /* gl_context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gl_context.h; path = ../../Source/Utility/gl_context.h; sourceTree = SOURCE_ROOT; };
-		58E3D5600EF6F567003656A8 /* gl_context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gl_context.cpp; path = ../../Source/Utility/gl_context.cpp; sourceTree = SOURCE_ROOT; };
+		58E3D5600EF6F567003656A8 /* gl_context_osx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = gl_context_osx.mm; path = ../../Source/Utility/gl_context_osx.mm; sourceTree = SOURCE_ROOT; };
 		58F5B4C30E0FFF4200D730F8 /* cci_plM.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = cci_plM.fsh; path = ../../Source/Shaders/cci_plM.fsh; sourceTree = SOURCE_ROOT; };
 		58F5E5160DABF54200DC39A2 /* newListener.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = newListener.html; path = ../../Source/Workbenches/RTVisualization/newListener.html; sourceTree = SOURCE_ROOT; };
 		58F5E51A0DABF65600DC39A2 /* vis_listener_actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_actions.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_actions.h; sourceTree = SOURCE_ROOT; };
@@ -1686,7 +1686,7 @@
 				585F351A0D68B15E00673AE6 /* adapter.cpp */,
 				585F351C0D68B15E00673AE6 /* bounding_object.cpp */,
 				585F351E0D68B15E00673AE6 /* color.cpp */,
-				58E3D5600EF6F567003656A8 /* gl_context.cpp */,
+				58E3D5600EF6F567003656A8 /* gl_context_osx.mm */,
 				585F35200D68B15E00673AE6 /* log_appenders.cpp */,
 				585F35220D68B15E00673AE6 /* log_manager.cpp */,
 				585F35240D68B15E00673AE6 /* matrix.cpp */,
@@ -3651,7 +3651,7 @@
 				582DB3440ED481B500BD61DE /* texture_manager_osx.mm in Sources */,
 				582DB3450ED481B600BD61DE /* utility_osx.mm in Sources */,
 				582DB3460ED481B700BD61DE /* vector.cpp in Sources */,
-				58E3D5620EF6F567003656A8 /* gl_context.cpp in Sources */,
+				58E3D5620EF6F567003656A8 /* gl_context_osx.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

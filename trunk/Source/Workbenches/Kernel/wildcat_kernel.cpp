@@ -34,88 +34,33 @@
 /*** Static Member Initialization ***/ 
 int WCWildcatKernel::_refCount = 0;
 std::string	WCWildcatKernel::_manifest = "";
-WPGLContext WCWildcatKernel::_context = NULL;
-CGLPixelFormatObj WCWildcatKernel::_pixelFormat = NULL;
+WCGLContext* WCWildcatKernel::_context = NULL;
 
 
 /***********************************************~***************************************************/
 
 
 void WCWildcatKernel::CreateContext(void) {
-#ifdef __APPLE__
-	//Create structure with pixel format attributes
-	CGLPixelFormatAttribute attribs[] = {
-										kCGLPFAAccelerated,
-										kCGLPFAColorSize, (CGLPixelFormatAttribute)24,
-										kCGLPFADepthSize, (CGLPixelFormatAttribute)16,
-										kCGLPFADoubleBuffer,
-										(CGLPixelFormatAttribute)0
-									};
-
-	//Create the best possible pixel format
-	GLint numVirtualScreens = 0;
-	CGLError err = CGLChoosePixelFormat(attribs, &WCWildcatKernel::_pixelFormat, &numVirtualScreens);
-	//Do some error checking
-	if ((err != kCGLNoError) || (WCWildcatKernel::_pixelFormat == NULL)) {
-		//Log an error message
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCWildcatKernel::CreateContext - CGLChoosePixelFormat Error: " << err);
-		//Throw exception
-		throw WCException();
+	//Try to create a GL Context
+	try {
+		WCWildcatKernel::_context = new WCGLContext();
+		//Make the context active
+		WCWildcatKernel::_context->MakeActive();
 	}
-	//Check to make sure pixel format is necessary level
-	//...
-
-	//Create the master context
-	err = CGLCreateContext (WCWildcatKernel::_pixelFormat, NULL, &WCWildcatKernel::_context);
-	//Do some error checking
-	if (err != kCGLNoError) {
+	catch (WCException ex) {
 		//Log an error message
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCWildcatKernel::CreateContext - CGLCreateContext Error: " << err);
-		//Throw exception
-		throw WCException();
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCWildcatKernel::CreateContext - Not able to create context");
+		exit(0);
 	}
-	//Destroy the pixel format
-	err = CGLDestroyPixelFormat(WCWildcatKernel::_pixelFormat);
-	//Do some error checking
-	if (err != kCGLNoError) {
-		//Log an error message
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCWildcatKernel::CreateContext - CGLDestroyPixelFormat Error: " << err);
-		//Throw exception
-		throw WCException();		
-	}
-#elif __WIN32__
-	//Windows context creation code
-	//...
-#else
-	//Linux context creation code
-	//...
-#endif
 	//Initialize the adapter
 	WCAdapter::Initialize();
 	//Check to make sure minimum levels are met
+	///...
 }
 
 
 void WCWildcatKernel::DestroyContext(void) {
-#ifdef __APPLE__
-	//Destroy the context
-	if (WCWildcatKernel::_context) {
-		CGLError err = CGLDestroyContext(WCWildcatKernel::_context);
-		//Do some error checking
-		if (err != kCGLNoError) {
-			//Log an error message
-			CLOGGER_ERROR(WCLogManager::RootLogger(), "WCWildcatKernel::DestroyContext - CGLDestroyContext Error: " << err);
-			//Throw exception
-			throw WCException();
-		}
-	}
-#elif __WIN32__
-	//Windows context destruction code
-	//...
-#else
-	//Linux context destruction code
-	//...
-#endif
+
 }
 
 

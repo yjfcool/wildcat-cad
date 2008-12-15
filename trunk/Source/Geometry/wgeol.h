@@ -38,6 +38,7 @@
 #include "Utility/adapter.h"
 #include "Utility/bounding_object.h"
 #include "Utility/color.h"
+#include "Utility/gl_context.h"
 #include "Utility/log_manager.h"
 #include "Utility/matrix.h"
 #include "Utility/object.h"

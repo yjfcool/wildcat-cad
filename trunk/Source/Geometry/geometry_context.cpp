@@ -665,7 +665,7 @@ void WCGeometryContext::StopIntersection(void) {
 /***********************************************~***************************************************/
 
 
-WCGeometryContext::WCGeometryContext(const WPGLContext &context, WCShaderManager *shaderManager) : _glContext(context), _shaderManager(shaderManager) {
+WCGeometryContext::WCGeometryContext(WCGLContext *context, WCShaderManager *shaderManager) : _glContext(context), _shaderManager(shaderManager) {
 	//Check to make sure context and shader manager are valid
 	if (this->_shaderManager == NULL) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::WCGeometryContext - NULL Shader Manager passed."); 

@@ -52,7 +52,7 @@ namespace __WILDCAT_NAMESPACE__ {
 class WCGeometryContext {
 private:
 	//General Context Objects
-	WPGLContext									_glContext;											//!< Pointer to GL context
+	WCGLContext									*_glContext;										//!< Pointer to GL context
 	WCShaderManager								*_shaderManager;									//!< Pointer to shader manager for GL context
 		
 	//NURBS Curve Objects
@@ -108,11 +108,11 @@ private:
 	
 public:
 	//Constructors and Destructors
-	WCGeometryContext(const WPGLContext &context, WCShaderManager *shaderManager);					//!< Primary constructor
+	WCGeometryContext(WCGLContext *context, WCShaderManager *shaderManager);						//!< Primary constructor
 	~WCGeometryContext();																			//!< Default destructor
 	
 	//General Access Methods
-	inline WPGLContext Context(void)			{ return this->_glContext; }						//!< Get the GL context
+	inline WCGLContext* Context(void)			{ return this->_glContext; }						//!< Get the GL context
 	inline WCShaderManager* ShaderManager(void)	{ return this->_shaderManager; }					//!< Get the shader manager
 	
 	//NURBS Curve Access Methods

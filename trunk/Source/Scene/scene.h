@@ -68,7 +68,7 @@ public:
 	
 protected:
 	//General Scene Properties
-	WPGLContext									_glContext;											//!< OpenGL context structure
+	WCGLContext									*_glContext;										//!< OpenGL context object
 	WCShaderManager								*_shaderManager;									//!< Shader manager for the scene
 	WCTextureManager							*_textureManager;									//!< Texture manager for the scene
 	WCFontManager								*_fontManager;										//!< Font manager for the scene
@@ -94,7 +94,8 @@ protected:
 	std::list<WCLightSource*>					_lightSources;										//! List of registered light sources
 
 private:
-	//Access Denied 
+	//Access Denied
+	WCScene();																						//!< Deny access to default constructor
 	WCScene(const WCScene& scene);																	//!< Deny access to copy operator
 	WCScene(const WCScene* scene);																	//!< Deny access to ref copy operator
 	WCScene& operator=(const WCScene& scene);														//!< Deny access to equals operator
@@ -102,7 +103,7 @@ private:
 
 public:
 	//Constructors and Destructors
-	WCScene();																						//!< Default constructor
+	WCScene(WCGLContext *copyContext=NULL);															//!< Primary context
 	WCScene(xercesc::DOMElement* element, WCSerialDictionary *dictionary);							//!< Persistance constructor
 	~WCScene();																						//!< Default destructor
 
@@ -151,7 +152,7 @@ public:
 	void ActiveCamera(WCCamera* camera);															//!< Set the active camera
 	
 	//Manager Methods
-	inline WPGLContext GLContext(void) const			{ return this->_glContext; }				//!< Get the OpenGL context for the scene
+	inline WCGLContext* GLContext(void) const			{ return this->_glContext; }				//!< Get the OpenGL context for the scene
 	inline WCShaderManager* ShaderManager(void) const	{ return this->_shaderManager; }			//!< Get the scene's shader manager
 	inline WCTextureManager* TextureManager(void) const	{ return this->_textureManager; }			//!< Get the scene's texture manager
 	inline WCFontManager* FontManager(void) const		{ return this->_fontManager; }				//!< Get the scene's font manager

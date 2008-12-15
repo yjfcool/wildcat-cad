@@ -29,54 +29,7 @@
 /*** Inluded Header Files ***/
 #import <Cocoa/Cocoa.h>
 #include "Kernel/wildcat_kernel.h"
-//#include "Utility/log_manager.h"
-//#include "Kernel/document_type_manager.h"
-//#include "Application/dialog_manager.h"
 #include "Application/MacOS/document_controller.h"
-
-
-/***********************************************~***************************************************/
-
-
-void InitApplication(void) {
-/*	try {
-		//Initialize logger manager
-		WCLogManager::Initialize();
-		//Initialize xml manager
-		xercesc::XMLPlatformUtils::Initialize();
-		//Initialize document type manager
-		WCDocumentTypeManager::Initialize();
-
-		//Register base document types
-		//								----Name----------------Description-------------------------Extension-------DTD Filename--------Factory---
-		WCDocumentTypeManager::RegisterType("Part",				"Wildcat Part Document",			"wildPart",		"wildpart.dtd",		NULL);
-		WCDocumentTypeManager::RegisterType("Visualization",	"Wildcat Visualization Document",	"wildVis",		"wildvis.dtd",		NULL);
-	}
-	//Only catch Wildcat exceptions here
-	catch(WCException ex) {
-		std::cerr << "Exception caught in InitApplication: " << ex.what() << std::endl;
-	}
-*/
-	//Initialize the Wildcat Kernel
-	WCWildcatKernel::Initialize();
-}
-
-
-void ShutdownApplication(void) {
-/*	try {
-		//Terminate the managers
-		WCDialogManager::Terminate();
-		xercesc::XMLPlatformUtils::Terminate();
-		WCLogManager::Terminate();
-	}
-	//Only catch Wildcat exceptions here
-	catch(WCException ex) {
-		std::cerr << "Exception caught in ShutdownApplication: " << ex.what() << std::endl;
-	}
-*/
-	//Shutdown the Wildcat Kernel
-	WCWildcatKernel::Terminate();
-}
 
 
 /***********************************************~***************************************************/
@@ -116,8 +69,8 @@ void ShutdownApplication(void) {
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification
 {
-	//Shutdown the application
-	ShutdownApplication();
+	//Shutdown the Wildcat Kernel
+	WCWildcatKernel::Terminate();
 }
 
 @end
@@ -128,11 +81,13 @@ void ShutdownApplication(void) {
 
 int main(int argc, char *argv[])
 {
-	//Init the app
-	InitApplication();
+	//Set up an auto-release pool
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+	//Initialize the Wildcat Kernel
+	WCWildcatKernel::Initialize();
 
 	//Begin setting up the App delegate
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	WCAppDelegate *delegate = [[WCAppDelegate alloc] autorelease];
 
 	//Create the main application instance (NSApp is global instance)

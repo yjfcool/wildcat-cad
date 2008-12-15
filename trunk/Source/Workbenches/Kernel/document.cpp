@@ -29,6 +29,7 @@
 /*** Included Header Files ***/
 #include "Kernel/document.h"
 #include "Kernel/action.h"
+#include "Kernel/wildcat_kernel.h"
 #include "Kernel/workbench.h"
 #include "Application/toolbar_manager.h"
 #ifdef __WXWINDOWS__
@@ -115,8 +116,8 @@ WCDocument::WCDocument(WCFeature *creator, const std::string &name, const std::s
 
 	//If this is root document
 	if (this->_document == NULL) {
-		//Create scene for the document
-		this->_scene = new WCScene();
+		//Create scene for the document (copy from the base context)
+		this->_scene = new WCScene( WCWildcatKernel::Context() );
 		//Create named views
 		this->AddView( WCNamedView("Front", WCQuaternion(DOCUMENT_NAMEDVIEW_FRONT)) );
 		this->AddView( WCNamedView("Back", WCQuaternion(DOCUMENT_NAMEDVIEW_BACK)) );

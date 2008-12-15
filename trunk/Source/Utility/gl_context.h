@@ -51,10 +51,18 @@ namespace __WILDCAT_NAMESPACE__ {
 	
 class WCGLContext {
 private:
-	WCGLContext_Bridge							*_bridge;											//!< GL Context bridge
+	void*										_context;											//!< GL Context base object
+	//Hidden Constructors
+	WCGLContext& operator=(const WCGLContext &context);												//!< Deny access to context equation
 public:
 	//Constructors and Destructors
 	WCGLContext();																					//!< Default constructor
+	WCGLContext(const WCGLContext &context);														//!< Share the context
+	~WCGLContext();																					//!< Default destructor
+
+	//Methods
+	bool IsActive(void);																			//!< See if context is active
+	void MakeActive(void);																			//!< Make the context active
 };
 
 
