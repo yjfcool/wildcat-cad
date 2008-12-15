@@ -49,7 +49,6 @@ namespace __WILDCAT_NAMESPACE__ {
 /***********************************************~***************************************************/
 
 
-
 class WCColor {
 private:
 	GLfloat										_rgba[4];											//!< Four consecutive GLfloat elements

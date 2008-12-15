@@ -28,9 +28,10 @@
 
 /*** Inluded Header Files ***/
 #import <Cocoa/Cocoa.h>
-#include "Utility/log_manager.h"
-#include "Kernel/document_type_manager.h"
-#include "Application/dialog_manager.h"
+#include "Kernel/wildcat_kernel.h"
+//#include "Utility/log_manager.h"
+//#include "Kernel/document_type_manager.h"
+//#include "Application/dialog_manager.h"
 #include "Application/MacOS/document_controller.h"
 
 
@@ -38,7 +39,7 @@
 
 
 void InitApplication(void) {
-	try {
+/*	try {
 		//Initialize logger manager
 		WCLogManager::Initialize();
 		//Initialize xml manager
@@ -55,11 +56,14 @@ void InitApplication(void) {
 	catch(WCException ex) {
 		std::cerr << "Exception caught in InitApplication: " << ex.what() << std::endl;
 	}
+*/
+	//Initialize the Wildcat Kernel
+	WCWildcatKernel::Initialize();
 }
 
 
 void ShutdownApplication(void) {
-	try {
+/*	try {
 		//Terminate the managers
 		WCDialogManager::Terminate();
 		xercesc::XMLPlatformUtils::Terminate();
@@ -69,6 +73,9 @@ void ShutdownApplication(void) {
 	catch(WCException ex) {
 		std::cerr << "Exception caught in ShutdownApplication: " << ex.what() << std::endl;
 	}
+*/
+	//Shutdown the Wildcat Kernel
+	WCWildcatKernel::Terminate();
 }
 
 
@@ -109,7 +116,8 @@ void ShutdownApplication(void) {
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification
 {
-	//Do nothing for now...
+	//Shutdown the application
+	ShutdownApplication();
 }
 
 @end
@@ -135,11 +143,8 @@ int main(int argc, char *argv[])
 	//Run the main loop
 	[NSApp run];
 
-	//Shutdown the application
-	ShutdownApplication();
 	//Clean up the autoreleaes pool
 	[pool release];
-
 	//Exit the application
 	return 1;
 }
