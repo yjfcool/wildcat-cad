@@ -136,6 +136,7 @@ std::list<WCIntersectionResult> __WILDCAT_NAMESPACE__::GeometricIntersection(WCN
 	left->GenerateTextureBuffers(0.0, 1.0, lodU, 0.0, 1.0, lodV, textures, true);
 	GLuint vertexTex = textures.at(NURBSSURFACE_VERTEX_BUFFER);
 	GLuint indexTex = textures.at(NURBSSURFACE_INDEX_BUFFER);
+	if (vertexTex == indexTex) { }
 	//Set program values
 	glUseProgram(left->Context()->SurfaceLineProgram());
 	glUniform3f(left->Context()->IntersectionLocations()[INTERSECTION_SLI_PARAMS], (GLfloat)lodU, (GLfloat)lodV, (GLfloat)tol);

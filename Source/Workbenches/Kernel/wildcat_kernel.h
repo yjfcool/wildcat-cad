@@ -54,8 +54,7 @@ private:
 	//Static Members
 	static int									_refCount;											//!< Reference count for startup-Terminate
 	static std::string							_manifest;											//!< Name of the document type manifest
-	static WPGLContext							_context;											//!< Master OpenGL context
-	static CGLPixelFormatObj					_pixelFormat;										//!< Master OpenGL pixel format
+	static WCGLContext							*_context;											//!< Master OpenGL context
 	//Static Methods
 	static void CreateContext(void);																//!<
 	static void DestroyContext(void);																//!<
@@ -71,6 +70,9 @@ public:
 	static bool Started(void)					{ return WCWildcatKernel::_refCount > 0; }			//!< Check to see if the kernel has been started
 	static bool Initialize(const std::string &manifest="");											//!< Initialize the manager with a manifest
 	static bool Terminate(void);																	//!< Terminate the logger
+
+	//Member Access Methods
+	inline static WCGLContext* Context(void)	{ return WCWildcatKernel::_context; }				//!< Get the base context
 };
 
 
