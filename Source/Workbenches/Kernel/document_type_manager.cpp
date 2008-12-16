@@ -110,8 +110,15 @@ bool WCDocumentTypeManager::RegisterType(const std::string &name, const std::str
 
 
 WCDocumentFactory*  WCDocumentTypeManager::FactoryFromType(const std::string &extension) {
-	//Do something here...
-	return NULL;
+	//See if the extension can be found
+	std::map<std::string,WSDocType>::iterator iter = WCDocumentTypeManager::_docTypeMap.find(extension);
+	//Was it not found
+	if (iter == WCDocumentTypeManager::_docTypeMap.end()) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDocumentTypeManager::FactoryFromType - Failed to find extension: " << extension << ".");
+		throw WCException();
+	}
+	//Must have found it, return the factory pointer
+	return (*iter).second.Factory;
 }
 
 

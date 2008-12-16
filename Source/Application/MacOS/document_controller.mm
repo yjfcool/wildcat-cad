@@ -59,10 +59,10 @@ public:
 //			WCDocumentFactory *factory = WCDocumentTypeManager::FactoryFromType(docType);
 //			WCDocument *doc = factory->Create();
 			WCDocument_OSX *document;
-			if (docType == "visDoc") {
+			if (docType == "wildVis") {
 				document = [[WCVisDocument alloc] initWithType:@"Whatever" error:&outError];
 			}
-			if (docType == "partDoc") {
+			if (docType == "wildPart") {
 				document = [[WCPartDocument alloc] initWithType:@"Whatever" error:&outError];
 			}
 			//Make sure document was created

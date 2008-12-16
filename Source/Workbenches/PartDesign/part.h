@@ -145,6 +145,22 @@ public:
 
 /***********************************************~***************************************************/
 
+	
+class WCPartDocumentFactory : public WCDocumentFactory {
+public:
+	//Constructors and Destructors
+	WCPartDocumentFactory()						{ }													//!< Default constructor
+	virtual ~WCPartDocumentFactory()			{ }													//!< Default destructor
+	//Mandatory Factory Methods
+	virtual WCPart* Create(const std::string &name, const std::string &filename) {					//!< Mandatory method for document creation
+												return new WCPart(name, filename); }
+	virtual WCPart* Open(xercesc::DOMElement *element, WCSerialDictionary *dictionary) {			//!< Mandatory method for document opening
+												return new WCPart(element, dictionary); }
+};
+
+
+/***********************************************~***************************************************/
+	
 
 }	   // End Wildcat Namespace
 #endif //__PART_H__
