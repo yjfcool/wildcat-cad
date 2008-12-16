@@ -29,6 +29,8 @@
 /*** Included Header Files ***/
 #include "Kernel/wildcat_kernel.h"
 #include "Kernel/document_type_manager.h"
+#include "PartDesign/part.h"
+#include "RTVisualization/visualization.h"
 
 
 /*** Static Member Initialization ***/ 
@@ -86,8 +88,8 @@ bool WCWildcatKernel::Initialize(const std::string &manifest) {
 		WCDocumentTypeManager::Initialize();
 		//Register base document types
 		//								----Name----------------Description-------------------------Extension-------DTD Filename--------Factory---
-//		WCDocumentTypeManager::RegisterType("Part",				"Wildcat Part Document",			"wildPart",		"wildpart.dtd",		NULL);
-//		WCDocumentTypeManager::RegisterType("Visualization",	"Wildcat Visualization Document",	"wildVis",		"wildvis.dtd",		NULL);
+		WCDocumentTypeManager::RegisterType("Part",				"Wildcat Part Document",			"wildPart",		"wildpart.dtd",		new WCPartDocumentFactory());
+		WCDocumentTypeManager::RegisterType("Visualization",	"Wildcat Visualization Document",	"wildVis",		"wildvis.dtd",		new WCVisDocumentFactory());
 
 		//Create primary OpenGL context
 		WCWildcatKernel::CreateContext();

@@ -139,8 +139,10 @@ public:
 	//Constructors and Destructors
 	WCDocumentFactory()							{ }													//!< Default constructor
 	virtual ~WCDocumentFactory()				{ }													//!< Default destructor
+	//Mandatory Methods
+	virtual WCDocument* Create(const std::string &name, const std::string &filename)=0;				//!< Mandatory method for document creation
+	virtual WCDocument* Open(xercesc::DOMElement *element, WCSerialDictionary *dictionary)=0;		//!< Mandatory method for document opening
 
-	virtual WCDocument* Create(void)=0;																//!< Mandatory method for document opening
 };
 
 

@@ -53,7 +53,8 @@
 }
 
 
-- (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
+- (void)applicationWillFinishLaunching:(NSNotification *)aNotification
+{
 	//Initialize the dialog manager (must be here because needs Bundle to be active for resource directory path)
 	WCDialogManager::Initialize("dialog_manifest.xml", false);
 	//Create the default document controller

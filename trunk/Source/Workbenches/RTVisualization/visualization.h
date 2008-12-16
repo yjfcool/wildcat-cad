@@ -159,6 +159,22 @@ public:
 
 /***********************************************~***************************************************/
 
+	
+class WCVisDocumentFactory : public WCDocumentFactory {
+public:
+	//Constructors and Destructors
+	WCVisDocumentFactory()						{ }													//!< Default constructor
+	virtual ~WCVisDocumentFactory()				{ }													//!< Default destructor
+	//Mandatory Factory Methods
+	virtual WCVisualization* Create(const std::string &name, const std::string &filename) {			//!< Mandatory method for document creation
+												return new WCVisualization(name, filename); }
+	virtual WCVisualization* Open(xercesc::DOMElement *element, WCSerialDictionary *dictionary) {	//!< Mandatory method for document opening
+												return new WCVisualization(element, dictionary); }
+};
+
+
+/***********************************************~***************************************************/
+
 
 }	   // End Wildcat Namespace
 #endif //__VISUALIZATION_H__
