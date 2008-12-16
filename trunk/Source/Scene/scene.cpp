@@ -53,11 +53,12 @@ WCScene::WCScene(WCGLContext *copyContext) : :: WCSerializeableObject(),
 	_projectionInverse(true), _mouseX(0.0), _mouseY(0.0), _activeCamera(NULL), _defaultCamera(NULL),
 	_firstResponder(NULL), _cameraLayer(NULL), _topLayer(NULL), _bottomLayer(NULL),
 	_frameTickObject(NULL) {
-	
 	std::string resourcesDirectory = _ResourceDirectory();
-
-	//Create a new gl Context (copying from a root context if possible)
+	//Make sure there is a context to copy
+	ASSERT(copyContext);
+	//Create a new gl Context (copying from a root context)
 	this->_glContext = new WCGLContext(*copyContext);
+	//Check to see if GL1.5 is present
 	if(WCAdapter::HasGL15()) {
 		//Start new shader manager
 		this->_shaderManager = new WCShaderManager(WCScene::ShaderManifest, resourcesDirectory, false);

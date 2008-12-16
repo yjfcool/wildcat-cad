@@ -41,10 +41,19 @@
 /***********************************************~***************************************************/
 
 
-@interface WCOpenGLView : NSOpenGLView
+//@interface WCOpenGLView : NSOpenGLView
+@interface WCOpenGLView : NSView
 {
-	WCDocument_OSX								*_document;											//!<
+	WCDocument_OSX								*_document;											//!< Parent document
+	NSOpenGLContext								*_context;
+	
 }
+
+- (id)initWithFrame:(NSRect)frameRect;																//!<
+- (void)setOpenGLContext:(NSOpenGLContext*)context;													//!<
+- (NSOpenGLContext*)openGLContext;																	//!<
+- (void)clearGLContext;																				//!<
+//- (void)update;																						//!<
 
 /*** Document Methods ***/
 - (void)setDocument:(WCDocument_OSX*)doc;															//!< Set the associated document
