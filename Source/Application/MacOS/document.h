@@ -58,7 +58,7 @@
 }
 
 /*** Event Methods ***/
-- (void)onInitOpenGL;
+//- (void)onInitOpenGL;
 - (void)onBecomeKey;
 - (void)onResignKey;
 - (void)onDisplay;

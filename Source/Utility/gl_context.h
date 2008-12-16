@@ -63,6 +63,7 @@ public:
 	//Methods
 	bool IsActive(void);																			//!< See if context is active
 	void MakeActive(void);																			//!< Make the context active
+	inline void* Context(void)					{ return this->_context; }							//!< Get the base context
 };
 
 

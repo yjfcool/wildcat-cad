@@ -33,8 +33,10 @@
 
 /*** Included Header Files ***/
 #include "Kernel/document.h"
+#include "Kernel/document_type_manager.h"
 #include "Kernel/workbench.h"
 #include "Kernel/selection_mode.h"
+
 
 
 /***********************************************~***************************************************/
@@ -43,7 +45,7 @@
 @implementation WCDocument_OSX
 
 
-- (id)init
+- (id)initWithType:(NSString *)typeName error:(NSError **)outError
 {
 	//Do the cocoa thing
     self = [super init];
@@ -51,10 +53,33 @@
     if (self) {
 		//Initialize remaining variables
 		_renderWindow = nil;
-		_document = NULL;
+
+		//Convert typename to string
+		const char* cString = [typeName cStringUsingEncoding:NSUTF8StringEncoding];
+		//Create the string value
+		std::string docType(cString);
+		//Get the appropraite factory
+		WCDocumentFactory *factory = WCDocumentTypeManager::FactoryFromType(docType);
+		//Create the document type
+		_document = factory->Create("", "");
+
 		//Do not create an OSX undo manager
 		[self setHasUndoManager:NO];
     }
+	//Return reference to self
+    return self;
+}
+
+
+- (id)initWithContentsOfURL:(NSURL*)absoluteURL ofType:(NSString*)typeName error:(NSError**)outError
+{
+	ASSERT(TRUE);
+	//Do the cocoa thing
+    self = [super init];
+	//Get the specified path for the file
+//	NSString* path = [absoluteURL path];
+	//Set filePath as a flag for loading (see onInitOpenGL)
+//	_filePath = new std::string( [path cStringUsingEncoding:NSUTF8StringEncoding] );
 	//Return reference to self
     return self;
 }
@@ -66,14 +91,41 @@
 	[super close];
 	//Close and release render window
 	[_renderWindow release];
+	//Delete the Wildcat document
+	delete _document;
 }
 
 
 - (void)makeWindowControllers {
 	//Create a render window.
 	_renderWindow = [[WCRenderWindow alloc] initWithDocument:self];
+	//Cast void* pointer to proper NSOpenGLContext* pointer
+	NSOpenGLContext *context = (NSOpenGLContext*)_document->Scene()->GLContext()->Context();
+	//Need to set context in renderwindow OpenGL view
+	[[_renderWindow renderView] setOpenGLContext:context];
 	//Add as window controller
 	[self addWindowController:_renderWindow];
+	//Show the window (and make key)
+	[[_renderWindow window] makeKeyAndOrderFront:_renderWindow];
+}
+
+
+- (BOOL)writeToURL:(NSURL*)absoluteURL ofType:(NSString*)typeName error:(NSError**)outError
+{
+	//Get the specified path for saving the file to
+	NSString* path = [absoluteURL path];
+	std::string fullPath( [path cStringUsingEncoding:NSUTF8StringEncoding] );
+	//Call to the root document to save
+	_document->ActiveWorkbench()->SaveAs(fullPath);
+	//Assume is successful
+    return YES;
+}
+
+
+- (BOOL)isDocumentEdited
+{
+	//Need to actually check _document to see
+	return NO;
 }
 
 
@@ -91,6 +143,7 @@
 //}
 
 
+/*
 - (void)onInitOpenGL
 {
 	//Make renderView OpenGL context active
@@ -114,6 +167,7 @@
 		exit(0);
 	}
 }
+*/
 
 
 - (void)onBecomeKey
@@ -301,6 +355,12 @@
 
 - (void)onWindowWillClose
 {
+}
+
+
+- (NSString*)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData
+{
+	return @"";
 }
 
 

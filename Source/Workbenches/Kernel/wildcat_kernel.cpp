@@ -74,12 +74,12 @@ bool WCWildcatKernel::Initialize(const std::string &manifest) {
 	//If already initialized, exit
 	if (WCWildcatKernel::_refCount > 1) return true;
 
-	std::cout << "WCWildcatKernel::Initializing...\n";
 	try {
 		//Parse the manifest
 		//...
 		//Initialize logger manager
 		WCLogManager::Initialize();
+		CLOGGER_WARN(WCLogManager::RootLogger(), "WCWildcatKernel::Initializing.");
 		//Initialize xml manager
 		xercesc::XMLPlatformUtils::Initialize();
 		//Try to grab lock file

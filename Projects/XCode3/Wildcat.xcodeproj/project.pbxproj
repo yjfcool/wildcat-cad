@@ -409,7 +409,6 @@
 		588D9CA00DAFDE8200BDDE8D /* opengl_view.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B40D68B69D00673AE6 /* opengl_view.mm */; };
 		588D9CA20DAFDE8D00BDDE8D /* render_window.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B80D68B69D00673AE6 /* render_window.mm */; };
 		588D9CA40DAFDE9800BDDE8D /* vis_document.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5849B6270DA28D6C0031E7CC /* vis_document.mm */; };
-		588D9CA50DAFDE9800BDDE8D /* part_document.mm in Sources */ = {isa = PBXBuildFile; fileRef = 585F36B60D68B69D00673AE6 /* part_document.mm */; };
 		5890DC3A0E65C8030038BBC4 /* part_pad_dialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5890DC390E65C8030038BBC4 /* part_pad_dialog.xib */; };
 		5890DC3E0E65CD7C0038BBC4 /* part_pad_dialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5890DC3D0E65CD7C0038BBC4 /* part_pad_dialog.mm */; };
 		589AC2190D73404F001725D0 /* constraint_coincidence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361C0D68B4B700673AE6 /* constraint_coincidence.cpp */; };
@@ -3852,7 +3851,6 @@
 				588D9CA00DAFDE8200BDDE8D /* opengl_view.mm in Sources */,
 				588D9CA20DAFDE8D00BDDE8D /* render_window.mm in Sources */,
 				588D9CA40DAFDE9800BDDE8D /* vis_document.mm in Sources */,
-				588D9CA50DAFDE9800BDDE8D /* part_document.mm in Sources */,
 				5850276B0E08107300BF2CBB /* topology_model.cpp in Sources */,
 				585027840E08270700BF2CBB /* topology_slice.cpp in Sources */,
 				585027860E08273100BF2CBB /* topology_intersect.cpp in Sources */,

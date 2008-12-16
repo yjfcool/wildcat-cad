@@ -30,12 +30,11 @@
 #import "Application/MacOS/document_controller.h"
 #import "Application/MacOS/document.h"
 
-#import "Application/MacOS/part_document.h"
-#import "Application/MacOS/vis_document.h"
+//#import "Application/MacOS/part_document.h"
+//#import "Application/MacOS/vis_document.h"
 
 
 /*** Included Header Files ***/
-#include "Kernel/document_type_manager.h"
 #include "Application/dialog_manager.h"
 #include "Application/dialog.h"
 
@@ -51,20 +50,19 @@ public:
 	virtual void ReceiveMessage(const std::string &message) {										//!< Receive message from a dialog
 		//See what type of message
 		if (message == "SelectDocType") {
+			//Get the document type selected
 			std::string docType = this->_dialog->StringFromScript("docType");
-			
-
-			//Lets create a VisDocument
+			//Convert from std::string to NSString
+			NSString *docTypeStr = [NSString stringWithCString:docType.c_str() encoding:NSUTF8StringEncoding];
+			//Lets create a Document object
 			NSError *outError = [NSError alloc];
-//			WCDocumentFactory *factory = WCDocumentTypeManager::FactoryFromType(docType);
-//			WCDocument *doc = factory->Create();
-			WCDocument_OSX *document;
-			if (docType == "wildVis") {
-				document = [[WCVisDocument alloc] initWithType:@"Whatever" error:&outError];
-			}
-			if (docType == "wildPart") {
-				document = [[WCPartDocument alloc] initWithType:@"Whatever" error:&outError];
-			}
+			WCDocument_OSX *document = [[WCDocument_OSX alloc] initWithType:docTypeStr error:&outError];
+//			if (docType == "wildVis") {
+//				document = [[WCVisDocument alloc] initWithType:@"Whatever" error:&outError];
+//			}
+//			if (docType == "wildPart") {
+//				document = [[WCPartDocument alloc] initWithType:@"Whatever" error:&outError];
+//			}
 			//Make sure document was created
 			if (document == nil) {
 				//Close the dialog

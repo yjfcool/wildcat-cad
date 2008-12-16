@@ -43,7 +43,6 @@
     self = [super initWithWindowNibName:@"RenderWindow"];
 	//Set the document
 	_doc = document;
-
 	//Setup remaining attributes
 	[[self window] setDelegate:self];
 	//Return self
@@ -60,6 +59,8 @@
 
 - (void)windowDidLoad
 {
+	//Make sure there is a renderView
+	ASSERT(_renderView);
 	//Do the Cocoa thing
 	[super windowDidLoad];
 	//Set the init status text
@@ -71,15 +72,6 @@
 	[_renderView addToolTipRect:[_renderView frame] owner:_doc userData:nil];
 	//Try calling to idle
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"OnIdleEvent" object:self];
-
-	//Try to get main menu
-//	NSMenu *menu = [[NSApplication sharedApplication] mainMenu];
-//	[[NSApplication sharedApplication] setWindowsMenu:menu];
-//	[menu setAutoenablesItems:NO];
-//	NSMenuItem *undo = [menu itemWithTitle:@"Undo"];
-//	NSMenuItem *redo = [menu itemWithTitle:@"Redo"];
-//	[undo setEnabled:YES];
-//	[redo setEnabled:YES];
 }
 
 

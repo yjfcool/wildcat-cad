@@ -124,8 +124,12 @@ bool WCGLContext::IsActive(void) {
 
 void WCGLContext::MakeActive(void) {
 	//Just call to the underlying context
-	if (this->_context)
-		[(NSOpenGLContext*)this->_context makeCurrentContext];
+	if (this->_context) {
+		//Cast to the proper type
+		NSOpenGLContext *context = (NSOpenGLContext*)this->_context;
+		//Make this context current
+		[context makeCurrentContext];
+	}
 }
 
 
