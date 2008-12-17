@@ -475,6 +475,8 @@ WCAlignedBoundingBox WCScene::BoundingBox(void) {
 
 
 void WCScene::Render(void) {
+	//Make sure the context is active
+	this->_glContext->MakeActive();
 	//Mark the scene as clean
 	this->_isDirty = false;
 	GLenum err;
@@ -498,6 +500,9 @@ void WCScene::Render(void) {
 	}
 	//Call frametick if present
 	if (this->_frameTickObject != NULL) (*this->_frameTickObject)();
+	//Flush the context
+	this->_glContext->FlushBuffer();
+
 	//Check for GL errors
 	err = glGetError();
 	if (err != GL_NO_ERROR)

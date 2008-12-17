@@ -53,7 +53,7 @@
 - (void)setOpenGLContext:(NSOpenGLContext*)context;													//!<
 - (NSOpenGLContext*)openGLContext;																	//!<
 - (void)clearGLContext;																				//!<
-//- (void)update;																						//!<
+- (void)update;																						//!<
 
 /*** Document Methods ***/
 - (void)setDocument:(WCDocument_OSX*)doc;															//!< Set the associated document
