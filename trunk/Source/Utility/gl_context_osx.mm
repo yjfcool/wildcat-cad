@@ -42,9 +42,11 @@ WCGLContext::WCGLContext() : _context(NULL) {
 	{
 		NSOpenGLPFADoubleBuffer,
 		NSOpenGLPFAColorSize, 32,
-		NSOpenGLPFADepthSize, 16,
+		NSOpenGLPFADepthSize, 32,
 		NSOpenGLPFAAccelerated,
-		0
+		NSOpenGLPFASampleBuffers, 1,
+		NSOpenGLPFASampleAlpha,
+		0		
 	};
 	//Create the best possible pixel format
 	NSOpenGLPixelFormat* pixFmt = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
@@ -78,8 +80,10 @@ WCGLContext::WCGLContext(const WCGLContext &context) : _context(NULL) {
 	{
 		NSOpenGLPFADoubleBuffer,
 		NSOpenGLPFAColorSize, 32,
-		NSOpenGLPFADepthSize, 16,
+		NSOpenGLPFADepthSize, 32,
 		NSOpenGLPFAAccelerated,
+		NSOpenGLPFASampleBuffers, 1,
+		NSOpenGLPFASampleAlpha,		
 		0
 	};
 	//Create the best possible pixel format
@@ -130,6 +134,16 @@ void WCGLContext::MakeActive(void) {
 		//Make this context current
 		[context makeCurrentContext];
 	}
+}
+
+
+void WCGLContext::FlushBuffer(void) {
+	//Make sure there is a base context
+	ASSERT(this->_context);
+	//Cast to the proper type
+	NSOpenGLContext *context = (NSOpenGLContext*)this->_context;
+	//Flush the buffer
+	[context flushBuffer];
 }
 
 

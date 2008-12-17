@@ -46,7 +46,8 @@ WCPart::WCPart(std::string name, std::string filename) : ::WCDocument(NULL, name
 	_featureMap(), _featureList(), _workbench(NULL), _currentBody(NULL),
 	_pointLayer(NULL), _lineLayer(NULL), _curveLayer(NULL), _surfaceLayer(NULL),
 	_pointMap(), _lineMap(), _curveMap(), _surfaceMap(), _topologyModel(NULL) {
-
+	//Set up default surface renderer
+	WCPartFeature::DefaultSurfaceRenderer = this->_scene->ShaderManager()->ProgramFromName("scn_basiclight");
 	//Check feature name
 	if (this->_name == "") this->_name = this->RootName() + ".1";
 	//Create event handler

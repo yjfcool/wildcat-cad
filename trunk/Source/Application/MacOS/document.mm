@@ -36,7 +36,7 @@
 #include "Kernel/document_type_manager.h"
 #include "Kernel/workbench.h"
 #include "Kernel/selection_mode.h"
-
+#include "Application/keymap.h"
 
 
 /***********************************************~***************************************************/
@@ -62,7 +62,6 @@
 		WCDocumentFactory *factory = WCDocumentTypeManager::FactoryFromType(docType);
 		//Create the document type
 		_document = factory->Create("", "");
-
 		//Do not create an OSX undo manager
 		[self setHasUndoManager:NO];
     }
@@ -103,6 +102,7 @@
 	NSOpenGLContext *context = (NSOpenGLContext*)_document->Scene()->GLContext()->Context();
 	//Need to set context in renderwindow OpenGL view
 	[[_renderWindow renderView] setOpenGLContext:context];
+	[_renderWindow windowDidResize:nil];
 	//Add as window controller
 	[self addWindowController:_renderWindow];
 	//Show the window (and make key)
@@ -136,40 +136,6 @@
 }
 
 
-//- (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
-//{
-//	NSLog(@"WCDocument_OSX::dataOfType - Should not be here.");
-//    return YES;
-//}
-
-
-/*
-- (void)onInitOpenGL
-{
-	//Make renderView OpenGL context active
-	NSOpenGLContext *context = [[_renderWindow renderView] openGLContext];
-	[context makeCurrentContext];
-
-	//Check OpenGL extensions
-	WCAdapter::Initialize();
-	bool pass = true;
-	if (!WCAdapter::HasGL20())						{ CLOGGER_ERROR(WCLogManager::RootLogger(), "OpenGL 2.0 not supported"); pass = false; }
-	if (!WCAdapter::HasGLARBFragmentShader())		{ CLOGGER_ERROR(WCLogManager::RootLogger(), "ARB_Fragment_Shader not supported"); pass = false; }
-	if (!WCAdapter::HasGLARBShadingLanguage100())	{ CLOGGER_ERROR(WCLogManager::RootLogger(), "ARB_Shading_Language_100 not supported"); pass = false; }
-	if (!WCAdapter::HasGLARBTextureRectangle())		{ CLOGGER_ERROR(WCLogManager::RootLogger(), "ARB_Texture_Rectangle not supported"); pass = false; }
-	if (!WCAdapter::HasGLEXTFramebufferObject())	{ CLOGGER_ERROR(WCLogManager::RootLogger(), "EXT_Frame_Buffer_Object not supported"); pass = false; }
-	//See if passed
-	if (!pass) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "InitApplication Error - Your graphics card does not support needed extensions");
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "Version: " << glGetString(GL_VERSION));
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "Renderer: " << glGetString(GL_RENDERER));
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "Extensions: " << glGetString(GL_EXTENSIONS));
-		exit(0);
-	}
-}
-*/
-
-
 - (void)onBecomeKey
 {
 	//Establish timer to handle idle loop
@@ -195,13 +161,10 @@
 
 - (void)onDisplay
 {
-	NSOpenGLContext *context = [[_renderWindow renderView] openGLContext];
-	//Make the context active
-	[context makeCurrentContext];
+	//Make sure there is a document
+	ASSERT(_document);
 	//Draw the part
 	_document->ActiveWorkbench()->Render();
-	//Flush the context
-	[context flushBuffer];
 	
 	//Set the status text in the render window
 	std::string statusText = "Status: " + _document->Status();
@@ -221,10 +184,11 @@
  
 - (void)onResize:(NSSize)size
 {
+	//Make sure there is a document
+	ASSERT(_document);
 	//Get the new renderView width and height
 	int width = (int)size.width;
 	int height = (int)size.height;
-
 	//Set the window width and height parameters
 	_document->ActiveWorkbench()->OnReshape(width, height);
 	//Render the doc if it's dirty
@@ -234,6 +198,8 @@
 
 - (void)onIdle
 {
+	//Make sure there is a document
+	ASSERT(_document);
 	//Call Idle method
 	_document->ActiveWorkbench()->OnIdle();
 	//Render the doc if it's dirty
@@ -243,6 +209,8 @@
 
 - (void)onMousePress:(NSEvent*)theEvent
 {
+	//Make sure there is a document
+	ASSERT(_document);
 	//See if modifier keys are pressed
 	if ([theEvent modifierFlags] & NSControlKeyMask)
 		_document->ActiveWorkbench()->OnPanPress();
@@ -275,6 +243,8 @@
 
 - (void)onMouseRelease:(NSEvent*)theEvent
 {
+	//Make sure there is a document
+	ASSERT(_document);
 	//Clear modifiers if necessary
 	if (_document->ActiveWorkbench()->IsPan()) _document->ActiveWorkbench()->OnPanRelease();
 	if (_document->ActiveWorkbench()->IsRotate()) _document->ActiveWorkbench()->OnRotateRelease();
@@ -303,6 +273,8 @@
 
 - (void)onScrollWheel:(NSEvent *)theEvent
 {
+	//Make sure there is a document
+	ASSERT(_document);
 	//Pass scrollWheel event on to the document
 	_document->ActiveWorkbench()->OnScroll((WPFloat)[theEvent deltaX], (WPFloat)[theEvent deltaY]);
 	//Render the part if it's dirty
@@ -312,6 +284,8 @@
 
 - (void)onMouseMoveXPosition:(int)x withYPosition:(int)y
 {
+	//Make sure there is a document
+	ASSERT(_document);
 	//React to a mouse movement
 	_document->ActiveWorkbench()->OnMouseMove(x, y);
 	//Render the part if it's dirty
@@ -321,8 +295,35 @@
 
 - (bool)onKeyPress:(NSEvent*)theEvent
 {
-	//Get the pressed keys (without any modifiers)
+	//Make sure there is a document
+	ASSERT(_document);
+	//Otherwise, get event key & modifiers
+	NSUInteger modifiers = [theEvent modifierFlags];
+	bool control = modifiers & NSControlKeyMask;
+	bool option = modifiers & NSAlternateKeyMask;
+	bool alt = modifiers & NSAlternateKeyMask;
+	bool command = modifiers & NSCommandKeyMask;
+	bool esc = false;
 	NSString *keys = [theEvent charactersIgnoringModifiers];
+	
+	//Are there any that we want to handle here
+	//Nothing for now...
+	
+	//Create the key event
+	WCKeyEvent event([keys characterAtIndex:0], control, option, alt, command, esc);
+	//Get the message for the event
+	WCUserMessage message = _document->ActiveWorkbench()->KeyMap()->MessageFromKeyEvent( event );
+	//If no message return false
+	if (message != "") {
+		//Pass the message to the document
+		_document->ActiveWorkbench()->OnUserMessage(message);
+		//Check to see if is dirty
+		if (_document->IsVisualDirty()) [self onDisplay];
+		//Return true
+		return true;
+	}
+
+	//Try default behavior 
 	switch([keys characterAtIndex:0]) {
 		//Capture arrow keys
 		case NSUpArrowFunctionKey:		_document->Scene()->OnArrowKeyPress(WCArrowKey::Up()); return true; break;

@@ -84,6 +84,8 @@
 
 - (void)windowDidResize:(NSNotification*)notification
 {
+	//Update the renderView
+	[_renderView update];
 	//Call resize on the document
 	[_doc onResize:[_renderView frame].size];
 }
