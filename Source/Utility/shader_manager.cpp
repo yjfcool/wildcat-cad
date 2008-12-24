@@ -437,7 +437,7 @@ GLuint WCShaderManager::ShaderFromName(const std::string &name) {
 	//See if you found anything
 	if( iter == this->_shaderMap.end() ) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::ShaderFromName - Unable to find shader: " << name);
-		return 0;
+		throw WCException("WCShaderManager::ShaderFromName - Unable to find shader: " + name);
 	}
 	//Otherwise, get the object ID
 	return (*iter).second->_id;
@@ -450,7 +450,7 @@ GLuint WCShaderManager::ProgramFromName(const std::string &name) {
 	//See if you found anything
 	if( iter == this->_programMap.end() ) {
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::ProgramFromName - Unable to find program: " << name);
-		return 0;
+		throw WCException("WCShaderManager::ProgramFromName - Unable to find program: " + name);
 	}
 	//Otherwise, get the object ID
 	return (*iter).second->_id;
@@ -468,7 +468,7 @@ std::string WCShaderManager::NameFromProgramID(const GLuint &id) {
 	}
 	//No match, return empty string
 	CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::NameFromProgramID - Unable to find program: " << id);
-	return "";
+	throw WCException("WCShaderManager::NameFromProgramID - Unable to find program: " + id);
 }
 
 	

@@ -58,6 +58,7 @@ WCScene::WCScene(WCGLContext *copyContext) : :: WCSerializeableObject(),
 	ASSERT(copyContext);
 	//Create a new gl Context (copying from a root context)
 	this->_glContext = new WCGLContext(*copyContext);
+
 	//Check to see if GL1.5 is present
 	if(WCAdapter::HasGL15()) {
 		//Start new shader manager
@@ -94,27 +95,30 @@ WCScene::WCScene(WCGLContext *copyContext) : :: WCSerializeableObject(),
 }
 
 
-WCScene::WCScene(xercesc::DOMElement* element, WCSerialDictionary *dictionary) : :: WCSerializeableObject(), 
+WCScene::WCScene(xercesc::DOMElement* element, WCSerialDictionary *dictionary, WCGLContext *copyContext) : :: WCSerializeableObject(), 
 	_glContext(NULL), _shaderManager(NULL), _textureManager(NULL), _geomContext(NULL), _isDirty(true),
 	_useShadowPass(false), _useSelectionPass(false),
 	_xMin(-1.0), _yMin(-1.0), _xMax(1.0), _yMax(1.0), _width(2.0), _height(2.0), _winWidth(1), _winHeight(1),
 	_projectionInverse(true), _mouseX(0.0), _mouseY(0.0), _activeCamera(NULL), _defaultCamera(NULL),
 	_firstResponder(NULL), _cameraLayer(NULL), _topLayer(NULL), _bottomLayer(NULL),
 	_frameTickObject(NULL) {
-
-	//Make sure element if not null
-	if (element == NULL) return;
+	std::string resourcesDirectory = _ResourceDirectory();
+	//Make sure element and dictionary are not null
+	ASSERT(element);
+	ASSERT(dictionary);
 	//Get GUID and register it
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
 	dictionary->InsertGUID(guid, this);
 
-	std::string resourcesDirectory = _ResourceDirectory();
+	//Make sure there is a context to copy
+	ASSERT(copyContext);
+	//Create a new gl Context (copying from a root context)
+	this->_glContext = new WCGLContext(*copyContext);
+
 	//Start new shader manager
 	this->_shaderManager = new WCShaderManager(WCScene::ShaderManifest, resourcesDirectory, false);
 	//Start new texture manager
 	this->_textureManager = new WCTextureManager(WCScene::TextureManifest, resourcesDirectory, false);
-	//Create a new gl Context
-	this->_glContext = new WCGLContext();
 
 #ifdef __WIN32__
 	this->_fontManager = new WCFontManager("", "", false);

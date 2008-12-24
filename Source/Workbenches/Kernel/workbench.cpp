@@ -45,12 +45,9 @@ WCWorkbench::WCWorkbench(WCFeature *feature, const std::string &name) : ::WCObje
 	_defaultView(name + "-default", WCQuaternion(0.0, 0.0, 0.0, 1.0)), 
 	_restoreView(name + "-restore", WCQuaternion(0.0, 0.0, 0.0, 1.0)),
 	_isPan(false), _isZoom(false), _isRotate(false), _isMultiSelect(false) {
-	//Make sure document is not null
-	if (this->_feature == NULL) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCWorkbench::WCWorkbench - NULL feature passed.");
-		//throw error
-		return;
-	}
+	//Make sure feature is not null
+	ASSERT(feature);
+
 	//Create the layer for the sketch
 	this->_layer = new WCWorkbenchLayer(this->_feature->Document()->Scene(), this->_name + ".layer");
 	//Create and retain the selectionManager
@@ -59,7 +56,16 @@ WCWorkbench::WCWorkbench(WCFeature *feature, const std::string &name) : ::WCObje
 	//Create the keymap
 	this->_keyMap = new WCKeyMap();
 
-	//Add standard items (slightly difference based on platform)
+	//Add standard items (may be slightly difference based on platform)
+	this->_keyMap->AddMapping( WCKeyEvent('1', false, false, false, false, false), WCUserMessage("frontview") );
+	this->_keyMap->AddMapping( WCKeyEvent('2', false, false, false, false, false), WCUserMessage("backview") );
+	this->_keyMap->AddMapping( WCKeyEvent('3', false, false, false, false, false), WCUserMessage("leftview") );
+	this->_keyMap->AddMapping( WCKeyEvent('4', false, false, false, false, false), WCUserMessage("rightview") );
+	this->_keyMap->AddMapping( WCKeyEvent('5', false, false, false, false, false), WCUserMessage("topview") );
+	this->_keyMap->AddMapping( WCKeyEvent('6', false, false, false, false, false), WCUserMessage("bottomview") );
+	this->_keyMap->AddMapping( WCKeyEvent('7', false, false, false, false, false), WCUserMessage("isoview") );
+	this->_keyMap->AddMapping( WCKeyEvent('8', false, false, false, false, false), WCUserMessage("zoomtofit") );
+	this->_keyMap->AddMapping( WCKeyEvent(96, false, false, false, false, false), WCUserMessage("exitworkbench") );
 //Apple mappings
 #ifdef __APPLE__ 
 	this->_keyMap->AddMapping( WCKeyEvent('z', false, false, false, true, false), WCUserMessage("undo") );
@@ -274,6 +280,11 @@ bool  WCWorkbench::OnUserMessage(const WCUserMessage &message) {
 	//Handle undo, redo
 	else if (message == "undo")			{ return this->_feature->Document()->Undo(1); }
 	else if (message == "redo")			{ return this->_feature->Document()->Redo(1); }
+
+	//Handle exit workbench
+	else if (message == "exitworkbench") {
+		this->DrawingMode( new WCSelectionMode( this ) );
+	}
 
 	//Otherwise, did not capture
 	return false;

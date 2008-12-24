@@ -137,7 +137,9 @@ WCDocument::WCDocument(xercesc::DOMElement *element, WCSerialDictionary *diction
 	_filename(), _scene(NULL), _uiLayer(NULL), _backgroundLayer(NULL), _treeView(NULL), _statusText("Ready"),
 	_actions(), _redoActions(), _undoDictionary(NULL), _activeWorkbench(NULL), _workbenchStack(), _namedViews(),
 	_lengthUnit(NULL), _angleUnit(NULL), _toolbarManager(NULL) {
-
+	//Make sure element and dictionary are present
+	ASSERT(element);
+	ASSERT(dictionary);
 	//Get GUID and register it
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
 	dictionary->InsertGUID(guid, this);
@@ -145,7 +147,7 @@ WCDocument::WCDocument(xercesc::DOMElement *element, WCSerialDictionary *diction
 	//If this is root document
 	if (this->_document == NULL) {
 		//Create scene for the document
-		this->_scene = new WCScene( WCSerializeableObject::ElementFromName(element,"Scene"), dictionary);
+		this->_scene = new WCScene(WCSerializeableObject::ElementFromName(element,"Scene"), dictionary, WCWildcatKernel::Context());
 		//Get filename attribute
 		this->_filename = WCSerializeableObject::GetStringAttrib(element, "filename");
 

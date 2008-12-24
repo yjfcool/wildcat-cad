@@ -113,6 +113,8 @@ WCBackgroundLayer::WCBackgroundLayer(WCScene *scene) : ::WCLayer(scene, "Backgro
 	_perfLevel(PerformanceLow), _vertexBuffer(0), _colorBuffer(0), _altVertexBuffer(NULL), _altColorBuffer(NULL),
 	_llColor(BACKGROUNDLAYER_BOTTOM_COLOR), _lrColor(BACKGROUNDLAYER_BOTTOM_COLOR), 
 	_ulColor(BACKGROUNDLAYER_TOP_COLOR), _urColor(BACKGROUNDLAYER_TOP_COLOR) {
+	//Make sure scene is present
+	ASSERT(scene);
 	//Set performance level
 	if(WCAdapter::HasGLARBVertexBufferObject()) {
 		//Set the higher performance level
@@ -152,6 +154,8 @@ bool WCBackgroundLayer::OnReshape(const WPFloat width, const WPFloat height) {
 
 
 void WCBackgroundLayer::Render(WCRenderState *state) {
+	//Make sure state is present
+	ASSERT(state);
 	//Only render if visible
 	if (!this->_isVisible) return;
 	//Check if dirty

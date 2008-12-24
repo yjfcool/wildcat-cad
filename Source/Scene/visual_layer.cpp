@@ -107,6 +107,9 @@ void WCVisualLayer::Render(WCRenderState *state) {
 		//Set the lighting parameters (if appropriate)
 		if ( (*iter)->RenderProgram() != 0 ) {
 			glUseProgram( (*iter)->RenderProgram() );
+			//Check for errors
+			GLenum err = glGetError();
+			if (err != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisualLayer::Render @UseProgram Error: " << std::hex << err);
 			this->_scene->ActiveCamera()->EnableLighting( (*iter)->RenderProgram() );
 		}
 		//Render the object
@@ -119,7 +122,7 @@ void WCVisualLayer::Render(WCRenderState *state) {
 	this->_isDirty = false;
 	//Check for errors
 	GLenum err = glGetError();
-	if (err != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryLayer::Render Error: " << std::hex << err);
+	if (err != GL_NO_ERROR) CLOGGER_ERROR(WCLogManager::RootLogger(), "WCVisualLayer::Render @Exit Error: " << std::hex << err);
 }
 
 

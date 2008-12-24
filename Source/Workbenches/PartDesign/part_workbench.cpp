@@ -51,11 +51,7 @@
 
 WCPartWorkbench::WCPartWorkbench(WCPart *part) : ::WCWorkbench(part, "Part Designer"), _part(part) {
 	//Make sure part is not null
-	if (this->_part == NULL) {
-		CLOGGER_FATAL(WCLogManager::RootLogger(), "WCPartWorkbench::WCPartWorkbench - NULL part passed.");
-		//throw error
-		return;
-	}
+	ASSERT(part);
 
 	//Setup the key map
 	this->_keyMap->AddMapping( WCKeyEvent('b'), WCUserMessage("body") );

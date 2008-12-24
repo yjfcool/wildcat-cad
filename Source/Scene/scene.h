@@ -104,7 +104,7 @@ private:
 public:
 	//Constructors and Destructors
 	WCScene(WCGLContext *copyContext=NULL);															//!< Primary context
-	WCScene(xercesc::DOMElement* element, WCSerialDictionary *dictionary);							//!< Persistance constructor
+	WCScene(xercesc::DOMElement* element, WCSerialDictionary *dictionary, WCGLContext *copyContext=NULL);//!< Persistance constructor
 	~WCScene();																						//!< Default destructor
 
 	//General Access Methods
