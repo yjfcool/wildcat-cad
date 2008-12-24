@@ -27,13 +27,13 @@
 
 
 /*** Included Header Files ***/
-#include "Geometry/trimmed_nurbs_surface.h"
-#include "Geometry/geometry_context.h"
-#include "Geometry/nurbs_curve.h"
-#include "Geometry/nurbs.h"
-#include "Geometry/geometric_line.h"
-#include "Geometry/geometric_algorithms.h"
-#include "Geometry/ray.h"
+#include <Geometry/trimmed_nurbs_surface.h>
+#include <Geometry/geometry_context.h>
+#include <Geometry/nurbs_curve.h>
+#include <Geometry/nurbs.h>
+#include <Geometry/geometric_line.h>
+#include <Geometry/geometric_algorithms.h>
+#include <Geometry/ray.h>
 
 
 /*** Locally Defined Values ***/

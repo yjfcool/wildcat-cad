@@ -31,9 +31,9 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/wftrl.h"
-#include "Kernel/action.h"
-#include "PartDesign/part_pad_types.h"
+#include <Kernel/wftrl.h>
+#include <Kernel/action.h>
+#include <PartDesign/part_pad_types.h>
 
 
 /*** Locally Defined Values ***/

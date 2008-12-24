@@ -31,8 +31,8 @@
 
 
 /*** Included Header Files ***/
-#include "Constraint/wgcsl.h"
-#include "Kernel/drawing_mode.h"
+#include <Constraint/wgcsl.h>
+#include <Kernel/drawing_mode.h>
 
 
 /*** Locally Defined Values ***/

@@ -27,7 +27,7 @@
 
 
 /*** Included Header Files ***/
-#include "Scene/light_source.h"
+#include <Scene/light_source.h>
 
 
 /*** Locally Defined Values ***/

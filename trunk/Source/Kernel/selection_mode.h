@@ -31,9 +31,9 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/wftrl.h"
-#include "Kernel/drawing_mode.h"
-#include "Kernel/workbench.h"
+#include <Kernel/wftrl.h>
+#include <Kernel/drawing_mode.h>
+#include <Kernel/workbench.h>
 
 
 /*** Locally Defined Values ***/

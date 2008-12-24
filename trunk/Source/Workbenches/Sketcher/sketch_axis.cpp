@@ -27,12 +27,12 @@
 
 
 /*** Included Header Files ***/
-#include "Sketcher/sketch_axis.h"
-#include "Sketcher/sketch.h"
-#include "Kernel/document.h"
-#include "Kernel/workbench_layer.h"
-#include "PartDesign/part.h"
-#include "PartDesign/part_plane.h"
+#include <Sketcher/sketch_axis.h>
+#include <Sketcher/sketch.h>
+#include <Kernel/document.h>
+#include <Kernel/workbench_layer.h>
+#include <PartDesign/part.h>
+#include <PartDesign/part_plane.h>
 
 
 /***********************************************~***************************************************/

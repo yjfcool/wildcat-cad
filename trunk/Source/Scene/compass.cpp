@@ -27,11 +27,11 @@
 
 
 /*** Included Header Files ***/
-#include "Scene/compass.h"
-#include "Scene/user_interface_layer.h"
-#include "Scene/scene.h"
-#include "Scene/camera.h"
-#include "Scene/text.h"
+#include <Scene/compass.h>
+#include <Scene/user_interface_layer.h>
+#include <Scene/scene.h>
+#include <Scene/camera.h>
+#include <Scene/text.h>
 
 
 /***********************************************~***************************************************/

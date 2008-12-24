@@ -27,8 +27,8 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/selection_mode.h"
-#include "Kernel/document.h"
+#include <Kernel/selection_mode.h>
+#include <Kernel/document.h>
 
 
 /***********************************************~***************************************************/

@@ -31,10 +31,10 @@
 
 
 /*** Included Header Files ***/
-#include "Constraint/wgcsl.h"
-#include "Kernel/wftrl.h"
-#include "Kernel/drawing_mode.h"
-#include "Sketcher/sketch_workbench.h"
+#include <Constraint/wgcsl.h>
+#include <Kernel/wftrl.h>
+#include <Kernel/drawing_mode.h>
+#include <Sketcher/sketch_workbench.h>
 
 
 /*** Locally Defined Values ***/

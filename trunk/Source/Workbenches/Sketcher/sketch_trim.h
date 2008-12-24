@@ -31,11 +31,11 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/wftrl.h"
-#include "Sketcher/sketch_feature.h"
-#include "Sketcher/sketch_trim_actions.h"
-#include "Sketcher/sketch_trim_controller.h"
-#include "Sketcher/sketch_trim_modes.h"
+#include <Kernel/wftrl.h>
+#include <Sketcher/sketch_feature.h>
+#include <Sketcher/sketch_trim_actions.h>
+#include <Sketcher/sketch_trim_controller.h>
+#include <Sketcher/sketch_trim_modes.h>
 
 
 /*** Locally Defined Values ***/

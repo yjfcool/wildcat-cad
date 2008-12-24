@@ -27,8 +27,8 @@
 
 
 /*** Included Header Files ***/
-#include "PartDesign/part_controller.h"
-#include "PartDesign/part.h"
+#include <PartDesign/part_controller.h>
+#include <PartDesign/part.h>
 
 
 /***********************************************~***************************************************/

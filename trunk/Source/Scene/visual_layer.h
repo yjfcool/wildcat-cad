@@ -31,8 +31,8 @@
 
 
 /*** Included Header Files ***/
-#include "Scene/wscnl.h"
-#include "Scene/layer.h"
+#include <Scene/wscnl.h>
+#include <Scene/layer.h>
 
 
 /*** Locally Defined Values ***/

@@ -27,8 +27,8 @@
 
 
 /*** Included Header Files ***/
-#include "Utility/adapter.h"
-#include "Utility/log_manager.h"
+#include <Utility/adapter.h>
+#include <Utility/log_manager.h>
 
 
 //Initialize static variables

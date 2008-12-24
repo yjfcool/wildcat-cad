@@ -27,28 +27,28 @@
 
 
 /*** Included Header Files ***/
-#include "Sketcher/sketch_workbench.h"
-#include "Sketcher/sketch.h"
-#include "Sketcher/grid.h"
-#include "Constraint/constraint_fix.h"
-#include "Kernel/keymap.h"
-#include "Kernel/document.h"
-#include "Kernel/workbench_layer.h"
-#include "Kernel/selection_mode.h"
-#include "PartDesign/part_plane.h"
-#include "PartDesign/part.h"
+#include <Sketcher/sketch_workbench.h>
+#include <Sketcher/sketch.h>
+#include <Sketcher/grid.h>
+#include <Constraint/constraint_fix.h>
+#include <Kernel/keymap.h>
+#include <Kernel/document.h>
+#include <Kernel/workbench_layer.h>
+#include <Kernel/selection_mode.h>
+#include <PartDesign/part_plane.h>
+#include <PartDesign/part.h>
 
 
 //Sketch Feature Included Headers
-#include "Sketcher/sketch_arc.h"
-#include "Sketcher/sketch_axis.h"
-#include "Sketcher/sketch_circle.h"
-#include "Sketcher/sketch_conic_twopoint.h"
-#include "Sketcher/sketch_ellipse.h"
-#include "Sketcher/sketch_line.h"
-#include "Sketcher/sketch_point.h"
-#include "Sketcher/sketch_rectangle.h"
-#include "Sketcher/sketch_trim.h"
+#include <Sketcher/sketch_arc.h>
+#include <Sketcher/sketch_axis.h>
+#include <Sketcher/sketch_circle.h>
+#include <Sketcher/sketch_conic_twopoint.h>
+#include <Sketcher/sketch_ellipse.h>
+#include <Sketcher/sketch_line.h>
+#include <Sketcher/sketch_point.h>
+#include <Sketcher/sketch_rectangle.h>
+#include <Sketcher/sketch_trim.h>
 
 
 /***********************************************~***************************************************/

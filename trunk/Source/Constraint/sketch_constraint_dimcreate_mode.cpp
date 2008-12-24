@@ -27,27 +27,27 @@
 
 
 /*** Included Header Files ***/
-#include "Constraint/sketch_constraint_modes.h"
-#include "Constraint/sketch_constraint.h"
-#include "Sketcher/sketch_workbench.h"
-#include "Sketcher/sketch.h"
-#include "Kernel/document.h"
-#include "PartDesign/part_plane.h"
+#include <Constraint/sketch_constraint_modes.h>
+#include <Constraint/sketch_constraint.h>
+#include <Sketcher/sketch_workbench.h>
+#include <Sketcher/sketch.h>
+#include <Kernel/document.h>
+#include <PartDesign/part_plane.h>
 
 
 //Feature Types
-#include "Sketcher/sketch_point.h"
-#include "Sketcher/sketch_line.h"
-#include "Sketcher/sketch_circle.h"
-#include "Sketcher/sketch_arc.h"
-#include "Sketcher/sketch_ellipse.h"
+#include <Sketcher/sketch_point.h>
+#include <Sketcher/sketch_line.h>
+#include <Sketcher/sketch_circle.h>
+#include <Sketcher/sketch_arc.h>
+#include <Sketcher/sketch_ellipse.h>
 
 
 //Constraint Types
-#include "Constraint/constraint_angle.h"
-#include "Constraint/constraint_distance.h"
-#include "Constraint/constraint_length.h"
-#include "Constraint/constraint_radius.h"
+#include <Constraint/constraint_angle.h>
+#include <Constraint/constraint_distance.h>
+#include <Constraint/constraint_length.h>
+#include <Constraint/constraint_radius.h>
 
 
 //Locally Defined Values

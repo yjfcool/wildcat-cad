@@ -27,11 +27,11 @@
 
 
 /*** Included Header Files ***/
-#include "Geometry/geometric_intersection.h"
-#include "Geometry/geometry_context.h"
-#include "Geometry/geometric_point.h"
-#include "Geometry/geometric_line.h"
-#include "Geometry/nurbs_curve.h"
+#include <Geometry/geometric_intersection.h>
+#include <Geometry/geometry_context.h>
+#include <Geometry/geometric_point.h>
+#include <Geometry/geometric_line.h>
+#include <Geometry/nurbs_curve.h>
 
 
 /*** Locally Defined Values ***/

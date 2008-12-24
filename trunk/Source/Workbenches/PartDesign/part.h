@@ -31,11 +31,11 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/wftrl.h"
-#include "Kernel/document.h"
-#include "PartDesign/part_actions.h"
-#include "PartDesign/part_controller.h"
-#include "PartDesign/part_workbench.h"
+#include <Kernel/wftrl.h>
+#include <Kernel/document.h>
+#include <PartDesign/part_actions.h>
+#include <PartDesign/part_controller.h>
+#include <PartDesign/part_workbench.h>
 
 
 /*** Locally Defined Values ***/

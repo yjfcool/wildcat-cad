@@ -27,7 +27,7 @@
 
 
 /*** Imported Header Files ***/
-#import "PartDesign/MacOS/part_pad_dialog.h"
+#import <PartDesign/MacOS/part_pad_dialog.h>
 
 
 /***********************************************~***************************************************/

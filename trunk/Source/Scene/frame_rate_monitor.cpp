@@ -27,9 +27,9 @@
 
 
 /*** Included Header Files ***/
-#include "Scene/frame_rate_monitor.h"
-#include "Scene/user_interface_layer.h"
-#include "Scene/text.h"
+#include <Scene/frame_rate_monitor.h>
+#include <Scene/user_interface_layer.h>
+#include <Scene/text.h>
 
 
 /*** Platform Included Header Files ***/

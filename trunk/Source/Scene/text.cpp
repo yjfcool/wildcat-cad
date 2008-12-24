@@ -27,10 +27,10 @@
 
 
 /*** Included Header Files***/
-#include "Scene/text.h"
+#include <Scene/text.h>
 //Include WCFont Support for Win32
 #ifndef __APPLE__
-#include "Application/Win32/font_manager.h"
+#include <Application/Win32/font_manager.h>
 #endif
 
 

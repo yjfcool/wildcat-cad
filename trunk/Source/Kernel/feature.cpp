@@ -27,8 +27,8 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/feature.h"
-#include "Kernel/document.h"
+#include <Kernel/feature.h>
+#include <Kernel/document.h>
 
 
 /***********************************************~***************************************************/

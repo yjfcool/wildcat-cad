@@ -31,8 +31,8 @@
 
 
 /*** Included Header Files ***/
-#include "Constraint/wgcsl.h"
-#include "Constraint/constraint_measure.h"
+#include <Constraint/wgcsl.h>
+#include <Constraint/constraint_measure.h>
 
 
 /*** Locally Defined Values ***/

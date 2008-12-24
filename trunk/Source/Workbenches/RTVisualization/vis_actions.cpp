@@ -27,9 +27,9 @@
 
 
 /*** Included Header Files ***/
-#include "RTVisualization/vis_actions.h"
-#include "RTVisualization/visualization.h"
-#include "Kernel/document.h"
+#include <RTVisualization/vis_actions.h>
+#include <RTVisualization/visualization.h>
+#include <Kernel/document.h>
 
 
 /***********************************************~***************************************************

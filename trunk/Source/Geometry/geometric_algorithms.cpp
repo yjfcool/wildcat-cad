@@ -27,9 +27,9 @@
 
 
 /*** Included Header Files ***/
-#include "Geometry/geometric_algorithms.h"
-#include "Geometry/geometric_line.h"
-#include "Geometry/nurbs_curve.h"
+#include <Geometry/geometric_algorithms.h>
+#include <Geometry/geometric_line.h>
+#include <Geometry/nurbs_curve.h>
 
 
 /***********************************************~***************************************************/

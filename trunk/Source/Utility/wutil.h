@@ -49,7 +49,7 @@
 
 /*** Included OpenGL Headers ***/
 #ifdef __APPLE__
-#include "Application/MacOS/apple_gl.h"
+#include <Utility/gl_osx.h>
 #define STDMIN	std::min
 #define STDMAX	std::max
 #define STDFABS	std::fabs
@@ -115,7 +115,7 @@ inline double round(const double &n) {
 
 
 /*** Related Header Files ***/
-#include "Utility/types.h"
+#include <Utility/types.h>
 
 
 /*** External or Global Variables ***/

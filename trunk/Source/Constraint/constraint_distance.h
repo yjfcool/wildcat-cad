@@ -31,12 +31,12 @@
 
 
 /*** Included Header Files ***/
-#include "Constraint/wgcsl.h"
-#include "Constraint/sketch_constraint.h"
-#include "Constraint/constraint_measure_twopoint.h"
-#include "Constraint/constraint_distance_actions.h"
-#include "Constraint/constraint_distance_controller.h"
-#include "Constraint/constraint_distance_modes.h"
+#include <Constraint/wgcsl.h>
+#include <Constraint/sketch_constraint.h>
+#include <Constraint/constraint_measure_twopoint.h>
+#include <Constraint/constraint_distance_actions.h>
+#include <Constraint/constraint_distance_controller.h>
+#include <Constraint/constraint_distance_modes.h>
 
 
 /*** Locally Defined Values ***/

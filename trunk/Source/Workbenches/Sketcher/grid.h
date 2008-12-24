@@ -31,8 +31,8 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/wftrl.h"
-#include "Sketcher/sketch.h"
+#include <Kernel/wftrl.h>
+#include <Sketcher/sketch.h>
 
 
 /*** Locally Defined Values ***/

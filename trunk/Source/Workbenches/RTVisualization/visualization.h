@@ -31,11 +31,11 @@
 
 
 /*** Included Header Files ***/
-#include "RTVisualization/wrtv.h"
-#include "Kernel/document.h"
-#include "RTVisualization/vis_actions.h"
-#include "RTVisualization/vis_controller.h"
-#include "RTVisualization/vis_workbench.h"
+#include <RTVisualization/wrtv.h>
+#include <Kernel/document.h>
+#include <RTVisualization/vis_actions.h>
+#include <RTVisualization/vis_controller.h>
+#include <RTVisualization/vis_workbench.h>
 
 
 /*** Locally Defined Values ***/

@@ -31,8 +31,8 @@
 
 
 /*** Included Header Files ***/
-#include "Scene/wscnl.h"
-#include "Scene/overlay.h"
+#include <Scene/wscnl.h>
+#include <Scene/overlay.h>
 
 
 /*** Locally Defined Values ***/

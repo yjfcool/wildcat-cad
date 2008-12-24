@@ -27,8 +27,8 @@
 
 
 /*** Included Header Files ***/
-#include "Constraint/constraint_measure_twopoint.h"
-#include "Kernel/document.h"
+#include <Constraint/constraint_measure_twopoint.h>
+#include <Kernel/document.h>
 
 
 /***********************************************~***************************************************/

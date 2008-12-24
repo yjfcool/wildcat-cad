@@ -31,9 +31,9 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/wftrl.h"
-#include "Kernel/action.h"
-#include "Sketcher/sketch_rect_mode.h"
+#include <Kernel/wftrl.h>
+#include <Kernel/action.h>
+#include <Sketcher/sketch_rect_mode.h>
 
 
 /*** Locally Defined Values ***/

@@ -27,13 +27,13 @@
 
 
 /*** Included Header Files ***/
-#include "Sketcher/sketch_circle_modes.h"
-#include "Sketcher/sketch_circle.h"
-#include "Sketcher/sketch_workbench.h"
-#include "Sketcher/sketch.h"
-#include "Kernel/document.h"
-#include "Kernel/workbench_layer.h"
-#include "PartDesign/part_plane.h"
+#include <Sketcher/sketch_circle_modes.h>
+#include <Sketcher/sketch_circle.h>
+#include <Sketcher/sketch_workbench.h>
+#include <Sketcher/sketch.h>
+#include <Kernel/document.h>
+#include <Kernel/workbench_layer.h>
+#include <PartDesign/part_plane.h>
 
 
 /***********************************************~***************************************************/

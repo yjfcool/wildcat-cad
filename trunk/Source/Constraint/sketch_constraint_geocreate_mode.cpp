@@ -27,12 +27,12 @@
 
 
 /*** Included Header Files ***/
-#include "Constraint/sketch_constraint_modes.h"
-#include "Constraint/sketch_constraint.h"
-#include "Sketcher/sketch_workbench.h"
-#include "Sketcher/sketch.h"
-#include "Kernel/document.h"
-#include "PartDesign/part_plane.h"
+#include <Constraint/sketch_constraint_modes.h>
+#include <Constraint/sketch_constraint.h>
+#include <Sketcher/sketch_workbench.h>
+#include <Sketcher/sketch.h>
+#include <Kernel/document.h>
+#include <PartDesign/part_plane.h>
 
 
 //Locally Defined Values

@@ -27,13 +27,13 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/workbench.h"
-#include "Kernel/feature.h"
-#include "Kernel/document.h"
-#include "Kernel/workbench_layer.h"
-#include "Kernel/drawing_mode.h"
-#include "Kernel/selection_mode.h"
-#include "Kernel/keymap.h"
+#include <Kernel/workbench.h>
+#include <Kernel/feature.h>
+#include <Kernel/document.h>
+#include <Kernel/workbench_layer.h>
+#include <Kernel/drawing_mode.h>
+#include <Kernel/selection_mode.h>
+#include <Kernel/keymap.h>
 #include <xercesc/framework/MemBufFormatTarget.hpp>
 
 

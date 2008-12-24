@@ -31,8 +31,8 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/wftrl.h"
-#include "Kernel/action.h"
+#include <Kernel/wftrl.h>
+#include <Kernel/action.h>
 
 
 /*** Locally Defined Values ***/

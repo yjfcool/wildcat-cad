@@ -31,8 +31,8 @@
 
 
 /*** Included Header Files ***/
-#include "Scene/wscnl.h"
-#include "Scene/user_interface_layer.h"
+#include <Scene/wscnl.h>
+#include <Scene/user_interface_layer.h>
 
 
 /*** Locally Defined Values ***/

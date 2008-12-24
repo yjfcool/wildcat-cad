@@ -27,10 +27,10 @@
 
 
 /*** Included Header Files ***/
-#include "PartDesign/part_shaft_controller.h"
-#include "PartDesign/part_shaft.h"
-#include "Kernel/document.h"
-#include "Kernel/workbench.h"
+#include <PartDesign/part_shaft_controller.h>
+#include <PartDesign/part_shaft.h>
+#include <Kernel/document.h>
+#include <Kernel/workbench.h>
 
 
 /***********************************************~***************************************************/

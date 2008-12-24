@@ -27,12 +27,12 @@
 
 
 /*** Included Header Files ***/
-#include "Geometry/geometric_intersection.h"
-#include "Geometry/geometric_point.h"
-#include "Geometry/geometric_line.h"
-#include "Geometry/nurbs_curve.h"
-#include "Geometry/nurbs_surface.h"
-#include "Geometry/trimmed_nurbs_surface.h"
+#include <Geometry/geometric_intersection.h>
+#include <Geometry/geometric_point.h>
+#include <Geometry/geometric_line.h>
+#include <Geometry/nurbs_curve.h>
+#include <Geometry/nurbs_surface.h>
+#include <Geometry/trimmed_nurbs_surface.h>
 
 
 /***********************************************~***************************************************/

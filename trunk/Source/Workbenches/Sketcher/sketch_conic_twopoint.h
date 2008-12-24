@@ -31,11 +31,11 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/wftrl.h"
-#include "Sketcher/sketch_feature.h"
-#include "Sketcher/sketch_conic_actions.h"
-#include "Sketcher/sketch_conic_controller.h"
-#include "Sketcher/sketch_conic_modes.h"
+#include <Kernel/wftrl.h>
+#include <Sketcher/sketch_feature.h>
+#include <Sketcher/sketch_conic_actions.h>
+#include <Sketcher/sketch_conic_controller.h>
+#include <Sketcher/sketch_conic_modes.h>
 
 
 /*** Locally Defined Values ***/

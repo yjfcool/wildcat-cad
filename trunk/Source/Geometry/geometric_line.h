@@ -31,8 +31,8 @@
 
 
 /*** Included Headers ***/
-#include "Geometry/wgeol.h"
-#include "Geometry/geometric_types.h"
+#include <Geometry/wgeol.h>
+#include <Geometry/geometric_types.h>
 
 
 /*** Locally Defined Values ***/

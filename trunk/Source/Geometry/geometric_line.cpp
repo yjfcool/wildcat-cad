@@ -27,11 +27,11 @@
 
 
 /*** Included Header Files ***/
-#include "Geometry/geometric_line.h"
-#include "Geometry/geometric_point.h"
-#include "Geometry/geometric_algorithms.h"
-#include "Geometry/ray.h"
-#include "Geometry/nurbs_curve.h"
+#include <Geometry/geometric_line.h>
+#include <Geometry/geometric_point.h>
+#include <Geometry/geometric_algorithms.h>
+#include <Geometry/ray.h>
+#include <Geometry/nurbs_curve.h>
 
 
 /***********************************************~***************************************************/

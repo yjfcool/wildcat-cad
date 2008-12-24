@@ -31,9 +31,9 @@
 
 
 /*** Included Header Files ***/
-#include "Constraint/wgcsl.h"
-#include "Constraint/constraint_node.h"
-#include "Constraint/constraint_edge.h"
+#include <Constraint/wgcsl.h>
+#include <Constraint/constraint_node.h>
+#include <Constraint/constraint_edge.h>
 
 
 /*** Locally Defined Values ***/

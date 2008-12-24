@@ -27,12 +27,12 @@
 
 
 /*** Included Header Files ***/
-#include "PartDesign/part_pad.h"
-#include "PartDesign/part_body.h"
-#include "PartDesign/part.h"
-#include "PartDesign/part_plane.h"
-#include "Sketcher/sketch_profile.h"
-#include "Sketcher/sketch.h"
+#include <PartDesign/part_pad.h>
+#include <PartDesign/part_body.h>
+#include <PartDesign/part.h>
+#include <PartDesign/part_plane.h>
+#include <Sketcher/sketch_profile.h>
+#include <Sketcher/sketch.h>
 
 
 /***********************************************~***************************************************/

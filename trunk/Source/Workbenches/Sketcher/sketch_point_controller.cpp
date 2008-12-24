@@ -27,12 +27,12 @@
 
 
 /*** Included Header Files ***/
-#include "Sketcher/sketch_point.h"
-#include "Sketcher/sketch_point_controller.h"
-#include "Sketcher/sketch_point_modes.h"
-#include "Sketcher/sketch.h"
-#include "Kernel/workbench.h"
-#include "Kernel/document.h"
+#include <Sketcher/sketch_point.h>
+#include <Sketcher/sketch_point_controller.h>
+#include <Sketcher/sketch_point_modes.h>
+#include <Sketcher/sketch.h>
+#include <Kernel/workbench.h>
+#include <Kernel/document.h>
 
 
 /***********************************************~***************************************************/

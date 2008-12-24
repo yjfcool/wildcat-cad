@@ -27,10 +27,10 @@
 
 
 /*** Included Header Files ***/
-#include "PartDesign/part_plane.h"
-#include "PartDesign/part_plane_controller.h"
-#include "PartDesign/part.h"
-#include "Kernel/document.h"
+#include <PartDesign/part_plane.h>
+#include <PartDesign/part_plane_controller.h>
+#include <PartDesign/part.h>
+#include <Kernel/document.h>
 
 
 /***********************************************~***************************************************/
