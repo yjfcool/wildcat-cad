@@ -31,7 +31,7 @@
 #include "Sketcher/sketch.h"
 #include "Sketcher/grid.h"
 #include "Constraint/constraint_fix.h"
-#include "Application/keymap.h"
+#include "Kernel/keymap.h"
 #include "Kernel/document.h"
 #include "Kernel/workbench_layer.h"
 #include "Kernel/selection_mode.h"

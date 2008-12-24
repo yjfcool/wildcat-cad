@@ -33,7 +33,7 @@
 #include "Kernel/workbench_layer.h"
 #include "Kernel/drawing_mode.h"
 #include "Kernel/selection_mode.h"
-#include "Application/keymap.h"
+#include "Kernel/keymap.h"
 #include <xercesc/framework/MemBufFormatTarget.hpp>
 
 
@@ -276,6 +276,7 @@ bool  WCWorkbench::OnUserMessage(const WCUserMessage &message) {
 	else if (message == "rightview")	{ this->NamedView("Right"); return true; }
 	else if (message == "topview")		{ this->NamedView("Top"); return true; }
 	else if (message == "bottomview")	{ this->NamedView("Bottom"); return true; }
+	else if (message == "zoomtofit")	{ this->ZoomToFit(); return true; }
 
 	//Handle undo, redo
 	else if (message == "undo")			{ return this->_feature->Document()->Undo(1); }
