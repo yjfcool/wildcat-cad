@@ -43,7 +43,7 @@ namespace __WILDCAT_NAMESPACE__ {
 	
 	
 /*** Class Predefines ***/
-//None
+class WCDocument;
 	
 	
 /***********************************************~***************************************************/
@@ -53,7 +53,7 @@ class WCWildcatKernel {
 private:
 	//Static Members
 	static int									_refCount;											//!< Reference count for startup-Terminate
-	static std::string							_manifest;											//!< Name of the document type manifest
+	static bool									_headless;											//!< Is there going to be a GUI
 	static WCGLContext							*_context;											//!< Master OpenGL context
 	//Static Methods
 	static void CreateContext(void);																//!<
@@ -68,11 +68,22 @@ private:
 public:
 	//Startup - Terminate Functions
 	static bool Started(void)					{ return WCWildcatKernel::_refCount > 0; }			//!< Check to see if the kernel has been started
-	static bool Initialize(const std::string &manifest="");											//!< Initialize the manager with a manifest
+	static bool Initialize(const bool &logToFile, const WCLoggerLevel &loggerLevel,					//!< Initialize the manager with a few options
+												const std::string &loggerFile, const bool &headless);
 	static bool Terminate(void);																	//!< Terminate the logger
 
 	//Member Access Methods
 	inline static WCGLContext* Context(void)	{ return WCWildcatKernel::_context; }				//!< Get the base context
+	inline static bool IsHeadless(void)			{ return WCWildcatKernel::_headless; }				//!< Get headless status
+
+	//Document Management Methods
+	static WCDocument* CreateDocument(const std::string &extension, const std::string &name, 		//!< Create a new document of type "extension"
+												const std::string &directory);
+	static WCDocument* OpenDocument(const std::string &fullpath);									//!< Open the document with full path "filename"
+
+	//Module Management Methods
+	static bool LoadModule(const std::string &fullpath);											//!< Load an optional module
+	static bool UnloadModule(const std::string &name);												//!< Unload an optional module
 };
 
 

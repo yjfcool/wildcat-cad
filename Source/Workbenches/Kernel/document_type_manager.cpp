@@ -104,6 +104,7 @@ bool WCDocumentTypeManager::RegisterType(const std::string &name, const std::str
 		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCDocumentTypeManager::RegisterType - Failed to insert " << extension << " into map.");
 		throw WCException();
 	}
+	CLOGGER_DEBUG(WCLogManager::RootLogger(), "WCDocumentTypeManager::RegisterType - Add document type: " << extension);
 	//All good
 	return true;
 }

@@ -109,8 +109,8 @@ void WCDocument::Initialize(void) {
 /***********************************************~***************************************************/
 
 
-WCDocument::WCDocument(WCFeature *creator, const std::string &name, const std::string &filename) : ::WCFeature(creator, name), 
-	_filename(filename), _scene(NULL), _uiLayer(NULL), _backgroundLayer(NULL), _treeView(NULL), _statusText("Ready"),
+WCDocument::WCDocument(WCFeature *creator, const std::string &name, const std::string &directory) : ::WCFeature(creator, name), 
+	_filename(directory), _scene(NULL), _uiLayer(NULL), _backgroundLayer(NULL), _treeView(NULL), _statusText("Ready"),
 	_actions(), _redoActions(), _undoDictionary(NULL), _activeWorkbench(NULL), _workbenchStack(), _namedViews(), 
 	_lengthUnit(NULL), _angleUnit(NULL), _toolbarManager(NULL) {
 

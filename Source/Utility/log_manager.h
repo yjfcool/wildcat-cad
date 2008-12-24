@@ -117,15 +117,24 @@ void _LogCheck(int level, WCLogger* logger, std::string msg, int line, std::stri
 class WCLoggerLevel {
 private:
 	int											_level;												//!< Int variable for the level of the logger
+	WCLoggerLevel();																				//!< Deny access to default constructor
 	WCLoggerLevel(int level) : _level(level)	{}													//!< Private constructor - must use the static methods
+	friend class WCLogger;
 public:
-	int GetLevel(void)							{ return this->_level; }							//!< Get the level for the logger
+	//Constructors and Destructors
+	WCLoggerLevel(const WCLoggerLevel &level) : _level(level._level) { }							//!< Copy constructor
+	//Static Public Constructors
 	static WCLoggerLevel Debug(void)			{ return WCLoggerLevel(LOGGER_DEBUG); }				//!< Create a Debug logger level
 	static WCLoggerLevel Info(void)				{ return WCLoggerLevel(LOGGER_INFO); }				//!< Create a Info logger level
 	static WCLoggerLevel Warn(void)				{ return WCLoggerLevel(LOGGER_WARN); }				//!< Create a Warn logger level
 	static WCLoggerLevel Error(void)			{ return WCLoggerLevel(LOGGER_ERROR); }				//!< Create a Error logger level
 	static WCLoggerLevel Fatal(void)			{ return WCLoggerLevel(LOGGER_FATAL); }				//!< Create a Fatal logger level
 	static WCLoggerLevel None(void)				{ return WCLoggerLevel(LOGGER_NONE); }				//!< Create a No-Logging logger level
+	//Overridden Operators
+	WCLoggerLevel& operator=(const WCLoggerLevel &level) { this->_level = level._level; return *this; }	//!< Equals operator
+	bool operator==(const WCLoggerLevel &level)	{ return this->_level == level._level; }				//!< Equality operator
+	bool operator!=(const WCLoggerLevel &level)	{ return this->_level != level._level; }				//!< Inequality operator
+	
 };
 
 
@@ -136,14 +145,14 @@ class WCLogger {
 private:
 	int											_refCount;											//!< Reference counter for the logger
 	std::string									_name;												//!< Name of the logger
-	int											_level;												//!< Logging output level of the logger
+	WCLoggerLevel								_level;												//!< Logging output level of the logger
 	WCLogAppender								*_appender;											//!< The current appender for the logger
 private:
 	WCLogger();																						//!< Deny access to default constructor
 	~WCLogger();																					//!< Private destructor (must use WCLogManager::Terminate() )
 	WCLogger(const WCLogger&);																		//!< Deny access to copy constructor
 	WCLogger& operator=(const WCLogger&);															//!< Deny access to equals operator
-	WCLogger(std::string name, WCLoggerLevel level, WCLogAppender* appender);						//!< Private constructor (must use WCLogManager::CreateLogger() )
+	WCLogger(const std::string &name, const WCLoggerLevel &level, WCLogAppender* appender);			//!< Private constructor (must use WCLogManager::CreateLogger() )
 	int Reference(void)							{ return ++this->_refCount; }						//!< Increment the reference counter
 	int Dereference(void)						{ return --this->_refCount; }						//!< Decrement the reference counter
 	int GetRefCount(void)						{ return this->_refCount; }							//!< Return the reference count for the logger
@@ -151,16 +160,16 @@ private:
 	friend class WCLogManager;																		//!< Let WCLogManager be a friend
 public:
 	//General use functions
-	void SetLevel(WCLoggerLevel level)			{ this->_level = level.GetLevel(); }				//!< Function to set the level of the logger
-	void SetAppender(WCLogAppender* appender=NULL);													//!< Set the log appender
+	void Level(const WCLoggerLevel &level)		{ this->_level = level; }							//!< Function to set the level of the logger
+	void Appender(WCLogAppender* appender=NULL);													//!< Set the log appender
 
 	//Functions used by the logging macros
-	inline bool IsDebugEnabled(void)			{ return (this->_level <= LOGGER_DEBUG); }			//!< Quick check to see if debug is enabled
-	inline bool IsInfoEnabled(void)				{ return (this->_level <= LOGGER_INFO); }			//!< Quick check to see if info is enabled
-	inline bool IsWarnEnabled(void)				{ return (this->_level <= LOGGER_WARN); }			//!< Quick check to see if warn is enabled
-	inline bool IsErrorEnabled(void)			{ return (this->_level <= LOGGER_ERROR); }			//!< Quick check to see if error is enabled
-	inline bool IsFatalEnabled(void)			{ return (this->_level <= LOGGER_FATAL); }			//!< Quick check to see if fatal is enabled
-	void ForcedLog(int level, std::string msg, int line, std::string file);							//!< Primary function used to send data to the logger
+	inline bool IsDebugEnabled(void)			{ return (this->_level._level <= LOGGER_DEBUG); }	//!< Quick check to see if debug is enabled
+	inline bool IsInfoEnabled(void)				{ return (this->_level._level <= LOGGER_INFO); }	//!< Quick check to see if info is enabled
+	inline bool IsWarnEnabled(void)				{ return (this->_level._level <= LOGGER_WARN); }	//!< Quick check to see if warn is enabled
+	inline bool IsErrorEnabled(void)			{ return (this->_level._level <= LOGGER_ERROR); }	//!< Quick check to see if error is enabled
+	inline bool IsFatalEnabled(void)			{ return (this->_level._level <= LOGGER_FATAL); }	//!< Quick check to see if fatal is enabled
+	void ForcedLog(const int &level, const std::string &msg, const int &line, const std::string &file);	//!< Primary function used to send data to the logger
 };
 
 
@@ -181,16 +190,16 @@ private:
 public:
 	//Startup - Terminate Functions
 	static bool Started(void)					{ return WCLogManager::_refCount > 0; }				//!< Check to see if the LogManager has been started
-	static bool Initialize(WCLoggerLevel level=WCLoggerLevel::Debug());								//!< Initialize the logger to a given level
+	static bool Initialize(const WCLoggerLevel &level, WCLogAppender *defaultAppender=NULL);		//!< Initialize the logger 
 	static bool Terminate(void);																	//!< Terminate the logger
 	//General Access Functions
 	static WCLogger* RootLogger(void)			{ return WCLogManager::_rootLogger; }				//!< Get the global root logger
 	static WCLogAppender* RootAppender(void)	{ return WCLogManager::_rootAppender; }				//!< Get the global log appender
-	static WCLogger* CreateLogger(std::string name, WCLogAppender* appender, WCLoggerLevel level);	//!< Create a new logger
+	static WCLogger* CreateLogger(const std::string &name, WCLogAppender* appender, const WCLoggerLevel &level);	//!< Create a new logger
 	static WCLogger* ReferenceLogger(WCLogger* ref);												//!< Add a reference to the logger
 	static bool WCLogManager::CheckLogger(WCLogger* ref);											//!< Check to make sure the logger is a valid logger
 	static void DereferenceLogger(WCLogger* ref);													//!< Remove a reference or destroy the logger (if zero)
-	static WCLogger* GetLogger(std::string name);													//!< Get the logger named Name
+	static WCLogger* GetLogger(const std::string &name);											//!< Get the logger named Name
 };
 
 

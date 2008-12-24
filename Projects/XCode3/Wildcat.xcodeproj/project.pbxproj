@@ -412,6 +412,7 @@
 		5890DC3E0E65CD7C0038BBC4 /* part_pad_dialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5890DC3D0E65CD7C0038BBC4 /* part_pad_dialog.mm */; };
 		589AC2190D73404F001725D0 /* constraint_coincidence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361C0D68B4B700673AE6 /* constraint_coincidence.cpp */; };
 		589AC2330D734343001725D0 /* constraint_coincidence_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361E0D68B4B700673AE6 /* constraint_coincidence_actions.cpp */; };
+		58B1FCD90F01785F0047F775 /* libboost_program_options-xgcc40-mt-1_38.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B1FCD80F01785F0047F775 /* libboost_program_options-xgcc40-mt-1_38.dylib */; };
 		58B27F780D785FC4008951D9 /* sketch_circle_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */; };
 		58B3A4090DF4988500A08C0C /* libxerces-c.28.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B3A4080DF4988500A08C0C /* libxerces-c.28.0.dylib */; };
 		58C2345E0ED75D9E0079741B /* WildcatUtility.framework in Copy Dependencies */ = {isa = PBXBuildFile; fileRef = 582DB3230ED4815500BD61DE /* WildcatUtility.framework */; };
@@ -433,6 +434,8 @@
 		58E3D48C0EF6BFB8003656A8 /* wildcat_kernel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58E3D48B0EF6BFB8003656A8 /* wildcat_kernel.cpp */; };
 		58E3D5610EF6F567003656A8 /* gl_context.h in Headers */ = {isa = PBXBuildFile; fileRef = 58E3D55F0EF6F567003656A8 /* gl_context.h */; };
 		58E3D5620EF6F567003656A8 /* gl_context_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 58E3D5600EF6F567003656A8 /* gl_context_osx.mm */; };
+		58E664590F028CE40029DBD2 /* libboost_filesystem-xgcc40-mt-1_38.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58E664580F028CE40029DBD2 /* libboost_filesystem-xgcc40-mt-1_38.dylib */; };
+		58E664700F028D140029DBD2 /* libboost_system-xgcc40-mt-1_38.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58E6646F0F028D140029DBD2 /* libboost_system-xgcc40-mt-1_38.dylib */; };
 		58F156D00D6B15A0008290F7 /* constraint_angle_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36140D68B4B700673AE6 /* constraint_angle_actions.cpp */; };
 		58F156D10D6B15A5008290F7 /* constraint_angle_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36160D68B4B700673AE6 /* constraint_angle_controller.cpp */; };
 		58F156DE0D6B18C4008290F7 /* constraint_angle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F36120D68B4B700673AE6 /* constraint_angle.cpp */; };
@@ -552,7 +555,6 @@
 		5849B60E0DA287520031E7CC /* vis_actions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_actions.cpp; path = ../../Source/Workbenches/RTVisualization/vis_actions.cpp; sourceTree = SOURCE_ROOT; };
 		5849B6100DA287630031E7CC /* vis_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_controller.h; path = ../../Source/Workbenches/RTVisualization/vis_controller.h; sourceTree = SOURCE_ROOT; };
 		5849B6110DA287630031E7CC /* vis_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_controller.cpp; path = ../../Source/Workbenches/RTVisualization/vis_controller.cpp; sourceTree = SOURCE_ROOT; };
-		5849B6260DA28D6C0031E7CC /* vis_document.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_document.h; path = ../../Source/Application/MacOS/vis_document.h; sourceTree = SOURCE_ROOT; };
 		5849B6270DA28D6C0031E7CC /* vis_document.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = vis_document.mm; path = ../../Source/Application/MacOS/vis_document.mm; sourceTree = SOURCE_ROOT; };
 		5849B62E0DA290990031E7CC /* visualization32.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = visualization32.tiff; path = ../../Source/Resources/visualization32.tiff; sourceTree = SOURCE_ROOT; };
 		5849B6370DA291D90031E7CC /* vis_motiontracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_motiontracker.h; path = ../../Source/Workbenches/RTVisualization/vis_motiontracker.h; sourceTree = SOURCE_ROOT; };
@@ -878,8 +880,6 @@
 		585F36B20D68B69D00673AE6 /* dialog_osx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = dialog_osx.mm; path = ../../Source/Application/MacOS/dialog_osx.mm; sourceTree = SOURCE_ROOT; };
 		585F36B30D68B69D00673AE6 /* opengl_view.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = opengl_view.h; path = ../../Source/Application/MacOS/opengl_view.h; sourceTree = SOURCE_ROOT; };
 		585F36B40D68B69D00673AE6 /* opengl_view.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = opengl_view.mm; path = ../../Source/Application/MacOS/opengl_view.mm; sourceTree = SOURCE_ROOT; };
-		585F36B50D68B69D00673AE6 /* part_document.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_document.h; path = ../../Source/Application/MacOS/part_document.h; sourceTree = SOURCE_ROOT; };
-		585F36B60D68B69D00673AE6 /* part_document.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = part_document.mm; path = ../../Source/Application/MacOS/part_document.mm; sourceTree = SOURCE_ROOT; };
 		585F36B70D68B69D00673AE6 /* render_window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = render_window.h; path = ../../Source/Application/MacOS/render_window.h; sourceTree = SOURCE_ROOT; };
 		585F36B80D68B69D00673AE6 /* render_window.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = render_window.mm; path = ../../Source/Application/MacOS/render_window.mm; sourceTree = SOURCE_ROOT; };
 		585F36B90D68B69D00673AE6 /* toolbar.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = toolbar.mm; path = ../../Source/Application/MacOS/toolbar.mm; sourceTree = SOURCE_ROOT; };
@@ -1074,6 +1074,7 @@
 		58AD027F0DF9C5CE00ED713F /* geometric_intersection_curve.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_intersection_curve.cpp; path = ../../Source/Geometry/geometric_intersection_curve.cpp; sourceTree = SOURCE_ROOT; };
 		58AD02810DF9C5ED00ED713F /* geometric_intersection_surface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_intersection_surface.cpp; path = ../../Source/Geometry/geometric_intersection_surface.cpp; sourceTree = SOURCE_ROOT; };
 		58AD02830DF9C60B00ED713F /* geometric_intersection_trimsurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_intersection_trimsurface.cpp; path = ../../Source/Geometry/geometric_intersection_trimsurface.cpp; sourceTree = SOURCE_ROOT; };
+		58B1FCD80F01785F0047F775 /* libboost_program_options-xgcc40-mt-1_38.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_program_options-xgcc40-mt-1_38.dylib"; path = "../../../../boost/bin.v2/libs/program_options/build/darwin-4.0.1/release/threading-multi/libboost_program_options-xgcc40-mt-1_38.dylib"; sourceTree = SOURCE_ROOT; };
 		58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_circle_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_circle_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		58B3A4080DF4988500A08C0C /* libxerces-c.28.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libxerces-c.28.0.dylib"; path = "../../Dependencies/xerces-c-src_2_8_0/lib/libxerces-c.28.0.dylib"; sourceTree = SOURCE_ROOT; };
 		58C234360ED75C720079741B /* WildcatUtility.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = WildcatUtility.plist; path = ../../Source/Application/MacOS/WildcatUtility.plist; sourceTree = SOURCE_ROOT; };
@@ -1105,6 +1106,8 @@
 		58E3D48B0EF6BFB8003656A8 /* wildcat_kernel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wildcat_kernel.cpp; path = ../../Source/Workbenches/Kernel/wildcat_kernel.cpp; sourceTree = SOURCE_ROOT; };
 		58E3D55F0EF6F567003656A8 /* gl_context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gl_context.h; path = ../../Source/Utility/gl_context.h; sourceTree = SOURCE_ROOT; };
 		58E3D5600EF6F567003656A8 /* gl_context_osx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = gl_context_osx.mm; path = ../../Source/Utility/gl_context_osx.mm; sourceTree = SOURCE_ROOT; };
+		58E664580F028CE40029DBD2 /* libboost_filesystem-xgcc40-mt-1_38.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_filesystem-xgcc40-mt-1_38.dylib"; path = "../../../../boost/bin.v2/libs/filesystem/build/darwin-4.0.1/release/threading-multi/libboost_filesystem-xgcc40-mt-1_38.dylib"; sourceTree = SOURCE_ROOT; };
+		58E6646F0F028D140029DBD2 /* libboost_system-xgcc40-mt-1_38.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_system-xgcc40-mt-1_38.dylib"; path = "../../../../boost/bin.v2/libs/system/build/darwin-4.0.1/release/threading-multi/libboost_system-xgcc40-mt-1_38.dylib"; sourceTree = SOURCE_ROOT; };
 		58F5B4C30E0FFF4200D730F8 /* cci_plM.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = cci_plM.fsh; path = ../../Source/Shaders/cci_plM.fsh; sourceTree = SOURCE_ROOT; };
 		58F5E5160DABF54200DC39A2 /* newListener.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = newListener.html; path = ../../Source/Workbenches/RTVisualization/newListener.html; sourceTree = SOURCE_ROOT; };
 		58F5E51A0DABF65600DC39A2 /* vis_listener_actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener_actions.h; path = ../../Source/Workbenches/RTVisualization/vis_listener_actions.h; sourceTree = SOURCE_ROOT; };
@@ -1157,6 +1160,9 @@
 				58B3A4090DF4988500A08C0C /* libxerces-c.28.0.dylib in Frameworks */,
 				58778F540ED5CB5700A4B1A8 /* WildcatUtility.framework in Frameworks */,
 				58778FDE0ED5D76500A4B1A8 /* WildcatGeometry.framework in Frameworks */,
+				58B1FCD90F01785F0047F775 /* libboost_program_options-xgcc40-mt-1_38.dylib in Frameworks */,
+				58E664590F028CE40029DBD2 /* libboost_filesystem-xgcc40-mt-1_38.dylib in Frameworks */,
+				58E664700F028D140029DBD2 /* libboost_system-xgcc40-mt-1_38.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1180,6 +1186,9 @@
 		1058C7A2FEA54F0111CA2CBB /* Included Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				58E6646F0F028D140029DBD2 /* libboost_system-xgcc40-mt-1_38.dylib */,
+				58E664580F028CE40029DBD2 /* libboost_filesystem-xgcc40-mt-1_38.dylib */,
+				58B1FCD80F01785F0047F775 /* libboost_program_options-xgcc40-mt-1_38.dylib */,
 				58B3A4080DF4988500A08C0C /* libxerces-c.28.0.dylib */,
 			);
 			name = "Included Frameworks";
@@ -2323,7 +2332,6 @@
 				585F36B00D68B69D00673AE6 /* HMBlkPanel.mm */,
 				585F369F0D68B68300673AE6 /* keymap.cpp */,
 				585F36B40D68B69D00673AE6 /* opengl_view.mm */,
-				585F36B60D68B69D00673AE6 /* part_document.mm */,
 				585F36B80D68B69D00673AE6 /* render_window.mm */,
 				585F36B90D68B69D00673AE6 /* toolbar.mm */,
 				585F36BB0D68B69D00673AE6 /* toolbar_bridge.mm */,
@@ -2350,13 +2358,11 @@
 				585F36AF0D68B69D00673AE6 /* HMBlkPanel.h */,
 				585F36A00D68B68300673AE6 /* keymap.h */,
 				585F36B30D68B69D00673AE6 /* opengl_view.h */,
-				585F36B50D68B69D00673AE6 /* part_document.h */,
 				585F36B70D68B69D00673AE6 /* render_window.h */,
 				585F36A10D68B68300673AE6 /* toolbar.h */,
 				585F36BA0D68B69D00673AE6 /* toolbar_bridge.h */,
 				585F36BC0D68B69D00673AE6 /* toolbar_osx.h */,
 				585F36A30D68B68300673AE6 /* toolbar_manager.h */,
-				5849B6260DA28D6C0031E7CC /* vis_document.h */,
 				585F36A40D68B68300673AE6 /* wildcat.h */,
 			);
 			name = Headers;
@@ -3947,7 +3953,10 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/../../Source/Application/MacOS/WildcatUtility.plist";
 				INSTALL_PATH = /Library/Frameworks;
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0/lib";
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0/lib",
+					"\"$(SRCROOT)/../../../../boost/bin.v2/libs/program_options/build/darwin-4.0.1/release/threading-multi\"",
+				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
@@ -3977,6 +3986,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0/lib\"",
+					"\"$(SRCROOT)/../../../../boost/bin.v2/libs/program_options/build/darwin-4.0.1/release/threading-multi\"",
 				);
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -4013,6 +4023,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0/lib\"",
+					"\"$(SRCROOT)/../../../../boost/bin.v2/libs/program_options/build/darwin-4.0.1/release/threading-multi\"",
 				);
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -4043,6 +4054,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0/lib\"",
+					"\"$(SRCROOT)/../../../../boost/bin.v2/libs/program_options/build/darwin-4.0.1/release/threading-multi\"",
 				);
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -4071,6 +4083,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				HEADER_SEARCH_PATHS = (
+					/Users/ghemingway/Documents/boost,
 					"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0/include",
 					"$(SRCROOT)/../../Source",
 					"$(SRCROOT)/../../Source/Workbenches",
@@ -4078,10 +4091,13 @@
 				INFOPLIST_FILE = "$(SRCROOT)/../../Source/Application/MacOS/Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
 					"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0/lib",
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../boost/bin.v2/libs/filesystem/build/darwin-4.0.1/release/threading-multi\"",
+					"\"$(SRCROOT)/../../../../boost/bin.v2/libs/system/build/darwin-4.0.1/release/threading-multi\"",
 				);
 				OTHER_CFLAGS = "";
+				PRELINK_LIBS = "";
 				PRODUCT_NAME = Wildcat;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
@@ -4110,6 +4126,10 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0/lib\"",
+					"\"$(SRCROOT)/../../../../boost/bin.v2/libs/program_options/build/darwin-4.0.1/release/threading-multi\"",
+					"\"$(SRCROOT)/../../../../boost/bin.v2/libs/program_options/build/darwin-4.0.1/release/link-static/threading-multi\"",
+					"\"$(SRCROOT)/../../../../boost/bin.v2/libs/filesystem/build/darwin-4.0.1/release/threading-multi\"",
+					"\"$(SRCROOT)/../../../../boost/bin.v2/libs/system/build/darwin-4.0.1/release/threading-multi\"",
 				);
 				PRODUCT_NAME = Wildcat;
 				WRAPPER_EXTENSION = app;

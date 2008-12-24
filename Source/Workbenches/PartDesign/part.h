@@ -83,7 +83,7 @@ private:
 	friend class WCPartWorkbench;																	//!< Workbench is a friend
 public:
 	//Constructors and Destructors
-	WCPart(std::string name, std::string filename="");												//!< Primary constructor
+	WCPart(const std::string &name, const std::string &directory="");								//!< Primary constructor
 	WCPart(xercesc::DOMElement *element, WCSerialDictionary *dictionary);							//!< Persistance constructor
 	~WCPart();																						//!< Default destructor
 
@@ -152,8 +152,8 @@ public:
 	WCPartDocumentFactory()						{ }													//!< Default constructor
 	virtual ~WCPartDocumentFactory()			{ }													//!< Default destructor
 	//Mandatory Factory Methods
-	virtual WCPart* Create(const std::string &name, const std::string &filename) {					//!< Mandatory method for document creation
-												return new WCPart(name, filename); }
+	virtual WCPart* Create(const std::string &name, const std::string &directory) {					//!< Mandatory method for document creation
+												return new WCPart(name, directory); }
 	virtual WCPart* Open(xercesc::DOMElement *element, WCSerialDictionary *dictionary) {			//!< Mandatory method for document opening
 												return new WCPart(element, dictionary); }
 };

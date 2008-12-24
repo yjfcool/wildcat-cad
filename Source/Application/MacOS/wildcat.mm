@@ -29,6 +29,7 @@
 /*** Inluded Header Files ***/
 #import <Cocoa/Cocoa.h>
 #include "Kernel/wildcat_kernel.h"
+#include <boost/program_options.hpp>
 #include "Application/MacOS/document_controller.h"
 
 
@@ -40,6 +41,7 @@
 }
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
 - (void)applicationWillTerminate:(NSNotification *)aNotification;
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
 @end
 
 
@@ -52,6 +54,12 @@
 	return YES;
 }
 
+
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
+{
+	std::cout << "application:openFile -- " << [filename cStringUsingEncoding:NSUTF8StringEncoding];
+	return YES;
+}
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification
 {
@@ -80,13 +88,59 @@
 /***********************************************~***************************************************/
 
 
-int main(int argc, char *argv[])
-{
+void _ParseCommandLine(int argc, char* argv[]) {
+	//Command line arguments
+	bool logToFile = true;
+	std::string loggerLevel = "ERROR";
+	std::string loggerFile = "wildcat.log";
+	std::vector<std::string> modules;
+	bool headless = false;
+	//Parse the command line options
+	boost::program_options::options_description optionsDescription("Allowed options");
+	optionsDescription.add_options()
+	("help", "produce help message")
+	("logtofile", boost::program_options::value<bool>(&logToFile)->default_value(true), "log output to a file")
+	("logging-level,l", boost::program_options::value<std::string>(&loggerLevel)->default_value("ERROR"), "set logging level")
+	("logging-file,f", boost::program_options::value<std::string>(&loggerFile)->default_value("wildcat.log"), "set logging file")
+	("modules,m", boost::program_options::value< std::vector<std::string> >(&modules), "load module(s)")
+	("headless,h", boost::program_options::value<bool>(&headless)->default_value(false), "run in headless mode");
+
+	//Get out the map!
+	boost::program_options::variables_map variablesMap;
+	//Try to parse the command line options
+	try {
+		boost::program_options::store(boost::program_options::parse_command_line(argc, argv, optionsDescription), variablesMap);
+		boost::program_options::notify(variablesMap);
+	} catch (boost::program_options::error &ex) {
+		//Must have been quite some problem
+		std::cerr << ex.what();
+		exit(-1);
+	}
+	//Convert logging level
+	WCLoggerLevel logLevel = WCLoggerLevel::Error();
+	std::transform(loggerLevel.begin(), loggerLevel.end(), loggerLevel.begin(), tolower);
+	if (variablesMap.count("logging-level")) {
+		if (loggerLevel == "fatal") logLevel = WCLoggerLevel::Fatal();
+		if (loggerLevel == "error") logLevel = WCLoggerLevel::Error();
+		if (loggerLevel == "warn") logLevel = WCLoggerLevel::Warn();
+		if (loggerLevel == "info") logLevel = WCLoggerLevel::Info();
+		if (loggerLevel == "debug") logLevel = WCLoggerLevel::Debug();
+	}
+
+	//Initialize the Wildcat Kernel
+	WCWildcatKernel::Initialize(logToFile, logLevel, loggerFile, headless);
+
+	//Open the modules
+	//...
+}
+
+
+int main(int argc, char *argv[]) {
 	//Set up an auto-release pool
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	//Initialize the Wildcat Kernel
-	WCWildcatKernel::Initialize();
+	//Handle the command line
+	_ParseCommandLine(argc, argv);
 
 	//Begin setting up the App delegate
 	WCAppDelegate *delegate = [[WCAppDelegate alloc] autorelease];

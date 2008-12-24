@@ -42,7 +42,7 @@ void WCPart::Initialize(void) {
 /***********************************************~***************************************************/
 
 
-WCPart::WCPart(std::string name, std::string filename) : ::WCDocument(NULL, name, filename), 
+WCPart::WCPart(const std::string &name, const std::string &directory) : ::WCDocument(NULL, name, directory), 
 	_featureMap(), _featureList(), _workbench(NULL), _currentBody(NULL),
 	_pointLayer(NULL), _lineLayer(NULL), _curveLayer(NULL), _surfaceLayer(NULL),
 	_pointMap(), _lineMap(), _curveMap(), _surfaceMap(), _topologyModel(NULL) {

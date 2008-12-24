@@ -29,6 +29,7 @@
 /*** Included Header Files ***/
 #include "Utility/log_manager.h"
 #include "Utility/log_appenders.h"
+#include "Utility/assert_exception.h"
 
 
 /*** Static Member Initialization ***/
@@ -54,16 +55,16 @@ void __WILDCAT_NAMESPACE__::_LogCheck(int level, WCLogger* logger, std::string m
 			if (logger->IsDebugEnabled()) logger->ForcedLog(LOGGER_DEBUG, msg, __LINE__, __FILE__);
 			break;
 		case LOGGER_INFO:
-			if (logger->IsDebugEnabled()) logger->ForcedLog(LOGGER_INFO, msg, __LINE__, __FILE__);
+			if (logger->IsInfoEnabled()) logger->ForcedLog(LOGGER_INFO, msg, __LINE__, __FILE__);
 			break;
 		case LOGGER_WARN:
-			if (logger->IsDebugEnabled()) logger->ForcedLog(LOGGER_WARN, msg, __LINE__, __FILE__);
+			if (logger->IsWarnEnabled()) logger->ForcedLog(LOGGER_WARN, msg, __LINE__, __FILE__);
 			break;
 		case LOGGER_ERROR:
-			if (logger->IsDebugEnabled()) logger->ForcedLog(LOGGER_ERROR, msg, __LINE__, __FILE__);
+			if (logger->IsErrorEnabled()) logger->ForcedLog(LOGGER_ERROR, msg, __LINE__, __FILE__);
 			break;
 		case LOGGER_FATAL:
-			if (logger->IsDebugEnabled()) logger->ForcedLog(LOGGER_FATAL, msg, __LINE__, __FILE__);
+			if (logger->IsFatalEnabled()) logger->ForcedLog(LOGGER_FATAL, msg, __LINE__, __FILE__);
 			break;
 	}
 }
@@ -72,8 +73,8 @@ void __WILDCAT_NAMESPACE__::_LogCheck(int level, WCLogger* logger, std::string m
 /***********************************************~***************************************************/
 
 
-WCLogger::WCLogger(std::string name, WCLoggerLevel level, WCLogAppender *appender) : 
-	_refCount(1), _name(name), _level(level.GetLevel()), _appender(appender) { 
+WCLogger::WCLogger(const std::string &name, const WCLoggerLevel &level, WCLogAppender *appender) : 
+	_refCount(1), _name(name), _level(level), _appender(appender) { 
 }
 
 
@@ -81,17 +82,15 @@ WCLogger::~WCLogger() {
 }
 
 
-void WCLogger::SetAppender(WCLogAppender *appender) {
-	if (appender != NULL) this->_appender = appender;
-	else {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCLogger::SetAppender Error - Null appender passed");
-		//throw error
-		return;
-	}
+void WCLogger::Appender(WCLogAppender *appender) {
+	//Make sure appender exists
+	ASSERT(appender);
+	//Set the appender
+	this->_appender = appender;
 }	
 
 
-void WCLogger::ForcedLog(int level, std::string msg, int line, std::string file) {
+void WCLogger::ForcedLog(const int &level, const std::string &msg, const int &line, const std::string &file) {
 	this->_appender->ForcedLog(level, msg, line, file);
 }
 
@@ -99,15 +98,21 @@ void WCLogger::ForcedLog(int level, std::string msg, int line, std::string file)
 /***********************************************~***************************************************/
 
 
-bool WCLogManager::Initialize(WCLoggerLevel level) {
+bool WCLogManager::Initialize(const WCLoggerLevel &level, WCLogAppender *defaultAppender) {
 	//Increment the reference counter
 	WCLogManager::_refCount++;
 	//Check to see if the LogManager has already been started
 	if (WCLogManager::_rootLogger != NULL) {
 		return true;
 	}
-	//Create the default LogAppender 
-	WCLogManager::_rootAppender = new WCConsoleAppender();
+	//See if default appender was attached
+	if (defaultAppender) {
+		WCLogManager::_rootAppender = defaultAppender;
+	}
+	//Otherwise, create the default LogAppender
+	else {
+		WCLogManager::_rootAppender = new WCConsoleAppender();
+	}
 	//Now set up the logger mapping table
 	WCLogManager::_loggerMap = new std::map<std::string,WCLogger*>;
 	//Create the default Logger
@@ -151,7 +156,7 @@ bool WCLogManager::Terminate(void) {
 }
 
 
-WCLogger* WCLogManager::CreateLogger(std::string name, WCLogAppender* appender, WCLoggerLevel level) {
+WCLogger* WCLogManager::CreateLogger(const std::string &name, WCLogAppender* appender, const WCLoggerLevel &level) {
 	WCLogger *newLogger;
 	
 	//Get a reference to the logger map
@@ -269,7 +274,7 @@ void WCLogManager::DereferenceLogger(WCLogger* ref) {
 }
 
 
-WCLogger* WCLogManager::GetLogger(std::string name) {
+WCLogger* WCLogManager::GetLogger(const std::string &name) {
 	std::map<std::string,WCLogger*>::iterator iter;
 
 	//Get a reference to the logger map

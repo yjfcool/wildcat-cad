@@ -33,7 +33,7 @@
 
 /*** Included Header Files ***/
 #include "Kernel/document.h"
-#include "Kernel/document_type_manager.h"
+#include "Kernel/wildcat_kernel.h"
 #include "Kernel/workbench.h"
 #include "Kernel/selection_mode.h"
 #include "Application/keymap.h"
@@ -58,10 +58,14 @@
 		const char* cString = [typeName cStringUsingEncoding:NSUTF8StringEncoding];
 		//Create the string value
 		std::string docType(cString);
-		//Get the appropraite factory
-		WCDocumentFactory *factory = WCDocumentTypeManager::FactoryFromType(docType);
-		//Create the document type
-		_document = factory->Create("", "");
+		//Try to create the document
+		try {
+			_document = WCWildcatKernel::CreateDocument(docType, "", "");
+		}
+		//Not able to create document
+		catch (WCException &ex) {
+			CLOGGER_ERROR(WCLogManager::RootLogger(), "initWithType - Not able to create document of type: " << docType << " Error: " << ex.what());
+		}
 		//Do not create an OSX undo manager
 		[self setHasUndoManager:NO];
     }
@@ -72,13 +76,20 @@
 
 - (id)initWithContentsOfURL:(NSURL*)absoluteURL ofType:(NSString*)typeName error:(NSError**)outError
 {
-	ASSERT(TRUE);
 	//Do the cocoa thing
     self = [super init];
 	//Get the specified path for the file
-//	NSString* path = [absoluteURL path];
+	NSString* path = [absoluteURL path];
 	//Set filePath as a flag for loading (see onInitOpenGL)
-//	_filePath = new std::string( [path cStringUsingEncoding:NSUTF8StringEncoding] );
+	std::string filePath( [path cStringUsingEncoding:NSUTF8StringEncoding] );
+	//Try to open the document
+	try {
+		_document = WCWildcatKernel::OpenDocument(filePath);
+	}
+	//Not able to open document
+	catch (WCException &ex) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "initWithContentsOfURL - Not able to open document: " << filePath << " Error: " << ex.what());
+	}
 	//Return reference to self
     return self;
 }
