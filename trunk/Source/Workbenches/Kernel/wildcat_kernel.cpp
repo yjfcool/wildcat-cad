@@ -207,6 +207,8 @@ WCDocument* WCWildcatKernel::OpenDocument(const std::string &fullpath) {
 		WCSerialDictionary *dictionary = new WCSerialDictionary();
 		//Try to create document using parsed XML
 		document = factory->Open( (xercesc::DOMElement*)(elementList->item(0)), dictionary );
+		//Delete the dictionary
+		delete dictionary;
 	}
 	//Error checking
 	catch (const xercesc::XMLException& toCatch) {

@@ -341,24 +341,6 @@
 		case NSLeftArrowFunctionKey:	_document->Scene()->OnArrowKeyPress(WCArrowKey::Left()); return true; break;
 		case NSRightArrowFunctionKey:	_document->Scene()->OnArrowKeyPress(WCArrowKey::Right()); return true; break;
 		case NSDownArrowFunctionKey:	_document->Scene()->OnArrowKeyPress(WCArrowKey::Down()); return true; break;
-
-		//Capture view keys
-		case '1': _document->ActiveWorkbench()->NamedView("Front"); return true; break;
-		case '2': _document->ActiveWorkbench()->NamedView("Back"); return true; break;
-		case '3': _document->ActiveWorkbench()->NamedView("Left"); return true; break;
-		case '4': _document->ActiveWorkbench()->NamedView("Right"); return true; break;
-		case '5': _document->ActiveWorkbench()->NamedView("Top"); return true; break;
-		case '6': _document->ActiveWorkbench()->NamedView("Bottom"); return true; break;
-		case '7': _document->ActiveWorkbench()->NamedView("Isometric"); return true; break;
-		case '8': _document->ActiveWorkbench()->ZoomToFit(); return true; break;
-		case 'v': _document->ActiveWorkbench()->SaveAs("test.xml"); return true; break;
-		//Capture escape
-		case 96:
-			//Revert to default drawing mode
-//			_document->ActiveWorkbench()->DrawingMode( WCDrawingMode::Selection( _document->ActiveWorkbench() ));
-			_document->ActiveWorkbench()->DrawingMode( new WCSelectionMode( _document->ActiveWorkbench() ) );
-			 return true;
-			break;
 	}
 	//Otherwise, did not capture
 	return false;

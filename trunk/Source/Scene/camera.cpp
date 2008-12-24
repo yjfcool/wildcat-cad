@@ -61,7 +61,7 @@ void WCCamera::GenerateMatrices(void) {
 /***********************************************~***************************************************/
 
 
-WCCamera::WCCamera(WCScene *scene, std::string name, const bool moveable) : ::WCSerializeableObject(), 
+WCCamera::WCCamera(WCScene *scene, const std::string &name, const bool &moveable) : ::WCSerializeableObject(), 
 	_scene(scene), _zoom(1.0), _panX(0.0), _panY(0.0), 
 	_isOrtho(true), _quaternion(0.0, 0.0, 0.0, 1.0), _matrix(false), _inverseMatrix(false), 
 	_name(name), _isMoveable(moveable), _renderState(NULL), _isAnimating(false), 
@@ -69,7 +69,8 @@ WCCamera::WCCamera(WCScene *scene, std::string name, const bool moveable) : ::WC
 	_aniZoom(1.0), _aniPanX(0.0), _aniPanY(0.0), _aniAngle(0.0), 
 	_markZoom(1.0), _markPanX(0.0), _markPanY(0.0), _markAngle(0.0),
 	_aniQuaternion(), _markQuaternion() {
-
+	//Make sure scene is present
+	ASSERT(scene);
 	//Create a render state for this camera
 	this->_renderState = new WCRenderState();
 	//Retain the render state
@@ -84,7 +85,6 @@ WCCamera::WCCamera(const WCCamera &camera) : ::WCObject(),
 	_aniZoom(1.0), _aniPanX(0.0), _aniPanY(0.0), _aniAngle(0.0), 
 	_markZoom(1.0), _markPanX(0.0), _markPanY(0.0), _markAngle(0.0), 
 	_aniQuaternion(), _markQuaternion() {
-
 	//Copy the existing quaternion
 	this->_quaternion = camera._quaternion;
 }
@@ -98,9 +98,9 @@ WCCamera::WCCamera(xercesc::DOMElement* element, WCSerialDictionary *dictionary)
 	_aniZoom(1.0), _aniPanX(0.0), _aniPanY(0.0), _aniAngle(0.0), 
 	_markZoom(1.0), _markPanX(0.0), _markPanY(0.0), _markAngle(0.0),
 	_aniQuaternion(), _markQuaternion() {
-
-	//Make sure element if not null
-	if (element == NULL) return;
+	//Make sure element and dictionary are not null
+	ASSERT(element);
+	ASSERT(dictionary);
 	//Get GUID and register it
 	WCGUID guid = WCSerializeableObject::GetStringAttrib(element, "guid");
 	dictionary->InsertGUID(guid, this);
@@ -150,7 +150,7 @@ void WCCamera::Quaternion(const WCQuaternion &quat) {
 	this->_scene->MarkDirty();
 }
 
-void WCCamera::Zoom(const WPFloat factor) {
+void WCCamera::Zoom(const WPFloat &factor) {
 	//Make sure the camera is moveable
 	if (!this->_isMoveable) return;
 	//Now update the zoom factor
@@ -163,7 +163,7 @@ void WCCamera::Zoom(const WPFloat factor) {
 }
 
 
-void WCCamera::IncrementZoom(const WPFloat factor) {
+void WCCamera::IncrementZoom(const WPFloat &factor) {
 	//Make sure the camera is moveable
 	if (!this->_isMoveable) return;
 	//Now update the zoom factor
@@ -175,7 +175,7 @@ void WCCamera::IncrementZoom(const WPFloat factor) {
 }
 
 
-void WCCamera::Pan(const WPFloat x, const WPFloat y) {
+void WCCamera::Pan(const WPFloat &x, const WPFloat &y) {
 	//Make sure the camera is moveable
 	if (!this->_isMoveable) return;
 	//Set the offset values
@@ -188,7 +188,7 @@ void WCCamera::Pan(const WPFloat x, const WPFloat y) {
 }
 
 
-void WCCamera::IncrementPan(const WPFloat x, const WPFloat y) {
+void WCCamera::IncrementPan(const WPFloat &x, const WPFloat &y) {
 	//Make sure the camera is moveable
 	if (!this->_isMoveable) return;
 	//Increment the offset values
@@ -201,7 +201,7 @@ void WCCamera::IncrementPan(const WPFloat x, const WPFloat y) {
 }
 
 
-void WCCamera::RotationXYZ(const WPFloat phi, const WPFloat theta, const WPFloat psi) {
+void WCCamera::RotationXYZ(const WPFloat &phi, const WPFloat &theta, const WPFloat &psi) {
 	//Make sure the camera is moveable
 	if (!this->_isMoveable) return;
 	//Load the rotation quaternion
@@ -213,7 +213,7 @@ void WCCamera::RotationXYZ(const WPFloat phi, const WPFloat theta, const WPFloat
 }
 
 
-void WCCamera::RotationZXZ(const WPFloat phi, const WPFloat theta, const WPFloat psi) {
+void WCCamera::RotationZXZ(const WPFloat &phi, const WPFloat &theta, const WPFloat &psi) {
 	//Make sure the camera is moveable
 	if (!this->_isMoveable) return;
 	//Load the rotation quaternion
@@ -225,7 +225,7 @@ void WCCamera::RotationZXZ(const WPFloat phi, const WPFloat theta, const WPFloat
 }
 
 
-void WCCamera::IncrementXRotation(const WPFloat rot) {
+void WCCamera::IncrementXRotation(const WPFloat &rot) {
 	//Make sure the camera is moveable
 	if (!this->_isMoveable) return;
 	//Load inc with the Euler Axis data
@@ -239,7 +239,7 @@ void WCCamera::IncrementXRotation(const WPFloat rot) {
 }
 
 
-void WCCamera::IncrementYRotation(const WPFloat rot) {
+void WCCamera::IncrementYRotation(const WPFloat &rot) {
 	//Make sure the camera is moveable
 	if (!this->_isMoveable) return;
 	//Load inc with the Euler Axis data
@@ -253,7 +253,7 @@ void WCCamera::IncrementYRotation(const WPFloat rot) {
 }
 
 
-void WCCamera::IncrementZRotation(const WPFloat rot) {
+void WCCamera::IncrementZRotation(const WPFloat &rot) {
 	//Make sure the camera is moveable
 	if (!this->_isMoveable) return;
 	//Load inc with the Euler Axis data
@@ -269,7 +269,7 @@ void WCCamera::IncrementZRotation(const WPFloat rot) {
 
 //This function is equivalent to a prerotation by rot followed by the existing rotation
 //  - should result in a rotation strictly about the x axis
-void WCCamera::IncrementXAxisAlignedRotation(const WPFloat rot) {
+void WCCamera::IncrementXAxisAlignedRotation(const WPFloat &rot) {
 	//Make sure the camera is moveable
 	if (!this->_isMoveable) return;
 	//Load inc with the Euler Axis data
@@ -285,7 +285,7 @@ void WCCamera::IncrementXAxisAlignedRotation(const WPFloat rot) {
 
 //This function is equivalent to a prerotation by rot followed by the existing rotation
 //  - should result in a rotation strictly about the y axis
-void WCCamera::IncrementYAxisAlignedRotation(const WPFloat rot) {
+void WCCamera::IncrementYAxisAlignedRotation(const WPFloat &rot) {
 	//Make sure the camera is moveable
 	if (!this->_isMoveable) return;
 	//Load inc with the Euler Axis data
@@ -301,7 +301,7 @@ void WCCamera::IncrementYAxisAlignedRotation(const WPFloat rot) {
 
 //This function is equivalent to a prerotation by rot followed by the existing rotation
 //  - should result in a rotation strictly about the z axis
-void WCCamera::IncrementZAxisAlignedRotation(const WPFloat rot) {
+void WCCamera::IncrementZAxisAlignedRotation(const WPFloat &rot) {
 	//Make sure the camera is moveable
 	if (!this->_isMoveable) return;
 	//Load inc with the Euler Axis data
@@ -341,7 +341,7 @@ void WCCamera::FitToWindow(void) {
 }
 
 	
-void WCCamera::AnimateToViewpoint(const WCQuaternion &rot, const WPFloat xPan, const WPFloat yPan, const WPFloat zoom, const WPFloat seconds) {
+void WCCamera::AnimateToViewpoint(const WCQuaternion &rot, const WPFloat &xPan, const WPFloat &yPan, const WPFloat &zoom, const WPFloat &seconds) {
 	//Make sure the camera is moveable
 	if (!this->_isMoveable) return;
 	//Setup the animation information
@@ -375,7 +375,7 @@ void WCCamera::AnimateToViewpoint(const WCQuaternion &rot, const WPFloat xPan, c
 }
 
 
-void WCCamera::AnimateToViewpoint(const WCNamedView &view, WPFloat duration) {
+void WCCamera::AnimateToViewpoint(const WCNamedView &view, const WPFloat &duration) {
 	//Calculate pan and zoom if named view is auto
 	if (view.IsAuto()) {
 		//Determine pan and zoom values
@@ -490,7 +490,7 @@ void WCCamera::ReadyScene(void) {
 }
 
 
-void WCCamera::EnableLighting(GLuint prog) {
+void WCCamera::EnableLighting(const GLuint &prog) {
 	//Make sure we can set parameters
 	if (prog == 0) return;	
 	//Set program params (if accepted)
@@ -501,6 +501,9 @@ void WCCamera::EnableLighting(GLuint prog) {
 
 
 xercesc::DOMElement* WCCamera::Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dictionary) {
+	//Make sure document and dictionary are present
+	ASSERT(document);
+	ASSERT(dictionary);
 	//Insert self into dictionary
 	WCGUID guid = dictionary->InsertAddress(this);
 	//Create primary element for this object

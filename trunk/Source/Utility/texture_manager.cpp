@@ -30,6 +30,7 @@
 #include "Utility/texture_manager.h"
 #include "Utility/log_manager.h"
 #include "Utility/adapter.h"
+#include "Utility/assert_exception.h"
 
 
 /***********************************************~***************************************************/
@@ -130,8 +131,9 @@ WCTextureManager::WCTextureManager(const std::string &manifest, const std::strin
 	//Parse the passed manifest
 	this->ParseManifest(manifest, directory, verbose);
 	//Check for errors
-	if (glGetError() != GL_NO_ERROR) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTextureManager::WCTextureManager - Unspecified Errors.");
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCTextureManager::WCTextureManager Error:" << std::hex << err);
 }
 
 
@@ -157,7 +159,7 @@ WSTexture* WCTextureManager::TextureFromName(const std::string &name) {
 	//See if you found anything
 	if( iter == this->_textureMap.end() ) {
 		CLOGGER_WARN(WCLogManager::RootLogger(), "WCTextureManager::TextureFromName - Not able to find texture: " << name);
-		return NULL;
+		throw WCException("WCTextureManager::TextureFromName - Not able to find texture: " + name);
 	}
 	//Otherwise, get the object
 	return (*iter).second;

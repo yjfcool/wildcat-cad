@@ -68,17 +68,15 @@ private:
 	WPFloat										_aniZoom, _aniPanX, _aniPanY, _aniAngle;			//!< Animation end points
 	WPFloat										_markZoom, _markPanX, _markPanY, _markAngle;		//!< Animation start points
 	WCQuaternion								_aniQuaternion, _markQuaternion;					//!< Animation quaternions
-	
 	//Private Methods
 	void GenerateMatrices(void);																	//< Generate matrices
-	
-	//Deny access
+	//Deny Access
 	WCCamera();																						//!< Deny access to default constructor
 	WCCamera& operator=(const WCCamera &camera);													//!< Deny access to equals operator
 	bool operator==(const WCCamera &camera);														//!< For now deny access to equality operator
 public:
 	//Constructors and Destructors
-	WCCamera(WCScene *scene, std::string name, const bool moveable=true);							//!< Primary constructor
+	WCCamera(WCScene *scene, const std::string &name, const bool &moveable=true);					//!< Primary constructor
 	WCCamera(const WCCamera &camera);																//!< Copy constructor
 	WCCamera(xercesc::DOMElement* element, WCSerialDictionary *dictionary);							//!< Persistance constructor
 	~WCCamera();																					//!< Default destructor
@@ -92,23 +90,23 @@ public:
 	WCQuaternion& Quaternion(void)				{ return this->_quaternion; }						//!< Get the rotation quaternion
 	void Quaternion(const WCQuaternion &quat);														//!< Set the rotation quaternion
 	WPFloat Zoom(void) const					{ return this->_zoom; }								//!< Get the current zoom factor
-	void Zoom(const WPFloat factor);																//!< Set the zoom factor
-	void IncrementZoom(const WPFloat factor);														//!< Increment the zoom factor
+	void Zoom(const WPFloat &factor);																//!< Set the zoom factor
+	void IncrementZoom(const WPFloat &factor);														//!< Increment the zoom factor
 	WPFloat PanX(void) const					{ return this->_panX; }								//!< Get the x pan amount
 	WPFloat PanY(void) const					{ return this->_panY; }								//!< Get the y pan amount
-	void Pan(const WPFloat x, const WPFloat y);														//!< Set the pan value
-	void IncrementPan(const WPFloat x, const WPFloat y);											//!< Increment the pan value
+	void Pan(const WPFloat &x, const WPFloat &y);													//!< Set the pan value
+	void IncrementPan(const WPFloat &x, const WPFloat &y);											//!< Increment the pan value
 	WCRenderState* RenderState(void)			{ return this->_renderState; }						//!< Get the camera render state
 	
 	//Rotation Manipulation Methods
-	void RotationXYZ(const WPFloat phi, const WPFloat theta, const WPFloat psi);					//!< Rotate values
-	void RotationZXZ(const WPFloat phi, const WPFloat theta, const WPFloat psi);					//!< Rotate values
-	void IncrementXRotation(const WPFloat rot);														//!< Increment the rotate values
-	void IncrementYRotation(const WPFloat rot);														//!< Increment the rotate values
-	void IncrementZRotation(const WPFloat rot);														//!< Increment the rotate values
-	void IncrementXAxisAlignedRotation(const WPFloat rot);											//!< X-Axis aligned rotation
-	void IncrementYAxisAlignedRotation(const WPFloat rot);											//!< Y-Axis aligned rotation
-	void IncrementZAxisAlignedRotation(const WPFloat rot);											//!< Z-Axis aligned rotation
+	void RotationXYZ(const WPFloat &phi, const WPFloat &theta, const WPFloat &psi);					//!< Rotate values
+	void RotationZXZ(const WPFloat &phi, const WPFloat &theta, const WPFloat &psi);					//!< Rotate values
+	void IncrementXRotation(const WPFloat &rot);													//!< Increment the rotate values
+	void IncrementYRotation(const WPFloat &rot);													//!< Increment the rotate values
+	void IncrementZRotation(const WPFloat &rot);													//!< Increment the rotate values
+	void IncrementXAxisAlignedRotation(const WPFloat &rot);											//!< X-Axis aligned rotation
+	void IncrementYAxisAlignedRotation(const WPFloat &rot);											//!< Y-Axis aligned rotation
+	void IncrementZAxisAlignedRotation(const WPFloat &rot);											//!< Z-Axis aligned rotation
 	
 	//Projection Methods
 	void Projection(void);																			//!< Set project values
@@ -116,15 +114,15 @@ public:
 	
 	//Animation Methods
 	void FitToWindow(void);																			//!< Zoom the window to just fit the model
-	void AnimateToViewpoint(const WCQuaternion &rot, const WPFloat xPan, const WPFloat yPan,		//!< Animate to a given viewpoint
-												 const WPFloat zoom, const WPFloat seconds=CAMERA_ANIMATE_DURATION);
-	void AnimateToViewpoint(const WCNamedView &view, WPFloat duration=CAMERA_ANIMATE_DURATION);		//!< Animate to a set view
+	void AnimateToViewpoint(const WCQuaternion &rot, const WPFloat &xPan, const WPFloat &yPan,		//!< Animate to a given viewpoint
+												 const WPFloat &zoom, const WPFloat &seconds=CAMERA_ANIMATE_DURATION);
+	void AnimateToViewpoint(const WCNamedView &view, const WPFloat &duration=CAMERA_ANIMATE_DURATION); //!< Animate to a set view
 	
 	//Other Methods
 	WCNamedView NamedView(void);																	//!< Record current position
 	void Reset(void);																				//!< Reset the camera back to zero point	
 	void ReadyScene(void);																			//!< Update the camera for rendering
-	void EnableLighting(GLuint prog);																//!< Force lighting on for a given program
+	void EnableLighting(const GLuint &prog);														//!< Force lighting on for a given program
 	
 	//Serialization and Object Methods
 	xercesc::DOMElement* Serialize(xercesc::DOMDocument *document, WCSerialDictionary *dict);		//!< Serialize the object

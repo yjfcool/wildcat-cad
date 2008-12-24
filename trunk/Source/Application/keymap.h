@@ -93,8 +93,8 @@ private:
 	
 public:
 	//Constructors and Destructors
-	WCKeyMap();																						//!< Default constructor
-	~WCKeyMap();																					//!< Default destructor
+	WCKeyMap() : _keyMap()						{ }													//!< Default constructor
+	~WCKeyMap()									{ }													//!< Default destructor
 
 	//KeyEvent Access Methods
 	void AddMapping(const WCKeyEvent &event, const WCUserMessage &message);							//!< Add key mapping

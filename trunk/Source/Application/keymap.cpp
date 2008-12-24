@@ -28,20 +28,9 @@
 
 //Included Header Files
 #include "Application/keymap.h"
-#include "Kernel/workbench.h"
 
 
 /***********************************************~***************************************************/
-
-
-WCKeyMap::WCKeyMap() {
-	//Nothing for now
-}
-
-
-WCKeyMap::~WCKeyMap() {
-	//Nothing for now
-}
 
 
 void WCKeyMap::AddMapping(const WCKeyEvent &event, const WCUserMessage &message) {
