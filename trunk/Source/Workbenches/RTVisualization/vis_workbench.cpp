@@ -30,7 +30,7 @@
 #include "RTVisualization/vis_workbench.h"
 #include "RTVisualization/visualization.h"
 #include "RTVisualization/ground_plane.h"
-#include "Application/keymap.h"
+#include "Kernel/keymap.h"
 #include "Kernel/document.h"
 #include "Kernel/workbench_layer.h"
 #include "Kernel/selection_mode.h"

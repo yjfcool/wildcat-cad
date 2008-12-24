@@ -36,7 +36,7 @@
 #include "Kernel/wildcat_kernel.h"
 #include "Kernel/workbench.h"
 #include "Kernel/selection_mode.h"
-#include "Application/keymap.h"
+#include "Kernel/keymap.h"
 
 
 /***********************************************~***************************************************/

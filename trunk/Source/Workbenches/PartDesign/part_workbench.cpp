@@ -29,7 +29,7 @@
 /*** Included Header Files ***/
 #include "PartDesign/part_workbench.h"
 #include "PartDesign/part.h"
-#include "Application/keymap.h"
+#include "Kernel/keymap.h"
 #include "Scene/frame_rate_monitor.h"
 #include "Kernel/selection_mode.h"
 #include "Sketcher/sketch.h"
