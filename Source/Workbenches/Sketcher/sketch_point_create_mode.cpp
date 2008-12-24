@@ -27,13 +27,13 @@
 
 
 /*** Included Header Files ***/
-#include "Sketcher/sketch_point_modes.h"
-#include "Sketcher/sketch_workbench.h"
-#include "Sketcher/sketch_point.h"
-#include "Sketcher/sketch.h"
-#include "Sketcher/sketch_align_suggestion.h"
-#include "Constraint/constraint_distance.h"
-#include "Kernel/document.h"
+#include <Sketcher/sketch_point_modes.h>
+#include <Sketcher/sketch_workbench.h>
+#include <Sketcher/sketch_point.h>
+#include <Sketcher/sketch.h>
+#include <Sketcher/sketch_align_suggestion.h>
+#include <Constraint/constraint_distance.h>
+#include <Kernel/document.h>
 
 
 /***********************************************~***************************************************/

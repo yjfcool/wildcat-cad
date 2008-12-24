@@ -27,11 +27,11 @@
 
 
 /*** Included Header Files ***/
-#include "PartDesign/part_body_controller.h"
-#include "PartDesign/part_body.h"
-#include "PartDesign/part.h"
-#include "Kernel/document.h"
-#include "Kernel/workbench.h"
+#include <PartDesign/part_body_controller.h>
+#include <PartDesign/part_body.h>
+#include <PartDesign/part.h>
+#include <Kernel/document.h>
+#include <Kernel/workbench.h>
 
 
 /***********************************************~***************************************************/

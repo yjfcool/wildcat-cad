@@ -27,13 +27,13 @@
 
 
 /*** Included Header Files ***/
-#include "Scene/scene.h"
-#include "Scene/camera.h"
-#include "Scene/light_source.h"
-#include "Scene/camera_layer.h"
+#include <Scene/scene.h>
+#include <Scene/camera.h>
+#include <Scene/light_source.h>
+#include <Scene/camera_layer.h>
 //Include Font Manager only if not on OSX
 #ifndef __APPLE__
-#include "Application/Win32/font_manager.h"
+#include <Application/Win32/font_manager.h>
 #endif
 
 

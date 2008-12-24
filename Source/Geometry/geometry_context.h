@@ -31,7 +31,7 @@
 
 
 /*** Included Headers ***/
-#include "Geometry/wgeol.h"
+#include <Geometry/wgeol.h>
 
 
 /*** Locally Defined Values ***/

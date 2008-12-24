@@ -27,13 +27,13 @@
 
 
 /*** Included Header Files ***/
-#include "Sketcher/sketch_point_modes.h"
-#include "Sketcher/sketch_point.h"
-#include "Sketcher/sketch.h"
-#include "Sketcher/sketch_align_suggestion.h"
-#include "Kernel/document.h"
-#include "Kernel/selection_mode.h"
-#include "PartDesign/part_plane.h"
+#include <Sketcher/sketch_point_modes.h>
+#include <Sketcher/sketch_point.h>
+#include <Sketcher/sketch.h>
+#include <Sketcher/sketch_align_suggestion.h>
+#include <Kernel/document.h>
+#include <Kernel/selection_mode.h>
+#include <PartDesign/part_plane.h>
 
 
 /***********************************************~***************************************************/

@@ -27,11 +27,11 @@
 
 
 /*** Included Header Files ***/
-#include "Sketcher/sketch_profile.h"
-#include "Sketcher/sketch.h"
-#include "Sketcher/sketch_axis.h"
-#include "Kernel/document.h"
-#include "PartDesign/part_plane.h"
+#include <Sketcher/sketch_profile.h>
+#include <Sketcher/sketch.h>
+#include <Sketcher/sketch_axis.h>
+#include <Kernel/document.h>
+#include <PartDesign/part_plane.h>
 
 
 /*** Locally Defined Values ***/

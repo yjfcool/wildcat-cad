@@ -31,10 +31,10 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/wftrl.h"
-#include "Sketcher/sketch_actions.h"
-#include "Sketcher/sketch_workbench.h"
-#include "PartDesign/part_feature.h"
+#include <Kernel/wftrl.h>
+#include <Sketcher/sketch_actions.h>
+#include <Sketcher/sketch_workbench.h>
+#include <PartDesign/part_feature.h>
 
 
 /*** Locally Defined Values ***/

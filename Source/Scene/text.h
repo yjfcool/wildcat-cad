@@ -31,7 +31,7 @@
 
 
 /*** Included Header Files ***/
-#include "Scene/wscnl.h"
+#include <Scene/wscnl.h>
 
 
 /*** Locally Defined Values ***/

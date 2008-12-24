@@ -27,8 +27,8 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/workbench_layer.h"
-#include "Kernel/drawing_mode.h"
+#include <Kernel/workbench_layer.h>
+#include <Kernel/drawing_mode.h>
 
 
 /***********************************************~***************************************************/

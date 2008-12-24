@@ -31,9 +31,9 @@
 
 
 /*** Included Header Files ***/
-#include "Constraint/wgcsl.h"
-#include "Constraint/sketch_constraint.h"
-#include "Kernel/action.h"
+#include <Constraint/wgcsl.h>
+#include <Constraint/sketch_constraint.h>
+#include <Kernel/action.h>
 
 
 /*** Locally Defined Values ***/

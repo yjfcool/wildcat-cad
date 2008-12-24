@@ -27,9 +27,9 @@
 
 
 /*** Included Header Files ***/
-#include "Utility/gl_context.h"
-#include "Utility/log_manager.h"
-#include "Utility/assert_exception.h"
+#include <Utility/gl_context.h>
+#include <Utility/log_manager.h>
+#include <Utility/assert_exception.h>
 #import <AppKit/NSOpenGL.h>
 
 

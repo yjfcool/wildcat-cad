@@ -31,9 +31,9 @@
 
 
 /*** Included Header Files ***/
-#include "Geometry/wgeol.h"
-#include "Geometry/geometric_types.h"
-#include "Geometry/nurbs.h"
+#include <Geometry/wgeol.h>
+#include <Geometry/geometric_types.h>
+#include <Geometry/nurbs.h>
 
 
 /*** Locally Defined Values ***/

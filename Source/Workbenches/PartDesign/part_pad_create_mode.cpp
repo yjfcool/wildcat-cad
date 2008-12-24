@@ -27,16 +27,16 @@
 
 
 /*** Included Header Files ***/
-#include "PartDesign/part_pad_modes.h"
-#include "PartDesign/part_pad.h"
-#include "PartDesign/part_plane.h"
-#include "PartDesign/part_workbench.h"
-#include "PartDesign/part.h"
-#include "Kernel/document.h"
-#include "Kernel/selection_mode.h"
-#include "Kernel/workbench_layer.h"
-#include "Sketcher/sketch_profile.h"
-#include "Sketcher/sketch.h"
+#include <PartDesign/part_pad_modes.h>
+#include <PartDesign/part_pad.h>
+#include <PartDesign/part_plane.h>
+#include <PartDesign/part_workbench.h>
+#include <PartDesign/part.h>
+#include <Kernel/document.h>
+#include <Kernel/selection_mode.h>
+#include <Kernel/workbench_layer.h>
+#include <Sketcher/sketch_profile.h>
+#include <Sketcher/sketch.h>
 
 
 /***********************************************~***************************************************/

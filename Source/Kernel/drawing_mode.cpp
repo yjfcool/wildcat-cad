@@ -27,9 +27,9 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/drawing_mode.h"
-#include "Kernel/workbench.h"
-#include "Kernel/selection_mode.h"
+#include <Kernel/drawing_mode.h>
+#include <Kernel/workbench.h>
+#include <Kernel/selection_mode.h>
 
 
 /***********************************************~***************************************************/

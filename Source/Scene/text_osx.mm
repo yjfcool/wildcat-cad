@@ -27,7 +27,7 @@
 
 
 /*** Included Header Files***/
-#include "Scene/text.h"
+#include <Scene/text.h>
 
 
 /*** Platform Specific Included Headers ***/

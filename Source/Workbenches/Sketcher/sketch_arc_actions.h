@@ -31,9 +31,9 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/wftrl.h"
-#include "Kernel/action.h"
-#include "Sketcher/sketch_arc_type.h"
+#include <Kernel/wftrl.h>
+#include <Kernel/action.h>
+#include <Sketcher/sketch_arc_type.h>
 
 
 /*** Locally Defined Values ***/

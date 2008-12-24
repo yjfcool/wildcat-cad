@@ -31,9 +31,9 @@
 
 
 /*** Included Header Files ***/
-#include "Constraint/wgcsl.h"
-#include "Kernel/wftrl.h"
-#include "Sketcher/sketch_feature.h"
+#include <Constraint/wgcsl.h>
+#include <Kernel/wftrl.h>
+#include <Sketcher/sketch_feature.h>
 
 
 /*** Locally Defined Values ***/

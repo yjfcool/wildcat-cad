@@ -27,12 +27,12 @@
 
 
 /*** Included Header Files ***/
-#include "Sketcher/sketch_ellipse_modes.h"
-#include "Sketcher/sketch_ellipse.h"
-#include "Sketcher/sketch_workbench.h"
-#include "Sketcher/sketch.h"
-#include "Kernel/document.h"
-#include "PartDesign/part_plane.h"
+#include <Sketcher/sketch_ellipse_modes.h>
+#include <Sketcher/sketch_ellipse.h>
+#include <Sketcher/sketch_workbench.h>
+#include <Sketcher/sketch.h>
+#include <Kernel/document.h>
+#include <PartDesign/part_plane.h>
 
 
 /***********************************************~***************************************************/

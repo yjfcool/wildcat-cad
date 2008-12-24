@@ -31,9 +31,9 @@
 
 
 /*** Included Headers ***/
-#include "Scene/wscnl.h"
-#include "Scene/scene.h"
-#include "Scene/render_state.h"
+#include <Scene/wscnl.h>
+#include <Scene/scene.h>
+#include <Scene/render_state.h>
 
 
 /*** Locally Defined Values ***/

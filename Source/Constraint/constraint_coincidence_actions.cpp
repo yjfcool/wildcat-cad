@@ -27,10 +27,10 @@
 
 
 /*** Included Header Files ***/
-#include "Constraint/constraint_coincidence_actions.h"
-#include "Constraint/constraint_coincidence.h"
-#include "Sketcher/sketch.h"
-#include "Sketcher/sketch_point.h"
+#include <Constraint/constraint_coincidence_actions.h>
+#include <Constraint/constraint_coincidence.h>
+#include <Sketcher/sketch.h>
+#include <Sketcher/sketch_point.h>
 
 
 /***********************************************~***************************************************/

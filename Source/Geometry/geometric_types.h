@@ -31,8 +31,8 @@
 
 
 /*** Included Headers ***/
-#include "Geometry/wgeol.h"
-#include "Geometry/geometric_intersection.h"
+#include <Geometry/wgeol.h>
+#include <Geometry/geometric_intersection.h>
 
 
 /*** Locally Defined Values ***/

@@ -31,8 +31,8 @@
 
 
 /*** Included Header Files ***/
-#include "Scene/wscnl.h"
-#include "Scene/selection_manager.h"
+#include <Scene/wscnl.h>
+#include <Scene/selection_manager.h>
 
 
 /*** Locally Defined Values ***/

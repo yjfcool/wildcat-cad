@@ -27,12 +27,12 @@
 
 
 /*** Included Header Files ***/
-#include "Sketcher/sketch_align_suggestion.h"
-#include "Sketcher/sketch_workbench.h"
-#include "Sketcher/sketch.h"
-#include "Sketcher/grid.h"
-#include "Kernel/document.h"
-#include "PartDesign/part_plane.h"
+#include <Sketcher/sketch_align_suggestion.h>
+#include <Sketcher/sketch_workbench.h>
+#include <Sketcher/sketch.h>
+#include <Sketcher/grid.h>
+#include <Kernel/document.h>
+#include <PartDesign/part_plane.h>
 
 
 /***********************************************~***************************************************/

@@ -27,20 +27,20 @@
 
 
 /*** Included Header Files ***/
-#include "RTVisualization/vis_workbench.h"
-#include "RTVisualization/visualization.h"
-#include "RTVisualization/ground_plane.h"
-#include "Kernel/keymap.h"
-#include "Kernel/document.h"
-#include "Kernel/workbench_layer.h"
-#include "Kernel/selection_mode.h"
-#include "Scene/frame_rate_monitor.h"
+#include <RTVisualization/vis_workbench.h>
+#include <RTVisualization/visualization.h>
+#include <RTVisualization/ground_plane.h>
+#include <Kernel/keymap.h>
+#include <Kernel/document.h>
+#include <Kernel/workbench_layer.h>
+#include <Kernel/selection_mode.h>
+#include <Scene/frame_rate_monitor.h>
 
 
 /*** Included Feature Headers ***/
-#include "RTVisualization/vis_motiontracker.h"
-#include "RTVisualization/vis_listener.h"
-#include "RTVisualization/vis_recorder.h"
+#include <RTVisualization/vis_motiontracker.h>
+#include <RTVisualization/vis_listener.h>
+#include <RTVisualization/vis_recorder.h>
 
 
 #define SERV_PORT								9877

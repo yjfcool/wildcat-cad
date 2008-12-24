@@ -27,13 +27,13 @@
 
 
 /*** Included Header Files ***/
-#include "Sketcher/sketch_line_modes.h"
-#include "Sketcher/sketch_line.h"
-#include "Sketcher/sketch_workbench.h"
-#include "Sketcher/sketch.h"
-#include "Kernel/document.h"
-#include "Kernel/selection_mode.h"
-#include "PartDesign/part_plane.h"
+#include <Sketcher/sketch_line_modes.h>
+#include <Sketcher/sketch_line.h>
+#include <Sketcher/sketch_workbench.h>
+#include <Sketcher/sketch.h>
+#include <Kernel/document.h>
+#include <Kernel/selection_mode.h>
+#include <PartDesign/part_plane.h>
 
 
 /*** Locally Defined Values ***/

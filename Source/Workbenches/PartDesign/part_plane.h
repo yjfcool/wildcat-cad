@@ -31,10 +31,10 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/wftrl.h"
-#include "PartDesign/part_feature.h"
-#include "PartDesign/part_plane_actions.h"
-#include "PartDesign/part_plane_controller.h"
+#include <Kernel/wftrl.h>
+#include <PartDesign/part_feature.h>
+#include <PartDesign/part_plane_actions.h>
+#include <PartDesign/part_plane_controller.h>
 
 
 /*** Locally Defined Values ***/

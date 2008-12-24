@@ -27,10 +27,10 @@
 
 
 /*** Included Header Files ***/
-#include "PartDesign/part_shaft_actions.h"
-#include "PartDesign/part_shaft.h"
-#include "PartDesign/part_body.h"
-#include "Kernel/document.h"
+#include <PartDesign/part_shaft_actions.h>
+#include <PartDesign/part_shaft.h>
+#include <PartDesign/part_body.h>
+#include <Kernel/document.h>
 
 
 /***********************************************~***************************************************/

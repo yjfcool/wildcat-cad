@@ -27,12 +27,12 @@
 
 
 /*** Included Header Files ***/
-#include "Constraint/constraint_distance.h"
-#include "Sketcher/sketch.h"
-#include "Sketcher/sketch_point.h"
-#include "Sketcher/sketch_line.h"
-#include "Kernel/document.h"
-#include "PartDesign/part_plane.h"
+#include <Constraint/constraint_distance.h>
+#include <Sketcher/sketch.h>
+#include <Sketcher/sketch_point.h>
+#include <Sketcher/sketch_line.h>
+#include <Kernel/document.h>
+#include <PartDesign/part_plane.h>
 
 
 /***********************************************~***************************************************/

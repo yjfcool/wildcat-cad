@@ -27,8 +27,8 @@
 
 
 /*** Included Header Files ***/
-#include "Utility/texture_manager.h"
-#include "Utility/log_manager.h"
+#include <Utility/texture_manager.h>
+#include <Utility/log_manager.h>
 
 
 /*** Platform Specific Included Headers ***/

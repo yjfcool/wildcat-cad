@@ -27,10 +27,10 @@
 
 
 /*** Included Header Files ***/
-#include "Sketcher/sketch_arc.h"
-#include "Sketcher/sketch.h"
-#include "Kernel/document.h"
-#include "PartDesign/part_plane.h"
+#include <Sketcher/sketch_arc.h>
+#include <Sketcher/sketch.h>
+#include <Kernel/document.h>
+#include <PartDesign/part_plane.h>
 
 
 /***********************************************~***************************************************/

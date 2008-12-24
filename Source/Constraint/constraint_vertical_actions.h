@@ -31,8 +31,8 @@
 
 
 /*** Included Header Files ***/
-#include "Constraint/wgcsl.h"
-#include "Kernel/action.h"
+#include <Constraint/wgcsl.h>
+#include <Kernel/action.h>
 
 
 /*** Locally Defined Values ***/

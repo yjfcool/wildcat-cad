@@ -27,17 +27,17 @@
 
 
 /*** Included Header Files ***/
-#include "PartDesign/part_shaft_modes.h"
-#include "PartDesign/part_shaft.h"
-#include "PartDesign/part_workbench.h"
-#include "PartDesign/part.h"
-#include "PartDesign/part_plane.h"
-#include "Kernel/document.h"
-#include "Kernel/selection_mode.h"
-#include "Kernel/workbench_layer.h"
-#include "Sketcher/sketch.h"
-#include "Sketcher/sketch_axis.h"
-#include "Sketcher/sketch_profile.h"
+#include <PartDesign/part_shaft_modes.h>
+#include <PartDesign/part_shaft.h>
+#include <PartDesign/part_workbench.h>
+#include <PartDesign/part.h>
+#include <PartDesign/part_plane.h>
+#include <Kernel/document.h>
+#include <Kernel/selection_mode.h>
+#include <Kernel/workbench_layer.h>
+#include <Sketcher/sketch.h>
+#include <Sketcher/sketch_axis.h>
+#include <Sketcher/sketch_profile.h>
 
 
 /***********************************************~***************************************************/

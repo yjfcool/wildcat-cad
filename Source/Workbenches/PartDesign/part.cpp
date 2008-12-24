@@ -27,9 +27,9 @@
 
 
 /*** Included Header Files ***/
-#include "PartDesign/part.h"
-#include "PartDesign/part_feature.h"
-#include "Kernel/workbench_layer.h"
+#include <PartDesign/part.h>
+#include <PartDesign/part_feature.h>
+#include <Kernel/workbench_layer.h>
 
 
 /***********************************************~***************************************************/

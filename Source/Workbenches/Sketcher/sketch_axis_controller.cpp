@@ -27,11 +27,11 @@
 
 
 /*** Included Header Files ***/
-#include "Sketcher/sketch_axis_controller.h"
-#include "Sketcher/sketch_axis.h"
-#include "Sketcher/sketch.h"
-#include "Kernel/document.h"
-#include "PartDesign/part.h"
+#include <Sketcher/sketch_axis_controller.h>
+#include <Sketcher/sketch_axis.h>
+#include <Sketcher/sketch.h>
+#include <Kernel/document.h>
+#include <PartDesign/part.h>
 
 
 /***********************************************~***************************************************/

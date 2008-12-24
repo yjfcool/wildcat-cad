@@ -27,11 +27,11 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/wildcat_kernel.h"
-#include "Kernel/document_type_manager.h"
-#include "PartDesign/part.h"
-#include "PartDesign/part_feature.h"
-#include "RTVisualization/visualization.h"
+#include <Kernel/wildcat_kernel.h>
+#include <Kernel/document_type_manager.h>
+#include <PartDesign/part.h>
+#include <PartDesign/part_feature.h>
+#include <RTVisualization/visualization.h>
 #include <boost/filesystem.hpp>
 
 

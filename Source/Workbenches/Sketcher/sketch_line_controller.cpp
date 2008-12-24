@@ -27,10 +27,10 @@
 
 
 /*** Included Header Files ***/
-#include "Sketcher/sketch_line.h"
-#include "Sketcher/sketch_line_controller.h"
-#include "Sketcher/sketch.h"
-#include "Kernel/document.h"
+#include <Sketcher/sketch_line.h>
+#include <Sketcher/sketch_line_controller.h>
+#include <Sketcher/sketch.h>
+#include <Kernel/document.h>
 
 
 /***********************************************~***************************************************/

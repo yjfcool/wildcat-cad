@@ -27,9 +27,9 @@
 
 
 /*** Included Header Files ***/
-#include "Geometry/geometric_intersection.h"
-#include "Geometry/geometric_point.h"
-#include "Geometry/geometric_line.h"
+#include <Geometry/geometric_intersection.h>
+#include <Geometry/geometric_point.h>
+#include <Geometry/geometric_line.h>
 
 
 /***********************************************~***************************************************/

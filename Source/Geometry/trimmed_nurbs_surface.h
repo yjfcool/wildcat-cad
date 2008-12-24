@@ -31,8 +31,8 @@
 
 
 /*** Included Header Files ***/
-#include "Geometry/wgeol.h"
-#include "Geometry/nurbs_surface.h"
+#include <Geometry/wgeol.h>
+#include <Geometry/nurbs_surface.h>
 
 
 /*** Locally Defined Values ***/

@@ -27,8 +27,8 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/document_type_manager.h"
-#include "Kernel/document.h"
+#include <Kernel/document_type_manager.h>
+#include <Kernel/document.h>
 
 
 /*** Static Member Initialization ***/ 

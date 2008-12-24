@@ -31,9 +31,9 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/wftrl.h"
-#include "Kernel/drawing_mode.h"
-#include "Sketcher/sketch_align_suggestion.h"
+#include <Kernel/wftrl.h>
+#include <Kernel/drawing_mode.h>
+#include <Sketcher/sketch_align_suggestion.h>
 
 
 /*** Locally Defined Values ***/

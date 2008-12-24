@@ -31,11 +31,11 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/wftrl.h"
-#include "PartDesign/part_feature.h"
-#include "PartDesign/part_shaft_actions.h"
-#include "PartDesign/part_shaft_controller.h"
-#include "PartDesign/part_shaft_modes.h"
+#include <Kernel/wftrl.h>
+#include <PartDesign/part_feature.h>
+#include <PartDesign/part_shaft_actions.h>
+#include <PartDesign/part_shaft_controller.h>
+#include <PartDesign/part_shaft_modes.h>
 
 
 /*** Locally Defined Values ***/

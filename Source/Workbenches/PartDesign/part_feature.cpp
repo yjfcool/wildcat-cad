@@ -27,13 +27,13 @@
 
 
 /*** Included Header Files ***/
-#include "PartDesign/part_feature.h"
-#include "PartDesign/part.h"
-#include "PartDesign/part_body.h"
-#include "PartDesign/part_pad.h"
-#include "PartDesign/part_plane.h"
-#include "PartDesign/part_shaft.h"
-#include "Sketcher/sketch.h"
+#include <PartDesign/part_feature.h>
+#include <PartDesign/part.h>
+#include <PartDesign/part_body.h>
+#include <PartDesign/part_pad.h>
+#include <PartDesign/part_plane.h>
+#include <PartDesign/part_shaft.h>
+#include <Sketcher/sketch.h>
 
 
 //Hidden Color Definitions

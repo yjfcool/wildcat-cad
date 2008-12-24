@@ -27,14 +27,14 @@
 
 
 /*** Included Header Files ***/
-#include "Kernel/document.h"
-#include "Kernel/action.h"
-#include "Kernel/wildcat_kernel.h"
-#include "Kernel/workbench.h"
-#include "Application/toolbar_manager.h"
+#include <Kernel/document.h>
+#include <Kernel/action.h>
+#include <Kernel/wildcat_kernel.h>
+#include <Kernel/workbench.h>
+#include <Kernel/toolbar_manager.h>
 #ifdef __WXWINDOWS__
-#include "Application/wx/wildcat_app.h"
-#include "Application/wx/main_frame.h"
+#include <Application/wx/wildcat_app.h>
+#include <Application/wx/main_frame.h>
 #endif
 
 

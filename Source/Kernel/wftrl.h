@@ -34,53 +34,53 @@
 
 
 //Geometry Headers
-#include "Geometry/wgeol.h"
-#include "Geometry/geometric_algorithms.h"
-#include "Geometry/geometric_line.h"
-#include "Geometry/geometric_point.h"
-#include "Geometry/geometric_types.h"
-#include "Geometry/nurbs.h"
-#include "Geometry/nurbs_curve.h"
-#include "Geometry/nurbs_surface.h"
-#include "Geometry/ray.h"
-#include "Geometry/trimmed_nurbs_surface.h"
+#include <Geometry/wgeol.h>
+#include <Geometry/geometric_algorithms.h>
+#include <Geometry/geometric_line.h>
+#include <Geometry/geometric_point.h>
+#include <Geometry/geometric_types.h>
+#include <Geometry/nurbs.h>
+#include <Geometry/nurbs_curve.h>
+#include <Geometry/nurbs_surface.h>
+#include <Geometry/ray.h>
+#include <Geometry/trimmed_nurbs_surface.h>
 
 
 //Topology Headers
-#include "Topology/topology_model.h"
-#include "Topology/topology_types.h"
+#include <Topology/topology_model.h>
+#include <Topology/topology_types.h>
 
 
 //Scene Headers
-#include "Scene/wscnl.h"
-#include "Scene/background_layer.h"
-#include "Scene/camera.h"
-#include "Scene/camera_layer.h"
-#include "Scene/compass.h"
-#include "Scene/event_controller.h"
-#include "Scene/layer.h"
-#include "Scene/light_source.h"
-#include "Scene/line_layer.h"
-#include "Scene/named_view.h"
-#include "Scene/node_layer.h"
-#include "Scene/overlay.h"
-#include "Scene/point_layer.h"
-#include "Scene/render_state.h"
-#include "Scene/scene.h"
-#include "Scene/scrollbar.h"
-#include "Scene/selection_manager.h"
-#include "Scene/text.h"
-#include "Scene/tree_view.h"
-#include "Scene/user_interface_layer.h"
-#include "Scene/visual_layer.h"
-#include "Scene/widget.h"
+#include <Scene/wscnl.h>
+#include <Scene/background_layer.h>
+#include <Scene/camera.h>
+#include <Scene/camera_layer.h>
+#include <Scene/compass.h>
+#include <Scene/event_controller.h>
+#include <Scene/layer.h>
+#include <Scene/light_source.h>
+#include <Scene/line_layer.h>
+#include <Scene/named_view.h>
+#include <Scene/node_layer.h>
+#include <Scene/overlay.h>
+#include <Scene/point_layer.h>
+#include <Scene/render_state.h>
+#include <Scene/scene.h>
+#include <Scene/scrollbar.h>
+#include <Scene/selection_manager.h>
+#include <Scene/text.h>
+#include <Scene/tree_view.h>
+#include <Scene/user_interface_layer.h>
+#include <Scene/visual_layer.h>
+#include <Scene/widget.h>
 
 
 //Application Headers
-#include "Application/toolbar.h"
-#include "Application/toolbar_manager.h"
-#include "Application/dialog.h"
-#include "Application/dialog_manager.h"
+#include <Kernel/toolbar.h>
+#include <Kernel/toolbar_manager.h>
+#include <Kernel/dialog.h>
+#include <Kernel/dialog_manager.h>
 
 
 /***********************************************~***************************************************/

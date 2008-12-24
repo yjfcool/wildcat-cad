@@ -31,8 +31,8 @@
 
 
 /*** Included Header Files ***/
-#include "RTVisualization/wrtv.h"
-#include "Kernel/drawing_mode.h"
+#include <RTVisualization/wrtv.h>
+#include <Kernel/drawing_mode.h>
 
 
 /*** Locally Defined Values ***/

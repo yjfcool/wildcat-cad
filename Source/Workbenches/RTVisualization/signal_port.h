@@ -31,8 +31,8 @@
 
 
 /*** Included Header Files ***/
-#include "RTVisualization/wrtv.h"
-#include "RTVisualization/vis_signal.h"
+#include <RTVisualization/wrtv.h>
+#include <RTVisualization/vis_signal.h>
 
 
 /*** Locally Defined Values ***/

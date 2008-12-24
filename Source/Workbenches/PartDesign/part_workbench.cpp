@@ -27,23 +27,23 @@
 
 
 /*** Included Header Files ***/
-#include "PartDesign/part_workbench.h"
-#include "PartDesign/part.h"
-#include "Kernel/keymap.h"
-#include "Scene/frame_rate_monitor.h"
-#include "Kernel/selection_mode.h"
-#include "Sketcher/sketch.h"
+#include <PartDesign/part_workbench.h>
+#include <PartDesign/part.h>
+#include <Kernel/keymap.h>
+#include <Scene/frame_rate_monitor.h>
+#include <Kernel/selection_mode.h>
+#include <Sketcher/sketch.h>
 
 
 //Part Feature Included Headers
-#include "PartDesign/part_plane.h"
-#include "PartDesign/part_body.h"
-#include "PartDesign/part_pad.h"
-#include "PartDesign/part_shaft.h"
+#include <PartDesign/part_plane.h>
+#include <PartDesign/part_body.h>
+#include <PartDesign/part_pad.h>
+#include <PartDesign/part_shaft.h>
 
 
 //Temporarily Included Headers
-#include "Converters/converter_stl.h"
+#include <Converters/converter_stl.h>
 
 
 /***********************************************~***************************************************/
