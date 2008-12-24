@@ -85,7 +85,7 @@ private:
 	WCDocument& operator=(const WCDocument& doc);													//!< Deny access to equals operator
 public:
 	//Constructors and Destructors
-	WCDocument(WCFeature *creator, const std::string &name, const std::string &filename);			//!< Primary constructor
+	WCDocument(WCFeature *creator, const std::string &name, const std::string &directory);			//!< Primary constructor
 	WCDocument(xercesc::DOMElement *element, WCSerialDictionary *dictionary);						//!< Persistance constructor
 	virtual ~WCDocument();																			//!< Default destructor
 
@@ -140,7 +140,7 @@ public:
 	WCDocumentFactory()							{ }													//!< Default constructor
 	virtual ~WCDocumentFactory()				{ }													//!< Default destructor
 	//Mandatory Methods
-	virtual WCDocument* Create(const std::string &name, const std::string &filename)=0;				//!< Mandatory method for document creation
+	virtual WCDocument* Create(const std::string &name, const std::string &directory)=0;			//!< Mandatory method for document creation
 	virtual WCDocument* Open(xercesc::DOMElement *element, WCSerialDictionary *dictionary)=0;		//!< Mandatory method for document opening
 
 };

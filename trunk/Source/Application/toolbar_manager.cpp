@@ -304,8 +304,7 @@ WCToolbar* WCToolbarManager::ToolbarFromName(const std::string &name) {
 	//See if you found anything
 	if( iter == this->_toolbarMap.end() ) {
 		//Not able to find
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCToolbarManager::ToolbarFromName - Not able to find toolbar: " << name);
-		return NULL;
+		throw WCException();
 	}
 	//Otherwise, get the object
 	return (*iter).second;
@@ -317,9 +316,8 @@ WCToolbarButton* WCToolbarManager::ButtonFromName(const std::string &name) {
 	std::map<std::string, WCToolbarButton*>::iterator iter = this->_buttonMap.find(name);
 	//See if you found anything
 	if( iter == this->_buttonMap.end() ) {
-	//Not able to find
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCToolbarManager::ButtonFromName - Not able to find button: " << name);
-		return NULL;
+		//Not able to find
+		throw WCException();
 	}
 	//Otherwise, get the object
 	return (*iter).second;

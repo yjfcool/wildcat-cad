@@ -30,9 +30,6 @@
 #import "Application/MacOS/document_controller.h"
 #import "Application/MacOS/document.h"
 
-//#import "Application/MacOS/part_document.h"
-//#import "Application/MacOS/vis_document.h"
-
 
 /*** Included Header Files ***/
 #include "Application/dialog_manager.h"
@@ -57,12 +54,6 @@ public:
 			//Lets create a Document object
 			NSError *outError = [NSError alloc];
 			WCDocument_OSX *document = [[WCDocument_OSX alloc] initWithType:docTypeStr error:&outError];
-//			if (docType == "wildVis") {
-//				document = [[WCVisDocument alloc] initWithType:@"Whatever" error:&outError];
-//			}
-//			if (docType == "wildPart") {
-//				document = [[WCPartDocument alloc] initWithType:@"Whatever" error:&outError];
-//			}
 			//Make sure document was created
 			if (document == nil) {
 				//Close the dialog

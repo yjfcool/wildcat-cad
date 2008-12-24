@@ -30,12 +30,14 @@
 #include "Kernel/wildcat_kernel.h"
 #include "Kernel/document_type_manager.h"
 #include "PartDesign/part.h"
+#include "PartDesign/part_feature.h"
 #include "RTVisualization/visualization.h"
+#include <boost/filesystem.hpp>
 
 
 /*** Static Member Initialization ***/ 
 int WCWildcatKernel::_refCount = 0;
-std::string	WCWildcatKernel::_manifest = "";
+bool	WCWildcatKernel::_headless = false;
 WCGLContext* WCWildcatKernel::_context = NULL;
 
 
@@ -62,23 +64,33 @@ void WCWildcatKernel::CreateContext(void) {
 
 
 void WCWildcatKernel::DestroyContext(void) {
-
+	//Make sure there is a context
+	if (!WCWildcatKernel::_context) return;
+	//Try to destroy teh context
+	try {
+		delete WCWildcatKernel::_context;
+	}
+	catch (WCException &ex) {
+		//Log an error message
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCWildcatKernel::DestroyContext - Not able to destroy context");
+		exit(0);
+	}
 }
 
 
 
 
-bool WCWildcatKernel::Initialize(const std::string &manifest) {
+bool WCWildcatKernel::Initialize(const bool &logToFile, const WCLoggerLevel &loggerLevel, const std::string &loggerFile, const bool &headless) {
 	//Increment the reference counter
 	WCWildcatKernel::_refCount++;
 	//If already initialized, exit
 	if (WCWildcatKernel::_refCount > 1) return true;
 
 	try {
-		//Parse the manifest
-		//...
+		//Set the headless status
+		WCWildcatKernel::_headless = headless;
 		//Initialize logger manager
-		WCLogManager::Initialize();
+		WCLogManager::Initialize(loggerLevel);
 		CLOGGER_WARN(WCLogManager::RootLogger(), "WCWildcatKernel::Initializing.");
 		//Initialize xml manager
 		xercesc::XMLPlatformUtils::Initialize();
@@ -88,8 +100,8 @@ bool WCWildcatKernel::Initialize(const std::string &manifest) {
 		WCDocumentTypeManager::Initialize();
 		//Register base document types
 		//								----Name----------------Description-------------------------Extension-------DTD Filename--------Factory---
-		WCDocumentTypeManager::RegisterType("Part",				"Wildcat Part Document",			"wildPart",		"wildpart.dtd",		new WCPartDocumentFactory());
-		WCDocumentTypeManager::RegisterType("Visualization",	"Wildcat Visualization Document",	"wildVis",		"wildvis.dtd",		new WCVisDocumentFactory());
+		WCDocumentTypeManager::RegisterType("Part",				"Wildcat Part Document",			".wildPart",	"wildpart.dtd",		new WCPartDocumentFactory());
+		WCDocumentTypeManager::RegisterType("Visualization",	"Wildcat Visualization Document",	".wildVis",		"wildvis.dtd",		new WCVisDocumentFactory());
 
 		//Create primary OpenGL context
 		WCWildcatKernel::CreateContext();
@@ -140,6 +152,82 @@ bool WCWildcatKernel::Terminate(void) {
 	}
 	//Return true
 	return true;
+}
+
+
+WCDocument* WCWildcatKernel::CreateDocument(const std::string &extension, const std::string &name, const std::string &directory) {
+	//Make sure kernel is running
+	if(!WCWildcatKernel::Started()) throw WCException();
+	//Get the appropraite factory
+	WCDocumentFactory *factory = WCDocumentTypeManager::FactoryFromType(extension);
+	//Create the document type
+	WCDocument *document = factory->Create(name, directory);
+	//Return new document
+	return document;
+}
+
+
+WCDocument* WCWildcatKernel::OpenDocument(const std::string &fullpath) {
+	//Make sure kernel is running
+	if(!WCWildcatKernel::Started()) throw WCException();
+	//Determine if file exists
+	if( !boost::filesystem::exists(fullpath) ) {
+		//There is an error here
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCWildcatKernel::OpenDocument - " << fullpath << " does not exist.");
+		throw WCException("File: " + fullpath + " does not exist.");
+	}
+	//Determine the file extension
+	std::string extension = boost::filesystem::extension(fullpath);
+	//Get the appropraite factory
+	WCDocumentFactory *factory = WCDocumentTypeManager::FactoryFromType(extension);
+	WCDocument* document;
+
+	//Create xml parser
+	xercesc::XercesDOMParser* parser = new xercesc::XercesDOMParser();
+	//Set validation scheme (would be really nice to use DTD here)
+	parser->setValidationScheme(xercesc::XercesDOMParser::Val_Always);    
+	xercesc::ErrorHandler* errHandler = (xercesc::ErrorHandler*) new xercesc::HandlerBase();
+	parser->setErrorHandler(errHandler);
+	xercesc::DOMElement *rootElement;
+	xercesc::DOMNodeList *elementList;
+	XMLCh* xmlString;
+	
+	//Try to parse
+	try {
+		//Parse the manifest
+		parser->parse( fullpath.c_str() );
+		//Get the root document node (Wildcat)
+		rootElement = parser->getDocument()->getDocumentElement();
+		//Get list of Part nodes
+		xmlString = xercesc::XMLString::transcode("Part");
+		elementList = rootElement->getElementsByTagName(xmlString);
+		xercesc::XMLString::release(&xmlString);
+		
+		//Create SerialDictionary
+		WCSerialDictionary *dictionary = new WCSerialDictionary();
+		//Try to create document using parsed XML
+		document = factory->Open( (xercesc::DOMElement*)(elementList->item(0)), dictionary );
+	}
+	//Error checking
+	catch (const xercesc::XMLException& toCatch) {
+		char* message = xercesc::XMLString::transcode(toCatch.getMessage());
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCWildcatKernel::OpenDocument - Exception message is: \n" << message);
+		xercesc::XMLString::release(&message);
+	}
+	catch (const xercesc::DOMException& toCatch) {
+		char* message = xercesc::XMLString::transcode(toCatch.msg);
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCWildcatKernel::OpenDocument - Exception message is: \n" << message);
+		xercesc::XMLString::release(&message);
+	}
+	catch (...) {
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCWildcatKernel::OpenDocument - Unexpected Exception");
+	}
+	//Clean up
+	delete parser;
+	delete errHandler;
+
+	//Return opened document
+	return document;
 }
 
 

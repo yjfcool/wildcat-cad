@@ -48,10 +48,15 @@ namespace __WILDCAT_NAMESPACE__ {
 
 
 class WCException : public std::exception {
+private:
+	std::string									_message;											//! Exception message
 public:
-	WCException() : ::std::exception()			{ }													//!< Primary constructor
-	
-	virtual const char* what() const throw()	{ return "WCException message"; }
+	//Constructors and Destructors
+	WCException() : ::std::exception(), _message("") { }											//!< Primary constructor
+	WCException(const std::string &msg) : ::std::exception(), _message(msg) { }						//!< Alternate constructor
+	virtual ~WCException() throw ()				{ }													//!< Default destructor
+	//Class Methods
+	virtual const std::string& Message()		{ return this->_message; }							//!< Get the message
 };
 
 
