@@ -41,10 +41,12 @@ WCGLContext::WCGLContext() : _context(NULL) {
 	NSOpenGLPixelFormatAttribute attrs[] =
 	{
 		NSOpenGLPFADoubleBuffer,
-		NSOpenGLPFAColorSize, 32,
-		NSOpenGLPFADepthSize, 32,
+		NSOpenGLPFAColorSize, 24,
+		NSOpenGLPFAAlphaSize, 8,
+		NSOpenGLPFADepthSize, 24,
 		NSOpenGLPFAAccelerated,
-		NSOpenGLPFASampleBuffers, 1,
+		NSOpenGLPFASampleBuffers, 4,
+		NSOpenGLPFASamples, 8,
 		NSOpenGLPFASampleAlpha,
 		0		
 	};
@@ -79,10 +81,12 @@ WCGLContext::WCGLContext(const WCGLContext &context) : _context(NULL) {
 	NSOpenGLPixelFormatAttribute attrs[] =
 	{
 		NSOpenGLPFADoubleBuffer,
-		NSOpenGLPFAColorSize, 32,
-		NSOpenGLPFADepthSize, 32,
+		NSOpenGLPFAColorSize, 24,
+		NSOpenGLPFAAlphaSize, 8,
+		NSOpenGLPFADepthSize, 24,
 		NSOpenGLPFAAccelerated,
-		NSOpenGLPFASampleBuffers, 1,
+		NSOpenGLPFASampleBuffers, 4,
+		NSOpenGLPFASamples, 8,
 		NSOpenGLPFASampleAlpha,		
 		0
 	};

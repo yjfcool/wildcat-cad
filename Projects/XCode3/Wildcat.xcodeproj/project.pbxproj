@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		5806B9FD0DA3C0A800D9989D /* vis_listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5806B9FC0DA3C0A800D9989D /* vis_listener.cpp */; };
 		580873CC0D9A7C3600038336 /* wildcat.icns in Resources */ = {isa = PBXBuildFile; fileRef = 580873CB0D9A7C3600038336 /* wildcat.icns */; };
+		580F1CBD0F02BAEC00086F68 /* WildcatUtility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 580F1C7D0F02B93100086F68 /* WildcatUtility.framework */; };
+		580F1CD80F02BB6F00086F68 /* WildcatUtility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 580F1C7D0F02B93100086F68 /* WildcatUtility.framework */; };
+		580F1CD90F02BB7700086F68 /* WildcatGeometry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 580F1C7E0F02B93100086F68 /* WildcatGeometry.framework */; };
+		580F1CDA0F02BB7800086F68 /* WildcatUtility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 580F1C7D0F02B93100086F68 /* WildcatUtility.framework */; };
 		582DB3280ED481A000BD61DE /* adapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 585F351B0D68B15E00673AE6 /* adapter.h */; };
 		582DB3290ED481A000BD61DE /* apple_gl.h in Headers */ = {isa = PBXBuildFile; fileRef = 5831C1C80E1099CF00EA53DD /* apple_gl.h */; };
 		582DB32A0ED481A100BD61DE /* assert_exception.h in Headers */ = {isa = PBXBuildFile; fileRef = 588D973F0DAFA99800BDDE8D /* assert_exception.h */; };
@@ -315,7 +319,6 @@
 		585F37FF0D68B8D300673AE6 /* part_plane_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F37E20D68B8D300673AE6 /* part_plane_controller.cpp */; };
 		586257100E379A5C00369675 /* converter_stl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5862570F0E379A5C00369675 /* converter_stl.cpp */; };
 		586BA53F0DABDE8F00E2DF91 /* dialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 586BA53E0DABDE8F00E2DF91 /* dialog.mm */; };
-		58778F540ED5CB5700A4B1A8 /* WildcatUtility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 582DB3230ED4815500BD61DE /* WildcatUtility.framework */; };
 		58778F6B0ED5CE7E00A4B1A8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 585F31490D68AFF600673AE6 /* Accelerate.framework */; };
 		58778F6C0ED5CE7F00A4B1A8 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97324FDCFA39411CA2CEA /* AppKit.framework */; };
 		58778F6D0ED5CE7F00A4B1A8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -324,7 +327,6 @@
 		58778F700ED5CE8100A4B1A8 /* libxerces-c.28.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B3A4080DF4988500A08C0C /* libxerces-c.28.0.dylib */; };
 		58778F710ED5CE8100A4B1A8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 585F314A0D68AFF600673AE6 /* OpenGL.framework */; };
 		58778F720ED5CE8200A4B1A8 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 585F31EA0D68B04100673AE6 /* WebKit.framework */; };
-		58778F730ED5CE8800A4B1A8 /* WildcatUtility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 582DB3230ED4815500BD61DE /* WildcatUtility.framework */; };
 		58778F790ED5CF1000A4B1A8 /* geometric_algorithms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F357F0D68B28800673AE6 /* geometric_algorithms.cpp */; };
 		58778F7A0ED5CF1100A4B1A8 /* geometric_algorithms.h in Headers */ = {isa = PBXBuildFile; fileRef = 585F35800D68B28800673AE6 /* geometric_algorithms.h */; };
 		58778F7B0ED5CF1200A4B1A8 /* geometric_algorithms_triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F35810D68B28800673AE6 /* geometric_algorithms_triangulation.cpp */; };
@@ -368,7 +370,6 @@
 		58778FA50ED5CF3600A4B1A8 /* trimsurface_triangulate.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5899BE4D0E1407CD00210936 /* trimsurface_triangulate.fsh */; };
 		58778FA60ED5CF3700A4B1A8 /* trimsurface_vis.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35710D68B26600673AE6 /* trimsurface_vis.fsh */; };
 		58778FA70ED5CF3700A4B1A8 /* wgeol.h in Headers */ = {isa = PBXBuildFile; fileRef = 585F35950D68B28800673AE6 /* wgeol.h */; };
-		58778FDE0ED5D76500A4B1A8 /* WildcatGeometry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58778F640ED5CE5E00A4B1A8 /* WildcatGeometry.framework */; };
 		58778FE60ED5D92E00A4B1A8 /* cci_plM.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 58F5B4C30E0FFF4200D730F8 /* cci_plM.fsh */; };
 		58778FE70ED5D92F00A4B1A8 /* cli_plM.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5857A8210E1AC71900808402 /* cli_plM.fsh */; };
 		58778FE80ED5D92F00A4B1A8 /* nc23_bezier_plH.gsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35650D68B26600673AE6 /* nc23_bezier_plH.gsh */; };
@@ -405,8 +406,6 @@
 		58B1FCD90F01785F0047F775 /* libboost_program_options-xgcc40-mt-1_38.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B1FCD80F01785F0047F775 /* libboost_program_options-xgcc40-mt-1_38.dylib */; };
 		58B27F780D785FC4008951D9 /* sketch_circle_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58B27F770D785FC4008951D9 /* sketch_circle_edit_mode.cpp */; };
 		58B3A4090DF4988500A08C0C /* libxerces-c.28.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B3A4080DF4988500A08C0C /* libxerces-c.28.0.dylib */; };
-		58C2345E0ED75D9E0079741B /* WildcatUtility.framework in Copy Dependencies */ = {isa = PBXBuildFile; fileRef = 582DB3230ED4815500BD61DE /* WildcatUtility.framework */; };
-		58C2345F0ED75D9E0079741B /* WildcatGeometry.framework in Copy Dependencies */ = {isa = PBXBuildFile; fileRef = 58778F640ED5CE5E00A4B1A8 /* WildcatGeometry.framework */; };
 		58C5DF3A0DAE700A00003673 /* vis_listener_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58F5E51B0DABF65600DC39A2 /* vis_listener_actions.cpp */; };
 		58C5E7400DAD250D00089549 /* newListener.html in Resources */ = {isa = PBXBuildFile; fileRef = 58F5E5160DABF54200DC39A2 /* newListener.html */; };
 		58DAD6420D69C7610093679D /* constraint_measure_radius.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD6410D69C7610093679D /* constraint_measure_radius.cpp */; };
@@ -512,8 +511,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				58C2345E0ED75D9E0079741B /* WildcatUtility.framework in Copy Dependencies */,
-				58C2345F0ED75D9E0079741B /* WildcatGeometry.framework in Copy Dependencies */,
 			);
 			name = "Copy Dependencies";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -527,8 +524,9 @@
 		5806B9FB0DA3C0A800D9989D /* vis_listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vis_listener.h; path = ../../Source/Workbenches/RTVisualization/vis_listener.h; sourceTree = SOURCE_ROOT; };
 		5806B9FC0DA3C0A800D9989D /* vis_listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vis_listener.cpp; path = ../../Source/Workbenches/RTVisualization/vis_listener.cpp; sourceTree = SOURCE_ROOT; };
 		580873CB0D9A7C3600038336 /* wildcat.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = wildcat.icns; path = ../../Source/Application/MacOS/wildcat.icns; sourceTree = SOURCE_ROOT; };
+		580F1C7D0F02B93100086F68 /* WildcatUtility.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WildcatUtility.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		580F1C7E0F02B93100086F68 /* WildcatGeometry.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WildcatGeometry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		58212ED10E098D150012DE71 /* part_pad_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_pad_types.h; path = ../../Source/Workbenches/PartDesign/part_pad_types.h; sourceTree = SOURCE_ROOT; };
-		582DB3230ED4815500BD61DE /* WildcatUtility.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WildcatUtility.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5831C1C80E1099CF00EA53DD /* apple_gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = apple_gl.h; path = ../../Source/Application/MacOS/apple_gl.h; sourceTree = SOURCE_ROOT; };
 		583FEAC60DAA69D100CCE245 /* document_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = document_controller.h; path = ../../Source/Application/MacOS/document_controller.h; sourceTree = SOURCE_ROOT; };
 		583FEAC70DAA69D100CCE245 /* document_controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = document_controller.mm; path = ../../Source/Application/MacOS/document_controller.mm; sourceTree = SOURCE_ROOT; };
@@ -1039,7 +1037,6 @@
 		5864E0B90DB50ED700DB0CD2 /* triangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = triangle.h; path = ../../Source/Geometry/triangle.h; sourceTree = SOURCE_ROOT; };
 		586BA3B10DABC40400E2DF91 /* dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialog.h; path = ../../Source/Application/dialog.h; sourceTree = SOURCE_ROOT; };
 		586BA53E0DABDE8F00E2DF91 /* dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = dialog.mm; path = ../../Source/Application/MacOS/dialog.mm; sourceTree = SOURCE_ROOT; };
-		58778F640ED5CE5E00A4B1A8 /* WildcatGeometry.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WildcatGeometry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_arc_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_arc_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		588D973F0DAFA99800BDDE8D /* assert_exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = assert_exception.h; path = ../../Source/Utility/assert_exception.h; sourceTree = SOURCE_ROOT; };
 		5890DC390E65C8030038BBC4 /* part_pad_dialog.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = part_pad_dialog.xib; path = ../../Source/Workbenches/PartDesign/MacOS/part_pad_dialog.xib; sourceTree = SOURCE_ROOT; };
@@ -1128,6 +1125,7 @@
 				582DB35E0ED4831200BD61DE /* Foundation.framework in Frameworks */,
 				582DB35F0ED4831400BD61DE /* libxerces-c.28.0.dylib in Frameworks */,
 				582DB3600ED4831400BD61DE /* OpenGL.framework in Frameworks */,
+				580F1CBD0F02BAEC00086F68 /* WildcatUtility.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1143,7 +1141,7 @@
 				58778F700ED5CE8100A4B1A8 /* libxerces-c.28.0.dylib in Frameworks */,
 				58778F710ED5CE8100A4B1A8 /* OpenGL.framework in Frameworks */,
 				58778F720ED5CE8200A4B1A8 /* WebKit.framework in Frameworks */,
-				58778F730ED5CE8800A4B1A8 /* WildcatUtility.framework in Frameworks */,
+				580F1CD80F02BB6F00086F68 /* WildcatUtility.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1157,11 +1155,11 @@
 				585F319E0D68B01B00673AE6 /* CoreFoundation.framework in Frameworks */,
 				585F31EB0D68B04100673AE6 /* WebKit.framework in Frameworks */,
 				58B3A4090DF4988500A08C0C /* libxerces-c.28.0.dylib in Frameworks */,
-				58778F540ED5CB5700A4B1A8 /* WildcatUtility.framework in Frameworks */,
-				58778FDE0ED5D76500A4B1A8 /* WildcatGeometry.framework in Frameworks */,
 				58B1FCD90F01785F0047F775 /* libboost_program_options-xgcc40-mt-1_38.dylib in Frameworks */,
 				58E664590F028CE40029DBD2 /* libboost_filesystem-xgcc40-mt-1_38.dylib in Frameworks */,
 				58E664700F028D140029DBD2 /* libboost_system-xgcc40-mt-1_38.dylib in Frameworks */,
+				580F1CD90F02BB7700086F68 /* WildcatGeometry.framework in Frameworks */,
+				580F1CDA0F02BB7800086F68 /* WildcatUtility.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1404,8 +1402,8 @@
 			isa = PBXGroup;
 			children = (
 				584556D90E1C7C8700364A00 /* Wildcat.app */,
-				582DB3230ED4815500BD61DE /* WildcatUtility.framework */,
-				58778F640ED5CE5E00A4B1A8 /* WildcatGeometry.framework */,
+				580F1C7D0F02B93100086F68 /* WildcatUtility.framework */,
+				580F1C7E0F02B93100086F68 /* WildcatGeometry.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3363,7 +3361,7 @@
 			);
 			name = WildcatUtility;
 			productName = WildcatUtility;
-			productReference = 582DB3230ED4815500BD61DE /* WildcatUtility.framework */;
+			productReference = 580F1C7D0F02B93100086F68 /* WildcatUtility.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		58778F630ED5CE5E00A4B1A8 /* WildcatGeometry */ = {
@@ -3384,7 +3382,7 @@
 			);
 			name = WildcatGeometry;
 			productName = WildcatGeometry;
-			productReference = 58778F640ED5CE5E00A4B1A8 /* WildcatGeometry.framework */;
+			productReference = 580F1C7E0F02B93100086F68 /* WildcatGeometry.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		8D1107260486CEB800E47090 /* Wildcat */ = {
@@ -3935,7 +3933,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
-				DEPLOYMENT_LOCATION = YES;
+				DEPLOYMENT_LOCATION = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
@@ -3955,6 +3953,7 @@
 					"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0/lib",
 					"\"$(SRCROOT)/../../../../boost/bin.v2/libs/program_options/build/darwin-4.0.1/release/threading-multi\"",
 				);
+				OBJROOT = "$(SRCROOT)/../../Build/MacOS";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
@@ -3963,6 +3962,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = WildcatUtility;
+				SYMROOT = "$(SRCROOT)/../../Build/MacOS";
 			};
 			name = Debug;
 		};
@@ -4017,7 +4017,7 @@
 					"$(SRCROOT)/../../Source",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/../../Source/Application/MacOS/WildcatGeometry.plist";
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				INSTALL_PATH = /Library/Frameworks;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0/lib\"",
