@@ -406,8 +406,9 @@ WCShaderManager::WCShaderManager(const std::string &manifest, const std::string 
 	//Parse the passed manifest
 	this->ParseManifest(manifest, directory, verbose);
 	//Check for errors
-	if (glGetError() != GL_NO_ERROR) 
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::WCShaderManager - Unspecified Errors: in constructor");
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) 
+		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCShaderManager::WCShaderManager - In constructor:" << std::hex << err);
 }
 
 

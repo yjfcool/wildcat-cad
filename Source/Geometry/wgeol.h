@@ -36,6 +36,7 @@
 //Utility Headers
 #include <Utility/wutil.h>
 #include <Utility/adapter.h>
+#include <Utility/assert_exception.h>
 #include <Utility/bounding_object.h>
 #include <Utility/color.h>
 #include <Utility/gl_context.h>
