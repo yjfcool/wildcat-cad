@@ -76,13 +76,10 @@ class WCShaderManager {
 private:
 	std::map<std::string, WSProgram*>			_programMap;										//!< Map of names to program objects
 	std::map<std::string, WSShader*>			_shaderMap;											//!< Map of names to shader objects
-	
 	//Private Methods
 	WSShader* ParseShader(xercesc::DOMElement *element, const std::string &directory,				//!< Parse a shader
 												const bool &verbose);
-	WSProgram* ParseProgram(xercesc::DOMElement *element, const bool &verbose);						//!< Parse a program
-	void ParseManifest(const std::string &manifest, const std::string &dir, const bool &verbose);	//!< Parse the given manifest
-	
+	WSProgram* ParseProgram(xercesc::DOMElement *element, const bool &verbose);						//!< Parse a program	
 	//Deny Access
 	WCShaderManager();																				//!< Deny access to default constructor
 	WCShaderManager(const WCShaderManager& mgr);													//!< Deny access to copy constructor
@@ -91,7 +88,9 @@ public:
 	//Constructors and Destructors
 	WCShaderManager(const std::string &manifest, const std::string &dir, const bool &verbose=false);//!< Initialize the manager with a manifest
 	~WCShaderManager();																				//!< Default destructor
-	
+
+	//Primary Methods
+	void ParseManifest(const std::string &manifest, const std::string &dir, const bool &verbose);	//!< Parse the given manifest
 	//Shader Access Methods
 	GLuint ShaderFromName(const std::string &name);													//!< Get a shader from a name
 	GLuint ProgramFromName(const std::string &name);												//!< Get a program from a name

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+	<shaders>
+		<shader name="scn_basiclight_trim_fragment" type="GL_FRAGMENT_SHADER" filename="trimsurface_vis.fsh" />
+		<shader name="passthrough" type="GL_VERTEX_SHADER" filename="passthrough.vsh" />
+		<shader name="nc_default_plH" type="GL_GEOMETRY_SHADER_EXT" filename="nc_default_plH.gsh" />
+		<shader name="nc23_bezier_plH" type="GL_GEOMETRY_SHADER_EXT" filename="nc23_bezier_plH.gsh" />
+		<shader name="nc_default_plM" type="GL_FRAGMENT_SHADER" filename="nc_default_plM.fsh" />
+		<shader name="nc23_default_plM" type="GL_FRAGMENT_SHADER" filename="nc23_default_plM.fsh" />
+		<shader name="nc23_bezier_plM" type="GL_FRAGMENT_SHADER" filename="nc23_bezier_plM.fsh" />
+		<shader name="ns_default_plH" type="GL_GEOMETRY_SHADER_EXT" filename="ns_default_plH.gsh" />
+		<shader name="ns23_bezier_plH" type="GL_GEOMETRY_SHADER_EXT" filename="ns23_bezier_plH.gsh" />
+		<shader name="ns_default_plM" type="GL_FRAGMENT_SHADER" filename="ns_default_plM.fsh" />
+		<shader name="ns23_default_plM" type="GL_FRAGMENT_SHADER" filename="ns23_default_plM.fsh" />
+		<shader name="ns23_bezier_plM" type="GL_FRAGMENT_SHADER" filename="ns23_bezier_plM.fsh" />
+		<shader name="trimsurface_inversion" type="GL_FRAGMENT_SHADER" filename="trimsurface_inversion.fsh" />
+		<shader name="trimsurface_triangulate" type="GL_FRAGMENT_SHADER" filename="trimsurface_triangulate.fsh" />
+		<shader name="cli_plM" type="GL_FRAGMENT_SHADER" filename="cli_plM.fsh" />
+		<shader name="cci_plM" type="GL_FRAGMENT_SHADER" filename="cci_plM.fsh" />
+		<shader name="spi_plM" type="GL_FRAGMENT_SHADER" filename="spi_plM.fsh" />
+		<shader name="sli_plM" type="GL_FRAGMENT_SHADER" filename="sli_plM.fsh" />
+	</shaders>
+	<programs>
+		<program name="scn_basiclight_trim">
+			<shader>scn_basiclight_vertex</shader>
+			<shader>scn_basiclight_trim_fragment</shader>
+		</program>
+		<program name="scn_selection_trim">
+			<shader>scn_selection_vertex</shader>
+			<shader>scn_basiclight_trim_fragment</shader>
+		</program>
+		<program name="nc_default_plH">
+			<shader>passthrough</shader>
+			<shader>nc_default_plH</shader>
+			<transform_feedback type="GL_INTERLEAVED_ATTRIBS_EXT">
+				<varying>gl_Position</varying>
+			</transform_feedback>
+			<geometry_shader inputType="gl_Points" vertsOut="16" outputType="gl_Points" />
+		</program>
+		<program name="nc23_bezier_plH">
+			<shader>passthrough</shader>
+			<shader>nc23_bezier_plH</shader>
+			<transform_feedback type="GL_INTERLEAVED_ATTRIBS_EXT">
+				<varying>gl_Position</varying>
+			</transform_feedback>
+			<geometry_shader inputType="gl_Points" vertsOut="16" outputType="gl_Points" />
+		</program>
+		<program name="nc_default_plM">
+			<shader>passthrough</shader>
+			<shader>nc_default_plM</shader>		
+		</program>
+		<program name="nc23_default_plM">
+			<shader>passthrough</shader>
+			<shader>nc23_default_plM</shader>
+		</program>
+		<program name="nc23_bezier_plM">
+			<shader>passthrough</shader>
+			<shader>nc23_bezier_plM</shader>
+		</program>
+		<program name="ns_default_plH">
+			<shader>passthrough</shader>
+			<shader>ns_default_plH</shader>
+			<transform_feedback type="GL_INTERLEAVED_ATTRIBS_EXT">
+				<varying>gl_Position</varying>
+				<varying>nurbNormal</varying>
+			</transform_feedback>
+			<geometry_shader inputType="gl_Points" vertsOut="16" outputType="gl_Points" />			
+		</program>
+		<program name="ns23_bezier_plH">
+			<shader>passthrough</shader>
+			<shader>ns23_bezier_plH</shader>
+			<transform_feedback type="GL_INTERLEAVED_ATTRIBS_EXT">
+				<varying>gl_Position</varying>
+				<varying>nurbNormal</varying>
+			</transform_feedback>
+			<geometry_shader inputType="gl_Points" vertsOut="16" outputType="gl_Points" />			
+		</program>
+		<program name="ns_default_plM">
+			<shader>passthrough</shader>
+			<shader>ns_default_plM</shader>
+		</program>
+		<program name="ns23_default_plM">
+			<shader>passthrough</shader>
+			<shader>ns23_default_plM</shader>
+		</program>
+		<program name="ns23_bezier_plM">
+			<shader>passthrough</shader>
+			<shader>ns23_bezier_plM</shader>
+		</program>
+		<program name="trimsurface_inversion">
+			<shader>passthrough</shader>
+			<shader>trimsurface_inversion</shader>
+		</program>
+		<program name="trimsurface_triangulate">
+			<shader>passthrough</shader>
+			<shader>trimsurface_triangulate</shader>
+		</program>
+		<program name="cli_plM">
+			<shader>passthrough</shader>
+			<shader>cli_plM</shader>
+		</program>
+		<program name="cci_plM">
+			<shader>passthrough</shader>
+			<shader>cci_plM</shader>
+		</program>
+		<program name="spi_plM">
+			<shader>passthrough</shader>
+			<shader>spi_plM</shader>
+		</program>
+		<program name="sli_plM">
+			<shader>passthrough</shader>
+			<shader>sli_plM</shader>
+		</program>
+	</programs>
+</manifest>

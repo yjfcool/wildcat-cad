@@ -174,17 +174,6 @@
 		585F35150D68B0EA00673AE6 /* verticalSelected32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585F34C50D68B0EA00673AE6 /* verticalSelected32.tiff */; };
 		585F35160D68B0EA00673AE6 /* zoomIn32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585F34C60D68B0EA00673AE6 /* zoomIn32.tiff */; };
 		585F35170D68B0EA00673AE6 /* zoomOut32.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 585F34C70D68B0EA00673AE6 /* zoomOut32.tiff */; };
-		585F355A0D68B24900673AE6 /* complete_light.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F354F0D68B24900673AE6 /* complete_light.vsh */; };
-		585F355B0D68B24900673AE6 /* display.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35500D68B24900673AE6 /* display.fsh */; };
-		585F355C0D68B24900673AE6 /* scn_basiclight.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35510D68B24900673AE6 /* scn_basiclight.vsh */; };
-		585F355D0D68B24900673AE6 /* scn_gooch.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35520D68B24900673AE6 /* scn_gooch.fsh */; };
-		585F355E0D68B24900673AE6 /* scn_gooch.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35530D68B24900673AE6 /* scn_gooch.vsh */; };
-		585F355F0D68B24900673AE6 /* scn_hemisphere.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35540D68B24900673AE6 /* scn_hemisphere.vsh */; };
-		585F35600D68B24900673AE6 /* scn_selection.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35550D68B24900673AE6 /* scn_selection.vsh */; };
-		585F35610D68B24900673AE6 /* scn_uberlight.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35560D68B24900673AE6 /* scn_uberlight.fsh */; };
-		585F35620D68B24900673AE6 /* scn_uberlight.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35570D68B24900673AE6 /* scn_uberlight.vsh */; };
-		585F35630D68B24900673AE6 /* xform.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35580D68B24900673AE6 /* xform.vsh */; };
-		585F35640D68B24900673AE6 /* xform_light.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 585F35590D68B24900673AE6 /* xform_light.vsh */; };
 		585F35CC0D68B31100673AE6 /* background_layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F35A10D68B31100673AE6 /* background_layer.cpp */; };
 		585F35CD0D68B31100673AE6 /* camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F35A30D68B31100673AE6 /* camera.cpp */; };
 		585F35CE0D68B31100673AE6 /* camera_layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F35A50D68B31100673AE6 /* camera_layer.cpp */; };
@@ -339,8 +328,6 @@
 		58778FA30ED5CF3400A4B1A8 /* trimmed_nurbs_surface.h in Headers */ = {isa = PBXBuildFile; fileRef = 585F35940D68B28800673AE6 /* trimmed_nurbs_surface.h */; };
 		58778FA70ED5CF3700A4B1A8 /* wgeol.h in Headers */ = {isa = PBXBuildFile; fileRef = 585F35950D68B28800673AE6 /* wgeol.h */; };
 		587CB6EA0D89A48D00833178 /* sketch_arc_edit_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */; };
-		5890DC3A0E65C8030038BBC4 /* part_pad_dialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5890DC390E65C8030038BBC4 /* part_pad_dialog.xib */; };
-		5890DC3E0E65CD7C0038BBC4 /* part_pad_dialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5890DC3D0E65CD7C0038BBC4 /* part_pad_dialog.mm */; };
 		589AC2190D73404F001725D0 /* constraint_coincidence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361C0D68B4B700673AE6 /* constraint_coincidence.cpp */; };
 		589AC2330D734343001725D0 /* constraint_coincidence_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 585F361E0D68B4B700673AE6 /* constraint_coincidence_actions.cpp */; };
 		58B1FCD90F01785F0047F775 /* libboost_program_options-xgcc40-mt-1_38.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B1FCD80F01785F0047F775 /* libboost_program_options-xgcc40-mt-1_38.dylib */; };
@@ -395,6 +382,34 @@
 		58D4DA080F0536430086ACDE /* sli_plM.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA020F0536430086ACDE /* sli_plM.fsh */; };
 		58D4DA090F0536430086ACDE /* spi_plM.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA030F0536430086ACDE /* spi_plM.fsh */; };
 		58D4DA0A0F0536430086ACDE /* ssi_plM.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA040F0536430086ACDE /* ssi_plM.fsh */; };
+		58D4DA2A0F053E740086ACDE /* wgeol.h in Copy Header Files */ = {isa = PBXBuildFile; fileRef = 585F35950D68B28800673AE6 /* wgeol.h */; };
+		58D4DA2B0F053E740086ACDE /* geometric_algorithms.h in Copy Header Files */ = {isa = PBXBuildFile; fileRef = 585F35800D68B28800673AE6 /* geometric_algorithms.h */; };
+		58D4DA2C0F053E740086ACDE /* geometric_intersection.h in Copy Header Files */ = {isa = PBXBuildFile; fileRef = 58AD01DA0DF986E500ED713F /* geometric_intersection.h */; };
+		58D4DA2D0F053E740086ACDE /* geometric_line.h in Copy Header Files */ = {isa = PBXBuildFile; fileRef = 585F35830D68B28800673AE6 /* geometric_line.h */; };
+		58D4DA2E0F053E740086ACDE /* geometric_point.h in Copy Header Files */ = {isa = PBXBuildFile; fileRef = 585F35850D68B28800673AE6 /* geometric_point.h */; };
+		58D4DA2F0F053E740086ACDE /* geometric_types.h in Copy Header Files */ = {isa = PBXBuildFile; fileRef = 585F35870D68B28800673AE6 /* geometric_types.h */; };
+		58D4DA300F053E740086ACDE /* geometry_context.h in Copy Header Files */ = {isa = PBXBuildFile; fileRef = 585F35890D68B28800673AE6 /* geometry_context.h */; };
+		58D4DA310F053E740086ACDE /* nurbs.h in Copy Header Files */ = {isa = PBXBuildFile; fileRef = 585F358C0D68B28800673AE6 /* nurbs.h */; };
+		58D4DA320F053E740086ACDE /* nurbs_curve.h in Copy Header Files */ = {isa = PBXBuildFile; fileRef = 585F358E0D68B28800673AE6 /* nurbs_curve.h */; };
+		58D4DA330F053E740086ACDE /* nurbs_surface.h in Copy Header Files */ = {isa = PBXBuildFile; fileRef = 585F35900D68B28800673AE6 /* nurbs_surface.h */; };
+		58D4DA340F053E740086ACDE /* ray.h in Copy Header Files */ = {isa = PBXBuildFile; fileRef = 585F35920D68B28800673AE6 /* ray.h */; };
+		58D4DA350F053E740086ACDE /* trimmed_nurbs_surface.h in Copy Header Files */ = {isa = PBXBuildFile; fileRef = 585F35940D68B28800673AE6 /* trimmed_nurbs_surface.h */; };
+		58D4DA410F053F5E0086ACDE /* part_pad_dialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 58D4DA3F0F053F5E0086ACDE /* part_pad_dialog.mm */; };
+		58D4DA420F053F5E0086ACDE /* part_pad_dialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA400F053F5E0086ACDE /* part_pad_dialog.xib */; };
+		58D4DA6C0F0541DA0086ACDE /* WildcatUtility.framework in Copy Dependencies */ = {isa = PBXBuildFile; fileRef = 580F1C7D0F02B93100086F68 /* WildcatUtility.framework */; };
+		58D4DA6D0F0541DA0086ACDE /* WildcatGeometry.framework in Copy Dependencies */ = {isa = PBXBuildFile; fileRef = 580F1C7E0F02B93100086F68 /* WildcatGeometry.framework */; };
+		58D4DA860F0542A10086ACDE /* complete_light.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA7B0F0542A10086ACDE /* complete_light.vsh */; };
+		58D4DA870F0542A10086ACDE /* display.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA7C0F0542A10086ACDE /* display.fsh */; };
+		58D4DA880F0542A10086ACDE /* scn_basiclight.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA7D0F0542A10086ACDE /* scn_basiclight.vsh */; };
+		58D4DA890F0542A10086ACDE /* scn_gooch.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA7E0F0542A10086ACDE /* scn_gooch.fsh */; };
+		58D4DA8A0F0542A10086ACDE /* scn_gooch.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA7F0F0542A10086ACDE /* scn_gooch.vsh */; };
+		58D4DA8B0F0542A10086ACDE /* scn_hemisphere.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA800F0542A10086ACDE /* scn_hemisphere.vsh */; };
+		58D4DA8C0F0542A10086ACDE /* scn_selection.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA810F0542A10086ACDE /* scn_selection.vsh */; };
+		58D4DA8D0F0542A10086ACDE /* scn_uberlight.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA820F0542A10086ACDE /* scn_uberlight.fsh */; };
+		58D4DA8E0F0542A10086ACDE /* scn_uberlight.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA830F0542A10086ACDE /* scn_uberlight.vsh */; };
+		58D4DA8F0F0542A10086ACDE /* xform.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA840F0542A10086ACDE /* xform.vsh */; };
+		58D4DA900F0542A10086ACDE /* xform_light.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA850F0542A10086ACDE /* xform_light.vsh */; };
+		58D4DAEB0F0549640086ACDE /* geometry_shader_manifest.xml in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DAEA0F0549640086ACDE /* geometry_shader_manifest.xml */; };
 		58DAD6420D69C7610093679D /* constraint_measure_radius.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD6410D69C7610093679D /* constraint_measure_radius.cpp */; };
 		58DAD64A0D69CB100093679D /* constraint_radius.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD6490D69CB100093679D /* constraint_radius.cpp */; };
 		58DAD64D0D69CC090093679D /* constraint_radius_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD64C0D69CC090093679D /* constraint_radius_actions.cpp */; };
@@ -484,6 +499,18 @@
 			dstPath = $PUBLIC_HEADERS_FOLDER_PATH;
 			dstSubfolderSpec = 16;
 			files = (
+				58D4DA2A0F053E740086ACDE /* wgeol.h in Copy Header Files */,
+				58D4DA2B0F053E740086ACDE /* geometric_algorithms.h in Copy Header Files */,
+				58D4DA2C0F053E740086ACDE /* geometric_intersection.h in Copy Header Files */,
+				58D4DA2D0F053E740086ACDE /* geometric_line.h in Copy Header Files */,
+				58D4DA2E0F053E740086ACDE /* geometric_point.h in Copy Header Files */,
+				58D4DA2F0F053E740086ACDE /* geometric_types.h in Copy Header Files */,
+				58D4DA300F053E740086ACDE /* geometry_context.h in Copy Header Files */,
+				58D4DA310F053E740086ACDE /* nurbs.h in Copy Header Files */,
+				58D4DA320F053E740086ACDE /* nurbs_curve.h in Copy Header Files */,
+				58D4DA330F053E740086ACDE /* nurbs_surface.h in Copy Header Files */,
+				58D4DA340F053E740086ACDE /* ray.h in Copy Header Files */,
+				58D4DA350F053E740086ACDE /* trimmed_nurbs_surface.h in Copy Header Files */,
 			);
 			name = "Copy Header Files";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -494,6 +521,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				58D4DA6C0F0541DA0086ACDE /* WildcatUtility.framework in Copy Dependencies */,
+				58D4DA6D0F0541DA0086ACDE /* WildcatGeometry.framework in Copy Dependencies */,
 			);
 			name = "Copy Dependencies";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -663,17 +692,6 @@
 		585F35340D68B15E00673AE6 /* vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vector.h; path = ../../Source/Utility/vector.h; sourceTree = SOURCE_ROOT; };
 		585F35350D68B15E00673AE6 /* visual_object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = visual_object.h; path = ../../Source/Utility/visual_object.h; sourceTree = SOURCE_ROOT; };
 		585F35360D68B15E00673AE6 /* wutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wutil.h; path = ../../Source/Utility/wutil.h; sourceTree = SOURCE_ROOT; };
-		585F354F0D68B24900673AE6 /* complete_light.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = complete_light.vsh; path = ../../Source/Shaders/complete_light.vsh; sourceTree = SOURCE_ROOT; };
-		585F35500D68B24900673AE6 /* display.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = display.fsh; path = ../../Source/Shaders/display.fsh; sourceTree = SOURCE_ROOT; };
-		585F35510D68B24900673AE6 /* scn_basiclight.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scn_basiclight.vsh; path = ../../Source/Shaders/scn_basiclight.vsh; sourceTree = SOURCE_ROOT; };
-		585F35520D68B24900673AE6 /* scn_gooch.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scn_gooch.fsh; path = ../../Source/Shaders/scn_gooch.fsh; sourceTree = SOURCE_ROOT; };
-		585F35530D68B24900673AE6 /* scn_gooch.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scn_gooch.vsh; path = ../../Source/Shaders/scn_gooch.vsh; sourceTree = SOURCE_ROOT; };
-		585F35540D68B24900673AE6 /* scn_hemisphere.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scn_hemisphere.vsh; path = ../../Source/Shaders/scn_hemisphere.vsh; sourceTree = SOURCE_ROOT; };
-		585F35550D68B24900673AE6 /* scn_selection.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scn_selection.vsh; path = ../../Source/Shaders/scn_selection.vsh; sourceTree = SOURCE_ROOT; };
-		585F35560D68B24900673AE6 /* scn_uberlight.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scn_uberlight.fsh; path = ../../Source/Shaders/scn_uberlight.fsh; sourceTree = SOURCE_ROOT; };
-		585F35570D68B24900673AE6 /* scn_uberlight.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scn_uberlight.vsh; path = ../../Source/Shaders/scn_uberlight.vsh; sourceTree = SOURCE_ROOT; };
-		585F35580D68B24900673AE6 /* xform.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = xform.vsh; path = ../../Source/Shaders/xform.vsh; sourceTree = SOURCE_ROOT; };
-		585F35590D68B24900673AE6 /* xform_light.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = xform_light.vsh; path = ../../Source/Shaders/xform_light.vsh; sourceTree = SOURCE_ROOT; };
 		585F357F0D68B28800673AE6 /* geometric_algorithms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_algorithms.cpp; path = ../../Source/Geometry/geometric_algorithms.cpp; sourceTree = SOURCE_ROOT; };
 		585F35800D68B28800673AE6 /* geometric_algorithms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geometric_algorithms.h; path = ../../Source/Geometry/geometric_algorithms.h; sourceTree = SOURCE_ROOT; };
 		585F35810D68B28800673AE6 /* geometric_algorithms_triangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_algorithms_triangulation.cpp; path = ../../Source/Geometry/geometric_algorithms_triangulation.cpp; sourceTree = SOURCE_ROOT; };
@@ -967,9 +985,6 @@
 		586257130E379BCE00369675 /* converter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = converter.h; path = ../../Source/Converters/converter.h; sourceTree = SOURCE_ROOT; };
 		587CB6E90D89A48D00833178 /* sketch_arc_edit_mode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sketch_arc_edit_mode.cpp; path = ../../Source/Workbenches/Sketcher/sketch_arc_edit_mode.cpp; sourceTree = SOURCE_ROOT; };
 		588D973F0DAFA99800BDDE8D /* assert_exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = assert_exception.h; path = ../../Source/Utility/assert_exception.h; sourceTree = SOURCE_ROOT; };
-		5890DC390E65C8030038BBC4 /* part_pad_dialog.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = part_pad_dialog.xib; path = ../../Source/Workbenches/PartDesign/MacOS/part_pad_dialog.xib; sourceTree = SOURCE_ROOT; };
-		5890DC3C0E65CD7C0038BBC4 /* part_pad_dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_pad_dialog.h; path = ../../Source/Workbenches/PartDesign/MacOS/part_pad_dialog.h; sourceTree = SOURCE_ROOT; };
-		5890DC3D0E65CD7C0038BBC4 /* part_pad_dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = part_pad_dialog.mm; path = ../../Source/Workbenches/PartDesign/MacOS/part_pad_dialog.mm; sourceTree = SOURCE_ROOT; };
 		58AD01DA0DF986E500ED713F /* geometric_intersection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geometric_intersection.h; path = ../../Source/Geometry/geometric_intersection.h; sourceTree = SOURCE_ROOT; };
 		58AD01F10DF98A3000ED713F /* geometric_intersection_point.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_intersection_point.cpp; path = ../../Source/Geometry/geometric_intersection_point.cpp; sourceTree = SOURCE_ROOT; };
 		58AD021F0DF997B700ED713F /* geometric_intersection_line.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = geometric_intersection_line.cpp; path = ../../Source/Geometry/geometric_intersection_line.cpp; sourceTree = SOURCE_ROOT; };
@@ -1045,6 +1060,21 @@
 		58D4DA020F0536430086ACDE /* sli_plM.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sli_plM.fsh; path = ../../Source/Geometry/Shaders/sli_plM.fsh; sourceTree = SOURCE_ROOT; };
 		58D4DA030F0536430086ACDE /* spi_plM.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = spi_plM.fsh; path = ../../Source/Geometry/Shaders/spi_plM.fsh; sourceTree = SOURCE_ROOT; };
 		58D4DA040F0536430086ACDE /* ssi_plM.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ssi_plM.fsh; path = ../../Source/Geometry/Shaders/ssi_plM.fsh; sourceTree = SOURCE_ROOT; };
+		58D4DA3E0F053F5E0086ACDE /* part_pad_dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = part_pad_dialog.h; path = ../../Source/Workbenches/PartDesign/OSX/part_pad_dialog.h; sourceTree = SOURCE_ROOT; };
+		58D4DA3F0F053F5E0086ACDE /* part_pad_dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = part_pad_dialog.mm; path = ../../Source/Workbenches/PartDesign/OSX/part_pad_dialog.mm; sourceTree = SOURCE_ROOT; };
+		58D4DA400F053F5E0086ACDE /* part_pad_dialog.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = part_pad_dialog.xib; path = ../../Source/Workbenches/PartDesign/OSX/part_pad_dialog.xib; sourceTree = SOURCE_ROOT; };
+		58D4DA7B0F0542A10086ACDE /* complete_light.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = complete_light.vsh; path = ../../Source/Scene/Shaders/complete_light.vsh; sourceTree = SOURCE_ROOT; };
+		58D4DA7C0F0542A10086ACDE /* display.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = display.fsh; path = ../../Source/Scene/Shaders/display.fsh; sourceTree = SOURCE_ROOT; };
+		58D4DA7D0F0542A10086ACDE /* scn_basiclight.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scn_basiclight.vsh; path = ../../Source/Scene/Shaders/scn_basiclight.vsh; sourceTree = SOURCE_ROOT; };
+		58D4DA7E0F0542A10086ACDE /* scn_gooch.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scn_gooch.fsh; path = ../../Source/Scene/Shaders/scn_gooch.fsh; sourceTree = SOURCE_ROOT; };
+		58D4DA7F0F0542A10086ACDE /* scn_gooch.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scn_gooch.vsh; path = ../../Source/Scene/Shaders/scn_gooch.vsh; sourceTree = SOURCE_ROOT; };
+		58D4DA800F0542A10086ACDE /* scn_hemisphere.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scn_hemisphere.vsh; path = ../../Source/Scene/Shaders/scn_hemisphere.vsh; sourceTree = SOURCE_ROOT; };
+		58D4DA810F0542A10086ACDE /* scn_selection.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scn_selection.vsh; path = ../../Source/Scene/Shaders/scn_selection.vsh; sourceTree = SOURCE_ROOT; };
+		58D4DA820F0542A10086ACDE /* scn_uberlight.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scn_uberlight.fsh; path = ../../Source/Scene/Shaders/scn_uberlight.fsh; sourceTree = SOURCE_ROOT; };
+		58D4DA830F0542A10086ACDE /* scn_uberlight.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scn_uberlight.vsh; path = ../../Source/Scene/Shaders/scn_uberlight.vsh; sourceTree = SOURCE_ROOT; };
+		58D4DA840F0542A10086ACDE /* xform.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = xform.vsh; path = ../../Source/Scene/Shaders/xform.vsh; sourceTree = SOURCE_ROOT; };
+		58D4DA850F0542A10086ACDE /* xform_light.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = xform_light.vsh; path = ../../Source/Scene/Shaders/xform_light.vsh; sourceTree = SOURCE_ROOT; };
+		58D4DAEA0F0549640086ACDE /* geometry_shader_manifest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = geometry_shader_manifest.xml; path = ../../Source/Geometry/Shaders/geometry_shader_manifest.xml; sourceTree = SOURCE_ROOT; };
 		58DAD6400D69C7610093679D /* constraint_measure_radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = constraint_measure_radius.h; path = ../../Source/Constraint/constraint_measure_radius.h; sourceTree = SOURCE_ROOT; };
 		58DAD6410D69C7610093679D /* constraint_measure_radius.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = constraint_measure_radius.cpp; path = ../../Source/Constraint/constraint_measure_radius.cpp; sourceTree = SOURCE_ROOT; };
 		58DAD6480D69CB100093679D /* constraint_radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = constraint_radius.h; path = ../../Source/Constraint/constraint_radius.h; sourceTree = SOURCE_ROOT; };
@@ -1184,7 +1214,6 @@
 				585F34720D68B08B00673AE6 /* Workbenches */,
 				586256F20E3790C100369675 /* Converters */,
 				585F34730D68B09200673AE6 /* Application */,
-				585F34740D68B09900673AE6 /* Resources */,
 				584556DA0E1C7C8700364A00 /* Products */,
 			);
 			name = Wildcat;
@@ -1533,6 +1562,7 @@
 		585F34730D68B09200673AE6 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				585F34740D68B09900673AE6 /* Resources */,
 				585F368C0D68B63B00673AE6 /* Headers */,
 				585F368B0D68B63300673AE6 /* Source */,
 			);
@@ -1867,17 +1897,17 @@
 		585F354E0D68B22C00673AE6 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				585F354F0D68B24900673AE6 /* complete_light.vsh */,
-				585F35500D68B24900673AE6 /* display.fsh */,
-				585F35510D68B24900673AE6 /* scn_basiclight.vsh */,
-				585F35520D68B24900673AE6 /* scn_gooch.fsh */,
-				585F35530D68B24900673AE6 /* scn_gooch.vsh */,
-				585F35540D68B24900673AE6 /* scn_hemisphere.vsh */,
-				585F35550D68B24900673AE6 /* scn_selection.vsh */,
-				585F35560D68B24900673AE6 /* scn_uberlight.fsh */,
-				585F35570D68B24900673AE6 /* scn_uberlight.vsh */,
-				585F35580D68B24900673AE6 /* xform.vsh */,
-				585F35590D68B24900673AE6 /* xform_light.vsh */,
+				58D4DA7B0F0542A10086ACDE /* complete_light.vsh */,
+				58D4DA7C0F0542A10086ACDE /* display.fsh */,
+				58D4DA7D0F0542A10086ACDE /* scn_basiclight.vsh */,
+				58D4DA7E0F0542A10086ACDE /* scn_gooch.fsh */,
+				58D4DA7F0F0542A10086ACDE /* scn_gooch.vsh */,
+				58D4DA800F0542A10086ACDE /* scn_hemisphere.vsh */,
+				58D4DA810F0542A10086ACDE /* scn_selection.vsh */,
+				58D4DA820F0542A10086ACDE /* scn_uberlight.fsh */,
+				58D4DA830F0542A10086ACDE /* scn_uberlight.vsh */,
+				58D4DA840F0542A10086ACDE /* xform.vsh */,
+				58D4DA850F0542A10086ACDE /* xform_light.vsh */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -2739,9 +2769,9 @@
 		585F37AA0D68B8BC00673AE6 /* Pad */ = {
 			isa = PBXGroup;
 			children = (
+				5890DC370E65C7750038BBC4 /* UI */,
 				585F38AF0D68BDD000673AE6 /* Headers */,
 				585F38AE0D68BDC800673AE6 /* Source */,
-				5890DC370E65C7750038BBC4 /* UI */,
 			);
 			name = Pad;
 			sourceTree = "<group>";
@@ -3136,9 +3166,9 @@
 		5890DC370E65C7750038BBC4 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				5890DC3C0E65CD7C0038BBC4 /* part_pad_dialog.h */,
-				5890DC3D0E65CD7C0038BBC4 /* part_pad_dialog.mm */,
-				5890DC390E65C8030038BBC4 /* part_pad_dialog.xib */,
+				58D4DA400F053F5E0086ACDE /* part_pad_dialog.xib */,
+				58D4DA3E0F053F5E0086ACDE /* part_pad_dialog.h */,
+				58D4DA3F0F053F5E0086ACDE /* part_pad_dialog.mm */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -3223,6 +3253,7 @@
 		58D4D88E0F02E3F20086ACDE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				58D4DAEA0F0549640086ACDE /* geometry_shader_manifest.xml */,
 				58D4D9D80F05350B0086ACDE /* WildcatGeometry.plist */,
 			);
 			name = Resources;
@@ -3468,6 +3499,7 @@
 				58D4DA080F0536430086ACDE /* sli_plM.fsh in Resources */,
 				58D4DA090F0536430086ACDE /* spi_plM.fsh in Resources */,
 				58D4DA0A0F0536430086ACDE /* ssi_plM.fsh in Resources */,
+				58D4DAEB0F0549640086ACDE /* geometry_shader_manifest.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3554,17 +3586,6 @@
 				585F35150D68B0EA00673AE6 /* verticalSelected32.tiff in Resources */,
 				585F35160D68B0EA00673AE6 /* zoomIn32.tiff in Resources */,
 				585F35170D68B0EA00673AE6 /* zoomOut32.tiff in Resources */,
-				585F355A0D68B24900673AE6 /* complete_light.vsh in Resources */,
-				585F355B0D68B24900673AE6 /* display.fsh in Resources */,
-				585F355C0D68B24900673AE6 /* scn_basiclight.vsh in Resources */,
-				585F355D0D68B24900673AE6 /* scn_gooch.fsh in Resources */,
-				585F355E0D68B24900673AE6 /* scn_gooch.vsh in Resources */,
-				585F355F0D68B24900673AE6 /* scn_hemisphere.vsh in Resources */,
-				585F35600D68B24900673AE6 /* scn_selection.vsh in Resources */,
-				585F35610D68B24900673AE6 /* scn_uberlight.fsh in Resources */,
-				585F35620D68B24900673AE6 /* scn_uberlight.vsh in Resources */,
-				585F35630D68B24900673AE6 /* xform.vsh in Resources */,
-				585F35640D68B24900673AE6 /* xform_light.vsh in Resources */,
 				585258050D7F173A00A0C6C8 /* centeredParallelogram32.tiff in Resources */,
 				585258060D7F173A00A0C6C8 /* centeredRect32.tiff in Resources */,
 				585258070D7F173A00A0C6C8 /* hexagon32.tiff in Resources */,
@@ -3581,13 +3602,24 @@
 				58DB05790DA6BD7D008FF90E /* docTypeSelector.html in Resources */,
 				58DB05A20DA6BFF8008FF90E /* dialog_manifest.xml in Resources */,
 				58C5E7400DAD250D00089549 /* newListener.html in Resources */,
-				5890DC3A0E65C8030038BBC4 /* part_pad_dialog.xib in Resources */,
 				58D4D8B40F02E4F30086ACDE /* MainMenu.nib in Resources */,
 				58D4D8B50F02E4F30086ACDE /* ModalDialog.nib in Resources */,
 				58D4D8B60F02E4F30086ACDE /* RenderWindow.nib in Resources */,
 				58D4D8B80F02E5200086ACDE /* wildcat.icns in Resources */,
 				58D4D8BF0F02E5650086ACDE /* Credits.rtf in Resources */,
 				58D4D8C00F02E5650086ACDE /* InfoPlist.strings in Resources */,
+				58D4DA420F053F5E0086ACDE /* part_pad_dialog.xib in Resources */,
+				58D4DA860F0542A10086ACDE /* complete_light.vsh in Resources */,
+				58D4DA870F0542A10086ACDE /* display.fsh in Resources */,
+				58D4DA880F0542A10086ACDE /* scn_basiclight.vsh in Resources */,
+				58D4DA890F0542A10086ACDE /* scn_gooch.fsh in Resources */,
+				58D4DA8A0F0542A10086ACDE /* scn_gooch.vsh in Resources */,
+				58D4DA8B0F0542A10086ACDE /* scn_hemisphere.vsh in Resources */,
+				58D4DA8C0F0542A10086ACDE /* scn_selection.vsh in Resources */,
+				58D4DA8D0F0542A10086ACDE /* scn_uberlight.fsh in Resources */,
+				58D4DA8E0F0542A10086ACDE /* scn_uberlight.vsh in Resources */,
+				58D4DA8F0F0542A10086ACDE /* xform.vsh in Resources */,
+				58D4DA900F0542A10086ACDE /* xform_light.vsh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3826,7 +3858,6 @@
 				585027880E08274100BF2CBB /* topology_union.cpp in Sources */,
 				5850278A0E08274F00BF2CBB /* topology_subtract.cpp in Sources */,
 				586257100E379A5C00369675 /* converter_stl.cpp in Sources */,
-				5890DC3E0E65CD7C0038BBC4 /* part_pad_dialog.mm in Sources */,
 				58415F680EA53C8100CF401D /* topology_model_internal.cpp in Sources */,
 				58E665DE0F02AA140029DBD2 /* action.cpp in Sources */,
 				58E665DF0F02AA140029DBD2 /* document.cpp in Sources */,
@@ -3855,6 +3886,7 @@
 				58D4D90C0F02EA880086ACDE /* toolbar.mm in Sources */,
 				58D4D90D0F02EA880086ACDE /* toolbar_bridge.mm in Sources */,
 				58D4D90E0F02EA880086ACDE /* toolbar_osx.mm in Sources */,
+				58D4DA410F053F5E0086ACDE /* part_pad_dialog.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3947,7 +3979,7 @@
 					"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0/lib",
 					"\"$(SRCROOT)/../../../../boost/bin.v2/libs/program_options/build/darwin-4.0.1/release/threading-multi\"",
 				);
-				OBJROOT = "$(SRCROOT)/../../Build/MacOS";
+				OBJROOT = "$(SRCROOT)/../../Build/OSX";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
@@ -3956,7 +3988,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = WildcatUtility;
-				SYMROOT = "$(SRCROOT)/../../Build/MacOS";
+				SYMROOT = "$(SRCROOT)/../../Build/OSX";
 			};
 			name = Debug;
 		};
@@ -4010,8 +4042,8 @@
 					"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0/include",
 					"$(SRCROOT)/../../Source",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/../../Source/Kernel/OSX/WildcatGeometry.plist";
-				INSTALL_PATH = /Library/Frameworks;
+				INFOPLIST_FILE = "$(SRCROOT)/../../Source/Geometry/OSX/WildcatGeometry.plist";
+				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../Dependencies/xerces-c-src_2_8_0/lib\"",

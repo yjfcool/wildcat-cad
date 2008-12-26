@@ -667,10 +667,18 @@ void WCGeometryContext::StopIntersection(void) {
 
 WCGeometryContext::WCGeometryContext(WCGLContext *context, WCShaderManager *shaderManager) : _glContext(context), _shaderManager(shaderManager) {
 	//Check to make sure context and shader manager are valid
-	if (this->_shaderManager == NULL) {
-		CLOGGER_ERROR(WCLogManager::RootLogger(), "WCGeometryContext::WCGeometryContext - NULL Shader Manager passed."); 
-		return;
-	}
+	ASSERT(context);
+	ASSERT(shaderManager);
+
+	//Get the location of the resources directory
+	std::string resDir = _ResourceDirectory();
+#ifdef __APPLE__
+	//Account for OSX embedded framework structure
+	resDir += "/../Frameworks/WildcatGeometry.framework/Resources";
+#endif
+	//Load geometry specific shaders
+	shaderManager->ParseManifest("geometry_shader_manifest.xml", resDir, false);
+
 	//Initialize all NURBS curve parameters
 	this->StartCurve();
 	//Initialize all NURBS surface parameters
