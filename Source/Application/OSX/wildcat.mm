@@ -112,9 +112,11 @@ void _ParseCommandLine(int argc, char* argv[]) {
 		boost::program_options::store(boost::program_options::parse_command_line(argc, argv, optionsDescription), variablesMap);
 		boost::program_options::notify(variablesMap);
 	} catch (boost::program_options::error &ex) {
+		//Debug some output
+		std::cerr << "Error parsing command-line." << std::endl;
+		for (int i=0; i<argc; i++) std::cerr << "\t" << argv[i] << std::endl;
 		//Must have been quite some problem
-		std::cerr << ex.what();
-		exit(-1);
+		std::cerr << "Boost Program Options: " << ex.what() << std::endl;
 	}
 	//Convert logging level
 	WCLoggerLevel logLevel = WCLoggerLevel::Error();

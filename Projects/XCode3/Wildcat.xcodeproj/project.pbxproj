@@ -45,7 +45,6 @@
 		582DB35C0ED4831100BD61DE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		582DB35D0ED4831100BD61DE /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 585F319D0D68B01B00673AE6 /* CoreFoundation.framework */; };
 		582DB35E0ED4831200BD61DE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
-		582DB35F0ED4831400BD61DE /* libxerces-c.28.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B3A4080DF4988500A08C0C /* libxerces-c.28.0.dylib */; };
 		582DB3600ED4831400BD61DE /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 585F314A0D68AFF600673AE6 /* OpenGL.framework */; };
 		582DB3BA0ED48AF900BD61DE /* wutil.h in Copy Header Files */ = {isa = PBXBuildFile; fileRef = 585F35360D68B15E00673AE6 /* wutil.h */; };
 		582DB3BB0ED48AF900BD61DE /* adapter.h in Copy Header Files */ = {isa = PBXBuildFile; fileRef = 585F351B0D68B15E00673AE6 /* adapter.h */; };
@@ -410,6 +409,7 @@
 		58D4DA8F0F0542A10086ACDE /* xform.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA840F0542A10086ACDE /* xform.vsh */; };
 		58D4DA900F0542A10086ACDE /* xform_light.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DA850F0542A10086ACDE /* xform_light.vsh */; };
 		58D4DAEB0F0549640086ACDE /* geometry_shader_manifest.xml in Resources */ = {isa = PBXBuildFile; fileRef = 58D4DAEA0F0549640086ACDE /* geometry_shader_manifest.xml */; };
+		58D4DB1D0F054EE40086ACDE /* libxerces-c.28.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B3A4080DF4988500A08C0C /* libxerces-c.28.0.dylib */; };
 		58DAD6420D69C7610093679D /* constraint_measure_radius.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD6410D69C7610093679D /* constraint_measure_radius.cpp */; };
 		58DAD64A0D69CB100093679D /* constraint_radius.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD6490D69CB100093679D /* constraint_radius.cpp */; };
 		58DAD64D0D69CC090093679D /* constraint_radius_actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58DAD64C0D69CC090093679D /* constraint_radius_actions.cpp */; };
@@ -1132,8 +1132,8 @@
 				582DB35B0ED4831000BD61DE /* AppKit.framework in Frameworks */,
 				582DB35C0ED4831100BD61DE /* Cocoa.framework in Frameworks */,
 				582DB35D0ED4831100BD61DE /* CoreFoundation.framework in Frameworks */,
+				58D4DB1D0F054EE40086ACDE /* libxerces-c.28.0.dylib in Frameworks */,
 				582DB35E0ED4831200BD61DE /* Foundation.framework in Frameworks */,
-				582DB35F0ED4831400BD61DE /* libxerces-c.28.0.dylib in Frameworks */,
 				582DB3600ED4831400BD61DE /* OpenGL.framework in Frameworks */,
 				580F1CBD0F02BAEC00086F68 /* WildcatUtility.framework in Frameworks */,
 			);
@@ -3132,6 +3132,7 @@
 		586256F20E3790C100369675 /* Converters */ = {
 			isa = PBXGroup;
 			children = (
+				586257130E379BCE00369675 /* converter.h */,
 				586256F30E3790CE00369675 /* STL */,
 			);
 			name = Converters;
@@ -3149,7 +3150,6 @@
 		586256F40E3790D800369675 /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				586257130E379BCE00369675 /* converter.h */,
 				5862570E0E379A4C00369675 /* converter_stl.h */,
 			);
 			name = Headers;
