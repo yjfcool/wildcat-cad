@@ -464,10 +464,10 @@ void WCMatrix::SetIdentity(void) {
 	memset(this->_data, 0, this->_numRow * this->_numCol * sizeof(WPFloat));
 	//Find the shorter dimension and work backwards towards 0,0
 #ifdef __APPLE__
-	for (WPUInt i = (WPUInt)std::min(this->_numRow, this->_numCol)-1; i >= 0; i--) {
+	for (WPUInt i = (WPUInt)STDMIN(this->_numRow, this->_numCol)-1; i >= 0; i--) {
 #endif
 #ifdef __WIN32__
-	for (WPUInt i = (WPUInt)min(this->_numRow, this->_numCol)-1; i >= 0; i--) {
+	for (WPUInt i = (WPUInt)STDMIN(this->_numRow, this->_numCol)-1; i >= 0; i--) {
 #endif
 		//Set the element to 1.0
 		this->Set(i, i, 1.0);

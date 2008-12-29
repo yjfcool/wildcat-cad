@@ -36,8 +36,8 @@
 #include <gl/gl.h>			// Header File For The OpenGL32 Library
 #include <gl/glu.h>			// Header File For The GLu32 Library
 //#include <gl/glaux.h>		// Header File For The Glaux Library
-#include <Application/Win32/wglext.h>
-#include <Application/Win32/glext.h>
+#include <Utility/wx/wglext.h>
+#include <Utility/wx/glext.h>
 
 
 /***********************************************~***************************************************/
