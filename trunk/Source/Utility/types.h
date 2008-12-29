@@ -97,7 +97,7 @@ typedef ULONGLONG								WPTime;
 	#define M_LOG2E								1.44269504088896340735992468100189214   /* log 2e */
 #endif //M_LOG2E
 
-#ifdef M_LOG10E
+#ifndef M_LOG10E
 	#define M_LOG10E							0.434294481903251827651128918916605082  /* log 10e */
 #endif //M_LOG10E
 

@@ -56,17 +56,16 @@
 #endif
 
 #ifdef __WXWINDOWS__
-#include "Application/Win32/stdafx.h"	//Generic header file For Windows
-#include "Application/Win32/win_gl.h"	//Header file for windows platform
+#include <Application/wx/stdafx.h>	//Generic header file For Windows
+#include <Utility/wx/gl_wx.h>	//Header file for wx platform
 #include <wx/wx.h>
 #include <wx/docview.h>
 #include <wx/stdpaths.h>
 #include <wx/config.h>
 
-
 //Defines for std:: problem
-#define STDMIN	min
-#define STDMAX	max
+#define STDMIN	std::min
+#define STDMAX	std::max
 #define STDFABS	fabs
 
 //Stupid workaround since Windows can't find round
@@ -76,7 +75,7 @@ inline double round(const double &n) {
 	else return flr;
 }
 
-#endif
+#endif //__WXWINDOWS__
 
 
 /*** Included Xerces Headers ***/

@@ -27,7 +27,7 @@
 
 
 //Included Header Files
-#include "Utility/wutil.h"
+#include <Utility/wutil.h>
 
 
 /*** Platform Specific Included Headers ***/
@@ -35,9 +35,9 @@
 //...
 #endif
 #ifdef __WXWINDOWS__
-#include "wx/wx.h"
-#include <wx/stdpaths.h>
-#include "Application/wx/wildcat_app.h"
+//#include "wx/wx.h"
+//#include <wx/stdpaths.h>
+//#include "Application/wx/wildcat_app.h"
 #endif
 
 
@@ -51,7 +51,8 @@ std::string _ResourceDirectory(void) {
 
 std::string _ApplicationDirectory(void) {
 #ifdef __WXWINDOWS__
-	return std::string(wxGetApp().GetExeFolder().mb_str());
+//	return std::string(wxGetApp().GetExeFolder().mb_str());
+	return "C:\\Documents and Settings\\ghemingway\\My Documents\\wildcat-cad\\Build\\wx\\Debug\\Wildcat";
 #else
 	//Get the command line
 	LPTSTR cmdLine = GetCommandLineW();

@@ -51,7 +51,13 @@ namespace __WILDCAT_NAMESPACE__ {
 	
 class WCGLContext {
 private:
-	void*										_context;											//!< GL Context base object
+#ifdef __APPLE__
+	NSOpenGLContext								*_context;											//!< GL Context base object
+#elif __WIN32__
+	HGLRC										_context;											//!< GL Context base object
+	HDC											_deviceContext;										//!< Device context base object
+#elif __LINUX__
+#endif
 	//Hidden Constructors
 	WCGLContext& operator=(const WCGLContext &context);												//!< Deny access to context equation
 public:
