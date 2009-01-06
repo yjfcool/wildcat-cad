@@ -77,7 +77,7 @@ WCMainFrame::~WCMainFrame() {
 
 
 void WCMainFrame::OnAbout(wxCommandEvent& WXUNUSED(event) ) {
-	wxMessageBox(_T("Wildcat CAD\nAuthor: Graham Hemingway\nhttp://code.google.com/p/wildcat-cad/\n\nContributors:\nDan Heeks\n\nBuilt with wxWidgets\nwww.wxwidgets.org"), _T("About Wildcat"));
+	wxMessageBox(_T("Wildcat CAD\nAuthor: Graham Hemingway\nhttp://code.google.com/p/wildcat-cad/\n\nContributors:\nDan Heeks\nFrank Hardy\n\nBuilt with wxWidgets\nwww.wxwidgets.org"), _T("About Wildcat"));
 }
 
 
